@@ -3,6 +3,8 @@ import Renderer from "./lib/Renderer.ts";
 import CanvasRenderPass from "./CanvasRenderPass.ts";
 import CharacterController from "./CharacterController.ts";
 import Level from "./Level.ts";
+import PreLoader from "./lib/PreLoader.ts";
+import GLTFLoader from "./GLTFLoader.ts";
 
 export default class Main {
     private canvas: HTMLCanvasElement;
@@ -12,6 +14,8 @@ export default class Main {
 
     private characterController: CharacterController;
     private level: Level;
+    private preloader: PreLoader;
+    private gltfLoader: GLTFLoader;
 
     constructor() {
 
@@ -19,24 +23,30 @@ export default class Main {
         this.canvasManager = new CanvasManager(this.canvas);
         this.renderer = new Renderer();
         this.renderer.setup(this.canvas).then(() => {
-            setTimeout(this.init.bind(this), 1000);
+            this.preload()
         }).catch((e) => {
             // console.warn("no WebGPU ->"+e);
         })
 
     }
-
+    public preload(){
+         this.preloader =new PreLoader(()=>{},this.init.bind(this));
+            this.gltfLoader = new GLTFLoader(this.renderer,"test",this.preloader)
+    }
     private init() {
 
         this.canvasRenderPass = new CanvasRenderPass(this.renderer)
 
         this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
-        this.characterController = new CharacterController(this.renderer)
+        this.characterController = new CharacterController(this.renderer,  this.gltfLoader)
         this.level = new Level(this.renderer)
         this.characterController.levelModels = this.level.models;
 
         this.canvasRenderPass.modelRenderer.addModel(this.characterController.model)
         for (let m of this.level.models) {
+            this.canvasRenderPass.modelRenderer.addModel(m);
+        }
+        for (let m of  this.characterController.models) {
             this.canvasRenderPass.modelRenderer.addModel(m);
         }
         this.tick();

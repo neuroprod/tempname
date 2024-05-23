@@ -5,6 +5,7 @@ import Model from "./lib/model/Model.ts";
 import Ray from "./lib/Ray.ts";
 import KeyInput from "./KeyInput.ts";
 import Timer from "./lib/Timer.ts";
+import GLTFLoader from "./GLTFLoader.ts";
 
 export default class CharacterController {
     public model: Model;
@@ -19,17 +20,18 @@ export default class CharacterController {
     //vertical
     private ySpeed = 0;
     private isInAir = false;
-    private gravity = 100;
-    private jumpSpeed = 30;
+    private gravity = 50;
+    private jumpSpeed = 15;
 
     // horizontal
     private xSpeed = 0;
-    private xAcc = 30;
+    private xAcc = 20;
     private xAirAcc = 10;
-    private maxXspeed = 10;
+    private maxXspeed = 7;
+  public models:Array<Model> = []
+    private gltfLoader: GLTFLoader;
 
-
-    constructor(renderer: Renderer) {
+    constructor(renderer: Renderer,gltfLoader:GLTFLoader) {
         this.renderer = renderer;
         this.keyInput = new KeyInput()
 
@@ -37,8 +39,14 @@ export default class CharacterController {
 
         this.model = new Model(this.renderer, "test");
         this.model.material = material
-        this.model.mesh = new Box(this.renderer)
+        this.model.mesh = new Box(this.renderer,{depth:0.1})
+        for(let m of gltfLoader.models)
+        {
+            m.material = material;
+            this.models.push(m)
 
+        }
+    this.gltfLoader = gltfLoader;
         this.ray.rayStart.set(0, 2, 0)
         this.ray.rayDir.set(0, -1, 0);
     }
@@ -52,8 +60,11 @@ export default class CharacterController {
             this.ySpeed = 0;
             this.xSpeed = 0;
         }
-
+       // this.model.setScaler(0)
         this.model.setPosition(this.posX, this.posY, 0);
+        this.gltfLoader.root.setPosition(this.posX, this.posY-0.5, 0);
+        this.gltfLoader.root.setScaler( 0.3);
+        this.gltfLoader.root.setEuler(0,Math.PI/2,0)
     }
 
     private updateVertical() {

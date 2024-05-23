@@ -12,7 +12,7 @@ export default class Camera extends UniformGroup {
     public cameraWorldU: Vector4 = new Vector4(0, 0, 10, 1.0);
     public cameraLookAt: Vector3 = new Vector3(0, 0, 0);
     public cameraUp: Vector3 = new Vector3(0, 1, 0);
-    public fovy = 1.2
+    public fovy = 0.7
     public near = 2;
     public far = 100;
     public ratio = 1;

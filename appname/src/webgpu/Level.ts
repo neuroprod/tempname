@@ -16,7 +16,7 @@ export default class Level{
 
         let floor = new Model(this.renderer, "floor");
         floor.material = material
-        floor.mesh = new Box(this.renderer,{width:10,depth:1.5})
+        floor.mesh = new Box(this.renderer,{width:10,depth:1.5,height:0.3})
         floor.setPosition(0,-5,0);
         this.models.push(floor)
 
@@ -50,6 +50,7 @@ export default class Level{
         platform2.material = material
         platform2.mesh = new Box(this.renderer,{width:3,depth:1.5})
         platform2.setPosition(-1,-1.5,0);
+        platform2.setEuler(0,0,0)
         this.models.push(platform2)
 
         {
