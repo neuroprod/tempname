@@ -12,21 +12,21 @@ export default class Leg{
     private leg: Bone;
     private knee: Bone;
     private root: Bone;
-    private legLength =0.25
-    private kneeLength =0.30
+    private legLength =0.22
+    private kneeLength =0.25
     private sphere: Model;
     private sphere2: Model;
     constructor(renderer:Renderer,label:string,root:Bone,debugModels:Array<Model>)
     {
         this.root =root;
-        this.hip =new Bone(renderer,label+"hip",debugModels,0.15);
+        this.hip =new Bone(renderer,label+"hip",debugModels,0.1);
         this.hip.setPosition(0.18,-0.10,0.18)
         this.hip.setEuler(0,-Math.PI/2,0);
         root.addChild(this.hip)
 
 
 
-        this.leg =new Bone(renderer,label+"hip",debugModels,this.legLength);
+      this.leg =new Bone(renderer,label+"hip",debugModels,this.legLength);
         this.leg.setPosition(0.0,0,0)
         this.leg.setEuler(0,0,-Math.PI/2);
         this.hip.addChild(this.leg)
@@ -63,15 +63,16 @@ export default class Leg{
 
     setTargetWorld(sphereWorld: Vector3) {
        let localRoot=this.hip.getPosition().clone().subtract(this.root.getLocalPos(sphereWorld.clone()));
+//console.log(localRoot)
+        let angle = Math.atan2(localRoot.y,localRoot.z)
 
-        let angle = Math.atan2(localRoot.z,localRoot.x)
-        this.hip.setEuler(Math.PI,angle,Math.PI);
+        this.hip.setEuler(0,angle+Math.PI/2,Math.PI/2);
         let hipLocalPos = this.hip.getLocalPos(sphereWorld.clone())
 
 
 
         //reduce to 2D problem
-        let posJoint = new Vector2(0, 0);//0
+        let posJoint = new Vector2(0.0, 0);//0
         let r0 = this.legLength;
         let posTarget = new Vector2(hipLocalPos.x, hipLocalPos.y);//1
          let r1 =this.kneeLength;
@@ -125,7 +126,7 @@ console.log("fail")
         solution2.y = y2 - ry;
 
         //we want the top solution
-        if (solution2.x > solution1.x)
+        if (solution2.y > solution1.y)
         {
             solution = solution2;
         }

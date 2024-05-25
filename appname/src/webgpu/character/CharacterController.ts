@@ -29,8 +29,8 @@ export default class CharacterController {
 
     // horizontal
     private xSpeed = 0;
-    private xAcc = 20;
-    private xAirAcc = 10;
+    private xAcc = 5;
+    private xAirAcc = 5;
     private maxXspeed = 5;
     public models:Array<Model> = []
     private gltfLoader: GLTFLoader;

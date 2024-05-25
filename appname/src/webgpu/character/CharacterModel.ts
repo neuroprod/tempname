@@ -48,14 +48,14 @@ export default class CharacterModel{
 
 
     setMoveData(posX: number, posY: number,xSpeed:number) {
-        xSpeed =0.1
+
         let delta = Timer.delta;
         this.legPos +=Math.abs(xSpeed)*delta;
 
 
 
 
-        let stepLength = 0.3
+        let stepLength = 0.4
         this.legPos%=stepLength*2;
         let xPos = this.legPos-stepLength;
         let yPos = 0
@@ -71,7 +71,7 @@ export default class CharacterModel{
         this.rootBone.setPosition(posX,posY,0);
 
 
-        this.sphere.setPosition(-0.12+xPos,yPos,0.20)
+        this.sphere.setPosition(-0.17+xPos,yPos,0.26-yPos*0.1)
         let sphereWorld = this.sphere.getWorldPos();
         this.legMidR.setTargetWorld(sphereWorld)
     }
