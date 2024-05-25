@@ -97,17 +97,15 @@ export default class Mesh extends ObjectGPU {
         this.bufferMap.set(name, buffer);
     }
 
-    updateBuffer(name: string, data: any) {
-        let buffer = this.getBufferByName(name);
-        if (buffer) {
-            let i = this.buffers.indexOf(buffer)
-            this.buffers.splice(i, 1);
-            buffer.destroy()
-        }
-        this.createBuffer(data, name)
-    }
+
 
     createBuffer(data: Float32Array, name: string) {
+        let bufferOld = this.getBufferByName(name);
+        if (bufferOld) {
+            let i = this.buffers.indexOf(bufferOld)
+            this.buffers.splice(i, 1);
+            bufferOld.destroy()
+        }
 
         const buffer = this.device.createBuffer({
             size: data.byteLength,
@@ -125,6 +123,9 @@ export default class Mesh extends ObjectGPU {
     }
 
     setIndices(indices: Uint16Array) {
+        if(this.indexBuffer){
+            this.indexBuffer.destroy();
+        }
         this.indices = indices;
         this.indexFormat = IndexFormat.Uint16
         this.hasIndices = true;
@@ -145,6 +146,10 @@ export default class Mesh extends ObjectGPU {
     }
 
     setIndices32(indices: Uint32Array) {
+        if(this.indexBuffer){
+            this.indexBuffer.destroy();
+        }
+
         this.indexFormat = IndexFormat.Uint32
         this.hasIndices = true;
         this.numIndices = indices.length;

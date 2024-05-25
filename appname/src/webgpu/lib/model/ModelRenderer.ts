@@ -1,5 +1,5 @@
 import Model from "./Model";
-;
+
 import Renderer from "../Renderer";
 import RenderPass from "../RenderPass.ts";
 import Camera from "../Camera.ts";

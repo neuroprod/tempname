@@ -1,21 +1,25 @@
-import Renderer from "./lib/Renderer.ts";
-import TestMaterial from "./TestMaterial.ts";
-import Box from "./lib/mesh/geometry/Box.ts";
-import Model from "./lib/model/Model.ts";
-import Ray from "./lib/Ray.ts";
-import KeyInput from "./KeyInput.ts";
-import Timer from "./lib/Timer.ts";
-import GLTFLoader from "./GLTFLoader.ts";
+import Renderer from "../lib/Renderer.ts";
+import TestMaterial from "../lib/material/TestMaterial.ts";
+import Box from "../lib/mesh/geometry/Box.ts";
+import Model from "../lib/model/Model.ts";
+import Ray from "../lib/Ray.ts";
+import KeyInput from "../KeyInput.ts";
+import Timer from "../lib/Timer.ts";
+import GLTFLoader from "../GLTFLoader.ts";
+import CharacterModel from "./CharacterModel.ts";
+import {Vector4} from "@math.gl/core";
+import Blend from "../lib/material/Blend.ts";
+import {CullMode} from "../lib/WebGPUConstants.ts";
 
 export default class CharacterController {
-    public model: Model;
-    public levelModels: Array<Model>;
+
+    public levelModels: Array<Model>=[];
     private renderer: Renderer;
     private ray = new Ray()
-    private keyInput: KeyInput;
+    public keyInput!: KeyInput;
 
-    private posX = 0;
-    private posY = 0;
+     posX = 0;
+     posY = 0;
 
     //vertical
     private ySpeed = 0;
@@ -27,44 +31,66 @@ export default class CharacterController {
     private xSpeed = 0;
     private xAcc = 20;
     private xAirAcc = 10;
-    private maxXspeed = 7;
-  public models:Array<Model> = []
+    private maxXspeed = 5;
+    public models:Array<Model> = []
     private gltfLoader: GLTFLoader;
-
+    //private legPos =0;
+    public characterModel: CharacterModel;
     constructor(renderer: Renderer,gltfLoader:GLTFLoader) {
         this.renderer = renderer;
-        this.keyInput = new KeyInput()
+
 
         let material = new TestMaterial(this.renderer, "testMaterial");
-
-        this.model = new Model(this.renderer, "test");
+        material.setUniform("color",new Vector4(0.03,0.031,0.05,0.1))
+        material.blendModes =[Blend.add()];
+        material.depthWrite =false;
+        material.cullMode =CullMode.None
+    /*    this.model = new Model(this.renderer, "test");
         this.model.material = material
-        this.model.mesh = new Box(this.renderer,{depth:0.1})
+        this.model.mesh = new Box(this.renderer,{depth:0.1,width:0.1,height:0.1})*/
         for(let m of gltfLoader.models)
         {
             m.material = material;
             this.models.push(m)
 
         }
-    this.gltfLoader = gltfLoader;
+        this.gltfLoader = gltfLoader;
         this.ray.rayStart.set(0, 2, 0)
         this.ray.rayDir.set(0, -1, 0);
+
+        this.characterModel = new CharacterModel(renderer)
+
     }
 
     update() {
         this.updateVertical();
         this.updateHorizontal();
+
+
         if (this.posY < -10) {
             this.posX = 0;
             this.posY = 5;
             this.ySpeed = 0;
             this.xSpeed = 0;
         }
-       // this.model.setScaler(0)
-        this.model.setPosition(this.posX, this.posY, 0);
-        this.gltfLoader.root.setPosition(this.posX, this.posY-0.5, 0);
-        this.gltfLoader.root.setScaler( 0.3);
+       // this.model.setScaler
+       /* let delta = Timer.delta;
+        this.legPos +=Math.abs(this.xSpeed)*delta;
+        let stepLength = 0.3
+        this.legPos%=stepLength*2;
+        let legV = this.legPos-stepLength;
+        let yPos = 0
+        if(legV<0){
+
+            yPos =-Math.sin((legV/stepLength)*Math.PI)*stepLength*0.5;
+        }
+
+      */
+
+        this.gltfLoader.root.setPosition(this.posX, this.posY, 0);
+
         this.gltfLoader.root.setEuler(0,Math.PI/2,0)
+        this.characterModel.setMoveData(this.posX, this.posY)
     }
 
     private updateVertical() {
@@ -79,11 +105,11 @@ export default class CharacterController {
 
 
         if (this.ySpeed <= 0) { //falling down
-            this.ray.rayStart.set(this.posX-0.4, this.posY, 0);
+            this.ray.rayStart.set(this.posX-0.4, this.posY+0.5, 0);
             this.ray.rayDir.set(0, -1, 0);
             let r1 = this.ray.intersectModels(this.levelModels);
 
-            this.ray.rayStart.set(this.posX+0.4, this.posY, 0);
+            this.ray.rayStart.set(this.posX+0.4, this.posY+0.5, 0);
             let r2 = this.ray.intersectModels(this.levelModels);
 
             let floorDist = 1000
@@ -156,7 +182,7 @@ export default class CharacterController {
             dir = 1;
         }
 
-        this.ray.rayStart.set(this.posX, this.posY, 0);
+        this.ray.rayStart.set(this.posX, this.posY+0.3, 0);
         this.ray.rayDir.set(dir, 0, 0);
         let r = this.ray.intersectModels(this.levelModels);
         let wallDist = 1000;

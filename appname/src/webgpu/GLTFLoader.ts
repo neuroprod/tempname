@@ -4,7 +4,7 @@ import Renderer from "./lib/Renderer";
 
 import Model from "./lib/model/Model";
 
-import {CullMode} from "./lib/WebGPUConstants";
+
 import Object3D from "./lib/model/Object3D.ts";
 import Mesh from "./lib/mesh/Mesh.ts";
 import {Matrix4, Quaternion, Vector3} from "@math.gl/core";

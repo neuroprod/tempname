@@ -3,6 +3,7 @@ import TextureHandler from "./TextureHandler.ts";
 import ColorAttachment from "./textures/ColorAttachment.ts";
 import UniformGroup from "./material/UniformGroup.ts";
 import Model from "./model/Model.ts";
+import UI from "./UI/UI.ts";
 
 
 export default class Renderer {
@@ -115,7 +116,7 @@ export default class Renderer {
 
             this.textureHandler.resize(this.width,this.height)
 
-
+            UI.setSize(this.width,this.height)
         }
 
     }
@@ -128,6 +129,7 @@ export default class Renderer {
     private updateModels() {
         for (let m of this.models) {
             m.update();
+
         }
     }
 }

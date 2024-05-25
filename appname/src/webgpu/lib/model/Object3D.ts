@@ -16,10 +16,10 @@ export default class Object3D extends ObjectGPU {
     private _scale = new Vector3(1, 1, 1);
     private _rotation = new Quaternion(0, 0, 0, 1);
 
-    public worldMatrixInv: Matrix4 = new Matrix4();
 
 
-
+private temp4 =new Vector4()
+    private temp3 =new Vector3()
     constructor(renderer: Renderer, label: string = "") {
         super(renderer, label);
 
@@ -33,6 +33,18 @@ export default class Object3D extends ObjectGPU {
         return this._worldMatrix;
 
     }
+    public _worldMatrixInv: Matrix4 = new Matrix4();
+    public get worldMatrixInv() {
+        if (!this._dirty) return this._worldMatrixInv;
+        this.updateMatrices();
+        return this._worldMatrixInv;
+
+    }
+
+
+
+
+
 
     private _localMatrix: Matrix4 = new Matrix4()
 
@@ -50,7 +62,11 @@ export default class Object3D extends ObjectGPU {
         temp.applyMatrix4(this.worldMatrix);
         return new Vector3(temp.x, temp.y, temp.z);
     }
-
+    getLocalPos(worldPos: Vector3) {
+        let temp = new Vector4(worldPos.x, worldPos.y, worldPos.z, 1)
+        temp.applyMatrix4(this.worldMatrixInv);
+        return new Vector3(temp.x, temp.y, temp.z);
+    }
     setPositionV(target: Vector3) {
         if (this._position.equals(target)) return
         this._position.from(target);
@@ -74,7 +90,7 @@ export default class Object3D extends ObjectGPU {
     }
 
     setRotationQ(newRot: Quaternion) {
-        if (this._rotation.equals(newRot as NumericArray)) return
+        if (this._rotation.equals(newRot as Array<number>)) return
         this._rotation.from(newRot)
         this.setDirty();
     }
@@ -125,8 +141,8 @@ export default class Object3D extends ObjectGPU {
         } else {
             this._worldMatrix.from(this._localMatrix)
         }
-        this.worldMatrixInv.from(this._worldMatrix);
-        this.worldMatrixInv.invert();
+        this._worldMatrixInv.from(this._worldMatrix);
+        this._worldMatrixInv.invert();
         this._dirty = false;
 
     }

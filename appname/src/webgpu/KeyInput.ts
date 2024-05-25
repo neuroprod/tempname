@@ -3,26 +3,48 @@ export default class KeyInput{
     leftDown =false;
     rightDown =false;
 
-
+    camLeft:boolean =false;
+    camRight:boolean =false;
+    camUp:boolean =false;
+    camDown:boolean =false;
     private rightDownTime: DOMHighResTimeStamp;
     private leftDownTime: DOMHighResTimeStamp;
     private space: boolean =false;
     constructor() {
 
         document.addEventListener('keydown', (event)=> {
-             console.log(event.key,"down")
+
            switch (event.key) {
                case "ArrowLeft":
-                   this.leftDown=true;
-                  this.leftDownTime = event.timeStamp
+
+                   if(event.shiftKey){
+                       this.camLeft =true;
+                   }else{
+                    this.leftDown=true;
+                    this.leftDownTime = event.timeStamp
+                   }
                    break;
                case "ArrowRight":
+                   if(event.shiftKey){
+                       this.camLeft =true;
+                   }else{
                    this.rightDown=true;
                    this.rightDownTime = event.timeStamp
+                   }
                    break;
                case "ArrowUp" :
+                   if(event.shiftKey){
+                       this.camUp =true;
+                       break;
+                   }
                case " " :
                    this.space =true;
+                   break;
+               case "ArrowDown" :
+                   if(event.shiftKey){
+                       this.camDown=true;
+
+                   }
                    break;
            }
 

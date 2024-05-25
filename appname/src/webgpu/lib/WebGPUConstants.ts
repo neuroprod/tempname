@@ -1,9 +1,9 @@
-export const GPUPrimitiveTopology = {
-    PointList: 'point-list',
-    LineList: 'line-list',
-    LineStrip: 'line-strip',
-    TriangleList: 'triangle-list',
-    TriangleStrip: 'triangle-strip',
+export const PrimitiveTopology = {
+    PointList: 'point-list' as GPUPrimitiveTopology,
+    LineList: 'line-list' as GPUPrimitiveTopology,
+    LineStrip: 'line-strip' as GPUPrimitiveTopology,
+    TriangleList: 'triangle-list' as GPUPrimitiveTopology,
+    TriangleStrip: 'triangle-strip' as GPUPrimitiveTopology,
 };
 
 export const CompareFunction = {

@@ -73,7 +73,7 @@ export default class UniformGroup extends ObjectGPU {
 
     }
 
-    addUniform(name: string, value: NumericArray | number | Float32Array, usage: GPUShaderStageFlags = GPUShaderStage.FRAGMENT, format = ShaderType.auto, arraySize = 1) {
+    addUniform(name: string, value:Array<number> | number | Float32Array, usage: GPUShaderStageFlags = GPUShaderStage.FRAGMENT, format = ShaderType.auto, arraySize = 1) {
         const found = this.uniforms.find((element) => element.name == name);
         if (found) {
             console.log("uniform already exist " + this.label + " " + name)
@@ -153,7 +153,7 @@ export default class UniformGroup extends ObjectGPU {
         //this.samplerUniforms.push({name:name,sampler:sampler,usage:GPUShaderStage.FRAGMENT})
     }
 
-    setUniform(name: string, value: Float32Array | NumericArray | number) {
+    setUniform(name: string, value: Float32Array | Array<number> | number) {
         const found = this.uniforms.find((element) => element.name == name);
 
         if (found) {

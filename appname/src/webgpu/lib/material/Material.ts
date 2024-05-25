@@ -3,8 +3,9 @@ import Renderer from "../Renderer.ts";
 import RenderPass from "../RenderPass.ts";
 import UniformGroup from "./UniformGroup.ts";
 import Attribute from "./Attribute.ts";
-import {CompareFunction} from "../WebGPUConstants.ts";
+import {CompareFunction, CullMode, PrimitiveTopology} from "../WebGPUConstants.ts";
 import {getShaderTextForShaderType} from "./ShaderTypes.ts";
+import Texture from "../textures/Texture.ts";
 
 class VertexOutput {
     name: string;
@@ -23,7 +24,8 @@ export default class Material extends ObjectGPU {
     attributes: Array<Attribute> = [];
     vertexOutputs: Array<VertexOutput> = [];
     public depthWrite: boolean = true;
-    public cullMode: "none" | "front" | "back" = "back";
+    public topology =PrimitiveTopology.TriangleList
+    public cullMode: "none" | "front" | "back" = CullMode.Back;
     public depthCompare: GPUCompareFunction = CompareFunction.Less;
     public blendModes: Array<GPUBlendState>;
     public logShader: boolean = false;
@@ -33,13 +35,22 @@ export default class Material extends ObjectGPU {
     private depthStencilState: GPUDepthStencilState;
     private needsDepth: boolean = true;
     private shader!: GPUShaderModule;
+    private defaultUniformGroup: UniformGroup;
+
 
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         this.setup();
 
     }
+    setUniform(name: string, value: Float32Array | Array<number> | number) {
+       this.defaultUniformGroup.setUniform(name,value)
 
+    }
+
+    setTexture(name: string, value: Texture){
+        this.defaultUniformGroup.setTexture(name,value)
+    }
     makePipeLine(pass: RenderPass) {
         if (this.pipeLine) return;
 
@@ -86,8 +97,11 @@ export default class Material extends ObjectGPU {
         return s;
     }
 
-    addUniformGroup(uniformGroup: UniformGroup) {
+    addUniformGroup(uniformGroup: UniformGroup, def: boolean= false) {
         this.uniformGroups.push(uniformGroup);
+        if(def){
+            this.defaultUniformGroup =uniformGroup;
+        }
     }
 
     public addAttribute(name: string, type: string, arrayLength = 1, stepMode: GPUVertexStepMode = "vertex") {
@@ -166,7 +180,7 @@ export default class Material extends ObjectGPU {
             },
 
             primitive: {
-                topology: "triangle-list",
+                topology: this.topology,
                 cullMode: this.cullMode,
             },
             multisample: {
