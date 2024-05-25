@@ -14,6 +14,7 @@ export default class CharacterModel{
     private hipBone: Bone;
     private legMidR: Leg;
     private sphere: Model;
+    private legPos: number =0;
 
 
 
@@ -46,9 +47,31 @@ export default class CharacterModel{
 
 
 
-    setMoveData(posX: number, posY: number) {
+    setMoveData(posX: number, posY: number,xSpeed:number) {
+        xSpeed =0.1
+        let delta = Timer.delta;
+        this.legPos +=Math.abs(xSpeed)*delta;
+
+
+
+
+        let stepLength = 0.3
+        this.legPos%=stepLength*2;
+        let xPos = this.legPos-stepLength;
+        let yPos = 0
+        if(xPos>0){
+
+            yPos =Math.sin((xPos/stepLength)*Math.PI)*stepLength*0.4;
+
+        }
+
+        xPos =Math.abs(xPos)-stepLength/2
+
+
         this.rootBone.setPosition(posX,posY,0);
-        this.sphere.setPosition(-0.12+Math.sin(Timer.time)*0.1,0,0.26)
+
+
+        this.sphere.setPosition(-0.12+xPos,yPos,0.20)
         let sphereWorld = this.sphere.getWorldPos();
         this.legMidR.setTargetWorld(sphereWorld)
     }

@@ -96,7 +96,7 @@ export default class Main {
 
         this.characterController.update();
         this.canvasRenderPass.update();
-        this.canvasRenderPass.camera.fovy=0.5
+        this.canvasRenderPass.camera.fovy=0.1
         this.canvasRenderPass.camera.near=20-2
         this.canvasRenderPass.camera.far=20+2
         if(this.keyInput.camLeft){

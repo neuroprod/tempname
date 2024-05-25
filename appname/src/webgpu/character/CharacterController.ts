@@ -41,7 +41,7 @@ export default class CharacterController {
 
 
         let material = new TestMaterial(this.renderer, "testMaterial");
-        material.setUniform("color",new Vector4(0.03,0.031,0.05,0.1))
+        material.setUniform("color",new Vector4(0.05,0.061,0.1,0.2))
         material.blendModes =[Blend.add()];
         material.depthWrite =false;
         material.cullMode =CullMode.None
@@ -90,7 +90,7 @@ export default class CharacterController {
         this.gltfLoader.root.setPosition(this.posX, this.posY, 0);
 
         this.gltfLoader.root.setEuler(0,Math.PI/2,0)
-        this.characterModel.setMoveData(this.posX, this.posY)
+        this.characterModel.setMoveData(this.posX, this.posY, this.xSpeed)
     }
 
     private updateVertical() {

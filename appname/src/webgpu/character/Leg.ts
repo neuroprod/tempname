@@ -12,15 +12,15 @@ export default class Leg{
     private leg: Bone;
     private knee: Bone;
     private root: Bone;
-    private legLength =0.17
-    private kneeLength =0.22
+    private legLength =0.25
+    private kneeLength =0.30
     private sphere: Model;
     private sphere2: Model;
     constructor(renderer:Renderer,label:string,root:Bone,debugModels:Array<Model>)
     {
         this.root =root;
         this.hip =new Bone(renderer,label+"hip",debugModels,0.15);
-        this.hip.setPosition(0.2,-0.14,0.2)
+        this.hip.setPosition(0.18,-0.10,0.18)
         this.hip.setEuler(0,-Math.PI/2,0);
         root.addChild(this.hip)
 
@@ -125,7 +125,7 @@ console.log("fail")
         solution2.y = y2 - ry;
 
         //we want the top solution
-        if (solution2.y > solution1.y)
+        if (solution2.x > solution1.x)
         {
             solution = solution2;
         }
