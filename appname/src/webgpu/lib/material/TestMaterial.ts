@@ -47,7 +47,7 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
 
-    let dif  = dot(normal,vec3(0.1,1.0,0.0))*0.3 +0.7;
+    let dif  = dot(normal,normalize(vec3(0,0,1)))*0.5 +0.5;
 
     return vec4f(uniforms.color.xyz*dif,uniforms.color.w);
 }

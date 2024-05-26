@@ -25,7 +25,7 @@ export default class Mesh extends ObjectGPU {
 
     private buffers: Array<GPUBuffer> = [];
     private bufferMap: Map<string, GPUBuffer> = new Map<string, GPUBuffer>();
-    private destroyed!: boolean = false;
+    private destroyed: boolean = false;
 
     constructor(renderer: Renderer, label = "") {
         super(renderer, label);
@@ -130,6 +130,7 @@ export default class Mesh extends ObjectGPU {
         this.indexFormat = IndexFormat.Uint16
         this.hasIndices = true;
         this.numIndices = indices.length;
+
         let byteLength = Math.ceil(indices.byteLength / 4) * 4;
 
         this.indexBuffer = this.device.createBuffer({

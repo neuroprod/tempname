@@ -5,21 +5,19 @@ import Renderer from "./lib/Renderer.ts";
 import {TextureFormat} from "./lib/WebGPUConstants.ts";
 import DepthStencilAttachment from "./lib/textures/DepthStencilAttachment.ts";
 
-import ModelRenderer from "./lib/model/ModelRenderer.ts";
-import Camera from "./lib/Camera.ts";
+
 import UI from "./lib/UI/UI.ts";
 
 
 export default class CanvasRenderPass extends RenderPass {
     public canvasColorAttachment: ColorAttachment;
-    left: boolean;
+
 
 
     private readonly canvasColorTarget: RenderTexture;
     private canvasDepthTarget: RenderTexture;
 
-    modelRenderer: ModelRenderer;
-    camera: Camera;
+
 
     constructor(renderer: Renderer) {
 
@@ -55,24 +53,24 @@ export default class CanvasRenderPass extends RenderPass {
         });
         this.depthStencilAttachment = new DepthStencilAttachment(this.canvasDepthTarget);
 
-        this.camera = new Camera(renderer);
-        this.modelRenderer = new ModelRenderer(renderer, "modelRenderer", this.camera);
 
 
 
+
+
+    }
+
+    drawInCanvas(param: CanvasRenderPass) {
 
     }
 
 
-    public update() {
-        this.camera.ratio = this.renderer.ratio
-
-
-    }
 
     draw() {
 
-        this.modelRenderer.draw(this);
+
+        this.drawInCanvas(this);
+
 
         UI.drawGPU(this.passEncoder, true)
     }

@@ -1,12 +1,12 @@
-import PreLoader from "./lib/PreLoader";
+import PreLoader from "../lib/PreLoader.ts";
 
-import Renderer from "./lib/Renderer";
+import Renderer from "../lib/Renderer.ts";
 
-import Model from "./lib/model/Model";
+import Model from "../lib/model/Model.ts";
 
 
-import Object3D from "./lib/model/Object3D.ts";
-import Mesh from "./lib/mesh/Mesh.ts";
+import Object3D from "../lib/model/Object3D.ts";
+import Mesh from "../lib/mesh/Mesh.ts";
 import {Matrix4, Quaternion, Vector3} from "@math.gl/core";
 
 

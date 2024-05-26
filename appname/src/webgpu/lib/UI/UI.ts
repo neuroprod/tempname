@@ -75,7 +75,6 @@ export default class UI {
     }
 
     static pushWindow(label: string, settings?: WindowSettings) {
-
         if (!UI.initialized) return;
         UI_I.currentComponent = UI_I.panelLayer;
 

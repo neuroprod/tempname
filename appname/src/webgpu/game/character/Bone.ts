@@ -1,13 +1,13 @@
-import Object3D from "../lib/model/Object3D.ts";
-import Renderer from "../lib/Renderer.ts";
+import Object3D from "../../lib/model/Object3D.ts";
+import Renderer from "../../lib/Renderer.ts";
 
-import TestMaterial from "../lib/material/TestMaterial.ts";
+import TestMaterial from "../../lib/material/TestMaterial.ts";
 
-import Model from "../lib/model/Model.ts";
-import Sphere from "../lib/mesh/geometry/Sphere.ts";
+import Model from "../../lib/model/Model.ts";
+import Sphere from "../../lib/mesh/geometry/Sphere.ts";
 import {Vector4} from "@math.gl/core";
-import ColorV from "../lib/ColorV.ts";
-import BoneMesh from "../lib/mesh/geometry/BoneMesh.ts";
+import ColorV from "../../lib/ColorV.ts";
+import BoneMesh from "../../lib/mesh/geometry/BoneMesh.ts";
 
 export default class Bone extends Object3D{
     private sphere: Model;

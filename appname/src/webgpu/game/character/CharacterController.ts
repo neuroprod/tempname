@@ -1,15 +1,15 @@
-import Renderer from "../lib/Renderer.ts";
-import TestMaterial from "../lib/material/TestMaterial.ts";
-import Box from "../lib/mesh/geometry/Box.ts";
-import Model from "../lib/model/Model.ts";
-import Ray from "../lib/Ray.ts";
+import Renderer from "../../lib/Renderer.ts";
+import TestMaterial from "../../lib/material/TestMaterial.ts";
+import Box from "../../lib/mesh/geometry/Box.ts";
+import Model from "../../lib/model/Model.ts";
+import Ray from "../../lib/Ray.ts";
 import KeyInput from "../KeyInput.ts";
-import Timer from "../lib/Timer.ts";
+import Timer from "../../lib/Timer.ts";
 import GLTFLoader from "../GLTFLoader.ts";
 import CharacterModel from "./CharacterModel.ts";
 import {Vector4} from "@math.gl/core";
-import Blend from "../lib/material/Blend.ts";
-import {CullMode} from "../lib/WebGPUConstants.ts";
+import Blend from "../../lib/material/Blend.ts";
+import {CullMode} from "../../lib/WebGPUConstants.ts";
 
 export default class CharacterController {
 
@@ -25,13 +25,13 @@ export default class CharacterController {
     private ySpeed = 0;
     private isInAir = false;
     private gravity = 50;
-    private jumpSpeed = 15;
+    private jumpSpeed = 20;
 
     // horizontal
     private xSpeed = 0;
-    private xAcc = 5;
-    private xAirAcc = 5;
-    private maxXspeed = 5;
+    private xAcc = 10;
+    private xAirAcc = 10;
+    private maxXspeed = 10;
     public models:Array<Model> = []
     private gltfLoader: GLTFLoader;
     //private legPos =0;
@@ -41,10 +41,10 @@ export default class CharacterController {
 
 
         let material = new TestMaterial(this.renderer, "testMaterial");
-        material.setUniform("color",new Vector4(0.05,0.061,0.1,0.2))
-        material.blendModes =[Blend.add()];
-        material.depthWrite =false;
-        material.cullMode =CullMode.None
+        material.setUniform("color",new Vector4(1,1,1,1))
+       // material.blendModes =[Blend.add()];
+       // material.depthWrite =false;
+        //material.cullMode =CullMode.None
     /*    this.model = new Model(this.renderer, "test");
         this.model.material = material
         this.model.mesh = new Box(this.renderer,{depth:0.1,width:0.1,height:0.1})*/
@@ -58,7 +58,7 @@ export default class CharacterController {
         this.ray.rayStart.set(0, 2, 0)
         this.ray.rayDir.set(0, -1, 0);
 
-        this.characterModel = new CharacterModel(renderer)
+        this.characterModel = new CharacterModel(renderer,gltfLoader.root)
 
     }
 
@@ -87,9 +87,7 @@ export default class CharacterController {
 
       */
 
-        this.gltfLoader.root.setPosition(this.posX, this.posY, 0);
 
-        this.gltfLoader.root.setEuler(0,Math.PI/2,0)
         this.characterModel.setMoveData(this.posX, this.posY, this.xSpeed)
     }
 

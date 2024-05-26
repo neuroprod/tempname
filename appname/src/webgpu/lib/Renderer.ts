@@ -116,7 +116,8 @@ export default class Renderer {
 
             this.textureHandler.resize(this.width,this.height)
 
-            UI.setSize(this.width,this.height)
+
+
         }
 
     }

@@ -1,15 +1,12 @@
-
 import Renderer from "./Renderer";
 import {lerp, Matrix4, Vector2, Vector3, Vector4} from "@math.gl/core";
 import UniformGroup from "./material/UniformGroup.ts";
 import Model from "./model/Model.ts";
 
 
-
 export default class Camera extends UniformGroup {
     public static instance: Camera;
-    public cameraWorld: Vector3 = new Vector3(0, 0, 10);
-    public cameraWorldU: Vector4 = new Vector4(0, 0, 10, 1.0);
+    public cameraWorld: Vector3 = new Vector3(0, 0, 1);
     public cameraLookAt: Vector3 = new Vector3(0, 0, 0);
     public cameraUp: Vector3 = new Vector3(0, 1, 0);
     public fovy = 0.7
@@ -25,9 +22,10 @@ export default class Camera extends UniformGroup {
     public orthoRight: number = 10;
     public orthoTop: number = 10;
     public orthoBottom: number = -10;
+    viewProjection: Matrix4 = new Matrix4();
+    private cameraWorldU: Vector4 = new Vector4(0, 0, 10, 1.0);
     private view: Matrix4 = new Matrix4();
     private projection: Matrix4 = new Matrix4();
-    viewProjection: Matrix4 = new Matrix4();
     private fplanes: Array<Vector4> = []
 
     constructor(renderer: Renderer) {
@@ -60,7 +58,74 @@ export default class Camera extends UniformGroup {
         return Camera.instance.getShaderText(id);
     }
 
-    setProjection() {
+    setOrtho(right = 1,left = -1, top = 1, bottom = 1, near = -1, far = 2) {
+        this.orthoRight =right;
+        this.orthoLeft =left;
+        this.orthoTop =top;
+        this.orthoBottom =bottom;
+        this.near = near;
+        this.far =far;
+        this.perspective = false
+    }
+
+    public modelInFrustum(model: Model): boolean {
+
+        for (let i: number = 0; i < 6; i++) {
+            if (this.dot(this.fplanes[i], model.center.x, model.center.y, model.center.z) < -model.radius) {
+
+                return false;
+            }
+        }
+        return true;
+    }
+
+    protected updateData() {
+
+        if (this.perspective) {
+            this.setProjection();
+        } else {
+
+            this.projection.ortho({
+                left: this.orthoLeft,
+                right: this.orthoRight,
+                bottom: this.orthoBottom,
+                top: this.orthoTop,
+                near: this.near,
+                far: this.far,
+            })
+        }
+
+        this.view.lookAt({
+            eye: this.cameraWorld,
+            center: this.cameraLookAt,
+            up: this.cameraUp,
+        });
+        this.viewInv.from(this.view);
+        this.viewInv.invert();
+
+        this.projectionInv.from(this.projection);
+        this.projectionInv.invert();
+
+
+        this.viewProjection.identity();
+        this.viewProjection.multiplyRight(this.projection);
+        this.viewProjection.multiplyRight(this.view);
+
+        this.makeFrustum();
+
+        this.viewProjectionInv.from(this.viewProjection);
+        this.viewProjectionInv.invert();
+
+        this.setUniform("inverseViewProjectionMatrix", this.viewProjectionInv)
+        this.setUniform("viewProjectionMatrix", this.viewProjection)
+        this.cameraWorldU.set(this.cameraWorld.x, this.cameraWorld.y, this.cameraWorld.z, 1)
+        this.setUniform("worldPosition", this.cameraWorldU)
+        this.setUniform("inverseViewMatrix", this.viewInv)
+        this.setUniform("inverseProjectionMatrix", this.projectionInv)
+        this.setUniform("projectionMatrix", this.projection)
+    }
+
+    private setProjection() {
 
 
         let fustrumTop = this.near * Math.tan(this.fovy / 2);
@@ -108,64 +173,8 @@ export default class Camera extends UniformGroup {
 
     }
 
-
-    public modelInFrustum(model:Model): boolean {
-
-        for (let i: number = 0; i < 6; i++) {
-            if (this.dot(this.fplanes[i], model.center.x, model.center.y, model.center.z) < -model.radius) {
-
-                return false;
-            }
-        }
-        return true;
-    }
     private dot(plane: Vector4, x: number, y: number, z: number) {
         return plane.x * x + plane.y * y + plane.z * z + plane.w;
-    }
-    protected updateData() {
-
-        if (this.perspective) {
-            this.setProjection();
-        } else {
-
-            this.projection.ortho({
-                left: this.orthoLeft,
-                right: this.orthoRight,
-                bottom: this.orthoBottom,
-                top: this.orthoTop,
-                near: this.near,
-                far: this.far,
-            })
-        }
-
-        this.view.lookAt({
-            eye: this.cameraWorld,
-            center: this.cameraLookAt,
-            up: this.cameraUp,
-        });
-        this.viewInv.from(this.view);
-        this.viewInv.invert();
-
-        this.projectionInv.from(this.projection);
-        this.projectionInv.invert();
-
-
-        this.viewProjection.identity();
-        this.viewProjection.multiplyRight(this.projection);
-        this.viewProjection.multiplyRight(this.view);
-
-        this.makeFrustum();
-
-        this.viewProjectionInv.from(this.viewProjection);
-        this.viewProjectionInv.invert();
-
-        this.setUniform("inverseViewProjectionMatrix", this.viewProjectionInv)
-        this.setUniform("viewProjectionMatrix", this.viewProjection)
-        this.cameraWorldU.set(this.cameraWorld.x, this.cameraWorld.y, this.cameraWorld.z, 1)
-        this.setUniform("worldPosition", this.cameraWorldU)
-        this.setUniform("inverseViewMatrix", this.viewInv)
-        this.setUniform("inverseProjectionMatrix", this.projectionInv)
-        this.setUniform("projectionMatrix", this.projection)
     }
 
     private makeFrustum() {

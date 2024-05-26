@@ -1,7 +1,7 @@
-import Renderer from "./lib/Renderer.ts";
-import Model from "./lib/model/Model.ts";
-import Box from "./lib/mesh/geometry/Box.ts";
-import TestMaterial from "./lib/material/TestMaterial.ts";
+import Renderer from "../lib/Renderer.ts";
+import Model from "../lib/model/Model.ts";
+import Box from "../lib/mesh/geometry/Box.ts";
+import TestMaterial from "../lib/material/TestMaterial.ts";
 
 export default class Level{
 
@@ -49,7 +49,7 @@ export default class Level{
         let platform2 = new Model(this.renderer, "platform");
         platform2.material = material
         platform2.mesh = new Box(this.renderer,{width:3,depth:1.5})
-        platform2.setPosition(4,3,0);
+        platform2.setPosition(4,2,0);
         platform2.setEuler(0,0,0)
         this.models.push(platform2)
 
@@ -57,7 +57,7 @@ export default class Level{
             let platform2 = new Model(this.renderer, "platform");
             platform2.material = material
             platform2.mesh = new Box(this.renderer,{width:3,depth:1.5})
-            platform2.setPosition(-3,2,0);
+            platform2.setPosition(-3,0,0);
             this.models.push(platform2)
         }
 

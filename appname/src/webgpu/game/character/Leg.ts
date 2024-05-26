@@ -1,32 +1,36 @@
-import Renderer from "../lib/Renderer.ts";
+import Renderer from "../../lib/Renderer.ts";
 import CharacterModel from "./CharacterModel.ts";
 import Bone from "./Bone.ts";
-import Model from "../lib/model/Model.ts";
+import Model from "../../lib/model/Model.ts";
 import {Vector2, Vector3} from "@math.gl/core";
-import Sphere from "../lib/mesh/geometry/Sphere.ts";
-import TestMaterial from "../lib/material/TestMaterial.ts";
-import ColorV from "../lib/ColorV.ts";
+import Sphere from "../../lib/mesh/geometry/Sphere.ts";
+import TestMaterial from "../../lib/material/TestMaterial.ts";
+import ColorV from "../../lib/ColorV.ts";
 
 export default class Leg{
     private hip: Bone;
     private leg: Bone;
     private knee: Bone;
     private root: Bone;
-    private legLength =0.22
-    private kneeLength =0.25
+
+    private legDistance = 0.3
+    private legLength =0.5
+    private kneeLength =0.5
     private sphere: Model;
     private sphere2: Model;
-    constructor(renderer:Renderer,label:string,root:Bone,debugModels:Array<Model>)
+    public hipPos: Vector3;
+    constructor(renderer:Renderer,label:string,dir:number,root:Bone,debugModels:Array<Model>)
     {
         this.root =root;
-        this.hip =new Bone(renderer,label+"hip",debugModels,0.1);
-        this.hip.setPosition(0.18,-0.10,0.18)
+        this.hip =new Bone(renderer,label+"hip",debugModels,0.5);
+        this.hipPos = new Vector3(this.legDistance*dir,0.0,0);
+        this.hip.setPositionV(this.hipPos);
         this.hip.setEuler(0,-Math.PI/2,0);
         root.addChild(this.hip)
 
 
 
-      this.leg =new Bone(renderer,label+"hip",debugModels,this.legLength);
+        this.leg =new Bone(renderer,label+"hip",debugModels,this.legLength);
         this.leg.setPosition(0.0,0,0)
         this.leg.setEuler(0,0,-Math.PI/2);
         this.hip.addChild(this.leg)
@@ -63,7 +67,7 @@ export default class Leg{
 
     setTargetWorld(sphereWorld: Vector3) {
        let localRoot=this.hip.getPosition().clone().subtract(this.root.getLocalPos(sphereWorld.clone()));
-//console.log(localRoot)
+
         let angle = Math.atan2(localRoot.y,localRoot.z)
 
         this.hip.setEuler(0,angle+Math.PI/2,Math.PI/2);
@@ -119,14 +123,15 @@ console.log("fail")
         let solution2 =new Vector2()
         let solution:Vector2
         //Determine the absolute intersection points. 2 solutions
+
         solution1.x = x2 + rx;
         solution2.x = x2 - rx;
 
         solution1.y = y2 + ry;
         solution2.y = y2 - ry;
 
-        //we want the top solution
-        if (solution2.y > solution1.y)
+        //we want the front solution
+        if (solution2.y< solution1.y)
         {
             solution = solution2;
         }

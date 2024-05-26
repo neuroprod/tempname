@@ -57,7 +57,6 @@ export default class UI_I {
     }
 
     static setSize(width, height) {
-
         this.screenSize.set(width, height);
         this.canvasSize.set(width, height)
 
@@ -406,7 +405,6 @@ export default class UI_I {
         UI_I.rendererGPU.init(renderer.device, renderer.presentationFormat);
         if (settings) Local.setSettings(settings);
         UI_I.init(renderer.canvas);
-
     }
 
     resize(width: number, height: number) {
@@ -448,7 +446,6 @@ export default class UI_I {
         if (this.focusComponent) {
             this.focusComponent.setKeys(buffer, actionKey);
         }
-
         if (this.mainComp.isDirty) {
             this.mainDrawBatch.isDirty = true;
 
@@ -473,14 +470,12 @@ export default class UI_I {
             if (UI_I.rendererGL) {
                 UI_I.rendererGL.setDrawBatches(drawBatches);
             } else if (UI_I.rendererGPU) {
-
                 UI_I.rendererGPU.setDrawBatches(drawBatches);
             }
             this.mainComp.isDirty = false;
         }
 
         this.components.forEach((comp) => {
-
             comp.renderOrderCount = 0;
             if (!comp.keepAlive) {
                 comp.useThisFrame = false;
@@ -490,7 +485,6 @@ export default class UI_I {
     }
 
     static pushDrawBatch(id: number, clipRect: Rect, isDirty: boolean) {
-
         let batch = this.drawBatches.get(id);
         if (batch) {
             batch.isDirty = isDirty;
