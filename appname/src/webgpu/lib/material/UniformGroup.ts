@@ -7,10 +7,11 @@ import {
     AddressMode,
     FilterMode,
     SamplerBindingType,
-    TextureDimension,
+    TextureDimension, TextureFormat, TextureSampleType,
     TextureViewDimension
 } from "../WebGPUConstants.ts";
 import Renderer from "../Renderer.ts";
+import {BaseRenderTextureOptions, BaseRenderTextureOptionsDefault} from "../textures/RenderTexture.ts";
 
 type Uniform = {
     isSet: boolean,
@@ -21,6 +22,25 @@ type Uniform = {
     usage: GPUShaderStageFlags,
     dirty: boolean
 }
+
+
+export type TextureUniformOptions = {
+    usage: GPUShaderStageFlags,
+    sampleType: GPUTextureSampleType,
+    dimension: GPUTextureViewDimension,
+
+}
+export const TextureUniformOptionsDefault: TextureUniformOptions = {
+    usage: GPUShaderStage.FRAGMENT,
+    sampleType: TextureSampleType.Float,
+    dimension: TextureDimension.TwoD,
+
+}
+
+
+
+
+
 
 type TextureUniform = {
     name: string,
@@ -47,9 +67,9 @@ type SamplerUniform = {
 
 }
 export default class UniformGroup extends ObjectGPU {
-    public static instance: UniformGroup
-    public bindGroupLayout: GPUBindGroupLayout;
-    public bindGroup: GPUBindGroup;
+   // public static instance: UniformGroup
+    public bindGroupLayout!: GPUBindGroupLayout;
+    public bindGroup!: GPUBindGroup;
     private isBufferDirty: boolean = true;
     public isBindGroupDirty: boolean = true;
     public uniforms: Array<Uniform> = [];
@@ -59,11 +79,12 @@ export default class UniformGroup extends ObjectGPU {
 
     public buffer!: GPUBuffer;
     public visibility: GPUShaderStageFlags = GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT | GPUShaderStage.COMPUTE;
-    private bufferData: Float32Array;
-    private nameInShader: string;
-    private typeInShader: string;
+    private bufferData!: Float32Array;
+    private readonly nameInShader: string;
+    private readonly typeInShader: string;
 
     private hasUniformBuffer: boolean = true;
+    private markDelete: boolean =false;
 
     constructor(renderer: Renderer,  nameInShader: string) {
         super(renderer, nameInShader);
@@ -117,15 +138,15 @@ export default class UniformGroup extends ObjectGPU {
         })
     }
 
-    addTexture(name: string, value: Texture, sampleType: GPUTextureSampleType, dimension: GPUTextureViewDimension, usage: GPUShaderStageFlags) {
+    addTexture(name: string, value: Texture, options: Partial< TextureUniformOptions> ={}) {
 
-
+        let opt = { ...TextureUniformOptionsDefault,...options} ;
         this.textureUniforms.push({
             name: name,
-            sampleType: sampleType,
+            sampleType: opt.sampleType,
             texture: value,
-            usage: usage,
-            dimension: dimension
+            usage: opt.usage,
+            dimension: opt.dimension
 
         })
 
@@ -406,7 +427,7 @@ ${this.getUniformStruct()}
             if (u.size == 1) {
                 this.bufferData[u.offset] = u.data as number;
             } else {
-                this.bufferData.set(u.data , u.offset);
+                this.bufferData.set(u.data as ArrayLike<number> , u.offset);
 
             }
         }
@@ -506,4 +527,11 @@ ${this.getUniformStruct()}
     }
 
 
+    destroy() {
+            if(this.hasUniformBuffer){
+                this.buffer.destroy();
+            }
+            this.markDelete =true;
+            console.log("fix uniform destroy")
+    }
 }

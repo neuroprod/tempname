@@ -33,22 +33,24 @@ export default class Model extends Object3D {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    addBuffer(name, buffer:GPUBuffer) {
-        this.buffersByName[name] = buffer;
+    addBuffer(name:string,buffer: GPUBuffer) {
+       this.buffersByName[name] = buffer;
     }
 
     getBufferByName(name: string) {
         return this.buffersByName[name];
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

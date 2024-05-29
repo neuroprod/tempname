@@ -23,6 +23,7 @@ export default class RenderTexture extends Texture {
         if((this.options as BaseRenderTextureOptions).scaleToCanvas){
             this.renderer.textureHandler.addScaleToCanvasTexture(this);
         }
+        this.make()
     }
 
     resize(width:number,height:number)

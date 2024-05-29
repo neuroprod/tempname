@@ -20,22 +20,22 @@ class VertexOutput {
 
 export default class Material extends ObjectGPU {
 
-    pipeLine: GPURenderPipeline;
+    pipeLine!: GPURenderPipeline;
     attributes: Array<Attribute> = [];
     vertexOutputs: Array<VertexOutput> = [];
     public depthWrite: boolean = true;
     public topology =PrimitiveTopology.TriangleList
     public cullMode: "none" | "front" | "back" = CullMode.Back;
     public depthCompare: GPUCompareFunction = CompareFunction.Less;
-    public blendModes: Array<GPUBlendState>;
+    public blendModes!: Array<GPUBlendState>;
     public logShader: boolean = false;
     uniformGroups: Array<UniformGroup> = [];
-    private pipeLineLayout: GPUPipelineLayout;
+    private pipeLineLayout!: GPUPipelineLayout;
     private colorTargets: Array<GPUColorTargetState> = [];
-    private depthStencilState: GPUDepthStencilState;
+    private depthStencilState!: GPUDepthStencilState;
     private needsDepth: boolean = true;
     private shader!: GPUShaderModule;
-    private defaultUniformGroup: UniformGroup;
+    private defaultUniformGroup!: UniformGroup;
 
 
     constructor(renderer: Renderer, label: string) {

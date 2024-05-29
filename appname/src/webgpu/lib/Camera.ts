@@ -141,7 +141,7 @@ export default class Camera extends UniformGroup {
         }
 
         if (this.lensShift.x != 0.0) {
-            fustrumRight = lerp(2.0 * fustrumRight, 0.0, 0.5 - 0.5 * this.lensShift.x);
+            frustumTopRight = lerp(2.0 * fustrumRight, 0.0, 0.5 - 0.5 * this.lensShift.x);
             fustrumLeft = lerp(0.0, 2.0 * fustrumLeft, 0.5 - 0.5 * this.lensShift.x);
         }
 

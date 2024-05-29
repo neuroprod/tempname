@@ -303,9 +303,9 @@ export const GPUTextureAspect = {
     DepthOnly: 'depth-only'
 };
 
-export const GPUInputStepMode = {
-    Vertex: 'vertex',
-    Instance: 'instance'
+export const VertexStepMode = {
+    Vertex: 'vertex' as GPUVertexStepMode ,
+    Instance: 'instance' as GPUVertexStepMode
 };
 
 export const GPUFeatureName = {
@@ -321,3 +321,13 @@ export const GPUFeatureName = {
     BGRA8UNormStorage: 'bgra8unorm-storage',
     Float32Filterable: 'float32-filterable'
 };
+
+export const TextureSampleType={
+    Float:'float' as GPUTextureSampleType,
+    UnfilterableFloat :'unfilterable-float'as GPUTextureSampleType,
+    Depth  : 'depth'as GPUTextureSampleType,
+    Sint :'sint'as GPUTextureSampleType,
+    Uint :'uint'as GPUTextureSampleType
+};
+
+

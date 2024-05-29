@@ -73,12 +73,11 @@ export default class Main {
     private update() {
 
         this.modelMaker.update( )
-        UI.pushWindow("Dev Settings")
-        UI.LFloat("kak",0);
-        UI.popWindow();
+
     }
 
     private draw() {
+        this.modelMaker.draw()
         this.canvasRenderPass.add();
 
     }

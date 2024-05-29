@@ -1,16 +1,18 @@
-import Material from "./Material.ts";
-import {ShaderType} from "./ShaderTypes.ts";
-import UniformGroup from "./UniformGroup.ts";
-import DefaultUniformGroups from "./DefaultUniformGroups.ts";
-import {CullMode} from "../WebGPUConstants.ts";
-import {Vector4} from "@math.gl/core";
 
-export default class TestMaterial extends Material{
+import {Vector4} from "@math.gl/core";
+import Material from "../lib/material/Material.ts";
+import {ShaderType} from "../lib/material/ShaderTypes.ts";
+import DefaultUniformGroups from "../lib/material/DefaultUniformGroups.ts";
+import UniformGroup from "../lib/material/UniformGroup.ts";
+import DefaultTextures from "../lib/textures/DefaultTextures.ts";
+
+export default class ModelPreviewMaterial extends Material{
 
     setup(){
         this.addAttribute("aPos", ShaderType.vec3);
         this.addAttribute("aNormal", ShaderType.vec3);
         this.addAttribute("aUV0", ShaderType.vec2);
+
         this.addVertexOutput("normal", ShaderType.vec3 );
         this.addVertexOutput("uv", ShaderType.vec2 );
 
@@ -20,8 +22,10 @@ export default class TestMaterial extends Material{
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addUniform("color",new Vector4(0.5,0.5,0.5,1))
-        this.cullMode =CullMode.Back;
+
+        uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer))
+        uniforms.addSampler("mySampler")
+
         //this.logShader =true;
     }
     getShader(): string {
@@ -47,13 +51,13 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
 
-    let dif  =vec3(uv,0.0)* (dot(normal,normalize(vec3(0,0,1)))*0.5 +0.5);
+    let dif  =textureSample(colorTexture, mySampler,  uv).xyz * (dot(normal,normalize(vec3(0,0,1)))*0.5 +0.5);
 
-    return vec4f(dif,uniforms.color.w);
+    return vec4f(dif,1.0);
 }
 ///////////////////////////////////////////////////////////
         `
-}
+    }
 
 
 }

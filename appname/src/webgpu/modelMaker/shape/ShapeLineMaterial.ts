@@ -1,7 +1,7 @@
 import Material from "../../lib/material/Material.ts";
 import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import DefaultUniformGroups from "../../lib/material/DefaultUniformGroups.ts";
-import {PrimitiveTopology} from "../../lib/WebGPUConstants.ts";
+import {CompareFunction, PrimitiveTopology} from "../../lib/WebGPUConstants.ts";
 
 
 export default class ShapeLineMaterial extends Material{
@@ -10,10 +10,10 @@ export default class ShapeLineMaterial extends Material{
         this.addAttribute("aPos", ShaderType.vec3);
 
 
-
-
         this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer), true);
         this.topology =PrimitiveTopology.LineList;
+        this.depthCompare = CompareFunction.Always;
+        this.depthWrite =false;
 
     }
     getShader(): string {
