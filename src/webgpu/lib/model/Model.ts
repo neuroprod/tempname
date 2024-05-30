@@ -1,6 +1,6 @@
 import Renderer from "../Renderer";
 
-import {Vector3, Vector4} from "math.gl";
+
 import Object3D from "./Object3D.ts";
 import Material from "../material/Material.ts";
 import Mesh from "../mesh/Mesh.ts";
