@@ -16,6 +16,7 @@ import Project from "./Project.ts";
 import ShapeLineModel from "./cutting/ShapeLineModel.ts";
 import Cutting from "./cutting/Cutting.ts";
 import Preview from "./preview/Preview.ts";
+import Timer from "../lib/Timer.ts";
 
 enum ModelMainState {
     draw,
@@ -98,6 +99,9 @@ export default class ModelMaker {
 
         this.previewWidth = Math.min(this.renderer.width - this.renderer.height)
         this.camera3D.ratio = this.previewWidth / this.renderer.height
+        if(this.cutting.model3D){
+            this.cutting.model3D.setEuler(Math.sin(Timer.time/3)*0.2,Math.sin(Timer.time)*0.8,0)
+        }
         this.handleMouse();
         this.onUI();
 
@@ -180,8 +184,10 @@ export default class ModelMaker {
                 let s = this.currentProject.getSaveString();
 
                 sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name,s).then(() => {
-                    console.log("saveOK")
+                   UI.logEvent("","saved!")
 
+                }).catch(()=>{
+                    UI.logEvent("","error saving",true)
                 })
 
             }
