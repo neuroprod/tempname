@@ -156,6 +156,7 @@ export default class UI {
             UI_I.addComponent(comp);
         }
         UI_I.groupDepth++;
+        // @ts-ignore
         let result = UI_I.currentComponent.parent.getReturnValue();
         return result;
 

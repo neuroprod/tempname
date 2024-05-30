@@ -31,7 +31,7 @@ export default class ButtonGroup extends Component {
     private verticalLSettings: VerticalLayoutSettings;
     private open: boolean = false;
     private isPressed: boolean = false;
-    private drawRect: Rect;
+    private drawRect!: Rect;
 
     constructor(id: number, label: string, settings: ButtonGroupSettings) {
         super(id, settings);
@@ -115,7 +115,7 @@ export default class ButtonGroup extends Component {
         s.overColor.a = 0.5
 
         s.backColor.a = 0.0;
-        this.isPressed = UI_IC.buttonBase(this.label, s)
+        this.isPressed = UI_IC.buttonBase(this.label,true, s)
         //let open = UI_IC.groupTitle(this.label, this.open);
         //if (open != this.open) {
         //  this.open = open;

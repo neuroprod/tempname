@@ -69,12 +69,12 @@ export default class ViewportPopUp extends PopUpWindow {
         );
 
         UI_IC.pushComponent("ok", this.hCompBtnSettings);
-        if (UI_IC.buttonBase("Cancel", this.btnCancelSettings)) {
+        if (UI_IC.buttonBase("Cancel",true, this.btnCancelSettings)) {
             this.viewport.currentRatio.copy(this.oldRatio);
             UI_I.removePopup(this);
         }
 
-        if (UI_IC.buttonBase("OK", this.btnOkSettings)) {
+        if (UI_IC.buttonBase("OK",true, this.btnOkSettings)) {
             this.viewport.saveToLocal();
             UI_I.removePopup(this);
         }

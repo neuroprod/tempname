@@ -82,11 +82,11 @@ export default class DragPopUp extends PopUpWindow {
         UI_IC.LText(Math.pow(10, -this.step).toFixed(Math.max(this.step, 0)) + " "); //could be the same id as prev ltext
 
         UI_IC.pushComponent("ok", this.hCompBtnSettings);
-        if (UI_IC.buttonBase("Cancel", this.btnCancelSettings)) {
+        if (UI_IC.buttonBase("Cancel",true, this.btnCancelSettings)) {
             UI_I.removePopup(this);
         }
 
-        if (UI_IC.buttonBase("OK", this.btnOkSettings)) {
+        if (UI_IC.buttonBase("OK",true, this.btnOkSettings)) {
             this.comp.setFromSettings(this.precision, this.step);
             UI_I.removePopup(this);
         }

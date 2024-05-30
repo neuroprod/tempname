@@ -56,14 +56,14 @@ export default class UI_I {
     constructor() {
     }
 
-    static setSize(width, height) {
+    static setSize(width:number, height:number) {
         this.screenSize.set(width, height);
         this.canvasSize.set(width, height)
 
 
     }
 
-    static init(canvas) {
+    static init(canvas:HTMLCanvasElement) {
 
         this.pixelRatio = window.devicePixelRatio;
 

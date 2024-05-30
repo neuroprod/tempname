@@ -15,7 +15,7 @@ export default class Cutting{
     private readonly mesh: ExtrudeMesh;
 
     private project!: Project;
-    private currentMesh!: ProjectMesh;
+    private currentMesh!: ProjectMesh|null;
     constructor(renderer:Renderer) {
 
 
@@ -37,7 +37,10 @@ export default class Cutting{
         this.project = project;
         if(this.project.meshes.length){
             this.currentMesh = this.project.meshes[0];
+        }else{
+            this.currentMesh =null;
         }
+
         this.updateLine();
     }
 
@@ -50,9 +53,10 @@ export default class Cutting{
     }
 
     private addVectorPoint(point: Vector2) {
-
-        this.currentMesh.points.push(point.clone())
-        this.updateLine();
+        if(this.currentMesh){
+            this.currentMesh.points.push(point.clone())
+            this.updateLine();
+        }
     }
 
     private updateLine() {
@@ -67,6 +71,7 @@ export default class Cutting{
                 this.model3D.visible = false;
             }
         }else{
+
             this.shapeLineModel.setLine([],new Vector2(0.5,0.5));
             this.model3D.visible = false;
         }

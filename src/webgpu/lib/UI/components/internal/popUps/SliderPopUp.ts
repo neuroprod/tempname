@@ -88,14 +88,14 @@ export default class SliderPopUp extends PopUpWindow {
 
         UI_IC.pushComponent("min", this.hCompSettings);
         UI_IC.LFloat(this, "min", this.lFloatSettings);
-        if (UI_IC.buttonBase("set Current", this.btnSettings)) {
+        if (UI_IC.buttonBase("set Current",true, this.btnSettings)) {
             this.min = this.value;
         }
         UI_I.popComponent();
 
         UI_IC.pushComponent("max", this.hCompSettings);
         UI_IC.LFloat(this, "max", this.lFloatSettings);
-        if (UI_IC.buttonBase("set Current", this.btnSettings)) {
+        if (UI_IC.buttonBase("set Current",true, this.btnSettings)) {
             this.max = this.value;
         }
         UI_I.popComponent();
@@ -104,11 +104,11 @@ export default class SliderPopUp extends PopUpWindow {
         UI_IC.LText(Math.pow(10, -this.precision).toFixed(this.precision));
 
         UI_IC.pushComponent("ok", this.hCompBtnSettings);
-        if (UI_IC.buttonBase("Cancel", this.btnCancelSettings)) {
+        if (UI_IC.buttonBase("Cancel",true ,this.btnCancelSettings)) {
             UI_I.removePopup(this);
         }
 
-        if (UI_IC.buttonBase("OK", this.btnOkSettings)) {
+        if (UI_IC.buttonBase("OK",true, this.btnOkSettings)) {
             this.slider.setFromSettings(this.min, this.max, this.precision);
             UI_I.removePopup(this);
         }

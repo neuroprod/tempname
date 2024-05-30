@@ -54,7 +54,7 @@ export default class SelectPopUp extends PopUp {
 
         for (let i = 0; i < this.items.length; i++) {
             if (i == this.index) continue;
-            if (UI_IC.buttonBase(this.items[i].label, this.btnSettings)) {
+            if (UI_IC.buttonBase(this.items[i].label,true, this.btnSettings)) {
                 this.callBack(this.items[i]);
                 UI_I.removePopup(this);
             }

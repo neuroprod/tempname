@@ -26,10 +26,7 @@ export default class ShapeLineModel extends Model{
 
     setLine(points:Array<Vector2>,center:Vector2){
 
-        if(points.length==0){
-            this.visible =false;
-            return;
-        }
+
         this.visible =true;
         this.positions=[]
         let centerSize =0.01;

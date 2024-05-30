@@ -10,7 +10,7 @@ export default class BoneMesh extends Mesh {
 
         let vertices = new Array<number>();
         let normals = new Array<number>();
-        let indices = [];
+        let indices  = new Array<number>();
         let startIndex = 0
 
         let s = Math.cos(Math.PI / 4) * radius

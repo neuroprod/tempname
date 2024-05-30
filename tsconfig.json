@@ -14,7 +14,7 @@
     "noEmit": true,
 
     /* Linting */
-    "member-access": true,
+
     "strict":true,
     "noUnusedLocals": false,
     "noUnusedParameters": false,

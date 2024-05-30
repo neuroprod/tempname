@@ -1,5 +1,6 @@
-import {Vector2, Vector3, Vector4} from "math.gl";
+
 import ColorV from "../ColorV";
+import {Vector2, Vector3, Vector4} from "@math.gl/core";
 
 
 export type UI_VEC2 = Vector2;
