@@ -85,12 +85,14 @@ export default class UniformGroup extends ObjectGPU {
 
     private hasUniformBuffer: boolean = true;
     private markDelete: boolean =false;
+    private autoUpdate: boolean=true
 
-    constructor(renderer: Renderer,  nameInShader: string) {
+    constructor(renderer: Renderer,  nameInShader: string,autoUpdate =true) {
         super(renderer, nameInShader);
         this.nameInShader = nameInShader;
         this.typeInShader = this.nameInShader.charAt(0).toUpperCase() + this.nameInShader.slice(1);
-        this.renderer.addUniformGroup(this)
+        this.autoUpdate =autoUpdate;
+        if(autoUpdate)this.renderer.addUniformGroup(this);
 
     }
 
@@ -532,6 +534,8 @@ ${this.getUniformStruct()}
                 this.buffer.destroy();
             }
             this.markDelete =true;
-            console.log("fix uniform destroy")
+            if(this.autoUpdate){
+                console.log("fix uniform destroy in renderer")
+            }
     }
 }

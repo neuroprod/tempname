@@ -64,7 +64,7 @@ export default class UI {
         UI.initialized = true;
     }
 
-    static setSize(width, height) {
+    static setSize(width:number, height:number) {
 
         UI_I.setSize(width, height)
     }
@@ -232,6 +232,7 @@ export default class UI {
     static LButton(
         buttonText: string,
         label: string = "",
+        enabled:boolean =true,
         settings?: LButtonSettings
     ): boolean {
         if (!UI.initialized) return false;
@@ -242,6 +243,7 @@ export default class UI {
             let comp = new LButton(UI_I.getID(id), label, buttonText, settings);
             UI_I.addComponent(comp);
         }
+        (UI_I.currentComponent as LButton).setEnabled(enabled)
         let result = UI_I.currentComponent.getReturnValue();
         UI_I.popComponent();
         return result;

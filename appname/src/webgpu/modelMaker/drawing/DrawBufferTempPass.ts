@@ -4,11 +4,16 @@ import RenderTexture from "../../lib/textures/RenderTexture.ts";
 import ColorAttachment from "../../lib/textures/ColorAttachment.ts";
 import {LoadOp, StoreOp} from "../../lib/WebGPUConstants.ts";
 import LineRenderer from "./LineRenderer.ts";
+import Material from "../../lib/material/Material.ts";
+import BaseBlitMaterial from "../../lib/blit/BaseBlitMaterial.ts";
+import Blit from "../../lib/blit/Blit.ts";
 
 export default class DrawBufferTempPass extends RenderPass{
     private readonly colorAttachment: ColorAttachment;
     private readonly colorTarget: RenderTexture;
     public lineRenderer: LineRenderer;
+    public blitMat: BaseBlitMaterial;
+    private blit: Blit;
 
     constructor(renderer: Renderer) {
 
@@ -28,8 +33,8 @@ export default class DrawBufferTempPass extends RenderPass{
         this.colorAttachment = new ColorAttachment( this.colorTarget, {
             clearValue: {
                 r: 1,
-                g: 0,
-                b: 0,
+                g: 1,
+                b: 1,
                 a: 1
             },
             loadOp:LoadOp.Clear,
@@ -37,10 +42,18 @@ export default class DrawBufferTempPass extends RenderPass{
         });
         this.colorAttachments = [this.colorAttachment];
 
+        this.blitMat =new BaseBlitMaterial(this.renderer,"baseBlit");
+        this.blit =new Blit(renderer,"baseblit",this.blitMat )
+
         this.lineRenderer = new LineRenderer(renderer)
 
+
+
     }
+
     draw(){
+
+        this.blit.draw(this);
         this.lineRenderer.draw(this)
     }
 }

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const fs = require("fs");
 const sharp = require('sharp');
-
+const path = require("path");
 
 const port = 3001
 var upload = multer({dest:'./temp/'});
@@ -21,16 +21,28 @@ app.listen(port, () => {
 app.post('/save',upload.single('file') ,(req, res) => {
 
     console.log(req.body)
-    console.log(req.file)
-     sharp("./"+req.file.path).webp().toFile("./"+req.body.destination+"/texture.webp").then(()=>{
 
+
+
+    console.log(req.file)
+    let path = "../public/data/"+req.body.destination+"/";
+    if(!fs.existsSync(path)) fs.mkdirSync(path);
+
+
+    fs.writeFileSync(path + '/data.json',  req.body.data);
+
+
+    fs.copyFileSync("./"+req.file.path,path+"texture.png");
+
+     sharp("./"+req.file.path).webp().toFile(path+"/texture.webp").then(()=>{
+            fs.rmSync("./"+req.file.path);
      })
   //  })
     // Save the data of user that was sent by the client
 
     // Send a response to client that will show that the request was successfull.
     res.send({
-        message: 'New user was added to the list',
+        message: 'ok',
     });
 
 

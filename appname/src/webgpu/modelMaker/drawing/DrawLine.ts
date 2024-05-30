@@ -16,9 +16,10 @@ export default class DrawLine {
     public drawSize =0.01
     constructor(renderer:Renderer,color:ColorV) {
         this.renderer =renderer;
-        this.uniformGroup=new UniformGroup(this.renderer,"uniforms");
+        this.uniformGroup=new UniformGroup(this.renderer,"uniforms",false);
 
         this.uniformGroup.addUniform("color",color)
+        this.uniformGroup.update();
     }
 
     smoothing() {

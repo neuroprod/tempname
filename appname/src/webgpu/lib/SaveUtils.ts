@@ -22,7 +22,7 @@ export function saveToBinFile(data: any, filename: string) {
     UI.logEvent("Downloading", filename + ".bin");
 }
 
-
+// RGBA8Unorm GPUTextureUsage.COPY_SRC
 export async function sendTextureToServer(texture:Texture,filename:string,saveTarget:string,data:string=""){
 
     let blob = await getImageBlob (texture)
@@ -48,7 +48,7 @@ export async function  sendBlobToServer(b:Blob,mime:string,filename:string,saveT
 
 }
 
-
+// RGBA8Unorm GPUTextureUsage.COPY_SRC
 export async function getImageBlob (texture:Texture){
 
    const device = texture.renderer.device

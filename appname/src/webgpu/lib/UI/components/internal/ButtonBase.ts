@@ -13,8 +13,9 @@ export class ButtonBaseSettings extends ComponentSettings {
     public backColor: Color = new Color().setHex("#65625e", 1);
     public overColor: Color = new Color().setHex("#868480", 1);
     public downColor: Color = new Color().setHex("#8b826d", 1);
-    public disableColor: Color = new Color().setHex("#575757", 1);
+    public disableColor: Color = new Color().setHex("#ff4c5a", 1);
     public labelColor: Color = new Color().setHex("#ffffff", 1);
+    public labelColorDisabled: Color = new Color().setHex("#ffffff", 1);
     public transparent: boolean = false;
 }
 
@@ -49,12 +50,15 @@ export default class ButtonBase extends Component {
         super.prepDraw();
 
         let settings = this.settings as ButtonBaseSettings;
-
+        let labelColor =  settings.labelColor;
+        if (!this.enabled) {
+            labelColor =  settings.labelColorDisabled;
+        }
         UI_I.currentDrawBatch.textBatch.addLine(
             this.textPos,
             this.label,
             this.textMaxSize,
-            settings.labelColor
+            labelColor
         );
 
         if (settings.transparent) return;
@@ -77,5 +81,12 @@ export default class ButtonBase extends Component {
     getReturnValue() {
         if (!this.enabled) return false;
         return this.isClicked;
+    }
+
+    setEnabled(enabled: boolean) {
+        if(enabled != this.enabled){
+            this.enabled =enabled;
+            this.setDirty()
+        }
     }
 }

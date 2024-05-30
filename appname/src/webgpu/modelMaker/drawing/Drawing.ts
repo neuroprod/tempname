@@ -4,14 +4,14 @@ import UI from "../../lib/UI/UI.ts";
 import DrawLine from "./DrawLine.ts";
 import DrawBufferTempPass from "./DrawBufferTempPass.ts";
 import ColorV from "../../lib/ColorV.ts";
-import {getImageBlob, sendTextureToServer} from "../../lib/SaveUtils.ts";
+import Project from "../Project.ts";
 
 
 export default class Drawing {
     private lineSize = 20;
     private lineColor = new ColorV(1, 0, 0, 1)
     private currentLine!: DrawLine;
-    private lines: Array<DrawLine> = [];
+
     private isDrawing: boolean = false;
 
 
@@ -25,11 +25,14 @@ export default class Drawing {
     private drawBufferClearPass: DrawBufferClearPass;
     private drawBufferStorePass: DrawBufferStorePass;*/
     private drawBufferTempPass: DrawBufferTempPass;
+    private needsRedraw: boolean=false;
+    private project!: Project;
 
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
         //TODO update passes
+
         /* this.mixPass=new DrawingMixPass(renderer);
 
          this.bufferTexture = new RenderTexture(renderer, "drawingBufferColor", {
@@ -45,7 +48,11 @@ export default class Drawing {
          this.drawBufferStorePass = new DrawBufferStorePass(this.renderer,this.bufferTexture)*/
         this.drawBufferTempPass = new DrawBufferTempPass(this.renderer)
     }
-
+    setProject(project: Project) {
+        this.project =project;
+        this.drawBufferTempPass.blitMat.setTexture("colorTexture", project.baseTexture)
+        this.updateDrawing()
+    }
     draw() {
 
         if (this.bufferNeedsClearing) {
@@ -53,37 +60,41 @@ export default class Drawing {
             this.drawBufferTempPass.add();
             this.bufferNeedsClearing = false;
         }
-        if (this.isDrawing) {
+        if (this.needsRedraw) {
             this.drawBufferTempPass.add();
+            this.needsRedraw =false;
         }
         // this.mixPass.add();
 
     }
 
     onUI() {
-        if(UI.LButton("save")){
-            sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"],"texture","textures").then(()=>{
-                console.log("saveOK")
+        if(!this.project)return;
 
-            })
-
-        }
         UI.LText("drawing")
         UI.LFloatSlider(this, "lineSize", 1, 100);
         UI.LColor("LineColor", this.lineColor)
+        if (this.project.drawLines.length) {
+            if (UI.LButton("Undo Line")) {
+                let line = this.project.drawLines.pop() as DrawLine
+                line.destroy();
+                this.updateDrawing();
+            }
+        }
     }
 
 
-
     setMouse(mouseLocal: Vector2, mouseDown: boolean, mouseUp: boolean) {
-        if (mouseDown) {
-            console.log("startdraw")
+
+        if(!this.project)return;
+        if (mouseDown && !UI.needsMouse()) {
+
 
 
             this.currentLine = new DrawLine(this.renderer, this.lineColor)
             this.currentLine.drawSize = this.lineSize / 1000;
 
-            this.lines.push(this.currentLine);
+            this.project.drawLines.push(this.currentLine);
 
             this.isDrawing = true;
             this.updateDrawing()
@@ -106,6 +117,10 @@ export default class Drawing {
     }
 
     private updateDrawing() {
-        this.drawBufferTempPass.lineRenderer.lines = this.lines;
+        this.needsRedraw =true;
+
+        this.drawBufferTempPass.lineRenderer.lines = this.project.drawLines;
     }
+
+
 }

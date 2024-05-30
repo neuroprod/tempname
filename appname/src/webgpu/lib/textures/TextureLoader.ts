@@ -6,22 +6,22 @@ export default class TextureLoader extends Texture {
     public loaded: boolean=false;
 
     onComplete=()=>{}
-    constructor(renderer: Renderer, url: string = "", options: Partial<TextureOptions>,delay=0) {
+    constructor(renderer: Renderer, url: string = "", options: Partial<TextureOptions>={}) {
         super(renderer, url, options)
 
         this.options.usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT;
-       if(url.includes("_Op."))
-       this.options.format = TextureFormat.R8Unorm
+     //  if(url.includes("_Op."))
+      // this.options.format = TextureFormat.R8Unorm
 
         this.make();
 
-        setTimeout(()=>{
 
-    this.loadURL(url).then(() => {
 
-        this.onComplete();
-    });
-},delay)
+        this.loadURL(url).then(() => {
+
+            this.onComplete();
+        });
+
 
     }
 
@@ -31,10 +31,10 @@ export default class TextureLoader extends Texture {
         const imageBitmap = await createImageBitmap(await response.blob());
         this.options.width = imageBitmap.width;
         this.options.height = imageBitmap.height;
-        if (this.options.mipLevelCount > Math.log2(imageBitmap.height) - 2) {
+       /* if (this.options.mipLevelCount > Math.log2(imageBitmap.height) - 2) {
             this.options.mipLevelCount = Math.max(Math.log2(imageBitmap.height) - 2, 0);
             //    console.log(  this.options.mipLevelCount,imageBitmap.height )
-        }
+        }*/
 
         //this.options.usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT;
         this.isDirty = true;

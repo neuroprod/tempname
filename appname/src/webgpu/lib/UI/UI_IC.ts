@@ -388,12 +388,13 @@ export default class UI_IC {
         return retValue;
     }
 
-    static buttonBase(buttonText: string, settings?: ButtonBaseSettings) {
+    static buttonBase(buttonText: string,enabled:boolean, settings?: ButtonBaseSettings) {
         if (!UI_I.setComponent(buttonText)) {
             if (!settings) settings = new ButtonBaseSettings();
             let comp = new ButtonBase(UI_I.getID(buttonText), buttonText, settings);
             UI_I.addComponent(comp);
         }
+        ( UI_I.currentComponent as ButtonBase).setEnabled(enabled);
         let retValue = UI_I.currentComponent.getReturnValue();
         UI_I.popComponent();
         return retValue;

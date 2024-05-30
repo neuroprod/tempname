@@ -12,6 +12,7 @@ import KeyInput from "./game/KeyInput.ts";
 import UI from "./lib/UI/UI.ts";
 import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
+import ModelLoader from "../ModelLoader.ts";
 
 export default class Main {
     private canvas: HTMLCanvasElement;
@@ -21,7 +22,7 @@ export default class Main {
 
 
     private preloader!: PreLoader;
-    private gltfLoader!: GLTFLoader;
+
 
 
 
@@ -29,6 +30,7 @@ export default class Main {
     private keyInput!: KeyInput;
     private modelMaker!:ModelMaker;
     private mouseListener!: MouseListener;
+    private modelLoader!: ModelLoader;
     constructor() {
 
         this.canvas = document.getElementById("webGPUCanvas") as HTMLCanvasElement;
@@ -43,17 +45,26 @@ export default class Main {
     }
     public preload(){
         UI.setWebGPU(this.renderer)
+        //setup canvas
+        this.canvasRenderPass = new CanvasRenderPass(this.renderer)
+        this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
+
+
+
          this.preloader =new PreLoader(()=>{},this.init.bind(this));
-            this.gltfLoader = new GLTFLoader(this.renderer,"test",this.preloader)
+        this.modelLoader = new ModelLoader(this.renderer,this.preloader)
+
+
+
+
     }
     private init() {
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener();
 
-        this.canvasRenderPass = new CanvasRenderPass(this.renderer)
-        this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
 
-        this.modelMaker =new ModelMaker(this.renderer,this.mouseListener);
+
+        this.modelMaker =new ModelMaker(this.renderer,this.mouseListener,   this.modelLoader.data);
         this.canvasRenderPass.drawInCanvas =this.modelMaker.drawInCanvas.bind(this.modelMaker);
 
 

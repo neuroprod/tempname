@@ -5,23 +5,25 @@ import UI from "../lib/UI/UI.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
 import Camera from "../lib/Camera.ts";
-import ShapeLineModel from "./shape/ShapeLineModel.ts";
+
 import Model from "../lib/model/Model.ts";
-import TestMaterial from "../lib/material/TestMaterial.ts";
-import {CullMode} from "../lib/WebGPUConstants.ts";
-import Timer from "../lib/Timer.ts";
 import ExtrudeMesh from "../lib/mesh/ExtrudeMesh.ts";
 import Drawing from "./drawing/Drawing.ts";
 import Blit from "../lib/blit/Blit.ts";
 import BaseBlitMaterial from "../lib/blit/BaseBlitMaterial.ts";
-import ModelPreviewMaterial from "./ModelPreviewMaterial.ts";
+import {sendTextureToServer} from "../lib/SaveUtils.ts";
+import Project from "./Project.ts";
+import ShapeLineModel from "./cutting/ShapeLineModel.ts";
+import Cutting from "./cutting/Cutting.ts";
+import Preview from "./preview/Preview.ts";
 
-enum ModelMainState{
+enum ModelMainState {
     draw,
     cut,
 
 }
-enum ModelFocus{
+
+enum ModelFocus {
     none,
     drawPanel,
     cutPanel,
@@ -29,60 +31,66 @@ enum ModelFocus{
 }
 
 
-
 export default class ModelMaker {
+
+    public projects: Array<Project> = []
+    private cutting: Cutting;
+    private drawing: Drawing
+    private preview: Preview
+
 
     private mouseListener: MouseListener
     private renderer: Renderer;
     private mouseLocal = new Vector2()
-    private center = new Vector2(0.5, 0.5)
-    private points: Array<Vector2> = []
+
+
     private modelRenderer2D: ModelRenderer;
     private camera2D: Camera;
-    private shapeLineModel: ShapeLineModel;
 
     private modelRenderer3D: ModelRenderer;
     private camera3D: Camera;
-    private model3D: Model;
-    private previewWidth = 0;
-    private mesh: ExtrudeMesh;
-    private drawing:Drawing
 
-    private modelMainState =ModelMainState.draw;
-    private modelFocus =ModelFocus.none
+    private previewWidth = 0;
+
+
+    private modelMainState = ModelMainState.draw;
+    private modelFocus = ModelFocus.none
     private blitTextureMaterial: BaseBlitMaterial;
     private backgroundBlit: Blit;
-    constructor(renderer: Renderer, mouseListener: MouseListener) {
+    private currentProject!: Project;
+
+
+    constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
         this.camera2D = new Camera(this.renderer)
         this.camera2D.setOrtho(1, 0, 1, 0)
-        this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
-        this.shapeLineModel = new ShapeLineModel(this.renderer);
-        this.modelRenderer2D.addModel(this.shapeLineModel);
+        this.preview = new Preview(renderer)
+
+        this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
 
         this.camera3D = new Camera(this.renderer);
         this.camera3D.cameraWorld.set(0, 0, 2)
         this.camera3D.far = 10;
         this.camera3D.near = 1;
+
+        this.drawing = new Drawing(renderer);
+        this.cutting = new Cutting(renderer);
+
+        this.modelRenderer2D.addModel(this.cutting.shapeLineModel);
+
         this.modelRenderer3D = new ModelRenderer(this.renderer, "3D", this.camera3D);
 
-        this.model3D = new Model(renderer, "model3D")
-        this.model3D.material = new ModelPreviewMaterial(renderer,"preview")
 
-        this.mesh = new ExtrudeMesh(renderer, "3DMesh")
-        this.model3D.mesh = this.mesh;
-        this.model3D.visible = false;
-        this.modelRenderer3D.addModel(this.model3D)
+        this.modelRenderer3D.addModel(this.cutting.model3D)
 
-        this.drawing =new Drawing(renderer)
-        this.model3D.material.setTexture("colorTexture",this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"])
-        this.blitTextureMaterial = new BaseBlitMaterial(renderer,"blitTexture")
-        this.blitTextureMaterial.setTexture("colorTexture",this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
-        this.backgroundBlit =new Blit(renderer,"bgBlit", this.blitTextureMaterial)
 
+        this.blitTextureMaterial = new BaseBlitMaterial(renderer, "blitTexture")
+        this.blitTextureMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
+        this.backgroundBlit = new Blit(renderer, "bgBlit", this.blitTextureMaterial)
+        this.setProjects(data);
     }
 
 
@@ -90,10 +98,8 @@ export default class ModelMaker {
 
         this.previewWidth = Math.min(this.renderer.width - this.renderer.height)
         this.camera3D.ratio = this.previewWidth / this.renderer.height
-        this.model3D.setEuler(0, Timer.time / 2, 0)
-        this.onUI();
-
         this.handleMouse();
+        this.onUI();
 
 
     }
@@ -101,12 +107,12 @@ export default class ModelMaker {
     draw() {
 
 
-            this.drawing.draw()
+        this.drawing.draw()
 
 
-       /* if(this.modelFocus ==ModelFocus.drawPanel){
-            this.drawing.draw()
-        }*/
+        /* if(this.modelFocus ==ModelFocus.drawPanel){
+             this.drawing.draw()
+         }*/
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
@@ -131,65 +137,111 @@ export default class ModelMaker {
 
     private onUI() {
         UI.pushWindow("ModelMaker")
-        if(this.modelMainState ==ModelMainState.draw){
-            if(UI.LButton("Cut"))this.modelMainState =ModelMainState.cut;
-            UI.separator("ll", false)
-            this.drawing.onUI()
-        }else{
-            if(UI.LButton("Draw"))this.modelMainState =ModelMainState.draw;
-            UI.separator("ll", false)
+        UI.pushLList("Projects", 100);
+        let count = 0;
+        for (let p of this.projects) {
+            if (UI.LListItem(p.name, p == this.currentProject)) {
+                this.currentProject = p;
+                this.drawing.setProject(this.currentProject);
+                this.cutting.setProject(this.currentProject)
+                this.preview.setProject(this.currentProject)
+            }
+            count++;
         }
+        UI.popList();
+        let newName = UI.LTextInput("new Project Name", "test")
+        if (UI.LButton("+ Add Project")) {
 
+            let fail = false;
+            if (newName.length == 0) {
+                UI.logEvent("", "Project needs a name", true);
+                fail = true
+            }
+            for (let p of this.projects) {
+                if (p.name == newName) {
+                    UI.logEvent("", "Project needs unique name", true);
+                    fail = true
+                    break;
+                }
+            }
+            if (!fail) {
+                this.currentProject = new Project(this.renderer);
+                this.currentProject.name = newName;
+                this.drawing.setProject(this.currentProject);
+                this.cutting.setProject(this.currentProject)
+                this.preview.setProject(this.currentProject)
+                this.projects.push(this.currentProject);
+            }
+        }
+        if (this.currentProject) {
+            UI.separator("ProjectSep " ,false);
+            UI.separator("Project: " +this.currentProject.name );
+            if (UI.LButton("Save Project")) {
+                let s = this.currentProject.getSaveString();
+
+                sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name,s).then(() => {
+                    console.log("saveOK")
+
+                })
+
+            }
+            UI.separator("Tools")
+            if (this.modelMainState == ModelMainState.draw) {
+                UI.LButton("Draw Texture", "", false)
+                if (UI.LButton("Cut Mesh")) this.modelMainState = ModelMainState.cut;
+                UI.separator("ll", false)
+                this.drawing.onUI()
+            } else {
+                if (UI.LButton("Draw Texture")) this.modelMainState = ModelMainState.draw;
+                UI.LButton("Cut Mesh", "", false)
+                UI.separator("ll", false)
+                this.cutting.onUI()
+            }
+        }
         UI.popWindow()
 
     }
 
     private handleMouse() {
         this.remapMouse(this.mouseListener.mousePos)
-        if(this.mouseListener.isDownThisFrame && !UI.needsMouse()){
+
+        if (this.mouseListener.isDownThisFrame && !UI.needsMouse()) {
             //this.mouseListener.reset()
             if (this.mouseLocal.x > 1) {
                 //rightPanel
-                this.modelFocus =ModelFocus.viewPanel
+                this.modelFocus = ModelFocus.viewPanel
 
-            }else
-            {
-                if(this.modelMainState==ModelMainState.cut) {
-                    this.addVectorPoint(this.mouseLocal)
-                    this.modelFocus =ModelFocus.cutPanel
-                }
-                else if (this.modelMainState==ModelMainState.draw)
-                {
-                    this.modelFocus =ModelFocus.drawPanel
+            } else {
+                if (this.modelMainState == ModelMainState.cut) {
+                    //this.addVectorPoint(this.mouseLocal)
+                    this.modelFocus = ModelFocus.cutPanel
+                } else if (this.modelMainState == ModelMainState.draw) {
+                    this.modelFocus = ModelFocus.drawPanel
                 }
             }
         }
-        if(this.modelFocus ==ModelFocus.drawPanel){
-            this.drawing.setMouse(this.mouseLocal,this.mouseListener.isDownThisFrame,this.mouseListener.isUpThisFrame)
+        if (this.modelFocus == ModelFocus.drawPanel) {
+            this.drawing.setMouse(this.mouseLocal, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame)
+        }
+        if (this.modelFocus == ModelFocus.cutPanel) {
+            this.cutting.setMouse(this.mouseLocal, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame)
         }
 
-
-
     }
 
-    private addVectorPoint(point: Vector2) {
 
-        this.points.push(point.clone())
-        this.updateLine();
-    }
+    private setProjects(data: any) {
+        for (let projData of data){
+            let p =new Project(this.renderer)
+            p.setData(projData);
+            this.projects.push(p)
 
-    private updateLine() {
-
-        this.shapeLineModel.setLine(this.points)
-        if (this.points.length >= 3) {
-            this.model3D.visible = true;
-            this.mesh.setExtrusion(this.points, 0.03, new Vector3(0.5, 0.5, 0))
-        } else {
-            this.model3D.visible = false;
         }
-
-
+        if(this.projects.length){
+            this.currentProject =this.projects[0];
+            this.drawing.setProject(this.currentProject);
+            this.cutting.setProject(this.currentProject)
+            this.preview.setProject(this.currentProject)
+        }
     }
-
-
 }

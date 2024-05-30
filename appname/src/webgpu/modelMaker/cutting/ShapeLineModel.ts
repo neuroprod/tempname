@@ -24,14 +24,20 @@ export default class ShapeLineModel extends Model{
         this.visible =false;
     }
 
-    setLine(points:Array<Vector2>){
+    setLine(points:Array<Vector2>,center:Vector2){
 
-        if(points.length<2){
+        if(points.length==0){
             this.visible =false;
             return;
         }
         this.visible =true;
         this.positions=[]
+        let centerSize =0.01;
+        this.positions.push(center.x-centerSize,center.y-centerSize,0)
+        this.positions.push(center.x+centerSize,center.y+centerSize,0)
+        this.positions.push(center.x-centerSize,center.y+centerSize,0)
+        this.positions.push(center.x+centerSize,center.y-centerSize,0)
+
 
 
         for(let p of points){
@@ -39,11 +45,14 @@ export default class ShapeLineModel extends Model{
 
         }
         this.indices=[]
+
+        this.indices.push(0,1)
+        this.indices.push(2,3)
         for (let i=0;i<points.length-1;i++)
         {
-            this.indices.push(i,i+1)
+            this.indices.push(i+4,i+1+4)
         }
-        this.indices.push(points.length-1,0)
+       // this.indices.push(points.length-1,0)
 
 
 
