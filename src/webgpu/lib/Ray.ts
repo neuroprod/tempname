@@ -7,7 +7,7 @@ import Model from "./model/Model.ts";
 
 
 export class RayIntersection{
-    public model:Model
+    public model!:Model
     public distance:number=0
     public point:Vector3 =new Vector3(0,0,0)
 }

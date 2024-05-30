@@ -9,23 +9,23 @@ import TextBatchMaterial from "./TextBatchMaterial";
 
 export default class RendererGPU {
 
-    private device: GPUDevice;
-    private presentationFormat: GPUTextureFormat;
+    private device!: GPUDevice;
+    private presentationFormat!: GPUTextureFormat;
     private drawArray: Array<DrawBatchGPU> = [];
     private drawBatches: Map<number, DrawBatchGPU> = new Map<
         number,
         DrawBatchGPU
     >();
-    private fillBatchMaterial: FillBatchMaterial;
-    private textBatchMaterial: TextBatchMaterial;
-    private mvpBuffer: GPUBuffer;
-    private mvpBufferData: Float32Array;
-    private mvpBindGroupLayout: GPUBindGroupLayout;
-    private mvpBindGroup: GPUBindGroup;
-    private fontTexture: GPUTexture;
-    private sampler: GPUSampler;
-    private fontBindGroup: GPUBindGroup;
-    private fontBindGroupLayout: GPUBindGroupLayout;
+    private fillBatchMaterial!: FillBatchMaterial;
+    private textBatchMaterial!: TextBatchMaterial;
+    private mvpBuffer!: GPUBuffer;
+    private mvpBufferData!: Float32Array;
+    private mvpBindGroupLayout!: GPUBindGroupLayout;
+    private mvpBindGroup!: GPUBindGroup;
+    private fontTexture!: GPUTexture;
+
+    private fontBindGroup!: GPUBindGroup;
+    private fontBindGroupLayout!: GPUBindGroupLayout;
     private width: number = 0;
     private height: number = 0;
     private mvp = new Float32Array(16);
@@ -124,8 +124,10 @@ export default class RendererGPU {
     delete(id: number) {
         if (this.drawBatches.has(id)) {
             let drawBatch = this.drawBatches.get(id);
+            // @ts-ignore
             drawBatch.destroy();
             this.drawBatches.delete(id);
+            // @ts-ignore
             this.drawArray.splice(this.drawArray.indexOf(drawBatch), 1);
         }
     }
@@ -141,7 +143,8 @@ export default class RendererGPU {
             let drawBatch;
             if (this.drawBatches.has(id)) {
                 drawBatch = this.drawBatches.get(id);
-                if (batch.isDirty) {
+                if (batch.isDirty ) {
+                    // @ts-ignore
                     drawBatch.setBatchData(batch);
                 }
             } else {
@@ -150,6 +153,7 @@ export default class RendererGPU {
                 this.drawBatches.set(batch.id, drawBatch);
             }
 
+            // @ts-ignore
             drawBatch.useThisUpdate = true;
             tempArr.push(drawBatch);
             batch.isDirty = false;
@@ -162,6 +166,7 @@ export default class RendererGPU {
             }
         }
 
+        // @ts-ignore
         this.drawArray = tempArr;
     }
 
@@ -176,12 +181,15 @@ export default class RendererGPU {
 
         for (let batch of this.drawArray) {
             if (batch.needsClipping) {
+                // @ts-ignore
+                if(batch.clipRect){
                 passEncoder.setScissorRect(
                     batch.clipRect.pos.x * UI_I.pixelRatio,
                     batch.clipRect.pos.y * UI_I.pixelRatio,
                     batch.clipRect.size.x * UI_I.pixelRatio,
                     batch.clipRect.size.y * UI_I.pixelRatio,
                 );
+                }
             } else {
                 passEncoder.setScissorRect(0, 0, this.width * UI_I.pixelRatio, this.height * UI_I.pixelRatio);
             }
