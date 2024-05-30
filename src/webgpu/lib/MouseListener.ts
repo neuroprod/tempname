@@ -1,4 +1,4 @@
-import {Vector2} from "math.gl";
+import {Vector2} from "@math.gl/core";
 
 
 export default class MouseListener {

@@ -1,6 +1,6 @@
-import Renderer from "./webgpu/lib/Renderer.ts";
-import PreLoader from "./webgpu/lib/PreLoader.ts";
-import TextureLoader from "./webgpu/lib/textures/TextureLoader.ts";
+import Renderer from "./lib/Renderer.ts";
+import PreLoader from "./lib/PreLoader.ts";
+import TextureLoader from "./lib/textures/TextureLoader.ts";
 
 export default class ModelLoader{
     private renderer: Renderer;

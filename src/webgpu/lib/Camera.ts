@@ -69,13 +69,13 @@ export default class Camera extends UniformGroup {
     }
 
     public modelInFrustum(model: Model): boolean {
-
-        for (let i: number = 0; i < 6; i++) {
+console.log("fix culling")
+       /* for (let i: number = 0; i < 6; i++) {
             if (this.dot(this.fplanes[i], model.center.x, model.center.y, model.center.z) < -model.radius) {
 
                 return false;
             }
-        }
+        }*/
         return true;
     }
 
@@ -128,26 +128,26 @@ export default class Camera extends UniformGroup {
     private setProjection() {
 
 
-        let fustrumTop = this.near * Math.tan(this.fovy / 2);
-        let fustrumBottom = -fustrumTop;
+        let frustumTop = this.near * Math.tan(this.fovy / 2);
+        let frustumBottom = -frustumTop;
 
-        let fustrumRight = fustrumTop * this.ratio;
-        let fustrumLeft = -fustrumRight;
+        let frustumRight = frustumTop * this.ratio;
+        let frustumLeft = -frustumRight;
 
 
         if (this.lensShift.y != 0.0) {
-            fustrumTop = lerp(0.0, 2.0 * fustrumTop, 0.5 + 0.5 * this.lensShift.y);
-            fustrumBottom = lerp(2.0 * fustrumBottom, 0.0, 0.5 + 0.5 * this.lensShift.y);
+            frustumTop = lerp(0.0, 2.0 * frustumTop, 0.5 + 0.5 * this.lensShift.y);
+            frustumBottom = lerp(2.0 * frustumBottom, 0.0, 0.5 + 0.5 * this.lensShift.y);
         }
 
         if (this.lensShift.x != 0.0) {
-            frustumTopRight = lerp(2.0 * fustrumRight, 0.0, 0.5 - 0.5 * this.lensShift.x);
-            fustrumLeft = lerp(0.0, 2.0 * fustrumLeft, 0.5 - 0.5 * this.lensShift.x);
+            frustumRight = lerp(2.0 * frustumRight, 0.0, 0.5 - 0.5 * this.lensShift.x);
+            frustumLeft = lerp(0.0, 2.0 * frustumLeft, 0.5 - 0.5 * this.lensShift.x);
         }
 
 
-        const dx = (fustrumRight - fustrumLeft);
-        const dy = (fustrumTop - fustrumBottom);
+        const dx = (frustumRight - frustumLeft);
+        const dy = (frustumTop - frustumBottom);
         const dz = (this.near - this.far);
 
         this.projection[0] = 2.0 * this.near / dx;
@@ -160,8 +160,8 @@ export default class Camera extends UniformGroup {
         this.projection[6] = 0.0;
         this.projection[7] = 0.0;
 
-        this.projection[8] = (fustrumRight + fustrumLeft) / dx;
-        this.projection[9] = (fustrumTop + fustrumBottom) / dy;
+        this.projection[8] = (frustumRight + frustumLeft) / dx;
+        this.projection[9] = (frustumTop + frustumBottom) / dy;
         this.projection[10] = this.far / dz;
         this.projection[11] = -1.0;
 

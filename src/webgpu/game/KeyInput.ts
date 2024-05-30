@@ -7,8 +7,8 @@ export default class KeyInput{
     camRight:boolean =false;
     camUp:boolean =false;
     camDown:boolean =false;
-    private rightDownTime: DOMHighResTimeStamp;
-    private leftDownTime: DOMHighResTimeStamp;
+    private rightDownTime!: DOMHighResTimeStamp;
+    private leftDownTime!: DOMHighResTimeStamp;
     private space: boolean =false;
     constructor() {
 

@@ -37,7 +37,7 @@ export default class GLTFLoader {
     public meshes: Array<Mesh> = []
    // public animations: Array<Animation> = []
 
-    private meshBuffer: SharedArrayBuffer | ArrayBuffer;
+    private meshBuffer!: SharedArrayBuffer | ArrayBuffer ;
     private byteLength: any;
     private json: any;
     private accessors: Array<Accessor> = []
@@ -83,6 +83,7 @@ export default class GLTFLoader {
            // this.parseSkin();
             this.makeModels();
 
+        // @ts-ignore
         this.meshBuffer = null;
         this.json = null;
     }
@@ -376,7 +377,7 @@ export default class GLTFLoader {
     private getSlize(accessor: any) {
         let byteLength = accessor.bufferView.byteLength
         let byteOffset = accessor.bufferView.byteOffset
-        let buffer = accessor.bufferView.buffer
+        //let buffer = accessor.bufferView.buffer
         return this.meshBuffer.slice(byteOffset, byteOffset + byteLength);
     }
 /*

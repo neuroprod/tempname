@@ -12,7 +12,7 @@ import KeyInput from "./game/KeyInput.ts";
 import UI from "./lib/UI/UI.ts";
 import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
-import ModelLoader from "../ModelLoader.ts";
+import ModelLoader from "./ModelLoader.ts";
 
 export default class Main {
     private canvas: HTMLCanvasElement;
