@@ -30,8 +30,10 @@ export default class Scene{
         this.renderer = renderer;
         this.mouseListener =mouseListener;
         this.camera =new Camera(renderer);
-        this.camera.cameraWorld.set(0,0,4)
-
+        this.camera.cameraWorld.set(0.5,0.3,2)
+        this.camera.cameraLookAt.set(0,0.2,0)
+        this.camera.near =0.1
+        this.camera.fovy =0.5
         this.modelPool =new ModelPool(renderer,data);
         this.modelRenderer =new ModelRenderer(renderer,"mainModels",this.camera)
         this.root =new Object3D(renderer,"root");
@@ -44,12 +46,14 @@ export default class Scene{
     update() {
         this.camera.ratio =this.renderer.ratio
 
+        this.editCursor.update()
+
         if(this.mouseListener.isDownThisFrame && !UI.needsMouse()){
 
             let mouseIn = new Vector2()
             mouseIn.from(this.mouseListener.mousePos)
-            mouseIn.scale([2/this.renderer.width,2/this.renderer.height]);
-            mouseIn.subtract([1,1]);
+            mouseIn.scale([2/this.renderer.width,-2/this.renderer.height]);
+            mouseIn.subtract([1,-1]);
 
             this.ray.setFromCamera(this.camera,mouseIn)
 
@@ -85,12 +89,15 @@ export default class Scene{
     private makeScene() {
 
         let model =this.modelPool.getModelByName(ModelNames.TEST_TREE);
+        model.setPosition(-0.8,0.5,-2)
         model.setScale(2,2,0.1)
+
+
         this.modelRenderer.addModel(model)
 
 
         let model2 =this.modelPool.getModelByName(ModelNames.TESTCHARACTERS_PINK);
-        model2.setPosition(1,0,0)
+        model2.setPosition(0.2,0,0)
       model2.setScale(1,1,0.1)
         this.modelRenderer.addModel(model2)
     }
