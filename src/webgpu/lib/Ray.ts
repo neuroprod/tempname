@@ -112,4 +112,19 @@ export default class Ray {
         return intersections;
 
     }
+
+    intersectPlane(point: Vector3, normal: Vector3) {
+        const d  = -normal.dot( this.rayDir )
+
+        if ( d < 0.0001 ) {
+            return null;
+        }
+        const c =-point.dot(normal);
+        const t = - ( this.rayStart.dot( normal ) + c ) / d;
+
+        let p = this.rayDir.clone()
+        p.scale(t)
+        p.add(this.rayStart);
+        return p
+    }
 }

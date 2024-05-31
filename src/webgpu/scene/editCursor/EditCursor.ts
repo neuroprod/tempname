@@ -8,6 +8,9 @@ import SolidMaterial from "../../lib/material/SolidMaterial.ts";
 import ModelRenderer from "../../lib/model/ModelRenderer.ts";
 import Camera from "../../lib/Camera.ts";
 import RevolveMesh from "../../lib/mesh/geometry/RevolveMesh.ts";
+import MouseListener from "../../lib/MouseListener.ts";
+import Ray from "../../lib/Ray.ts";
+import {Vector3} from "@math.gl/core";
 
 
 export default class EditCursor{
@@ -21,7 +24,16 @@ export default class EditCursor{
     private arrowX: Model;
     private arrowZ: Model;
     private camera: Camera;
-    constructor(renderer:Renderer,camera:Camera) {
+    private mouseListener: MouseListener;
+    private ray: Ray;
+    private intersectionPlanePos: Vector3 =new Vector3();
+    private intersectionPlaneDir: Vector3 =new Vector3();
+    private startDragPos: null | Vector3;
+    private isDragging: boolean;
+    private move: string;
+    constructor(renderer: Renderer, camera: Camera, mouseListener: MouseListener, ray: Ray) {
+        this.mouseListener = mouseListener;
+        this.ray =ray;
         this.renderer =renderer;
         this.camera =camera;
         this.root =new Object3D(renderer,"rootCursor");
@@ -30,7 +42,7 @@ export default class EditCursor{
         this.arrowMesh=new RevolveMesh(this.renderer,"arrow",8,[0,0.01,0.01,0.05,0],[0,0,0.8,0.8,1])
 
 
-        this.arrowY = new Model(this.renderer,"testModel")
+        this.arrowY = new Model(this.renderer,"y")
         this.arrowY.mesh =this.arrowMesh
         this.arrowY.material =new SolidMaterial(renderer,"up")
 
@@ -39,7 +51,7 @@ export default class EditCursor{
         this.root.addChild(this.arrowY)
 
 
-        this.arrowX = new Model(this.renderer,"testModel")
+        this.arrowX = new Model(this.renderer,"x")
         this.arrowX.mesh =this.arrowMesh
 
         this.arrowX.setEuler(0,0,-Math.PI/2)
@@ -49,7 +61,7 @@ export default class EditCursor{
         this.root.addChild(this.arrowX)
 
 
-        this.arrowZ = new Model(this.renderer,"testModel")
+        this.arrowZ = new Model(this.renderer,"z")
         this.arrowZ.mesh =this.arrowMesh
         this.arrowZ.setEuler(Math.PI/2,0,0)
 
@@ -64,6 +76,59 @@ export default class EditCursor{
         this.modelRenderer.addModel( this.arrowY)
         this.modelRenderer.addModel( this.arrowX)
         this.modelRenderer.addModel( this.arrowZ)
+
+    }
+    checkMouse() {
+        if(!this.currentModel) return false;
+        if(this.mouseListener.isDownThisFrame)
+        {
+           let intersections = this.ray.intersectModels([this.arrowX,this.arrowY,this.arrowZ])
+            if(intersections.length==0) return false;
+
+            if(intersections[0].model.label=="x"){
+                this.intersectionPlanePos = this.currentModel.getWorldPos();
+                this.intersectionPlaneDir.set(0,0,1);
+                this.move ="x"
+            }
+            if(intersections[0].model.label=="y"){
+                this.intersectionPlanePos = this.currentModel.getWorldPos();
+                this.intersectionPlaneDir.set(0,0,1);
+                this.move ="y"
+            }
+            if(intersections[0].model.label=="z"){
+                this.intersectionPlanePos = this.currentModel.getWorldPos();
+                this.intersectionPlaneDir.set(1,0,0);
+                this.move ="z"
+            }
+            let pos = this.ray.intersectPlane(  this.intersectionPlanePos,  this.intersectionPlaneDir)
+            this.startDragPos = pos;
+            this.isDragging =true;
+        }
+
+        if(this.isDragging){
+            let pos = this.ray.intersectPlane(  this.intersectionPlanePos,  this.intersectionPlaneDir);
+
+           if(pos){
+               if(this.move=="x") {
+                   let dist = this.startDragPos.x - pos.x;
+                   this.currentModel.setPosition(this.intersectionPlanePos.x + dist, this.intersectionPlanePos.y, this.intersectionPlanePos.z)
+               }
+               if(this.move=="y") {
+                   let dist = this.startDragPos.y - pos.y;
+                   this.currentModel.setPosition(this.intersectionPlanePos.x , this.intersectionPlanePos.y+dist, this.intersectionPlanePos.z)
+               }
+               if(this.move=="z") {
+                   let dist = this.startDragPos.z - pos.z;
+                   this.currentModel.setPosition(this.intersectionPlanePos.x , this.intersectionPlanePos.y, this.intersectionPlanePos.z+dist)
+               }
+           }
+
+        }
+
+        if(this.mouseListener.isUpThisFrame && this.isDragging)
+        {
+            this.isDragging =false
+        }
 
     }
     public update(){
@@ -97,4 +162,6 @@ export default class EditCursor{
     draw() {
 
     }
+
+
 }

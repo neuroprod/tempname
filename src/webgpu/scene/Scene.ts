@@ -38,7 +38,8 @@ export default class Scene{
         this.modelRenderer =new ModelRenderer(renderer,"mainModels",this.camera)
         this.root =new Object3D(renderer,"root");
         this.outline =new Outline(renderer,this.camera)
-        this.editCursor =new EditCursor(renderer,this.camera)
+        this.editCursor =new EditCursor(renderer,this.camera,mouseListener,this.ray)
+
         this.makeScene()
 
     }
@@ -46,16 +47,21 @@ export default class Scene{
     update() {
         this.camera.ratio =this.renderer.ratio
 
-        this.editCursor.update()
 
-        if(this.mouseListener.isDownThisFrame && !UI.needsMouse()){
+        let mouseIn = new Vector2()
+        mouseIn.from(this.mouseListener.mousePos)
+        mouseIn.scale([2/this.renderer.width,-2/this.renderer.height]);
+        mouseIn.subtract([1,-1]);
+        this.ray.setFromCamera(this.camera,mouseIn)
 
-            let mouseIn = new Vector2()
-            mouseIn.from(this.mouseListener.mousePos)
-            mouseIn.scale([2/this.renderer.width,-2/this.renderer.height]);
-            mouseIn.subtract([1,-1]);
 
-            this.ray.setFromCamera(this.camera,mouseIn)
+
+
+        let cursorNeedsMouse  =this.editCursor.checkMouse()
+
+        if(!cursorNeedsMouse && this.mouseListener.isDownThisFrame && !UI.needsMouse()){
+
+
 
             let intersections  =this.ray.intersectModels(this.modelRenderer.models)
             if(intersections.length){
@@ -64,10 +70,9 @@ export default class Scene{
             }else{
                 this.setCurrentModel(null);
             }
-
         }
 
-
+        this.editCursor.update()
 
     }
     setCurrentModel(value: Model | null) {
@@ -90,7 +95,7 @@ export default class Scene{
 
         let model =this.modelPool.getModelByName(ModelNames.TEST_TREE);
         model.setPosition(-0.8,0.5,-2)
-        model.setScale(2,2,0.1)
+        model.setScale(2,2,0.02)
 
 
         this.modelRenderer.addModel(model)
@@ -98,7 +103,7 @@ export default class Scene{
 
         let model2 =this.modelPool.getModelByName(ModelNames.TESTCHARACTERS_PINK);
         model2.setPosition(0.2,0,0)
-      model2.setScale(1,1,0.1)
+      model2.setScale(1,1,0.04)
         this.modelRenderer.addModel(model2)
     }
 }
