@@ -8,6 +8,7 @@ import BaseBlitMaterial from "../../lib/blit/BaseBlitMaterial.ts";
 
 import Blend from "../../lib/material/Blend.ts";
 import SolidMaterial from "../../lib/material/SolidMaterial.ts";
+import OutlinePass from "./OutlinePass.ts";
 
 export default class Outline{
 
@@ -16,15 +17,17 @@ export default class Outline{
     private renderer: Renderer;
     private outlinePrePass: OutlinePrePass;
     private outlineBlit: Blit;
+    private outlinePass: OutlinePass;
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.outlinePrePass = new OutlinePrePass(renderer,camera)
+        this.outlinePass = new OutlinePass(renderer)
         let solidMaterial = new SolidMaterial(this.renderer,"solidOutlineMaterial")
         this.outlinePrePass.modelRenderer.setMaterial( solidMaterial);
 
         let blitMaterial =new BaseBlitMaterial(this.renderer,"baseBlit");
-        blitMaterial.setTexture("colorTexture",this.renderer.textureHandler.texturesByLabel["OutlinePrePass"]);
-        blitMaterial.blendModes =[Blend.add()]
+        blitMaterial.setTexture("colorTexture",this.renderer.textureHandler.texturesByLabel["OutlinePass"]);
+        blitMaterial.blendModes =[Blend.preMultAlpha()];
         this.outlineBlit =new Blit(this.renderer,"outlineBlit",blitMaterial)
     }
     setCurrentModel(model: Model | null) {
@@ -37,6 +40,7 @@ export default class Outline{
     {
         if(!this.currentModel)return
         this.outlinePrePass.add();
+        this.outlinePass.add();
     }
 
     drawFinal(pass: CanvasRenderPass) {
