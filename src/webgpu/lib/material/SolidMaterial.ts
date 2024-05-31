@@ -1,22 +1,23 @@
-import Material from "../material/Material.ts";
-import {ShaderType} from "../material/ShaderTypes.ts";
-import UniformGroup from "../material/UniformGroup.ts";
-import DefaultTextures from "../textures/DefaultTextures.ts";
-import {CompareFunction} from "../WebGPUConstants.ts";
+import Material from "./Material.ts";
+import {ShaderType} from "./ShaderTypes.ts";
 
-export default class BaseBlitMaterial extends Material
+import {CompareFunction} from "../WebGPUConstants.ts";
+import DefaultUniformGroups from "./DefaultUniformGroups.ts";
+import UniformGroup from "./UniformGroup.ts";
+import {Vector4} from "@math.gl/core";
+
+export default class SolidMaterial extends Material
 {
     setup(){
         this.addAttribute("aPos", ShaderType.vec3);
-        this.addAttribute("aUV0", ShaderType.vec2);
 
-        this.addVertexOutput("uv", ShaderType.vec2 );
+
+        this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer), true);
+        this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer), true);
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer));
-        uniforms.addSampler("mySampler")
-
+        uniforms.addUniform("color",new Vector4(1,0,0,1))
         this.depthWrite = false
         this.depthCompare = CompareFunction.Always
 
@@ -27,15 +28,13 @@ export default class BaseBlitMaterial extends Material
 
 ${this.getVertexOutputStruct()}   
 
-
 ${this.getShaderUniforms()}
 @vertex
 fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 {
     var output : VertexOutput;
-    output.position =vec4( aPos,1.0);
-    output.uv = aUV0;
-
+    output.position =camera.viewProjectionMatrix*model.modelMatrix* vec4( aPos,1.0);
+ 
     return output;
 }
 
@@ -43,10 +42,14 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 @fragment
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
-    return textureSample(colorTexture, mySampler,  uv) ;
+    return uniforms.color;
 }
 ///////////////////////////////////////////////////////////
         `
     }
+
+
+
+
 
 }

@@ -39,14 +39,14 @@ export default class Ray {
         this.rayDir.from(r.rayDir);
 
     }
-    setFromCamera(camera: Camera, mousePosIn: Vector2) {
+    setFromCamera(camera: Camera, mousePos: Vector2) {
 
-       // let mousePos = mousePosIn.clone().scale(new Vector2(2 / (this.renderer.width / this.renderer.pixelRatio), 2 / (this.renderer.height / this.renderer.pixelRatio)))
-        //let pos = new Vector4(mousePos.x - 1, (mousePos.y - 1) * -1, 1, 1);
+       //let mousePos = mousePosIn.clone().scale(new Vector2(2 / (this.renderer.width / this.renderer.pixelRatio), 2 / (this.renderer.height / this.renderer.pixelRatio)))
+        let pos = new Vector4(mousePos.x , mousePos.y , 1, 1);
 
-        //pos.transform(camera.viewProjectionInv as NumericArray);
-        //this.rayStart = camera.cameraWorld.clone()
-        //this.rayDir = new Vector3(pos.x - this.rayStart.x, pos.y - this.rayStart.y, pos.z - this.rayStart.z).normalize()
+        pos.transform(camera.viewProjectionInv as NumericArray);
+        this.rayStart = camera.cameraWorld.clone()
+        this.rayDir = new Vector3(pos.x - this.rayStart.x, pos.y - this.rayStart.y, pos.z - this.rayStart.z).normalize()
 
     }
 
@@ -64,6 +64,7 @@ export default class Ray {
 
         this.transform(model.worldMatrixInv)
         if(this.intersectsBox(model.mesh.min,model.mesh.max)){
+
             let intersection =new RayIntersection()
             intersection.model =model;
             intersection.distance = this.intersectionDistance;

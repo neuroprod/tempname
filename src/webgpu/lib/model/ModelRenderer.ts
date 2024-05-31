@@ -4,6 +4,7 @@ import Renderer from "../Renderer";
 import RenderPass from "../RenderPass.ts";
 import Camera from "../Camera.ts";
 import UniformGroup from "../material/UniformGroup.ts";
+import Material from "../material/Material.ts";
 
 
 export default class ModelRenderer {
@@ -11,7 +12,9 @@ export default class ModelRenderer {
     public models: Array<Model> = [];
     private renderer: Renderer;
     private label: string;
-    private camera: Camera;
+    private camera!: Camera;
+    private singleMaterial =false;
+    private material!: Material;
 
 
     constructor(renderer: Renderer, label = "",camera:Camera) {
@@ -20,25 +23,44 @@ export default class ModelRenderer {
         this.camera =camera;
 
     }
-
+    setMaterial(material:Material){
+        this.singleMaterial =true;
+        this.material =material;
+    }
     draw(pass: RenderPass) {
 
         const passEncoder = pass.passEncoder;
 
         let currentMaterialID =""
         let uniformGroupsIDS:Array<string>=["","","",""];
+        let material:Material
+
+        if(this.singleMaterial){
+            material =this.material;
+            material.makePipeLine(pass);
+            passEncoder.setPipeline(material.pipeLine);
+        }
+
        // passEncoder.setBindGroup(0, this.renderer.camera.bindGroup);
 
         for (let model of this.models) {
             if (!model.visible) continue
 
-            if(model.material.UUID!=currentMaterialID){
-                model.material.makePipeLine(pass);
-                passEncoder.setPipeline(model.material.pipeLine);
+            if(!this.singleMaterial){
+                material =  model.material
+                if(material.UUID!=currentMaterialID){
+                    material.makePipeLine(pass);
+                    passEncoder.setPipeline(material.pipeLine);
+                    currentMaterialID =material.UUID;
+                }
             }
 
-            for(let i=0;i< model.material.uniformGroups.length;i++){
-                let label =model.material.uniformGroups[i].label;
+
+
+            // @ts-ignore
+            for(let i=0;i< material.uniformGroups.length;i++){
+                // @ts-ignore
+                let label =material.uniformGroups[i].label;
                 let uniformGroup:UniformGroup ;
 
                 if(label=="camera"){
@@ -48,7 +70,8 @@ export default class ModelRenderer {
                     uniformGroup = model.modelTransform;
                 }
                 else{
-                    uniformGroup =model.material.uniformGroups[i];
+                    // @ts-ignore
+                    uniformGroup =material.uniformGroups[i];
                 }
 
                 if(uniformGroupsIDS[i]!=uniformGroup.UUID){
@@ -60,12 +83,8 @@ export default class ModelRenderer {
 
 
 
-
-
-
-
-
-            for (let attribute of model.material.attributes) {
+            // @ts-ignore
+            for (let attribute of material.attributes) {
                 let buffer = model.mesh.getBufferByName(attribute.name);
                 if (!buffer) buffer = model.getBufferByName(attribute.name);
                 if (buffer) {
@@ -99,13 +118,16 @@ export default class ModelRenderer {
 
         }
     }
+    public setModels(models: Array<Model>) {
 
+        this.models =models;
+    }
     public addModel(model: Model) {
 
         this.models.push(model);
     }
 
-    removeModel(model: Model) {
+    public removeModel(model: Model) {
         const index = this.models.indexOf(model, 0);
         if (index > -1) {
             this.models.splice(index, 1);

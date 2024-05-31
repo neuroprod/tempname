@@ -6,7 +6,7 @@ import Model from "./model/Model.ts";
 
 export default class Camera extends UniformGroup {
     public static instance: Camera;
-    public cameraWorld: Vector3 = new Vector3(0, 0, 1);
+    public cameraWorld: Vector3 = new Vector3(0, 0, 2);
     public cameraLookAt: Vector3 = new Vector3(0, 0, 0);
     public cameraUp: Vector3 = new Vector3(0, 1, 0);
     public fovy = 0.7

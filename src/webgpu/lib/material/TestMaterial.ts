@@ -21,7 +21,7 @@ export default class TestMaterial extends Material{
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
         uniforms.addUniform("color",new Vector4(0.5,0.5,0.5,1))
-        this.cullMode =CullMode.Back;
+        //this.cullMode =CullMode.Back;
         //this.logShader =true;
     }
     getShader(): string {

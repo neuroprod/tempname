@@ -37,7 +37,7 @@ export default class Project
     }
 
     setData(projData: any) {
-        console.log(projData)
+
         this.name =projData.name;
         this.baseTexture=projData.texture;
         for (let m of projData.meshes){

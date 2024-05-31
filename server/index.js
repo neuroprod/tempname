@@ -1,15 +1,29 @@
+
+
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const fs = require("fs");
 const sharp = require('sharp');
-const path = require("path");
+
 
 const port = 3001
 var upload = multer({dest:'./temp/'});
 
+function generate(){
+    let dir = "../public/data"
 
+
+    let folders =fs.readdirSync(dir)
+    let j = JSON.stringify(folders)
+    let path = "../public/";
+    if(!fs.existsSync(path)) fs.mkdirSync(path);
+
+
+    fs.writeFileSync(path + '/data.json', j);
+
+}
 
 const app = express()
 app.use(cors())
@@ -20,11 +34,11 @@ app.listen(port, () => {
 })
 app.post('/save',upload.single('file') ,(req, res) => {
 
-    console.log(req.body)
+    //console.log(req.body)
 
 
 
-    console.log(req.file)
+    //console.log(req.file)
     let path = "../public/data/"+req.body.destination+"/";
     if(!fs.existsSync(path)) fs.mkdirSync(path);
 
@@ -36,11 +50,10 @@ app.post('/save',upload.single('file') ,(req, res) => {
 
      sharp("./"+req.file.path).webp().toFile(path+"/texture.webp").then(()=>{
             fs.rmSync("./"+req.file.path);
+         generate();
+console.log("save done")
      })
-  //  })
-    // Save the data of user that was sent by the client
 
-    // Send a response to client that will show that the request was successfull.
     res.send({
         message: 'ok',
     });

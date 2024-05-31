@@ -6,14 +6,13 @@ import {Vector2, Vector3} from "@math.gl/core";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
 import Camera from "../lib/Camera.ts";
 
-import Model from "../lib/model/Model.ts";
-import ExtrudeMesh from "../lib/mesh/ExtrudeMesh.ts";
+
 import Drawing from "./drawing/Drawing.ts";
 import Blit from "../lib/blit/Blit.ts";
 import BaseBlitMaterial from "../lib/blit/BaseBlitMaterial.ts";
 import {sendTextureToServer} from "../lib/SaveUtils.ts";
 import Project from "./Project.ts";
-import ShapeLineModel from "./cutting/ShapeLineModel.ts";
+
 import Cutting from "./cutting/Cutting.ts";
 import Preview from "./preview/Preview.ts";
 import Timer from "../lib/Timer.ts";
@@ -153,17 +152,17 @@ export default class ModelMaker {
             count++;
         }
         UI.popList();
-        let newName = UI.LTextInput("new Project Name", "test")
-        if (UI.LButton("+ Add Project")) {
+        let newName = UI.LTextInput("Model Name", "")
+        if (UI.LButton("+ Add Model")) {
 
             let fail = false;
             if (newName.length == 0) {
-                UI.logEvent("", "Project needs a name", true);
+                UI.logEvent("", "Model needs a name", true);
                 fail = true
             }
             for (let p of this.projects) {
                 if (p.name == newName) {
-                    UI.logEvent("", "Project needs unique name", true);
+                    UI.logEvent("", "Model needs unique name", true);
                     fail = true
                     break;
                 }
@@ -179,8 +178,8 @@ export default class ModelMaker {
         }
         if (this.currentProject) {
             UI.separator("ProjectSep " ,false);
-            UI.separator("Project: " +this.currentProject.name );
-            if (UI.LButton("Save Project")) {
+            UI.separator("Model: " +this.currentProject.name );
+            if (UI.LButton("Save Model")) {
                 let s = this.currentProject.getSaveString();
 
                 sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name,s).then(() => {

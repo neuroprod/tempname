@@ -92,7 +92,7 @@ export default class Cutting{
 
         }
         UI.popList();
-        let newName = UI.LTextInput("new Mesh Name", "testMesh")
+        let newName = UI.LTextInput("new Mesh", "")
         if (UI.LButton("+ Add Mesh")) {
 
             let fail = false;

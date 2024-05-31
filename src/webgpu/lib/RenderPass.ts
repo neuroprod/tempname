@@ -36,7 +36,7 @@ export default class RenderPass extends ObjectGPU {
 
 
 
-    draw() {
+    protected draw() {
 
     }
 
