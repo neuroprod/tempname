@@ -22,28 +22,47 @@ export default class EditCamera
     private camDistance =2
     private isDragging: boolean =false;
 
-    private camUp: Vector3 =new Vector3()
-    private camPos: Vector3 =new Vector3()
+    private camUp: Vector3 =new Vector3();
+    private camPos: Vector3 =new Vector3();
+    private camTarget: Vector3 =new Vector3();
+    private isRotating: boolean=false;
+    private isPanning: boolean=true;
 
     constructor(renderer: Renderer, camera: Camera, mouseListener: MouseListener, ray: Ray) {
         this.mouseListener = mouseListener;
         this.ray = ray;
         this.renderer = renderer;
         this.camera = camera;
-
+        this.setCamera()
 
     }
 
 
     checkMouse(){
+
+        if(!UI.needsMouse() && this.mouseListener.wheelDelta){
+
+            this.camDistance +=this.mouseListener.wheelDelta/40;
+            if(this.camDistance<1) this.camDistance =1;
+            this.setCamera()
+        }
+
+
         if(this.mouseListener.isDownThisFrame && this.mouseListener.shiftKey && !UI.needsMouse()){
 
             this.camQuatStart.from(this.camQuat);
             this.mouseStart.from(this.mouseListener.mousePos);
-
+            this.isRotating =true;
             this.isDragging =true;
         }
-        if(this.isDragging){
+        if(this.mouseListener.isDownThisFrame && this.mouseListener.shiftKey && !UI.needsMouse()){
+
+            this.mouseStart.from(this.mouseListener.mousePos);
+            this.isPanning =true;
+            this.isDragging =true;
+        }
+        if(this.isDragging && this.isRotating){
+
             this.mouseMove.from(this.mouseListener.mousePos);
             this.mouseMove.subtract(this.mouseStart)
 
@@ -61,17 +80,13 @@ export default class EditCamera
             this.camQuat.multiplyLeft(this.camQuatTempX)
 
 
-            this.camPos.set(0,0,this.camDistance);
-            this.camPos.transformByQuaternion(this.camQuat)
-            this.camUp.set(0,1,0);
-            this.camUp.transformByQuaternion(this.camQuat)
-            this.camera.cameraUp.from(this.camUp)
-            this.camera.cameraWorld.from(this.camPos);
+            this.setCamera();
 
         }
         if(this.mouseListener.isUpThisFrame && this.isDragging){
-
+            this.isRotating =false;
             this.isDragging =false;
+            this.isPanning =false;
         }
 
 
@@ -80,7 +95,16 @@ export default class EditCamera
         return this.isDragging;
     }
 
-
+    setCamera(){
+        this.camPos.set(0,0,this.camDistance);
+        this.camPos.transformByQuaternion(this.camQuat)
+        this.camPos.add(this.camTarget)
+        this.camUp.set(0,1,0);
+        this.camUp.transformByQuaternion(this.camQuat)
+        this.camera.cameraUp.from(this.camUp)
+        this.camera.cameraWorld.from(this.camPos);
+        this.camera.cameraLookAt.from(this.camTarget)
+    }
 
 
 

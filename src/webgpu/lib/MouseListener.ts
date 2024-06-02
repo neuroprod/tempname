@@ -155,6 +155,7 @@ export default class MouseListener {
         this.metaKey =false;
         this.isUpThisFrame = false;
         this.isDownThisFrame = false;
+        this.wheelDelta =0;
         this.isDirty--;
     }
 }
