@@ -12,6 +12,10 @@ export default class MouseListener {
     public isUpThisFrame: boolean = false;
     public isDirty: number = 1;
     public wheelDelta: number = 0;
+    public altKey: boolean =false;
+    public ctrlKey: boolean = false;
+    public shiftKey: boolean=false;
+    public metaKey: boolean =false;
 
     constructor() {
         this.element = document;
@@ -62,12 +66,12 @@ export default class MouseListener {
         });
         document.addEventListener("mouseleave", (event) => {
 
-            if (event.clientY <= 0 || event.clientX <= 0 || (event.clientX >= window.innerWidth || event.clientY >= window.innerHeight)) {
+            //if (event.clientY <= 0 || event.clientX <= 0 || (event.clientX >= window.innerWidth || event.clientY >= window.innerHeight)) {
 
 
-                this.mousePos.set(-1, -1);
+                //this.mousePos.set(-1, -1);
 
-            }
+           // }
         });
         this.mousePos = new Vector2(-1, -1);
         this.mousePosDown = new Vector2(-1, -1);
@@ -82,11 +86,17 @@ export default class MouseListener {
     }
 
     mouseDownListener(e: MouseEvent) {
-        if (e.which - 1 == 0) {
+            if (e.button == 0) {
             this.setMousePosition(e);
             if (this.preventDefault) {
                 e.preventDefault();
             }
+            this.altKey =e.altKey;
+            this.ctrlKey =e.ctrlKey;
+            this.shiftKey =e.shiftKey;
+            this.metaKey =e.metaKey;
+
+
             this.mouseDown();
         }
     }
@@ -107,7 +117,7 @@ export default class MouseListener {
     }
 
     cancelListener() {
-        console.log("cancels")
+
         this.isDown = false;
         this.isDownThisFrame = false;
         this.isDirty = 1;
@@ -139,6 +149,10 @@ export default class MouseListener {
     }
 
     reset() {
+        this.altKey =false;
+        this.ctrlKey = false;
+        this.shiftKey=false;
+        this.metaKey =false;
         this.isUpThisFrame = false;
         this.isDownThisFrame = false;
         this.isDirty--;

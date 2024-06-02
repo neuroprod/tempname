@@ -116,7 +116,7 @@ export default class Ray {
     intersectPlane(point: Vector3, normal: Vector3) {
         const d  = -normal.dot( this.rayDir )
 
-        if ( d < 0.0001 ) {
+        if ( d < 0.0001 && d > -0.0001) {
             return null;
         }
         const c =-point.dot(normal);

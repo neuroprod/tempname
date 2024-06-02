@@ -81,6 +81,8 @@ export default class EditCursor {
 
     checkMouse() {
         if (!this.currentModel) return false;
+
+
         if (this.mouseListener.isDownThisFrame) {
             let intersections = this.ray.intersectModels([this.arrowX, this.arrowY, this.arrowZ])
             if (intersections.length == 0) return false;
@@ -88,9 +90,9 @@ export default class EditCursor {
             if (intersections[0].model.label == "x") {
                 this.intersectionPlanePos = this.currentModel.getWorldPos();
 
-                let dir1  =this.ray.rayDir.dot([0,0,1])
-                let dir2  =this.ray.rayDir.dot([0,1,0])
-                console.log(dir1,dir2)
+                //let dir1  =this.ray.rayDir.dot([0,0,1])
+                //let dir2  =this.ray.rayDir.dot([0,1,0])
+                //console.log(dir1,dir2)
 
                 this.intersectionPlaneDir.set(0, 0, 1);
                 this.move = "x"
@@ -118,6 +120,7 @@ export default class EditCursor {
             }
         }
 
+        //move/rotate/scale
         if (this.isDragging) {
             let pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir);
 
@@ -141,7 +144,7 @@ export default class EditCursor {
         if (this.mouseListener.isUpThisFrame && this.isDragging) {
             this.isDragging = false
         }
-
+        return this.isDragging;
     }
 
     public update() {

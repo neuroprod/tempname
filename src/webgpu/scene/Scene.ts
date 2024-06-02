@@ -12,6 +12,7 @@ import {Vector2} from "@math.gl/core";
 import Model from "../lib/model/Model.ts";
 import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
+import EditCamera from "./EditCamera.ts";
 
 export default class Scene{
 
@@ -26,6 +27,7 @@ export default class Scene{
     private currentModel: Model|null =null;
     private outline: Outline;
     private editCursor: EditCursor;
+    private editCamera:EditCamera;
     constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
         this.renderer = renderer;
         this.mouseListener =mouseListener;
@@ -39,30 +41,30 @@ export default class Scene{
         this.root =new Object3D(renderer,"root");
         this.outline =new Outline(renderer,this.camera)
         this.editCursor =new EditCursor(renderer,this.camera,mouseListener,this.ray)
-
+        this.editCamera = new EditCamera(renderer,this.camera,mouseListener,this.ray)
         this.makeScene()
 
     }
 
     update() {
-        this.camera.ratio =this.renderer.ratio
+        this.camera.ratio = this.renderer.ratio
 
-
+        //setScreenRay
         let mouseIn = new Vector2()
         mouseIn.from(this.mouseListener.mousePos)
-        mouseIn.scale([2/this.renderer.width,-2/this.renderer.height]);
-        mouseIn.subtract([1,-1]);
-        this.ray.setFromCamera(this.camera,mouseIn)
+        mouseIn.scale([2 / this.renderer.width, -2 / this.renderer.height]);
+        mouseIn.subtract([1, -1]);
+        this.ray.setFromCamera(this.camera, mouseIn)
 
-
-
-
-        let cursorNeedsMouse  =this.editCursor.checkMouse()
-
-        if(!cursorNeedsMouse && this.mouseListener.isDownThisFrame && !UI.needsMouse()){
-
-
-
+        //checkCameraInteraction
+        let cursorNeeded = false
+        cursorNeeded =this.editCamera.checkMouse();
+        //check edit cursor
+        if (!cursorNeeded) {
+            let cursorNeedsMouse = this.editCursor.checkMouse()
+        }
+        //check modelSelect
+        if(!cursorNeeded && this.mouseListener.isDownThisFrame && !UI.needsMouse()){
             let intersections  =this.ray.intersectModels(this.modelRenderer.models)
             if(intersections.length){
                 this.setCurrentModel(intersections[0].model)
@@ -102,7 +104,7 @@ export default class Scene{
 
 
         let model2 =this.modelPool.getModelByName(ModelNames.TESTCHARACTERS_PINK);
-        model2.setPosition(0.2,0,0)
+        model2.setPosition(0.0,0,0)
       model2.setScale(1,1,0.04)
         this.modelRenderer.addModel(model2)
     }
