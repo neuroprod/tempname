@@ -19,6 +19,12 @@ export default class EditCamera
 
     private mouseStart:Vector2 =new Vector2()
     private mouseMove:Vector2 =new Vector2()
+
+    private planePos:Vector3=new Vector3();
+    private planeDir:Vector3=new Vector3();
+    private planeIntersectStart=new Vector3();
+    private planeIntersectOffset=new Vector3();
+    private planeIntersectTemp=new Vector3();
     private camDistance =2
     private isDragging: boolean =false;
 
@@ -54,10 +60,19 @@ export default class EditCamera
             this.mouseStart.from(this.mouseListener.mousePos);
             this.isRotating =true;
             this.isDragging =true;
+            this.isPanning =false;
         }
-        if(this.mouseListener.isDownThisFrame && this.mouseListener.shiftKey && !UI.needsMouse()){
+       else if(this.mouseListener.isDownThisFrame && this.mouseListener.ctrlKey && !UI.needsMouse()){
 
             this.mouseStart.from(this.mouseListener.mousePos);
+            this.planePos.from(this.camTarget);
+            this.planeDir.from(this.camPos);
+            this.planeDir.subtract(this.planePos);
+            this.planeDir.normalize();
+
+            this.planeIntersectStart =this.ray.intersectPlane(this.planePos,this.planeDir) as Vector3//should always intersect
+
+            this.isRotating =false;
             this.isPanning =true;
             this.isDragging =true;
         }
@@ -81,6 +96,17 @@ export default class EditCamera
 
 
             this.setCamera();
+
+        }
+        else if(this.isDragging && this.isPanning){
+
+            console.log("panning")
+            this.planeIntersectOffset =this.ray.intersectPlane(this.planePos,this.planeDir) as Vector3//should always intersect
+
+
+
+            this.setCamera();
+            console.log(">>>")
 
         }
         if(this.mouseListener.isUpThisFrame && this.isDragging){

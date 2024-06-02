@@ -61,7 +61,7 @@ export default class Scene{
         cursorNeeded =this.editCamera.checkMouse();
         //check edit cursor
         if (!cursorNeeded) {
-            let cursorNeedsMouse = this.editCursor.checkMouse()
+            cursorNeeded = this.editCursor.checkMouse()
         }
         //check modelSelect
         if(!cursorNeeded && this.mouseListener.isDownThisFrame && !UI.needsMouse()){
