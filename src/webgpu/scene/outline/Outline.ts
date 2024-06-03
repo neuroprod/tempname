@@ -7,7 +7,7 @@ import Blit from "../../lib/blit/Blit.ts";
 import BaseBlitMaterial from "../../lib/blit/BaseBlitMaterial.ts";
 
 import Blend from "../../lib/material/Blend.ts";
-import SolidMaterial from "../../lib/material/SolidMaterial.ts";
+import SolidMaterial from "../../lib/material/materials/SolidMaterial.ts";
 import OutlinePass from "./OutlinePass.ts";
 
 export default class Outline{

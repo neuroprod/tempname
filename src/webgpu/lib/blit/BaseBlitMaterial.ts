@@ -27,7 +27,6 @@ export default class BaseBlitMaterial extends Material
 
 ${this.getVertexOutputStruct()}   
 
-
 ${this.getShaderUniforms()}
 @vertex
 fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput

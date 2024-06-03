@@ -3,7 +3,7 @@ import Bone from "./Bone.ts";
 import Leg from "./Leg.ts";
 import Model from "../../lib/model/Model.ts";
 import UI from "../../lib/UI/UI.ts";
-import TestMaterial from "../../lib/material/TestMaterial.ts";
+import TestMaterial from "../../lib/material/materials/TestMaterial.ts";
 import Sphere from "../../lib/mesh/geometry/Sphere.ts";
 import ColorV from "../../lib/ColorV.ts";
 import Timer from "../../lib/Timer.ts";

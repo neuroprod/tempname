@@ -24,7 +24,7 @@ export default class Material extends ObjectGPU {
     attributes: Array<Attribute> = [];
     vertexOutputs: Array<VertexOutput> = [];
     public depthWrite: boolean = true;
-    public topology =PrimitiveTopology.TriangleList
+    public topology = PrimitiveTopology.TriangleList
     public cullMode: "none" | "front" | "back" = CullMode.Back;
     public depthCompare: GPUCompareFunction = CompareFunction.Less;
     public blendModes!: Array<GPUBlendState>;
@@ -43,14 +43,16 @@ export default class Material extends ObjectGPU {
         this.setup();
 
     }
+
     setUniform(name: string, value: Float32Array | Array<number> | number) {
-       this.defaultUniformGroup.setUniform(name,value)
+        this.defaultUniformGroup.setUniform(name, value)
 
     }
 
-    setTexture(name: string, value: Texture){
-        this.defaultUniformGroup.setTexture(name,value)
+    setTexture(name: string, value: Texture) {
+        this.defaultUniformGroup.setTexture(name, value)
     }
+
     makePipeLine(pass: RenderPass) {
         if (this.pipeLine) return;
 
@@ -97,10 +99,10 @@ export default class Material extends ObjectGPU {
         return s;
     }
 
-    addUniformGroup(uniformGroup: UniformGroup, def: boolean= false) {
+    addUniformGroup(uniformGroup: UniformGroup, def: boolean = false) {
         this.uniformGroups.push(uniformGroup);
-        if(def){
-            this.defaultUniformGroup =uniformGroup;
+        if (def) {
+            this.defaultUniformGroup = uniformGroup;
         }
     }
 
@@ -124,8 +126,9 @@ export default class Material extends ObjectGPU {
         a += "   @builtin(position) position : vec4f\n}";
         return a;
     }
+
     public getFragmentInput() {
-      let a="";
+        let a = "";
         let loc = 0;
         for (let o of this.vertexOutputs) {
             a += " @location(" + loc + ") " + o.name + " : " + getShaderTextForShaderType(o.type) + ","
@@ -134,6 +137,7 @@ export default class Material extends ObjectGPU {
 
         return a;
     }
+
     public getShaderAttributes() {
 
         let a = "";
@@ -207,11 +211,6 @@ export default class Material extends ObjectGPU {
             layouts.push(u.bindGroupLayout)
         }
 
-        /*if (this.shader.needsCamera) layouts.push(Camera.getBindGroupLayout())
-        if (this.shader.needsTransform) layouts.push(ModelTransform.getBindGroupLayout())
-        if (this.uniforms) layouts.push(this.uniforms.bindGroupLayout)
-        if (this.skin) layouts.push(this.skin.bindGroupLayout)
-        if (this.extraGroup) layouts.push(this.extraGroup.bindGroupLayout)*/
         this.pipeLineLayout = this.device.createPipelineLayout({
             label: "Material_pipelineLayout_" + this.label,
             bindGroupLayouts: layouts,
@@ -221,12 +220,10 @@ export default class Material extends ObjectGPU {
     private getVertexBufferLayout() {
         let bufferLayout: Array<GPUVertexBufferLayout> = [];
 
-
         for (let atr of this.attributes) {
 
             let vertexAtr: GPUVertexAttribute = {
                 shaderLocation: atr.slot, offset: 0, format: atr.format,
-
             }
 
             bufferLayout.push({

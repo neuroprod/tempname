@@ -70,7 +70,7 @@ export default class Scene{
             }
         }
 
-        this.editCursor.update()
+        this.editCursor.update(this.editCamera.camDistance)
 
     }
     setCurrentModel(value: Model | null) {

@@ -1,7 +1,7 @@
 import Object3D from "../../lib/model/Object3D.ts";
 import Renderer from "../../lib/Renderer.ts";
 
-import TestMaterial from "../../lib/material/TestMaterial.ts";
+import TestMaterial from "../../lib/material/materials/TestMaterial.ts";
 
 import Model from "../../lib/model/Model.ts";
 import Sphere from "../../lib/mesh/geometry/Sphere.ts";

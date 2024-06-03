@@ -1,5 +1,5 @@
 import Renderer from "../../lib/Renderer.ts";
-import TestMaterial from "../../lib/material/TestMaterial.ts";
+import TestMaterial from "../../lib/material/materials/TestMaterial.ts";
 import Box from "../../lib/mesh/geometry/Box.ts";
 import Model from "../../lib/model/Model.ts";
 import Ray from "../../lib/Ray.ts";

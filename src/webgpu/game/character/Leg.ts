@@ -4,7 +4,7 @@ import Bone from "./Bone.ts";
 import Model from "../../lib/model/Model.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import Sphere from "../../lib/mesh/geometry/Sphere.ts";
-import TestMaterial from "../../lib/material/TestMaterial.ts";
+import TestMaterial from "../../lib/material/materials/TestMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
 
 export default class Leg{

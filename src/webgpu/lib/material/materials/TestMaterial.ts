@@ -1,8 +1,8 @@
-import Material from "./Material.ts";
-import {ShaderType} from "./ShaderTypes.ts";
-import UniformGroup from "./UniformGroup.ts";
-import DefaultUniformGroups from "./DefaultUniformGroups.ts";
-import {CullMode} from "../WebGPUConstants.ts";
+import Material from "../Material.ts";
+import {ShaderType} from "../ShaderTypes.ts";
+import UniformGroup from "../UniformGroup.ts";
+import DefaultUniformGroups from "../DefaultUniformGroups.ts";
+import {CullMode} from "../../WebGPUConstants.ts";
 import {Vector4} from "@math.gl/core";
 
 export default class TestMaterial extends Material{

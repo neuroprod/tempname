@@ -1,9 +1,9 @@
-import Material from "./Material.ts";
-import {ShaderType} from "./ShaderTypes.ts";
+import Material from "../Material.ts";
+import {ShaderType} from "../ShaderTypes.ts";
 
-import {CompareFunction} from "../WebGPUConstants.ts";
-import DefaultUniformGroups from "./DefaultUniformGroups.ts";
-import UniformGroup from "./UniformGroup.ts";
+import {CompareFunction} from "../../WebGPUConstants.ts";
+import DefaultUniformGroups from "../DefaultUniformGroups.ts";
+import UniformGroup from "../UniformGroup.ts";
 import {Vector4} from "@math.gl/core";
 
 export default class SolidMaterial extends Material

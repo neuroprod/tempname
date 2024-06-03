@@ -6,7 +6,6 @@ export default class TextureHandler{
     public textures: Array<Texture> = [];
     private scaleToCanvasTextures: Array<RenderTexture> = [];
 
-
     constructor() {
     }
     addTexture(texture: Texture) {

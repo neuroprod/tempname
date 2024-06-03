@@ -47,14 +47,14 @@ export default class Renderer {
         const adapter = await navigator.gpu.requestAdapter({powerPreference: "high-performance"});
         if(adapter) {
 
-            for (let a of adapter.features.keys()) {
+           /* for (let a of adapter.features.keys()) {
                 console.log(a)
-            }
+            }*/
             const requiredFeatures: Array<GPUFeatureName> = [];
 
 
             this.device = await adapter.requestDevice({requiredFeatures: requiredFeatures});
-            console.log(this.device)
+          //  console.log(this.device)
             this.context = this.canvas.getContext("webgpu") as GPUCanvasContext;
             this.presentationFormat = navigator.gpu.getPreferredCanvasFormat();
 
@@ -81,13 +81,10 @@ export default class Renderer {
 
         this.canvasTextureView = this.context.getCurrentTexture();
         this.canvasColorAttachment.setTarget(this.canvasTextureView.createView())
+
+
         this.commandEncoder = this.device.createCommandEncoder();
-
-
-
         setCommands();
-
-
         this.device.queue.submit([this.commandEncoder.finish()]);
 
 
@@ -130,7 +127,6 @@ export default class Renderer {
     private updateModels() {
         for (let m of this.models) {
             m.update();
-
         }
     }
 }

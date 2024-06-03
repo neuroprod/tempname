@@ -29,7 +29,7 @@ export default class EditCamera
     private camTargetStart=new Vector3();
 
 
-    private camDistance =2
+    public camDistance =2
     private isDragging: boolean =false;
 
     private camUp: Vector3 =new Vector3();
@@ -108,7 +108,7 @@ export default class EditCamera
             //keep y vertical
             this.camQuat.multiplyRight(this.camQuatTempY)
             this.camQuat.multiplyLeft(this.camQuatTempX)
-            
+
             this.setCamera();
 
         }

@@ -32,4 +32,24 @@ export default class ColorV extends Vector4 {
   set a(value: number) {
     this[3] = value;
   }
+
+  public setHex(hex: string, a = 1) {
+    let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+
+    if (result) {
+      this.r = parseInt(result[1], 16) / 255;
+      this.g = parseInt(result[2], 16) / 255;
+      this.b = parseInt(result[3], 16) / 255;
+    }
+
+    this.a = a;
+    return this;
+  }
+
+  gray(val: number) {
+    this.r = val;
+    this.g = val;
+    this.b = val;
+    return this;
+  }
 }
