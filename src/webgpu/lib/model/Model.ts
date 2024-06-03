@@ -43,14 +43,4 @@ export default class Model extends Object3D {
 
 
 
-
-
-
-
-
-
-
-
-
-
 }

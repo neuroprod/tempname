@@ -14,6 +14,13 @@ import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
 
+export enum ToolState {
+
+    translate,
+    rotate,
+    scale,
+
+}
 export default class Scene{
 
 
@@ -28,6 +35,8 @@ export default class Scene{
     private outline: Outline;
     private editCursor: EditCursor;
     private editCamera:EditCamera;
+
+    private currentToolState:ToolState=ToolState.translate;
     constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
         this.renderer = renderer;
         this.mouseListener =mouseListener;
@@ -43,7 +52,7 @@ export default class Scene{
         this.editCursor =new EditCursor(renderer,this.camera,mouseListener,this.ray)
         this.editCamera = new EditCamera(renderer,this.camera,mouseListener,this.ray)
         this.makeScene()
-
+this.setCurrentToolState(ToolState.translate)
     }
 
     update() {
@@ -70,8 +79,13 @@ export default class Scene{
             }
         }
 
-        this.editCursor.update(this.editCamera.camDistance)
+        this.editCursor.update()
 
+    }
+    public onUI() {
+        if (UI.LButton("Translate", "Tools", this.currentToolState!= ToolState.translate)) this.setCurrentToolState(ToolState.translate);
+        if (UI.LButton("Rotate", "", this.currentToolState!= ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
+        if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
     }
     setCurrentModel(value: Model | null) {
         this.currentModel = value;
@@ -101,7 +115,12 @@ export default class Scene{
 
         let model2 =this.modelPool.getModelByName(ModelNames.TESTCHARACTERS_PINK);
         model2.setPosition(0.0,0,0)
-      model2.setScale(1,1,0.04)
+        model2.setScale(1,1,0.04)
         this.modelRenderer.addModel(model2)
+    }
+
+    private setCurrentToolState(toolState: ToolState) {
+        this.currentToolState =toolState;
+        this.editCursor.setToolState(this.currentToolState);
     }
 }

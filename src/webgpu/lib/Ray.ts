@@ -21,7 +21,7 @@ export default class Ray {
     private _rayStart: Vector3 = new Vector3();
     private _rayDir: Vector3 = new Vector3();
     private intersectionDistance: number=0;
-
+private _temp: Vector3 = new Vector3();
     constructor() {
 
 
@@ -135,6 +135,42 @@ export default class Ray {
         let p = this.rayDir.clone()
         p.scale(t)
         p.add(this.rayStart);
+        return p
+    }
+
+    intersectSphere(position: Vector3, radius: number, invModel:Matrix4|null) {
+
+        this._rayStart.from(this.rayStart);
+        this._rayDir.from(this.rayDir);
+        if( invModel) {
+            this._rayDir.add(this._rayStart as NumericArray);
+            this._rayDir.transform(invModel as NumericArray);
+            this._rayStart.transform(invModel as NumericArray);
+            this._rayDir.subtract(this._rayStart as NumericArray);
+        }
+
+
+
+
+
+        this._temp.from(this._rayStart)
+
+        this._temp.subtract(position);
+        const b = this._temp.dot( this._rayDir);
+        const c = this._temp.dot(this._temp) - radius * radius;
+        const h = b * b - c;
+        if (h < 0.0) {
+            return null;
+        }
+
+        const t = -b - Math.sqrt(h);
+        if (t < 0) {
+            return null;
+        }
+
+        let p = this._rayDir.clone()
+        p.scale(t)
+        p.add(this._rayStart);
         return p
     }
 }

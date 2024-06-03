@@ -27,7 +27,7 @@ this.addVertexOutput("world",ShaderType.vec3)
         this.depthWrite = false
         this.depthCompare = CompareFunction.Always
         this.cullMode =CullMode.None
-        this.logShader =true;
+
     }
     getShader(): string {
         return /* wgsl */ `

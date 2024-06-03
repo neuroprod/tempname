@@ -98,8 +98,15 @@ export default class Main {
 
     private onUI() {
         UI.pushWindow("Main")
-        if (UI.LButton("Editor", "", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);
+        if (UI.LButton("Editor", "Views", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);
         if (UI.LButton("ModelMaker", "", this.currentMainState != MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+        UI.separator("msep",false)
+       if(this.currentMainState== MainState.modelMaker){
+           this.modelMaker.onUI()
+       }  else if(this.currentMainState== MainState.editor){
+            this.scene.onUI()
+        }
+
         UI.popWindow()
     }
 

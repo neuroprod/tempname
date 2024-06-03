@@ -169,7 +169,29 @@ private temp4 =new Vector4()
         return this._position;
     }
 
+    getEulerXYZ() {
+        const w = this._rotation[3];
+        const x = this._rotation[0];
+        const y = this._rotation[1];
+        const z = this._rotation[2];
 
+        const wx = w * x,
+            wy = w * y,
+            wz = w * z;
+        const xx = x * x,
+            xy = x * y,
+            xz = x * z;
+        const yy = y * y,
+            yz = y * z,
+            zz = z * z;
+
+        return new Vector3([
+            -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + yy)),
+            Math.asin(2 * (xz + wy)),
+            -Math.atan2(2 * (xy - wz), 1 - 2 * (yy + zz)),
+        ]);
+
+    }
 
 
 }

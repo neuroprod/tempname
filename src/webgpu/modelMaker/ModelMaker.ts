@@ -102,7 +102,7 @@ export default class ModelMaker {
             this.cutting.model3D.setEuler(Math.sin(Timer.time/3)*0.2,Math.sin(Timer.time)*0.8,0)
         }
         this.handleMouse();
-        this.onUI();
+       // this.onUI();
 
 
     }
@@ -138,9 +138,9 @@ export default class ModelMaker {
         this.mouseLocal.y = 1 - pos.y / this.renderer.height
     }
 
-    private onUI() {
-        UI.pushWindow("ModelMaker")
-        UI.pushLList("Projects", 100);
+    public onUI() {
+
+        UI.pushLList("Models", 100);
         let count = 0;
         for (let p of this.projects) {
             if (UI.LListItem(p.name, p == this.currentProject)) {
@@ -203,7 +203,7 @@ export default class ModelMaker {
                 this.cutting.onUI()
             }
         }
-        UI.popWindow()
+
 
     }
 
