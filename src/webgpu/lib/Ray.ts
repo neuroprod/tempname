@@ -39,13 +39,23 @@ export default class Ray {
         this.rayDir.from(r.rayDir);
 
     }
+    setFromCameraData(camWorld:Vector3,camViewProjectionInv:Matrix4, mousePos: Vector2) {
+
+        //let mousePos = mousePosIn.clone().scale(new Vector2(2 / (this.renderer.width / this.renderer.pixelRatio), 2 / (this.renderer.height / this.renderer.pixelRatio)))
+        let pos = new Vector4(mousePos.x , mousePos.y , 1, 1);
+
+        pos.transform(camViewProjectionInv as NumericArray);
+        this.rayStart.from(camWorld)
+        this.rayDir = new Vector3(pos.x - this.rayStart.x, pos.y - this.rayStart.y, pos.z - this.rayStart.z).normalize()
+
+    }
     setFromCamera(camera: Camera, mousePos: Vector2) {
 
        //let mousePos = mousePosIn.clone().scale(new Vector2(2 / (this.renderer.width / this.renderer.pixelRatio), 2 / (this.renderer.height / this.renderer.pixelRatio)))
         let pos = new Vector4(mousePos.x , mousePos.y , 1, 1);
 
         pos.transform(camera.viewProjectionInv as NumericArray);
-        this.rayStart = camera.cameraWorld.clone()
+        this.rayStart.from(camera.cameraWorld)
         this.rayDir = new Vector3(pos.x - this.rayStart.x, pos.y - this.rayStart.y, pos.z - this.rayStart.z).normalize()
 
     }

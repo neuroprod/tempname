@@ -50,11 +50,7 @@ export default class Scene{
         this.camera.ratio = this.renderer.ratio
 
         //setScreenRay
-        let mouseIn = new Vector2()
-        mouseIn.from(this.mouseListener.mousePos)
-        mouseIn.scale([2 / this.renderer.width, -2 / this.renderer.height]);
-        mouseIn.subtract([1, -1]);
-        this.ray.setFromCamera(this.camera, mouseIn)
+        this.ray.setFromCamera(this.camera, this.mouseListener.getMouseNorm())
 
         //checkCameraInteraction
         let cursorNeeded = false

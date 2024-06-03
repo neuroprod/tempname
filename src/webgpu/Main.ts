@@ -67,7 +67,7 @@ export default class Main {
 
     private init() {
         this.keyInput = new KeyInput();
-        this.mouseListener = new MouseListener();
+        this.mouseListener = new MouseListener(this.renderer);
 
         this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);

@@ -1,10 +1,9 @@
 import {Vector2} from "@math.gl/core";
+import Renderer from "./Renderer.ts";
 
 
 export default class MouseListener {
-    private element: Document;
-
-    private preventDefault = false;
+    public mouseNorm: Vector2 =new Vector2();
     public mousePos: Vector2;
     public mousePosDown: Vector2;
     public isDown: boolean = false;
@@ -12,12 +11,16 @@ export default class MouseListener {
     public isUpThisFrame: boolean = false;
     public isDirty: number = 1;
     public wheelDelta: number = 0;
-    public altKey: boolean =false;
+    public altKey: boolean = false;
     public ctrlKey: boolean = false;
-    public shiftKey: boolean=false;
-    public metaKey: boolean =false;
+    public shiftKey: boolean = false;
+    public metaKey: boolean = false;
+    private element: Document;
+    private preventDefault = false;
+    private renderer: Renderer;
 
-    constructor() {
+    constructor(renderer: Renderer) {
+        this.renderer = renderer;
         this.element = document;
 
         this.element.addEventListener(
@@ -69,12 +72,21 @@ export default class MouseListener {
             //if (event.clientY <= 0 || event.clientX <= 0 || (event.clientX >= window.innerWidth || event.clientY >= window.innerHeight)) {
 
 
-                //this.mousePos.set(-1, -1);
+            //this.mousePos.set(-1, -1);
 
-           // }
+            // }
         });
         this.mousePos = new Vector2(-1, -1);
         this.mousePosDown = new Vector2(-1, -1);
+    }
+
+    getMouseNorm() {
+
+        this.mouseNorm.from(this.mousePos)
+        this.mouseNorm.scale([2 / this.renderer.width, -2 / this.renderer.height]);
+        this.mouseNorm.subtract([1, -1]);
+
+        return this.mouseNorm;
     }
 
     touchStartListener(e: TouchEvent) {
@@ -86,15 +98,15 @@ export default class MouseListener {
     }
 
     mouseDownListener(e: MouseEvent) {
-            if (e.button == 0) {
+        if (e.button == 0) {
             this.setMousePosition(e);
             if (this.preventDefault) {
                 e.preventDefault();
             }
-            this.altKey =e.altKey;
-            this.ctrlKey =e.ctrlKey;
-            this.shiftKey =e.shiftKey;
-            this.metaKey =e.metaKey;
+            this.altKey = e.altKey;
+            this.ctrlKey = e.ctrlKey;
+            this.shiftKey = e.shiftKey;
+            this.metaKey = e.metaKey;
 
 
             this.mouseDown();
@@ -143,19 +155,19 @@ export default class MouseListener {
     }
 
     setMousePosition(e: any) {
-        this.mousePos.x = e.offsetX*window.devicePixelRatio;
-        this.mousePos.y = e.offsetY*window.devicePixelRatio;
+        this.mousePos.x = e.offsetX * window.devicePixelRatio;
+        this.mousePos.y = e.offsetY * window.devicePixelRatio;
         this.isDirty = 1;
     }
 
     reset() {
-        this.altKey =false;
+        this.altKey = false;
         this.ctrlKey = false;
-        this.shiftKey=false;
-        this.metaKey =false;
+        this.shiftKey = false;
+        this.metaKey = false;
         this.isUpThisFrame = false;
         this.isDownThisFrame = false;
-        this.wheelDelta =0;
+        this.wheelDelta = 0;
         this.isDirty--;
     }
 }
