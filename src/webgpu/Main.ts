@@ -10,6 +10,7 @@ import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
 import ModelLoader from "./ModelLoader.ts";
 import Scene from "./scene/Scene.ts";
+import JsonLoader from "./JsonLoader.ts";
 
 enum MainState {
 
@@ -36,6 +37,7 @@ export default class Main {
 
     private currentMainState!: MainState
     private scene!: Scene;
+    private sceneLoader!: JsonLoader;
 
 
     constructor() {
@@ -60,7 +62,7 @@ export default class Main {
         this.preloader = new PreLoader(() => {
         }, this.init.bind(this));
         this.modelLoader = new ModelLoader(this.renderer, this.preloader)
-
+        this.sceneLoader =new JsonLoader("scene1",this.preloader)
     }
 
 
@@ -69,7 +71,7 @@ export default class Main {
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
-        this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data)
+        this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data,this.sceneLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
         this.setMainState(MainState.editor)
         this.tick();

@@ -5,17 +5,31 @@ import ExtrudeMesh from "../lib/mesh/ExtrudeMesh.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import Object3D from "../lib/model/Object3D.ts";
 import SceneObject3D from "../shared/SceneObject3D.ts";
+import SelectItem from "../lib/UI/math/SelectItem.ts";
+import {ModelNames} from "../data/ModelNames.ts";
 
 
 export default class ModelPool {
     private renderer: Renderer;
     private data: any;
-
+    public modelSelect:Array<SelectItem>=[]
     constructor(renderer:Renderer,data:any) {
 
         this.renderer =renderer;
         this.data =data;
 
+        for (let m of data){
+
+          let mN = m.name;
+            let meshes = m.meshes
+
+           for (let mesh of meshes){
+               let n =mN+"_"+mesh.name
+               let selectItem =new SelectItem(n,n)
+               this.modelSelect.push(selectItem)
+
+           }
+        }
 
     }
     public getModelByName(name:string,newName="")

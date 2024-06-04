@@ -47,10 +47,10 @@ export async function  sendBlobToServer(b:Blob,mime:string,filename:string,saveT
 
 
 }
-export async function  saveScene(filename:string,data:string ="") {
+export async function  saveScene(fileName:string,data:string ="") {
 
     let formData = new FormData();
-    formData.set("filename",filename);
+    formData.set("fileName",fileName);
     formData.set("data",data);
 
     const response = await fetch("http://localhost:3001/saveScene", {

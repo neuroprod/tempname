@@ -61,11 +61,11 @@ app.post('/save',upload.single('file') ,(req, res) => {
 
 })
 
-app.post('/saveScene',(req, res) => {
+app.post('/saveScene',upload.single('file'),(req, res) => {
 
 
 
-    console.log(req.body.data)
+
 
 
     //console.log(req.file)
@@ -73,9 +73,9 @@ app.post('/saveScene',(req, res) => {
 
 
 
-    //fs.writeFileSync(path + '/'+req.body.fileName+'.json',  req.body.data);
+    fs.writeFileSync(path + '/'+req.body.fileName+'.json',  req.body.data);
 
-
+console.log('sceneSaved');
 
     res.send({
         message: 'ok',
