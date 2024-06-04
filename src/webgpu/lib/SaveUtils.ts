@@ -47,6 +47,19 @@ export async function  sendBlobToServer(b:Blob,mime:string,filename:string,saveT
 
 
 }
+export async function  saveScene(filename:string,data:string ="") {
+
+    let formData = new FormData();
+    formData.set("filename",filename);
+    formData.set("data",data);
+
+    const response = await fetch("http://localhost:3001/saveScene", {
+        method: "post",
+        body: formData,
+    });
+
+
+}
 
 // RGBA8Unorm GPUTextureUsage.COPY_SRC
 export async function getImageBlob (texture:Texture){

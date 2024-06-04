@@ -23,5 +23,20 @@ export default class SceneObject3D extends Object3D{
     }
 
 
+    getSceneData(dataArr:Array<any>) {
+       let obj:any ={}
+        obj.id =this.UUID;
+        obj.label =this.label;
+        obj.position =this.getPosition()
+        obj.rotation=this.getRotation()
+        if(this.model) obj.model = this.model.label
+        if(this.parent)obj.parentID = this.parent.UUID
+        dataArr.push(obj);
 
+        for (let child of this.children)
+        {
+            let co = child as SceneObject3D;
+            if (co.getSceneData) co.getSceneData(dataArr );
+        }
+    }
 }

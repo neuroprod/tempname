@@ -14,6 +14,7 @@ import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
 import SceneObject3D from "../shared/SceneObject3D.ts";
+import {saveScene} from "../lib/SaveUtils.ts";
 
 export enum ToolState {
 
@@ -87,6 +88,18 @@ export default class Scene{
 
     }
     public onUI() {
+        if(UI.LButton("Save Scene")){
+
+           let data:Array<any>=[]
+           this.root.getSceneData(data);
+
+            saveScene("scene",JSON.stringify(data)).then()
+        }
+
+
+        UI.separator("Tools")
+
+
         this.editCursor.localSpace = UI.LBool("Translate local",true);
         if (UI.LButton("Translate", "", this.currentToolState!= ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState!= ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
