@@ -18,7 +18,7 @@ import {ToolState} from "../Scene.ts";
 
 export default class EditCursor {
     private renderer: Renderer;
-    private currentModel: Model | null = null;
+    private currentModel: Object3D | null = null;
     private root: Object3D;
     private arrowMesh: Mesh
 
@@ -227,7 +227,7 @@ export default class EditCursor {
 
     }
 
-    setCurrentModel(model: Model | null) {
+    setCurrentModel(model: Object3D | null) {
         this.currentModel = model;
         if (!this.currentModel) return
 

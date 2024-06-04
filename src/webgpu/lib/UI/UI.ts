@@ -27,6 +27,7 @@ import LList, {LListSettings} from "./components/LList";
 import LListItem, {LListItemSettings} from "./components/LListItem";
 import Renderer from "../Renderer";
 import ButtonGroup, {ButtonGroupSettings} from "./components/ButtonGroup";
+import Tree, {TreeSettings} from "./components/Tree.ts";
 
 export default class UI {
     private static viewPort: Viewport | null;
@@ -147,7 +148,20 @@ export default class UI {
         }
         UI_I.groupDepth++;
     }
+    static pushTree(label: string, settings?: TreeSettings) {
+        if (!UI.initialized) return;
+        if (!UI_I.setComponent(label)) {
+            if (!settings) settings = new TreeSettings();
+            let comp = new Tree(UI_I.getID(label), label, settings);
+            UI_I.addComponent(comp);
+        }
 
+        // @ts-ignore
+        let result = UI_I.currentComponent.parent.getReturnValue();
+
+        UI_I.groupDepth++;
+        return result;
+    }
     static pushButtonGroup(label: string, settings?: ButtonGroupSettings) {
         if (!UI.initialized) return;
         if (!UI_I.setComponent(label)) {
@@ -161,7 +175,12 @@ export default class UI {
         return result;
 
     }
-
+    static popTree():void{
+        if (!UI.initialized) return;
+        UI_I.groupDepth--;
+        UI_I.popComponent();
+        UI_I.popComponent();
+    };
     static popGroup() {
         if (!UI.initialized) return;
         UI_I.groupDepth--;

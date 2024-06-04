@@ -18,7 +18,7 @@ export default class Object3D extends ObjectGPU {
 
 
 
-private temp4 =new Vector4()
+    private temp4 =new Vector4()
     private temp3 =new Vector3()
     constructor(renderer: Renderer, label: string = "") {
         super(renderer, label);

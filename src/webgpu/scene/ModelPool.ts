@@ -3,6 +3,8 @@ import Model from "../lib/model/Model.ts";
 import ModelPreviewMaterial from "../modelMaker/ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../lib/mesh/ExtrudeMesh.ts";
 import {Vector2, Vector3} from "@math.gl/core";
+import Object3D from "../lib/model/Object3D.ts";
+import SceneObject3D from "../shared/SceneObject3D.ts";
 
 
 export default class ModelPool {
@@ -16,7 +18,7 @@ export default class ModelPool {
 
 
     }
-    public getModelByName(name:string)
+    public getModelByName(name:string,newName="")
     {
         let names = name.split("_")
         if(names.length!=2) {
@@ -43,7 +45,11 @@ export default class ModelPool {
         mesh.setExtrusion(points,0.02,new Vector3(meshData.center))
         model.mesh  =mesh;
 
-        return model;
+        if(newName=="")newName =name;
+        let obj3D =new SceneObject3D(this.renderer,newName)
+        obj3D.addChild(model)
+        obj3D.model =model;
+        return obj3D;
 
     }
     private getObjByName(arr:Array<any>,name:string){

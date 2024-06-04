@@ -45,6 +45,7 @@ import DragPopUp, {DragPopUpSettings,} from "./components/internal/popUps/DragPo
 
 import LSelect, {LSelectSettings} from "./components/LSelect";
 import Event, {EventSettings} from "./components/internal/Event";
+import TreeTitle, {TreeTitleSettings} from "./components/internal/UITreeTitle.ts";
 
 export default class UI_IC {
     static LFloat(
@@ -331,7 +332,20 @@ export default class UI_IC {
         UI_I.popComponent();
         return retValue;
     }
+    static treeTitle(
+        label: string,
 
+        settings?: TreeTitleSettings
+    ) {
+        if (!UI_I.setComponent(label)) {
+            if (!settings) settings = new TreeTitleSettings();
+            let comp = new TreeTitle(UI_I.getID(label), label, settings);
+            UI_I.addComponent(comp);
+        }
+        let retValue = UI_I.currentComponent.getReturnValue();
+        UI_I.popComponent();
+        return retValue;
+    }
     static toggleIcon(
         name: string,
         ref: any,

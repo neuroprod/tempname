@@ -13,6 +13,7 @@ import Model from "../lib/model/Model.ts";
 import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
+import SceneObject3D from "../shared/SceneObject3D.ts";
 
 export enum ToolState {
 
@@ -27,11 +28,11 @@ export default class Scene{
     private renderer: Renderer;
     private camera: Camera;
     private modelRenderer: ModelRenderer;
-    private root :Object3D
+    private root :SceneObject3D
     private modelPool: ModelPool;
     private mouseListener: MouseListener;
     private ray:Ray =new Ray();
-    private currentModel: Model|null =null;
+    private currentModel: Object3D|null =null;
     private outline: Outline;
     private editCursor: EditCursor;
     private editCamera:EditCamera;
@@ -47,10 +48,12 @@ export default class Scene{
         this.camera.fovy =0.5
         this.modelPool =new ModelPool(renderer,data);
         this.modelRenderer =new ModelRenderer(renderer,"mainModels",this.camera)
-        this.root =new Object3D(renderer,"root");
+
         this.outline =new Outline(renderer,this.camera)
         this.editCursor =new EditCursor(renderer,this.camera,mouseListener,this.ray)
         this.editCamera = new EditCamera(renderer,this.camera,mouseListener,this.ray)
+        this.root =new SceneObject3D(this.renderer,"root")
+        this.root.setCurrentModel=this.setCurrentModel.bind(this);
         this.makeScene()
         this.setCurrentToolState(ToolState.translate)
     }
@@ -72,7 +75,8 @@ export default class Scene{
         if(!cursorNeeded && this.mouseListener.isDownThisFrame && !UI.needsMouse()){
             let intersections  =this.ray.intersectModels(this.modelRenderer.models)
             if(intersections.length){
-                this.setCurrentModel(intersections[0].model)
+                let m = intersections[0].model;
+                this.setCurrentModel(m.parent as SceneObject3D)
 
             }else{
                 this.setCurrentModel(null);
@@ -87,11 +91,21 @@ export default class Scene{
         if (UI.LButton("Translate", "", this.currentToolState!= ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState!= ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
        // if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+        this.root.onUI()
+
+
     }
-    setCurrentModel(value: Model | null) {
-        this.currentModel = value;
-        this.outline.setCurrentModel( this.currentModel)
-        this.editCursor.setCurrentModel(this.currentModel);
+    setCurrentModel(value: SceneObject3D | null) {
+        if(value) {
+            this.currentModel = value;
+            this.outline.setCurrentModel( value.model)
+            this.editCursor.setCurrentModel(this.currentModel);
+        }else{
+            this.currentModel = null;
+            this.outline.setCurrentModel( null)
+            this.editCursor.setCurrentModel(null);
+        }
+
     }
     draw() {
         this.outline.draw()
@@ -111,23 +125,34 @@ export default class Scene{
 
         let cloud1 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_CLOUD1);
         cloud1.setPosition(0.2,0.2,-0.1)
+        cloud1.setCurrentModel =this.setCurrentModel.bind(this);
+        this.root.addChild(cloud1)
+
 
         let cloud2 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_CLOUD2);
         cloud2.setPosition(-0.3,0.3,-0.1)
+        cloud2.setCurrentModel =this.setCurrentModel.bind(this);
+        this.root.addChild(cloud2)
+
         let body =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_BODY);
-        let eye1 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_EYE);
-        let eye2 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_EYE);
+        body.setCurrentModel =this.setCurrentModel.bind(this);
+        let eye1 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_EYE,"eyeLeft");
+        let eye2 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_EYE,"eyeRight");
         eye1.setPosition(0.1,0,0.1)
         eye2.setPosition(-0.1,0,0.1)
+        eye2.setCurrentModel =this.setCurrentModel.bind(this);
+        eye1.setCurrentModel =this.setCurrentModel.bind(this);
         body.addChild(eye1)
         body.addChild(eye2)
+        this.root.addChild(body)
        // body.setPosition(-0.1,0,0.1)
         //body.setEuler(0,1,0.2)
-        this.modelRenderer.addModel(cloud1)
-        this.modelRenderer.addModel(cloud2)
-        this.modelRenderer.addModel(body)
-        this.modelRenderer.addModel(eye1)
-        this.modelRenderer.addModel(eye2)
+        this.modelRenderer.addModel(cloud1.children[0] as Model)
+        this.modelRenderer.addModel(cloud2.children[0] as Model)
+        this.modelRenderer.addModel(body.children[0] as Model)
+        this.modelRenderer.addModel(eye1.children[0] as Model)
+        this.modelRenderer.addModel(eye2.children[0] as Model)
+
 
     }
 
