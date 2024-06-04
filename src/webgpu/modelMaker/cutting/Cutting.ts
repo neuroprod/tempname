@@ -16,6 +16,7 @@ export default class Cutting{
 
     private project!: Project;
     private currentMesh!: ProjectMesh|null;
+    private setCenter: boolean =false;
     constructor(renderer:Renderer) {
 
 
@@ -47,8 +48,13 @@ export default class Cutting{
     setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean) {
         if(!this.currentMesh)return;
         if (isDownThisFrame && !UI.needsMouse()) {
-            this.addVectorPoint(mouseLocal);
-
+            if(this.setCenter){
+                this.currentMesh.setCenter(mouseLocal);
+                this.setCenter =false;
+                this.updateLine()
+            }else {
+                this.addVectorPoint(mouseLocal);
+            }
         }
     }
 
@@ -124,7 +130,10 @@ export default class Cutting{
                 }
 
             }
-
+            if(UI.LButton("Set Center"))
+            {
+                this.setCenter =true;
+            }
 
         }
     }

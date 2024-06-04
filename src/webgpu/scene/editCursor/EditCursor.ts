@@ -9,7 +9,7 @@ import Camera from "../../lib/Camera.ts";
 import RevolveMesh from "../../lib/mesh/geometry/RevolveMesh.ts";
 import MouseListener from "../../lib/MouseListener.ts";
 import Ray from "../../lib/Ray.ts";
-import {Matrix4, Quaternion, Vector2, Vector3, Vector4} from "@math.gl/core";
+import {Matrix3, Quaternion, Vector2, Vector3, Vector4} from "@math.gl/core";
 import CircleMesh from "./CircleMesh.ts";
 import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
@@ -41,7 +41,7 @@ export default class EditCursor {
     private ray: Ray;
     private intersectionPlanePos: Vector3 = new Vector3();
     private intersectionPlaneDir: Vector3 = new Vector3();
-    private startDragPos!: Vector3;
+    private startDragPos: Vector3= new Vector3();
     private isDragging: boolean = false;
     private move!: string;
 
@@ -57,7 +57,12 @@ export default class EditCursor {
     private scaleMesh: RevolveMesh;
     private cursorSize: number=0.2;
     private scaleStart: Vector3 =new Vector3();
-
+    public localSpace: boolean =false;
+    private planePos: Vector3=new Vector3();
+    private movePos: Vector3 =new Vector3();
+    private rootScale: number =1;
+    private rootRot: Quaternion =new Quaternion();
+    private rotDir: number =1;
 
     constructor(renderer: Renderer, camera: Camera, mouseListener: MouseListener, ray: Ray) {
 
@@ -180,34 +185,44 @@ export default class EditCursor {
 
         if(this.currentToolState==ToolState.rotate) {
 
-            this.circleX.material.setUniform("ratio", this.renderer.ratio)
+            this.circleX.material.setUniform("ratio", 1/this.renderer.ratio)
             this.circleX.material.setUniform("maxDist", camDistance)
-            this.circleX.material.setUniform("thickness", 4 / this.renderer.height)
+            this.circleX.material.setUniform("thickness", 3*this.renderer.pixelRatio / this.renderer.height)
 
-            this.circleY.material.setUniform("ratio", this.renderer.ratio)
+            this.circleY.material.setUniform("ratio", 1/this.renderer.ratio)
             this.circleY.material.setUniform("maxDist", camDistance)
-            this.circleY.material.setUniform("thickness", 4 / this.renderer.height)
+            this.circleY.material.setUniform("thickness", 3*this.renderer.pixelRatio / this.renderer.height)
 
-            this.circleZ.material.setUniform("ratio", this.renderer.ratio)
+            this.circleZ.material.setUniform("ratio", 1/this.renderer.ratio)
             this.circleZ.material.setUniform("maxDist", camDistance)
-            this.circleZ.material.setUniform("thickness", 4 / this.renderer.height)
+            this.circleZ.material.setUniform("thickness", 3*this.renderer.pixelRatio / this.renderer.height)
         }
 
         let p = this.currentModel.getWorldPos();
 
-        this.root.setPositionV(p);
-        if(this.currentToolState==ToolState.translate ){
+        this.root.setPositionV(p)
+
+        if(!this.localSpace && this.currentToolState ==ToolState.translate) {
+
             this.root.setRotation(0,0,0,1)
-        }else{
-            this.root.setRotationQ(this.currentModel.getRotation())
+        }
+       else {
+
+            let m =new Matrix3()
+            this.currentModel.worldMatrix.getRotationMatrix3(m)
+            this.rootRot.fromMatrix3(m)
+            this.root.setRotationQ(this.rootRot)
         }
 
+
+       //calculate screen size of tool
         let pUp = p.clone().add(this.camera.cameraUp)
         p.transformAsPoint(this.camera.viewProjection)
         pUp.transformAsPoint(this.camera.viewProjection)
         let scale = 1 / p.distance(pUp);
 
-        this.root.setScaler(scale * this.cursorSize)
+       this.rootScale = scale * this.cursorSize;
+        this.root.setScaler(this.rootScale)
 
 
     }
@@ -263,60 +278,85 @@ export default class EditCursor {
         if(!this.currentModel)return;
         if (this.mouseListener.isDownThisFrame) {
             let intersections = this.ray.intersectModels([this.arrowX, this.arrowY, this.arrowZ])
+
+
             if (intersections.length == 0) return false;
 
+
+
+            if(this.localSpace){
+
+                this.startDragPos.from( this.currentModel.getPosition())
+                //we are going to transform the ray to the cursor local space
+                this.intersectionPlanePos.set(0,0,0)
+            }else{
+                this.startDragPos.from( this.currentModel.getWorldPos())
+                //we are going to check in world
+                this.intersectionPlanePos.from(this.root.getPosition())
+            }
+
+
             if (intersections[0].model.label == "x") {
-                this.intersectionPlanePos = this.currentModel.getWorldPos();
-
-                //let dir1  =this.ray.rayDir.dot([0,0,1])
-                //let dir2  =this.ray.rayDir.dot([0,1,0])
-                //console.log(dir1,dir2)
-
                 this.intersectionPlaneDir.set(0, 0, 1);
                 this.move = "x"
             }
             if (intersections[0].model.label == "y") {
-                this.intersectionPlanePos = this.currentModel.getWorldPos();
-                /* let dir1  =this.ray.rayDir.dot([0,0,1])
-                 let dir2  =this.ray.rayDir.dot([1,0,0])
-                 console.log(dir1,dir2)*/
                 this.intersectionPlaneDir.set(0, 0, 1);
                 this.move = "y"
             }
             if (intersections[0].model.label == "z") {
-                this.intersectionPlanePos = this.currentModel.getWorldPos();
-                /* let dir1  =this.ray.rayDir.dot([1,0,0])
-                 let dir2  =this.ray.rayDir.dot([0,1,0])
-                 console.log(dir1,dir2)*/
                 this.intersectionPlaneDir.set(1, 0, 0);
                 this.move = "z"
             }
-            let pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
+            let pos:Vector3|null
+            if(this.localSpace){
+                //we are going to transform the ray to the cursor local space
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.root.worldMatrixInv)
+            }else{
+                //we are going to check in world
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
+            }
+
+
             if (pos) {
-                this.startDragPos = pos;
+                this.planePos = pos;
                 this.isDragging = true;
             }
         }
 
         //move/rotate/scale
         if (this.isDragging) {
-            let pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir);
-
+            let pos:Vector3|null
+            if(this.localSpace){
+                //we are going to transform the ray to the cursor local space
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.root.worldMatrixInv)
+            }else{
+                //we are going to check in world
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
+            }
             if (pos) {
+
+                //TODO replace with mask vector
                 if (this.move == "x") {
-                    let dist = this.startDragPos.x - pos.x;
-                    // @ts-ignore
-                    this.currentModel.setPosition(this.intersectionPlanePos.x + dist, this.intersectionPlanePos.y, this.intersectionPlanePos.z)
+                    let dist = this.planePos.x - pos.x;
+                    this.movePos.set(this.startDragPos.x+dist,this.startDragPos.y,this.startDragPos.z);
                 }
                 if (this.move == "y") {
-                    let dist = this.startDragPos.y - pos.y;
-                    // @ts-ignore
-                    this.currentModel.setPosition(this.intersectionPlanePos.x, this.intersectionPlanePos.y + dist, this.intersectionPlanePos.z)
+                    let dist = this.planePos.y - pos.y;
+                    this.movePos.set(this.startDragPos.x,this.startDragPos.y+dist,this.startDragPos.z);
                 }
                 if (this.move == "z") {
-                    let dist = this.startDragPos.z - pos.z;
-                    // @ts-ignore
-                    this.currentModel.setPosition(this.intersectionPlanePos.x, this.intersectionPlanePos.y, this.intersectionPlanePos.z + dist)
+                    let dist = this.planePos.z - pos.z;
+                    this.movePos.set(this.startDragPos.x,this.startDragPos.y,this.startDragPos.z+dist);
+                }
+
+
+                if(this.localSpace || !this.currentModel.parent){
+                    this.currentModel.setPositionV(this.movePos)
+                }else{
+                    let lp = this.currentModel.parent?.getLocalPos(this.movePos);
+                    if(lp) this.currentModel.setPositionV(lp)
+
                 }
             }
 
@@ -326,30 +366,39 @@ export default class EditCursor {
             this.isDragging = false
         }
     }
+
+    //alwaysLocal
     private checkMouseRotate() {
         if(!this.currentModel)return;
         if (this.mouseListener.isDownThisFrame) {
-            let objWorld = this.currentModel.getWorldPos()
+            let objWorld = this.root.getWorldPos();
 
-            let q =   this.currentModel.getRotation()
-            let m = new Matrix4()
-            m.fromQuaternion(q);
-            m.invert()
-            let pos =this.ray.intersectSphere(objWorld, this.cursorSize/2*1.1,m)
+
+            let pos =this.ray.intersectSphere(objWorld,this.cursorSize*0.5)
+
 
             if(pos){
+                pos.subtract(objWorld)
                 pos.normalize();
-                pos.x =Math.abs(pos.x);
-                pos.y =Math.abs(pos.y);
-                pos.z =Math.abs(pos.z);
-                if(pos.x<pos.y && pos.x<pos.z){
-                    this.move = "x"
-                }else  if(pos.y<pos.x && pos.y<pos.z){
-                    this.move = "y"
-                }else  if(pos.z<pos.y && pos.z<pos.x){
-                    this.move = "z"
-                }
 
+                pos.transformByQuaternion(   this.rootRot.invert())
+
+
+                let poss=new Vector3()
+                poss.x =Math.abs(pos.x);
+                poss.y =Math.abs(pos.y);
+                poss.z =Math.abs(pos.z);
+                if(poss.x<poss.y && poss.x<poss.z){
+                    this.move = "x"
+                    this.rotDir = Math.sign(pos.z)
+                }else  if(poss.y<poss.x && poss.y<poss.z){
+                    this.move = "y"
+                    this.rotDir = Math.sign(pos.z)
+                }else  if(poss.z<poss.y && poss.z<poss.x){
+                    this.move = "z"
+                    this.rotDir = Math.sign(pos.z)
+                }
+                this.rotDir =1;
                 this.mouseStart.from(this.mouseListener.mousePos)
                 let world=new Vector4(objWorld.x,objWorld.y,objWorld.z,1.0);
                 world.transform(  this.camera.viewProjection)
@@ -366,12 +415,14 @@ export default class EditCursor {
 
             let v1 =new Vector2(this.mouseListener.mousePos).subtract(this.objectScreen)
             let v2 =new Vector2( this.mouseStart).subtract(this.objectScreen)
-            let angle =v2.horizontalAngle()-v1.horizontalAngle()
 
+
+            let angle =v2.horizontalAngle()-v1.horizontalAngle()
+            angle*=this.rotDir
             this.rotQuat.identity()
            // console.log("scale",this.move)
             if(this.move=="x"){
-                this.rotQuat.rotateX(-angle)
+                this.rotQuat.rotateX(angle)
 
         }
             if(this.move=="y"){

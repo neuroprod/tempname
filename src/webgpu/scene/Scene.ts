@@ -52,7 +52,7 @@ export default class Scene{
         this.editCursor =new EditCursor(renderer,this.camera,mouseListener,this.ray)
         this.editCamera = new EditCamera(renderer,this.camera,mouseListener,this.ray)
         this.makeScene()
-this.setCurrentToolState(ToolState.translate)
+        this.setCurrentToolState(ToolState.translate)
     }
 
     update() {
@@ -83,9 +83,10 @@ this.setCurrentToolState(ToolState.translate)
 
     }
     public onUI() {
-        if (UI.LButton("Translate", "Tools", this.currentToolState!= ToolState.translate)) this.setCurrentToolState(ToolState.translate);
+        this.editCursor.localSpace = UI.LBool("Translate local",true);
+        if (UI.LButton("Translate", "", this.currentToolState!= ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState!= ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
-        if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+       // if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
     }
     setCurrentModel(value: Model | null) {
         this.currentModel = value;
@@ -105,18 +106,29 @@ this.setCurrentToolState(ToolState.translate)
 
     private makeScene() {
 
-        let model =this.modelPool.getModelByName(ModelNames.TEST_TREE);
-        model.setPosition(-0.8,0.5,-2)
-        model.setScale(2,2,0.02)
 
 
-        this.modelRenderer.addModel(model)
 
+        let cloud1 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_CLOUD1);
+        cloud1.setPosition(0.2,0.2,-0.1)
 
-        let model2 =this.modelPool.getModelByName(ModelNames.TESTCHARACTERS_PINK);
-        model2.setPosition(0.0,0,0)
-        model2.setScale(1,1,0.04)
-        this.modelRenderer.addModel(model2)
+        let cloud2 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_CLOUD2);
+        cloud2.setPosition(-0.3,0.3,-0.1)
+        let body =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_BODY);
+        let eye1 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_EYE);
+        let eye2 =this.modelPool.getModelByName(ModelNames.TESTOBJECTS_EYE);
+        eye1.setPosition(0.1,0,0.1)
+        eye2.setPosition(-0.1,0,0.1)
+        body.addChild(eye1)
+        body.addChild(eye2)
+       // body.setPosition(-0.1,0,0.1)
+        //body.setEuler(0,1,0.2)
+        this.modelRenderer.addModel(cloud1)
+        this.modelRenderer.addModel(cloud2)
+        this.modelRenderer.addModel(body)
+        this.modelRenderer.addModel(eye1)
+        this.modelRenderer.addModel(eye2)
+
     }
 
     private setCurrentToolState(toolState: ToolState) {

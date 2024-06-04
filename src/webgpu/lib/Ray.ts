@@ -123,14 +123,27 @@ private _temp: Vector3 = new Vector3();
 
     }
 
-    intersectPlane(point: Vector3, normal: Vector3) {
-        const d  = -normal.dot( this.rayDir )
+    intersectPlane(point: Vector3, normal: Vector3, invModel:Matrix4|null=null) {
+
+
+        this._rayStart.from(this.rayStart);
+        this._rayDir.from(this.rayDir);
+        if( invModel) {
+            this._rayDir.add(this._rayStart as NumericArray);
+            this._rayDir.transform(invModel as NumericArray);
+            this._rayStart.transform(invModel as NumericArray);
+            this._rayDir.subtract(this._rayStart as NumericArray);
+        }
+
+
+
+        const d  = -normal.dot( this._rayDir )
 
         if ( d < 0.0001 && d > -0.0001) {
             return null;
         }
         const c =-point.dot(normal);
-        const t = - ( this.rayStart.dot( normal ) + c ) / d;
+        const t = - ( this._rayStart.dot( normal ) + c ) / d;
 
         let p = this.rayDir.clone()
         p.scale(t)
@@ -138,7 +151,7 @@ private _temp: Vector3 = new Vector3();
         return p
     }
 
-    intersectSphere(position: Vector3, radius: number, invModel:Matrix4|null) {
+    intersectSphere(position: Vector3, radius: number, invModel:Matrix4|null=null) {
 
         this._rayStart.from(this.rayStart);
         this._rayDir.from(this.rayDir);
@@ -168,9 +181,9 @@ private _temp: Vector3 = new Vector3();
             return null;
         }
 
-        let p = this._rayDir.clone()
+        let p = this.rayDir.clone()
         p.scale(t)
-        p.add(this._rayStart);
+        p.add(this.rayStart);
         return p
     }
 }

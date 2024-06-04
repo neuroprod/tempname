@@ -40,7 +40,7 @@ export default class ModelPool {
             points.push(new Vector2(meshData.points[i],meshData.points[i+1]));
         }
 
-        mesh.setExtrusion(points,1,new Vector3(meshData.center))
+        mesh.setExtrusion(points,0.02,new Vector3(meshData.center))
         model.mesh  =mesh;
 
         return model;
