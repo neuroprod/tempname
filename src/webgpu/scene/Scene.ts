@@ -91,9 +91,18 @@ export default class Scene{
         if (UI.LButton("Translate", "", this.currentToolState!= ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState!= ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
        // if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+
+
+
+    }
+    public onObjectUI(){
+        UI.pushWindow("scene")
         this.root.onUI()
+        UI.separator("Objseperator",false)
+        if(this.currentModel)
+            this.currentModel.onDataUI()
 
-
+        UI.popWindow()
     }
     setCurrentModel(value: SceneObject3D | null) {
         if(value) {

@@ -105,9 +105,11 @@ export default class Main {
            this.modelMaker.onUI()
        }  else if(this.currentMainState== MainState.editor){
             this.scene.onUI()
+           UI.popWindow()
+           this.scene.onObjectUI()
         }
 
-        UI.popWindow()
+
     }
 
     private draw() {

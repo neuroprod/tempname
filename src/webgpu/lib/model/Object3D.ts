@@ -3,6 +3,7 @@ import Renderer from "../Renderer";
 
 import ObjectGPU from "../ObjectGPU.ts";
 import {Matrix4, Quaternion, Vector3, Vector4} from "@math.gl/core";
+import UI from "../UI/UI.ts";
 
 
 
@@ -194,4 +195,9 @@ export default class Object3D extends ObjectGPU {
     }
 
 
+    onDataUI() {
+        UI.pushID(this.UUID)
+        UI.LTextInput("name",this,"label")
+        UI.popID()
+    }
 }
