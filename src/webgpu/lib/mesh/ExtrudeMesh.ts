@@ -14,6 +14,20 @@ export default class ExtrudeMesh extends Mesh {
 
     setExtrusion(points: Array<Vector2>, thickness = 1, center = new Vector3()) {
 
+        let edgeSum =0
+        for (let i = 0; i < points.length-1; i++) {
+
+            let p1 =points[i]
+            let p2 =points[i+1]
+            edgeSum+=(p2.x-p1.x)*(p2.y+p1.y)
+
+        }
+        if(edgeSum<0)points.reverse()
+
+
+
+
+
         this.pos_temp = [];
         this.uv_temp = [];
         this.index_temp = [];
