@@ -172,7 +172,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        shadowPos.y =1.0-( shadowPos.y*0.5 +0.5);
        let  m = textureSample(shadowMap, mySampler,  shadowPos.xy).xy;
      
-       let s =ChebyshevUpperBound(m,distance(world,uniforms.shadowCameraPosition.xyz)-3.0);   
+       let s =ChebyshevUpperBound(m,distance(world,uniforms.shadowCameraPosition.xyz)-4.0);   
        
        
        color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness)*s;

@@ -46,7 +46,7 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 @fragment
 fn mainFragment(${this.getFragmentInput()})  -> @location(0) vec4f
 {
-    let d =distance(camera.worldPosition.xyz, world)-3;
+    let d =distance(camera.worldPosition.xyz, world)-4.0;
     return vec4f(d,computeMoment(d),0.0,0.0);
 
 }

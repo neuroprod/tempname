@@ -50,14 +50,14 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
        let textureSize =vec2<f32>( textureDimensions(inTexture));
       let uvPos = vec2<i32>(floor(uv0*textureSize));
      var p =vec2f(0.0);
-     var d =1;
-      for(var x=-d;x<=d;x+=d){
-        for(var y=-d;y<=d;y+=d){
+     var d =2;
+      for(var x=-d;x<=d;x+=1){
+        for(var y=-d;y<=d;y+=1){
             p+=textureLoad(inTexture,  uvPos+vec2i(x,y) ,0).xy; 
         }
       }
   
-      p/=9.0;
+      p/=25.0;
       
     return vec4(p,0.0,0.0) ;
 }

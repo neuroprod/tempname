@@ -16,8 +16,8 @@ export default class DirectionalLight{
         this.shadowCamera =new Camera(renderer);
 
         //this.shadowCamera.setOrtho(-2,2,2,-2);
-        this.shadowCamera.near=0.1;
-        this.shadowCamera.far=100;
+        this.shadowCamera.near=1;
+        this.shadowCamera.far=10;
         let lookAt =new Vector3()
 
         this.shadowCamera.cameraLookAt.from(lookAt)
