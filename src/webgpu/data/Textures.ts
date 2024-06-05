@@ -1,5 +1,7 @@
 export const Textures = {
-    GCOLOR: 'gNolor',
-    GNORMAL: 'gNormal',
-    GDEPTH: 'gDepth',
+    GCOLOR: 'GColor',
+    GNORMAL: 'GNormal',
+    GDEPTH: 'GDepth',
+    LIGHT: "Light"
+
 }

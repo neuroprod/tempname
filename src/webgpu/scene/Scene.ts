@@ -40,7 +40,7 @@ export default class Scene {
 
     private currentToolState: ToolState = ToolState.translate;
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
-    private gameRenderer: GameRenderer;
+    gameRenderer: GameRenderer;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {

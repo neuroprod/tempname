@@ -40,7 +40,7 @@ export default class Main {
     private scene!: Scene;
     private sceneLoader!: JsonLoader;
 
-    private gameRenderer!:GameRenderer;
+
     constructor() {
 
         this.canvas = document.getElementById("webGPUCanvas") as HTMLCanvasElement;
@@ -102,6 +102,7 @@ export default class Main {
 
     private onUI() {
         UI.pushWindow("Main")
+        this.scene.gameRenderer.onUI()
         if (UI.LButton("Editor", "Views", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);
         if (UI.LButton("ModelMaker", "", this.currentMainState != MainState.modelMaker)) this.setMainState(MainState.modelMaker);
         UI.separator("msep",false)
