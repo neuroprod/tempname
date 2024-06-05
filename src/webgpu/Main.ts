@@ -11,6 +11,7 @@ import MouseListener from "./lib/MouseListener.ts";
 import ModelLoader from "./ModelLoader.ts";
 import Scene from "./scene/Scene.ts";
 import JsonLoader from "./JsonLoader.ts";
+import GameRenderer from "./render/GameRenderer.ts";
 
 enum MainState {
 
@@ -39,7 +40,7 @@ export default class Main {
     private scene!: Scene;
     private sceneLoader!: JsonLoader;
 
-
+    private gameRenderer!:GameRenderer;
     constructor() {
 
         this.canvas = document.getElementById("webGPUCanvas") as HTMLCanvasElement;
@@ -73,6 +74,7 @@ export default class Main {
 
         this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data,this.sceneLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
+
         this.setMainState(MainState.editor)
         this.tick();
     }
@@ -121,6 +123,8 @@ export default class Main {
         }
         if (this.currentMainState == MainState.editor) {
             this.scene.draw()
+
+
             this.canvasRenderPass.drawInCanvas = this.scene.drawInCanvas.bind(this.scene);
         }
         this.canvasRenderPass.add();

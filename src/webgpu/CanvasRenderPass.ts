@@ -36,9 +36,9 @@ export default class CanvasRenderPass extends RenderPass {
 
         this.canvasColorAttachment = new ColorAttachment(this.canvasColorTarget, {
             clearValue: {
-                r: 0.1,
-                g: 0.1,
-                b: 0.1,
+                r: 0.5,
+                g: 0.7,
+                b: 1,
                 a: 1
             }
         });

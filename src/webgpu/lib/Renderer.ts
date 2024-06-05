@@ -129,5 +129,9 @@ export default class Renderer {
             m.update();
         }
     }
+
+    getTexture(name: string) {
+        return this.textureHandler.texturesByLabel[name];
+    }
 }
 

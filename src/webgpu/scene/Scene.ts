@@ -12,6 +12,7 @@ import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
 import SceneObject3D from "../shared/SceneObject3D.ts";
 import {saveScene} from "../lib/SaveUtils.ts";
+import GameRenderer from "../render/GameRenderer.ts";
 
 
 export enum ToolState {
@@ -39,6 +40,7 @@ export default class Scene {
 
     private currentToolState: ToolState = ToolState.translate;
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
+    private gameRenderer: GameRenderer;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
@@ -49,6 +51,9 @@ export default class Scene {
         this.camera.cameraLookAt.set(0, 0.2, 0)
         this.camera.near = 0.1
         this.camera.fovy = 0.5
+
+        this.gameRenderer =new GameRenderer(this.renderer,this.camera)
+
         this.modelPool = new ModelPool(renderer, modelData);
         this.modelRenderer = new ModelRenderer(renderer, "mainModels", this.camera)
 
@@ -76,7 +81,7 @@ export default class Scene {
         }
         //check modelSelect
         if (!cursorNeeded && this.mouseListener.isDownThisFrame && !UI.needsMouse()) {
-            let intersections = this.ray.intersectModels(this.modelRenderer.models)
+            let intersections = this.ray.intersectModels( this.gameRenderer.gBufferPass.modelRenderer.models)
             if (intersections.length) {
                 let m = intersections[0].model;
                 this.setCurrentModel(m.parent as SceneObject3D)
@@ -150,10 +155,12 @@ export default class Scene {
     draw() {
         this.outline.draw()
         this.editCursor.draw();
+        this.gameRenderer.draw();
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-        this.modelRenderer.draw(pass);
+      //  this.modelRenderer.draw(pass);
+        this.gameRenderer.drawFinal(pass);
         this.outline.drawFinal(pass);
         this.editCursor.drawFinal(pass);
     }
@@ -174,7 +181,7 @@ export default class Scene {
             this.modelsByLoadID[d.id] =m;
             this.modelsByLoadID[d.parentID].addChild(m)
             m.setCurrentModel = this.setCurrentModel.bind(this);
-            if(m.model)    this.modelRenderer.addModel(m.model)
+            if(m.model)    this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
             // if(m.model)
         }
 

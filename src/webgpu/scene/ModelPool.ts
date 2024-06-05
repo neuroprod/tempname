@@ -8,6 +8,7 @@ import SceneObject3D from "../shared/SceneObject3D.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {ModelNames} from "../data/ModelNames.ts";
 import Box from "../lib/mesh/geometry/Box.ts";
+import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 
 
 export default class ModelPool {
@@ -39,7 +40,7 @@ export default class ModelPool {
         if(name =="cube"){
 
             let model =new Model(this.renderer,name);
-            model.material =new ModelPreviewMaterial(this.renderer,"preViewMaterial");
+            model.material =new GBufferMaterial(this.renderer,"preViewMaterial");
             model.mesh  =new Box(this.renderer);
             if(newName=="")newName =name;
             let obj3D =new SceneObject3D(this.renderer,newName)
@@ -57,7 +58,7 @@ export default class ModelPool {
 
 
         let model =new Model(this.renderer,name);
-        model.material =new ModelPreviewMaterial(this.renderer,"preViewMaterial");
+        model.material =new GBufferMaterial(this.renderer,"gMat");
         let textureName  ="./data/"+names[0]+"/texture.webp"
         let texture = this.renderer.textureHandler.texturesByLabel[textureName];
 
