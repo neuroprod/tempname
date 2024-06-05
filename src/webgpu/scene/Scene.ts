@@ -181,7 +181,10 @@ export default class Scene {
             this.modelsByLoadID[d.id] =m;
             this.modelsByLoadID[d.parentID].addChild(m)
             m.setCurrentModel = this.setCurrentModel.bind(this);
-            if(m.model)    this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
+            if(m.model) {
+                this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
+                this.gameRenderer.shadowPass.modelRenderer.addModel(m.model)
+            }
             // if(m.model)
         }
 
