@@ -25,8 +25,8 @@ ${this.getShaderUniforms()}
 
 fn computeMoment( depth:f32)->f32 {
 
-    let dx = dpdxFine(depth);
-    let dy = dpdyFine(depth);
+    let dx = dpdx(depth);
+    let dy = dpdy(depth);
     return depth * depth +0.25 * (dx * dx + dy * dy);
 }
 
@@ -46,7 +46,7 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 @fragment
 fn mainFragment(${this.getFragmentInput()})  -> @location(0) vec4f
 {
-    let d =distance(camera.worldPosition.xyz, world);
+    let d =distance(camera.worldPosition.xyz, world)-3;
     return vec4f(d,computeMoment(d),0.0,0.0);
 
 }

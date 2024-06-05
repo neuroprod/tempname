@@ -10,6 +10,7 @@ import UI from "../lib/UI/UI.ts";
 import LightRenderPass from "./light/LightRenderPass.ts";
 import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
 import DirectionalLight from "./lights/DirectionalLight.ts";
+import ShadowBlurRenderPass from "./shadow/ShadowBlurRenderPass.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
@@ -23,12 +24,14 @@ export default class GameRenderer{
     private lightPass: LightRenderPass;
     private sunLight: DirectionalLight;
     public shadowPass: ShadowRenderPass;
+    private shadowBlurPass: ShadowBlurRenderPass;
 
 
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.sunLight = new DirectionalLight(renderer)
         this.shadowPass =new ShadowRenderPass(renderer,this.sunLight)
+        this.shadowBlurPass =new ShadowBlurRenderPass(renderer);
         this.gBufferPass =new GBufferRenderPass(renderer,camera);
 
 
@@ -43,6 +46,7 @@ export default class GameRenderer{
         this.blitFinal =new Blit(renderer,"blitFinal",this.debugTextureMaterial)
 
         this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
+        this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 0}));
         this.passSelect.push(new SelectItem(Textures.GCOLOR, {texture: Textures.GCOLOR, type: 0}));
         this.passSelect.push(new SelectItem(Textures.GNORMAL, {texture: Textures.GNORMAL, type: 0}));
@@ -68,6 +72,7 @@ export default class GameRenderer{
     //doPasses
     draw(){
         this.shadowPass.add();
+        this.shadowBlurPass.add();
         this.gBufferPass.add();
         this.lightPass.add();
     }

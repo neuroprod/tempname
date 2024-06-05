@@ -22,7 +22,7 @@ export default class DirectionalLight{
 
         this.shadowCamera.cameraLookAt.from(lookAt)
 
-        this.shadowCamera.cameraWorld.set(1,2,3)
+        this.shadowCamera.cameraWorld.set(0.5,2,1.5)
     }
 
 

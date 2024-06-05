@@ -28,7 +28,7 @@ export default class LightMaterial extends Material {
         uniforms.addTexture("gColor",this.renderer.getTexture(Textures.GCOLOR), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("gNormal",this.renderer.getTexture(Textures.GNORMAL), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("gDepth",this.renderer.getTexture(Textures.GDEPTH), {sampleType:TextureSampleType.UnfilterableFloat})
-        uniforms.addTexture("shadowMap",this.renderer.getTexture(Textures.SHADOW_DEPTH), {sampleType:TextureSampleType.Float})
+        uniforms.addTexture("shadowMap",this.renderer.getTexture(Textures.SHADOW_DEPTH_BLUR), {sampleType:TextureSampleType.Float})
         uniforms.addSampler("mySampler");
 
        this.logShader =true;
@@ -134,17 +134,16 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 }
 fn ChebyshevUpperBound( Moments:vec2f,  t:f32)->f32 {
   // One-tailed inequality valid if t > Moments.x
-  var p =0.0;
-  if(t <= Moments.x){
-   p=1.0;
-  }
+  var p =step(t,Moments.x);
+ 
+
 var Variance = Moments.y-(Moments.x*Moments.x);
 
-  Variance = max(Variance, 0.00001);
+  Variance = max(Variance, 0.002);
   // Compute probabilistic upper bound.
   let d =t -Moments.x;
 
-  let p_max = Variance / (Variance + d * d);
+  let p_max =Variance / (Variance + d * d);
   return max(p, p_max);
 }
 
@@ -165,7 +164,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        let N=normalize(textureLoad(gNormal,  uvPos ,0).xyz*2.0-1.0); 
        let V = normalize(camera.worldPosition.xyz - world);
        let F0 = mix(vec3(0.04), albedo, metallic);
-       var color =albedo*vec3(0.4,0.4,0.4);
+       var color =albedo*vec3(0.1,0.1,0.1);
        
        var shadowPos = uniforms.shadowMatrix* vec4(world,1.0);
        shadowPos = shadowPos/shadowPos.w;
@@ -173,7 +172,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        shadowPos.y =1.0-( shadowPos.y*0.5 +0.5);
        let  m = textureSample(shadowMap, mySampler,  shadowPos.xy).xy;
      
-       let s =ChebyshevUpperBound(m,distance(world,uniforms.shadowCameraPosition.xyz));   
+       let s =ChebyshevUpperBound(m,distance(world,uniforms.shadowCameraPosition.xyz)-3.0);   
        
        
        color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness)*s;
