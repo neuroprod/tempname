@@ -24,8 +24,7 @@ export default class GameRenderer{
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.gBufferPass =new GBufferRenderPass(renderer,camera);
-
-        this.lightPass =new LightRenderPass(renderer)
+        this.lightPass =new LightRenderPass(renderer,camera)
 
 
 
@@ -42,7 +41,7 @@ export default class GameRenderer{
 
         this.currentValue = this.passSelect[0].value;
         this.debugTextureMaterial.setTexture("colorTexture",this.renderer.getTexture(this.currentValue.texture));
-        this.debugTextureMaterial.setUniform("rtype",  this.currentValue.type)
+        this.debugTextureMaterial.setUniform("renderType",  this.currentValue.type)
 
 
     }

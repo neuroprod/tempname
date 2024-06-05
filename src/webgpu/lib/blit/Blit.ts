@@ -25,9 +25,13 @@ export default class Blit {
         for (let i = 0; i < this.material.uniformGroups.length; i++) {
             let label = this.material.uniformGroups[i].label;
             let uniformGroup: UniformGroup;
+
+
+                uniformGroup = this.material.uniformGroups[i];
+
             //fix if need extra groups
 
-            uniformGroup = this.material.uniformGroups[i];
+
             passEncoder.setBindGroup(i, uniformGroup.bindGroup);
 
         }

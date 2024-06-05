@@ -6,6 +6,8 @@ import {TextureFormat} from "../../lib/WebGPUConstants.ts";
 import ColorAttachment from "../../lib/textures/ColorAttachment.ts";
 import LightMaterial from "./LightMaterial.ts";
 import Blit from "../../lib/blit/Blit.ts";
+import Camera from "../../lib/Camera.ts";
+
 
 export default class LightRenderPass extends RenderPass{
     private colorTarget: RenderTexture;
@@ -13,7 +15,7 @@ export default class LightRenderPass extends RenderPass{
     private lightMaterial: LightMaterial;
     private blit: Blit;
 
-    constructor(renderer:Renderer) {
+    constructor(renderer:Renderer,camera:Camera) {
             super(renderer,"lightRenderPass");
         this.colorTarget = new RenderTexture(renderer, Textures.LIGHT, {
             format: TextureFormat.RGBA8Unorm,
@@ -26,6 +28,8 @@ export default class LightRenderPass extends RenderPass{
         this.colorAttachments = [this.colorAttachment]
 
         this.lightMaterial =new LightMaterial(renderer,"LightMaterial")
+        this.lightMaterial.uniformGroups[0]=camera;
+
         this.blit  =new Blit(renderer,"blitLight",this.lightMaterial)
 
     }

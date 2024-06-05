@@ -15,8 +15,8 @@ export default class GBufferMaterial extends Material{
         this.addVertexOutput("normal", ShaderType.vec3 );
         this.addVertexOutput("uv", ShaderType.vec2 );
 
-        this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer), true);
-        this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer), true);
+        this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer));
+        this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer));
 
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
