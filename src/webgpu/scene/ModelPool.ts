@@ -7,6 +7,7 @@ import Object3D from "../lib/model/Object3D.ts";
 import SceneObject3D from "../shared/SceneObject3D.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {ModelNames} from "../data/ModelNames.ts";
+import Box from "../lib/mesh/geometry/Box.ts";
 
 
 export default class ModelPool {
@@ -22,7 +23,7 @@ export default class ModelPool {
 
           let mN = m.name;
             let meshes = m.meshes
-
+            this.modelSelect.push(new SelectItem("cube","cube"))
            for (let mesh of meshes){
                let n =mN+"_"+mesh.name
                let selectItem =new SelectItem(n,n)
@@ -34,6 +35,19 @@ export default class ModelPool {
     }
     public getModelByName(name:string,newName="")
     {
+
+        if(name =="cube"){
+
+            let model =new Model(this.renderer,name);
+            model.material =new ModelPreviewMaterial(this.renderer,"preViewMaterial");
+            model.mesh  =new Box(this.renderer);
+            if(newName=="")newName =name;
+            let obj3D =new SceneObject3D(this.renderer,newName)
+            obj3D.addChild(model)
+            obj3D.model =model;
+            return obj3D;
+
+        }
         let names = name.split("_")
         if(names.length!=2) {
             console.log("error making model")
@@ -56,7 +70,7 @@ export default class ModelPool {
             points.push(new Vector2(meshData.points[i],meshData.points[i+1]));
         }
 
-        mesh.setExtrusion(points,0.02,new Vector3(meshData.center))
+        mesh.setExtrusion(points,0.005,new Vector3(meshData.center))
         model.mesh  =mesh;
 
         if(newName=="")newName =name;
