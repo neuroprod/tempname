@@ -5,7 +5,7 @@ import Model from "../lib/model/Model.ts";
 
 export default class SceneObject3D extends Object3D{
     setCurrentModel!: (value: (SceneObject3D | null)) => void;
-
+    public  isSceneObject3D =true
     model:Model|null =null;
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);

@@ -123,6 +123,10 @@ export default class Scene {
 
         if (this.currentModel){
             UI.separator(this.currentModel.label.toUpperCase(), true)
+            if(UI.LButton("Delete")){
+                this.removeModel(this.currentModel)
+            }
+
             let selectedModel =UI.LSelect("models",this.modelPool.modelSelect)
             if(UI.LButton("Add +")){
                 let  m =this.modelPool.getModelByName(selectedModel);
@@ -130,7 +134,7 @@ export default class Scene {
                 m.setCurrentModel = this.setCurrentModel.bind(this);
                 this.currentModel.addChild(m)
                 this.setCurrentModel(m);
-                if(m.model)    this.modelRenderer.addModel(m.model)
+                this.addModel(m)
             }
             this.currentModel.onDataUI()
 
@@ -187,14 +191,41 @@ export default class Scene {
                 if(d.scale){
                     m.model.setScale(d.scale[0],d.scale[1],d.scale[2])
                 }
-                this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
-                this.gameRenderer.shadowPass.modelRenderer.addModel(m.model)
+                this.addModel(m)
             }
             // if(m.model)
         }
 
 
     }
+    public removeModel(m:SceneObject3D){
+       this.setCurrentModel(null)
+       for (let child of m.children){
+           let childSceneObject =child as SceneObject3D
+           if(childSceneObject.isSceneObject3D){
+               this.removeModel(childSceneObject)
+           }else{
+               //console.log(child)
+           }
+
+       }
+        if(m.model){
+            this.gameRenderer.gBufferPass.modelRenderer.removeModel(m.model)
+            this.gameRenderer.shadowPass.modelRenderer.removeModel(m.model)
+
+            m.removeChild(m.model)
+            m.model =null
+        }
+        if(m.parent)m.parent.removeChild(m)
+
+    }
+    public addModel(m:SceneObject3D){
+        if(m.model){
+            this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
+            this.gameRenderer.shadowPass.modelRenderer.addModel(m.model)
+        }
+    }
+
 
     private setCurrentToolState(toolState: ToolState) {
         this.currentToolState = toolState;
