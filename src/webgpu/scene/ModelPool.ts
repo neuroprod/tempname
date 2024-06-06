@@ -4,7 +4,7 @@ import ModelPreviewMaterial from "../modelMaker/ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../lib/mesh/ExtrudeMesh.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import Object3D from "../lib/model/Object3D.ts";
-import SceneObject3D from "../shared/SceneObject3D.ts";
+import SceneObject3D from "./SceneObject3D.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {ModelNames} from "../data/ModelNames.ts";
 import Box from "../lib/mesh/geometry/Box.ts";

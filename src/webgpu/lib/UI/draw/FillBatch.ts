@@ -1,6 +1,7 @@
 import Vec2 from "../math/Vec2";
 import Color from "../math/Color";
 import Rect from "../math/Rect";
+import {Vector2} from "@math.gl/core";
 
 export default class FillBatch {
     public indices: Array<number> = [];
@@ -59,7 +60,29 @@ export default class FillBatch {
         );
         this.indicesPos += 4;
     }
-
+    addKeyframe(pos: Vec2, color: Color) {
+        this.vertices = this.vertices.concat(
+            [pos.x+4,pos.y],
+            color.getArray(),
+            [pos.x,pos.y+4],
+            color.getArray(),
+            [pos.x-4,pos.y],
+            color.getArray(),
+            [pos.x,pos.y-4],
+            color.getArray()
+        );
+        this.indices.push(
+            this.indicesPos,
+            this.indicesPos + 1,
+            this.indicesPos + 2
+        );
+        this.indices.push(
+            this.indicesPos,
+            this.indicesPos + 2,
+            this.indicesPos + 3
+        );
+        this.indicesPos += 4;
+    }
     addShadow(rect: Rect) {
         return;
         this.shadowRect.copy(rect);
@@ -211,4 +234,6 @@ export default class FillBatch {
             pos.y += size;
         }
     }
+
+
 }

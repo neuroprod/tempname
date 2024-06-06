@@ -14,7 +14,7 @@ import CircleMesh from "./CircleMesh.ts";
 import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
 import {ToolState} from "../Scene.ts";
-import SceneObject3D from "../../shared/SceneObject3D.ts";
+import SceneObject3D from "../SceneObject3D.ts";
 
 
 export default class EditCursor {

@@ -10,7 +10,7 @@ import Ray from "../lib/Ray.ts";
 import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
-import SceneObject3D from "../shared/SceneObject3D.ts";
+import SceneObject3D from "./SceneObject3D.ts";
 import {saveScene} from "../lib/SaveUtils.ts";
 import GameRenderer from "../render/GameRenderer.ts";
 

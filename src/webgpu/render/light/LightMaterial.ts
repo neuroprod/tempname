@@ -31,7 +31,7 @@ export default class LightMaterial extends Material {
         uniforms.addTexture("shadowMap",this.renderer.getTexture(Textures.SHADOW_DEPTH_BLUR), {sampleType:TextureSampleType.Float})
         uniforms.addSampler("mySampler");
 
-       this.logShader =true;
+
     }
     getShader(): string {
         return /* wgsl */ `
