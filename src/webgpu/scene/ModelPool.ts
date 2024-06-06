@@ -71,7 +71,7 @@ export default class ModelPool {
             points.push(new Vector2(meshData.points[i],meshData.points[i+1]));
         }
 
-        mesh.setExtrusion(points,0.005,new Vector3(meshData.center))
+        mesh.setExtrusion(points,0.1,new Vector3(meshData.center))
         model.mesh  =mesh;
 
         if(newName=="")newName =name;
