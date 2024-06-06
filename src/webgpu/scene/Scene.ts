@@ -33,7 +33,7 @@ export default class Scene {
     private modelPool: ModelPool;
     private mouseListener: MouseListener;
     private ray: Ray = new Ray();
-    private currentModel: Object3D | null = null;
+    private currentModel: SceneObject3D | null = null;
     private outline: Outline;
     private editCursor: EditCursor;
     private editCamera: EditCamera;
@@ -112,7 +112,7 @@ export default class Scene {
         this.editCursor.localSpace = UI.LBool("Translate local", true);
         if (UI.LButton("Translate", "", this.currentToolState != ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState != ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
-        // if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+        if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
 
 
     }
@@ -177,12 +177,16 @@ export default class Scene {
             }
 
             let  m =this.modelPool.getModelByName(d.model,d.label);
+
             m.setPosition(d.position[0],d.position[1],d.position[2])
             m.setRotation(d.rotation[0],d.rotation[1],d.rotation[2],d.rotation[3])
             this.modelsByLoadID[d.id] =m;
             this.modelsByLoadID[d.parentID].addChild(m)
             m.setCurrentModel = this.setCurrentModel.bind(this);
             if(m.model) {
+                if(d.scale){
+                    m.model.setScale(d.scale[0],d.scale[1],d.scale[2])
+                }
                 this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
                 this.gameRenderer.shadowPass.modelRenderer.addModel(m.model)
             }

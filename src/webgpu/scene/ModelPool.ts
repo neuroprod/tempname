@@ -62,7 +62,7 @@ export default class ModelPool {
         let textureName  ="./data/"+names[0]+"/texture.webp"
         let texture = this.renderer.textureHandler.texturesByLabel[textureName];
 
-       model.material.setTexture("colorTexture",texture);
+        model.material.setTexture("colorTexture",texture);
 
         let mesh   =new ExtrudeMesh(this.renderer,name);
 
@@ -71,7 +71,7 @@ export default class ModelPool {
             points.push(new Vector2(meshData.points[i],meshData.points[i+1]));
         }
 
-        mesh.setExtrusion(points,0.1,new Vector3(meshData.center))
+        mesh.setExtrusion(points,0.01,new Vector3(meshData.center))
         model.mesh  =mesh;
 
         if(newName=="")newName =name;

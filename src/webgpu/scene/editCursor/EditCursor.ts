@@ -14,11 +14,12 @@ import CircleMesh from "./CircleMesh.ts";
 import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
 import {ToolState} from "../Scene.ts";
+import SceneObject3D from "../../shared/SceneObject3D.ts";
 
 
 export default class EditCursor {
     private renderer: Renderer;
-    private currentModel: Object3D | null = null;
+    private currentModel: SceneObject3D | null = null;
     private root: Object3D;
     private arrowMesh: Mesh
 
@@ -227,7 +228,7 @@ export default class EditCursor {
 
     }
 
-    setCurrentModel(model: Object3D | null) {
+    setCurrentModel(model: SceneObject3D | null) {
         this.currentModel = model;
         if (!this.currentModel) return
 
@@ -446,12 +447,13 @@ export default class EditCursor {
     }
     private checkMouseScale() {
         if(!this.currentModel)return;
+        if(!this.currentModel.model)return;
         if (this.mouseListener.isDownThisFrame) {
 
             let intersections = this.ray.intersectModels([this.scaleX, this.scaleY, this.scaleZ])
             if (intersections.length == 0) return false;
 
-            this.scaleStart.from(this.currentModel.getScale());
+            this.scaleStart.from(this.currentModel.model.getScale());
             if (intersections[0].model.label == "sx") {
 
                 this.move = "x"
@@ -481,13 +483,14 @@ export default class EditCursor {
             let disStart = this.mouseStart.distance(this.objectScreen)
             let scale = dis/disStart;
 
-            if(this.move=="x"){
-                this.currentModel.setScale(this.scaleStart.x*scale,this.scaleStart.y,this.scaleStart.z);
-            }else  if(this.move=="y"){
-                this.currentModel.setScale(this.scaleStart.x,this.scaleStart.y*scale,this.scaleStart.z);
-            }else  if(this.move=="z"){
-                this.currentModel.setScale(this.scaleStart.x,this.scaleStart.y,this.scaleStart.z*scale);
-            }
+                if (this.move == "x") {
+                    this.currentModel.model.setScale(this.scaleStart.x * scale, this.scaleStart.y, this.scaleStart.z);
+                } else if (this.move == "y") {
+                    this.currentModel.model.setScale(this.scaleStart.x, this.scaleStart.y * scale, this.scaleStart.z);
+                } else if (this.move == "z") {
+                    this.currentModel.model.setScale(this.scaleStart.x, this.scaleStart.y, this.scaleStart.z * scale);
+                }
+
         }
 
         if (this.mouseListener.isUpThisFrame) {

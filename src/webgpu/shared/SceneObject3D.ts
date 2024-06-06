@@ -29,7 +29,10 @@ export default class SceneObject3D extends Object3D{
         obj.label =this.label;
         obj.position =this.getPosition()
         obj.rotation=this.getRotation()
-        if(this.model) obj.model = this.model.label
+        if(this.model) {
+            obj.model = this.model.label
+            obj.scale=this.model.getScale();
+        }
         if(this.parent)obj.parentID = this.parent.UUID
         dataArr.push(obj);
 
