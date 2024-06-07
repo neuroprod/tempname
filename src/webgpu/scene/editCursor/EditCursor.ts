@@ -379,7 +379,7 @@ export default class EditCursor {
             let objWorld = this.root.getWorldPos();
 
 
-            let pos =this.ray.intersectSphere(objWorld,this.cursorSize*0.5)
+            let pos =this.ray.intersectSphere(objWorld, this.rootScale)
 
 
             if(pos){

@@ -8,7 +8,7 @@ export enum AnimationType{
 }
 export default class Animation{
 
-    numFrames =30;
+    numFrames =150;
     frameTime =1/30;
 
     channels: Array<AnimationChannel>=[];

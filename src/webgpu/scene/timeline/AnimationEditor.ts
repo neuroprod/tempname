@@ -17,7 +17,7 @@ class AnimationEditor {
     private channelEditorsByID: { [id: string]: AnimationChannelEditor } = {};
 
     isDrawDirty: boolean =true
-    numFrames =30;
+    numFrames =150;
     frameTime =1/30;
     private _currentFrame =0;
     private isRecording =true;
