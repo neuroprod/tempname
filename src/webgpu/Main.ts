@@ -12,7 +12,7 @@ import ModelLoader from "./ModelLoader.ts";
 import Scene from "./scene/Scene.ts";
 import JsonLoader from "./JsonLoader.ts";
 import GameRenderer from "./render/GameRenderer.ts";
-import TimeLineEditor from "./scene/timeline/TimeLineEditor.ts";
+import AnimationEditor from "./scene/timeline/AnimationEditor.ts";
 
 enum MainState {
 
@@ -41,7 +41,7 @@ export default class Main {
     private scene!: Scene;
     private sceneLoader!: JsonLoader;
 
-private testAnimation!:TimeLineEditor;
+
     constructor() {
 
         this.canvas = document.getElementById("webGPUCanvas") as HTMLCanvasElement;
@@ -76,7 +76,7 @@ private testAnimation!:TimeLineEditor;
         this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data,this.sceneLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
 
-        this.testAnimation =new TimeLineEditor(this.renderer,"animation")
+
 
         this.setMainState(MainState.editor)
         this.tick();
@@ -105,9 +105,10 @@ private testAnimation!:TimeLineEditor;
 
     private onUI() {
         UI.pushWindow("Animation")
-
-        UI.TimeLine(this.testAnimation)
+        AnimationEditor.onUI();
         UI.popWindow()
+
+
         UI.pushWindow("Main")
         this.scene.gameRenderer.onUI()
         if (UI.LButton("Editor", "Views", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);

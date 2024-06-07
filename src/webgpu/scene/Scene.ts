@@ -3,7 +3,7 @@ import MouseListener from "../lib/MouseListener.ts";
 import CanvasRenderPass from "../CanvasRenderPass.ts";
 import Camera from "../lib/Camera.ts";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
-import Object3D from "../lib/model/Object3D.ts";
+
 import ModelPool from "./ModelPool.ts";
 import UI from "../lib/UI/UI.ts";
 import Ray from "../lib/Ray.ts";

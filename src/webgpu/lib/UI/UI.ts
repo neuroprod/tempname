@@ -28,8 +28,8 @@ import LListItem, {LListItemSettings} from "./components/LListItem";
 import Renderer from "../Renderer";
 import ButtonGroup, {ButtonGroupSettings} from "./components/ButtonGroup";
 import Tree, {TreeSettings} from "./components/Tree.ts";
-import TimeLineEditor from "../../scene/timeline/TimeLineEditor.ts";
-import TimeLine, {TimeLineSettings} from "./components/TimeLine.ts";
+import AnimationEditor from "../../scene/timeline/AnimationEditor.ts";
+import UIAnimationEditor, {TimeLineSettings} from "../../scene/timeline/UIAnimationEditor.ts";
 
 export default class UI {
     private static viewPort: Viewport | null;
@@ -243,16 +243,7 @@ export default class UI {
         if (!size) size = UI_I.globalStyle.defaultLabelSize;
         UI_I.globalStyle.setLabelSize(size);
     }
-    static TimeLine(animation:TimeLineEditor)
-    {
-        if (!UI.initialized) return;
-        let id = animation.UUID;
-        if (!UI_I.setComponent(id)) {
-            let comp = new TimeLine(UI_I.getID(id),animation, new  TimeLineSettings());
-            UI_I.addComponent(comp);
-        }
-        UI_I.popComponent();
-    }
+
     static LSelect(
         label: string,
         items: Array<SelectItem>,
