@@ -1,4 +1,3 @@
-
 import {Vector2} from "@math.gl/core";
 import UI from "../../lib/UI/UI.ts";
 import UI_I from "../../lib/UI/UI_I.ts";
@@ -8,6 +7,7 @@ import Animation, {AnimationType} from "./animation/Animation.ts";
 import SceneObject3D from "../SceneObject3D.ts";
 import AnimationChannel from "./animation/AnimationChannel.ts";
 import AnimationChannelEditor from "./AnimationChannelEditor.ts";
+import AnimationEditorGroup from "./AnimationEditorGroup.ts";
 
 
 class AnimationEditor {
@@ -19,9 +19,12 @@ class AnimationEditor {
     isDrawDirty: boolean =true
     numFrames =30;
     frameTime =1/30;
-    private _currentFrame =5;
+    private _currentFrame =0;
     private isRecording =true;
     private currentAnimation: Animation|null =null;
+
+    private root =new AnimationEditorGroup("root")
+
     constructor() {
 
 
@@ -66,9 +69,13 @@ class AnimationEditor {
         let channelEditor = this.channelEditorsByID[id];
         if(!channelEditor)
         {
+
             let channel = new AnimationChannel(model, type);
             this.currentAnimation.channels.push(channel);
-            channelEditor = new AnimationChannelEditor(channel, id);
+             let label ="Position"
+            if(type==AnimationType.SCALE)label ="Scale"
+            if(type==AnimationType.ROTATE)label ="Rotation"
+            channelEditor = new AnimationChannelEditor(label, channel, id);
             this.channelEditors.push(channelEditor);
             this.channelEditorsByID[id] = channelEditor;
         }

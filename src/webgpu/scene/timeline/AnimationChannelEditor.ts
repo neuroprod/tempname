@@ -1,10 +1,12 @@
 import AnimationChannel from "./animation/AnimationChannel.ts";
+import AnimationEditorGroup from "./AnimationEditorGroup.ts";
 
-export default class AnimationChannelEditor{
+export default class AnimationChannelEditor extends AnimationEditorGroup{
     private channel: AnimationChannel;
     private id: string;
 
-    constructor(channel:AnimationChannel,id:string) {
+    constructor(label:string,channel:AnimationChannel,id:string) {
+        super(label)
         this.channel =channel;
         this.id =id;
     }
@@ -13,5 +15,5 @@ export default class AnimationChannelEditor{
         this.channel.addKey(frame,time);
     }
 
-    
+
 }
