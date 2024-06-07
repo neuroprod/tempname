@@ -13,6 +13,8 @@ import EditCamera from "./EditCamera.ts";
 import SceneObject3D from "./SceneObject3D.ts";
 import {saveScene} from "../lib/SaveUtils.ts";
 import GameRenderer from "../render/GameRenderer.ts";
+import Animation from "./timeline/animation/Animation.ts";
+import AnimationEditor from "./timeline/AnimationEditor.ts";
 
 
 export enum ToolState {
@@ -41,6 +43,7 @@ export default class Scene {
     private currentToolState: ToolState = ToolState.translate;
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
     gameRenderer: GameRenderer;
+    private testAnimation: Animation;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
@@ -65,6 +68,11 @@ export default class Scene {
         this.root.setCurrentModel = this.setCurrentModel.bind(this);
         this.makeScene(sceneData);
         this.setCurrentToolState(ToolState.translate)
+
+        this.testAnimation = new Animation(renderer,"testAnimation")
+        AnimationEditor.setAnimation(this.testAnimation);
+
+
     }
 
     update() {

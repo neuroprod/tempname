@@ -15,6 +15,8 @@ import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
 import {ToolState} from "../Scene.ts";
 import SceneObject3D from "../SceneObject3D.ts";
+import AnimationEditor from "../timeline/AnimationEditor.ts";
+import {AnimationType} from "../timeline/animation/Animation.ts";
 
 
 export default class EditCursor {
@@ -364,6 +366,8 @@ export default class EditCursor {
         }
 
         if (this.mouseListener.isUpThisFrame && this.isDragging) {
+
+            AnimationEditor.addKeyData(this.currentModel,AnimationType.TRANSLATE)
             this.isDragging = false
         }
     }
@@ -437,6 +441,8 @@ export default class EditCursor {
 
             this.rotQuat.multiplyLeft(this.startQuat)
             this.currentModel.setRotationQ(this.rotQuat)
+            AnimationEditor.addKeyData(this.currentModel,AnimationType.ROTATE)
+
 
         }
 
@@ -495,6 +501,7 @@ export default class EditCursor {
 
         if (this.mouseListener.isUpThisFrame) {
             this.isDragging = false;
+            AnimationEditor.addKeyData(this.currentModel,AnimationType.SCALE)
         }
 
     }

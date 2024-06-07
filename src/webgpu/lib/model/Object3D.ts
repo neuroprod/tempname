@@ -89,6 +89,11 @@ export default class Object3D extends ObjectGPU {
         this._scale.set(x, y, z)
         this.setDirty();
     }
+    setScaleV(val:Vector3) {
+        if (this._scale.equals(val)) return
+        this._scale.from(val)
+        this.setDirty();
+    }
 
     setRotationQ(newRot: Quaternion) {
         if (this._rotation.equals(newRot as Array<number>)) return

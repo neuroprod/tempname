@@ -7,9 +7,7 @@ import Color from "../../lib/UI/math/Color.ts";
 import Rect from "../../lib/UI/math/Rect.ts";
 
 import Vec2 from "../../lib/UI/math/Vec2.ts";
-import UI_IC from "../../lib/UI/UI_IC.ts";
-import UI from "../../lib/UI/UI.ts";
-import {ButtonBaseSettings} from "../../lib/UI/components/internal/ButtonBase.ts";
+
 import Font from "../../lib/UI/draw/Font.ts";
 
 export class UIAnimationEditorSettings extends ComponentSettings
@@ -46,8 +44,7 @@ export default class UIAnimationEditor extends Component{
     private cursorTextPos =new Vec2()
 
     //temps
-    private tempRect1 =new Rect()
-    private tempRect2 =new Rect()
+
     private mouseStartDragX: number=0;
     private cursorDragStartFrame: number =0;
 

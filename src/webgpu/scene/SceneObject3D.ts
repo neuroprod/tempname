@@ -42,4 +42,6 @@ export default class SceneObject3D extends Object3D{
             if (co.getSceneData) co.getSceneData(dataArr );
         }
     }
+
+
 }

@@ -28,8 +28,7 @@ import LListItem, {LListItemSettings} from "./components/LListItem";
 import Renderer from "../Renderer";
 import ButtonGroup, {ButtonGroupSettings} from "./components/ButtonGroup";
 import Tree, {TreeSettings} from "./components/Tree.ts";
-import AnimationEditor from "../../scene/timeline/AnimationEditor.ts";
-import UIAnimationEditor, {TimeLineSettings} from "../../scene/timeline/UIAnimationEditor.ts";
+
 
 export default class UI {
     private static viewPort: Viewport | null;

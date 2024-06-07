@@ -3,9 +3,29 @@ import {Vector2} from "@math.gl/core";
 import UI from "../../lib/UI/UI.ts";
 import UI_I from "../../lib/UI/UI_I.ts";
 import UIAnimationEditor, {UIAnimationEditorSettings} from "./UIAnimationEditor.ts";
-import Animation from "./animation/Animation.ts";
+import Animation, {AnimationType} from "./animation/Animation.ts";
+
+import SceneObject3D from "../SceneObject3D.ts";
+import AnimationChannel from "./animation/AnimationChannel.ts";
+import AnimationChannelEditor from "./AnimationChannelEditor.ts";
+
 
 class AnimationEditor {
+
+
+    private channelEditors: Array<AnimationChannelEditor>=[];
+    private channelEditorsByID: { [id: string]: AnimationChannelEditor } = {};
+
+    isDrawDirty: boolean =true
+    numFrames =30;
+    frameTime =1/30;
+    private _currentFrame =5;
+    private isRecording =true;
+    private currentAnimation: Animation|null =null;
+    constructor() {
+
+
+    }
     get currentFrame(): number {
         return this._currentFrame;
     }
@@ -13,14 +33,9 @@ class AnimationEditor {
     set currentFrame(value: number) {
         this.isDrawDirty =true;
         this._currentFrame =Math.max( Math.min(value,this.numFrames),0);
-    }
-    isDrawDirty: boolean =true
-    numFrames =30;
-    frameTime =1/30;
-    private _currentFrame =5;
-
-    private currentAnimation: Animation|null =null;
-    constructor() {
+        if(this.currentAnimation){
+            this.currentAnimation.setTime(this._currentFrame* this.frameTime)
+        }
 
 
     }
@@ -43,6 +58,23 @@ class AnimationEditor {
     }
 
 
+    addKeyData(model: SceneObject3D, type: AnimationType,force:boolean=false) {
+        if(!this.currentAnimation)return;
+        if(!this.isRecording && !force)return;
+
+        let id  =model.UUID+"_"+type;
+        let channelEditor = this.channelEditorsByID[id];
+        if(!channelEditor)
+        {
+            let channel = new AnimationChannel(model, type);
+            this.currentAnimation.channels.push(channel);
+            channelEditor = new AnimationChannelEditor(channel, id);
+            this.channelEditors.push(channelEditor);
+            this.channelEditorsByID[id] = channelEditor;
+        }
+        channelEditor.addKey(this.currentFrame,this.currentFrame*this.frameTime)
+
+    }
 }
 export default new AnimationEditor()
 
