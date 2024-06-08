@@ -104,9 +104,9 @@ export default class Main {
     }
 
     private onUI() {
-        UI.pushWindow("Animation")
+
         AnimationEditor.onUI();
-        UI.popWindow()
+
 
 
         UI.pushWindow("Main")

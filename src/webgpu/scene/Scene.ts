@@ -43,7 +43,8 @@ export default class Scene {
     private currentToolState: ToolState = ToolState.translate;
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
     gameRenderer: GameRenderer;
-    private testAnimation: Animation;
+    private currentAnimation!: Animation;
+
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
@@ -69,8 +70,8 @@ export default class Scene {
         this.makeScene(sceneData);
         this.setCurrentToolState(ToolState.translate)
 
-        this.testAnimation = new Animation(renderer,"testAnimation")
-        AnimationEditor.setAnimation(this.testAnimation);
+       // this.testAnimation = new Animation(renderer,"testAnimation")
+       // AnimationEditor.setAnimation(this.testAnimation);
 
 
     }
@@ -97,6 +98,7 @@ export default class Scene {
 
             } else {
                 this.setCurrentModel(null);
+
             }
         }
 
@@ -121,7 +123,14 @@ export default class Scene {
         if (UI.LButton("Translate", "", this.currentToolState != ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState != ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
         if (UI.LButton("Scale", "", this.currentToolState!= ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+        UI.separator("Animation")
+        if(this.currentModel){
+           if( UI.LButton("New Animation For Model")){
+               this.currentAnimation =new Animation(this.renderer,"new_animation",this.currentModel)
+               AnimationEditor.setAnimation(this.currentAnimation)
+           }
 
+        }
 
     }
 

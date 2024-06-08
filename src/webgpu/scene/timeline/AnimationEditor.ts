@@ -17,13 +17,12 @@ class AnimationEditor {
     private channelEditorsByID: { [id: string]: AnimationChannelEditor } = {};
 
     isDrawDirty: boolean =true
-    numFrames =150;
-    frameTime =1/30;
+
     private _currentFrame =0;
     private isRecording =true;
-    private currentAnimation: Animation|null =null;
+    public currentAnimation: Animation|null =null;
 
-    private root =new AnimationEditorGroup("root")
+    private root:AnimationEditorGroup|null=null;
 
     constructor() {
 
@@ -34,16 +33,24 @@ class AnimationEditor {
     }
 
     set currentFrame(value: number) {
-        this.isDrawDirty =true;
-        this._currentFrame =Math.max( Math.min(value,this.numFrames),0);
         if(this.currentAnimation){
-            this.currentAnimation.setTime(this._currentFrame* this.frameTime)
+        this.isDrawDirty =true;
+        this._currentFrame =Math.max( Math.min(value,this.currentAnimation?.numFrames),0);
+
+            this.currentAnimation.setTime(this._currentFrame* this.currentAnimation.frameTime)
         }
 
 
     }
-    setAnimation(anime:Animation){
+    setAnimation(anime:Animation|null){
         this.currentAnimation = anime;
+        if(this.currentAnimation){
+            if(this.root)this.root.destroy();
+            this.root =new AnimationEditorGroup("root")
+            this.currentAnimation.root.makeAnimationGroups(this.root)
+            console.log(this.root);
+        }
+
     }
     onMouseDown(pos:Vector2){
         console.log(pos);
@@ -51,13 +58,17 @@ class AnimationEditor {
     }
      onUI()
     {
-        if (!UI.initialized) return;
-        let id = "timeLine";
-        if (!UI_I.setComponent(id)) {
-            let comp = new UIAnimationEditor(UI_I.getID(id), new  UIAnimationEditorSettings());
-            UI_I.addComponent(comp);
+        if(this.currentAnimation) {
+            UI.pushWindow("Animation")
+            if (!UI.initialized) return;
+            let id = "timeLine";
+            if (!UI_I.setComponent(id)) {
+                let comp = new UIAnimationEditor(UI_I.getID(id), new UIAnimationEditorSettings());
+                UI_I.addComponent(comp);
+            }
+            UI_I.popComponent();
+            UI.popWindow()
         }
-        UI_I.popComponent();
     }
 
 
@@ -79,7 +90,7 @@ class AnimationEditor {
             this.channelEditors.push(channelEditor);
             this.channelEditorsByID[id] = channelEditor;
         }
-        channelEditor.addKey(this.currentFrame,this.currentFrame*this.frameTime)
+        channelEditor.addKey(this.currentFrame,this.currentFrame*this.currentAnimation.frameTime)
 
     }
 }

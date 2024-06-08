@@ -153,7 +153,8 @@ export default class UIAnimationEditor extends Component{
         UI_I.currentDrawBatch.fillBatch.addRect(this.keysBackgroundRect, this.keysBackgroundColor);
 
 //backgroundLines
-        for(let i=1;i<=AnimationEditor.numFrames;i++){
+        // @ts-ignore
+        for(let i=1;i<=AnimationEditor.currentAnimation.numFrames;i++){
             UI_I.currentDrawBatch.fillBatch.addRect(this.keysLineRect, this.keysLineColor);
             this.keysLineRect.pos.x+=this.frameSize;
         }
