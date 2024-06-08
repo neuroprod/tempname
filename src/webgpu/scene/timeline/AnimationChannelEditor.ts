@@ -45,7 +45,6 @@ export default class AnimationChannelEditor{
             v.copy(pos)
             v.x+=AnimationEditor.frameSize*f+AnimationEditor.keyFramesOffset.x;
             v.y+=8;
-
             this.keyPositions.push(v)
         }
     }

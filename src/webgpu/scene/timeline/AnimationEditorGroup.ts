@@ -91,7 +91,6 @@ export default class AnimationEditorGroup{
 
         }
 
-
         for(let c of this.children){
 
             c.drawUI()

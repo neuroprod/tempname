@@ -65,9 +65,9 @@ class AnimationEditor {
             for(let channel of this.currentAnimation.channels){
 
                 let id =channel.sceneObject3D.UUID + "_" + channel.type;
-                let label = "Position"
-                if (channel.type == AnimationType.SCALE) label = "Scale"
-                if (channel.type  == AnimationType.ROTATE) label = "Rotation"
+                let label = "Position";
+                if (channel.type == AnimationType.SCALE) label = "Scale";
+                if (channel.type  == AnimationType.ROTATE) label = "Rotation";
                 let channelEditor = new AnimationChannelEditor(label, channel, id);
                 this.channelEditors.push(channelEditor);
             }

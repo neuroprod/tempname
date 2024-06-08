@@ -108,7 +108,7 @@ export default class AnimationChannel{
                 let k0 =this.keys[i-1];
                 let k1  =this.keys[i];
                 let lerpVal =(time-k0.frame)/ (k1.frame -k0.frame);
-                console.log(this.type)
+
                 if(this.type==AnimationType.TRANSLATE) {
                     let v = new Vector3()
                     v.from(k0.data)
@@ -125,7 +125,6 @@ export default class AnimationChannel{
                     let q = new Quaternion()
                     q.from(k0.data)
                     q.slerp(k1.data, lerpVal)
-                    console.log(q)
                     this.sceneObject3D.setRotationQ(q);
                 }
                return;

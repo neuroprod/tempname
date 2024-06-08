@@ -105,7 +105,7 @@ export default class Main {
 
     private onUI() {
 
-        AnimationEditor.onUI();
+
 
 
 
@@ -120,6 +120,7 @@ export default class Main {
             this.scene.onUI()
            UI.popWindow()
            this.scene.onObjectUI()
+           AnimationEditor.onUI();
         }
 
 
