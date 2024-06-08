@@ -20,8 +20,8 @@ export default class AnimationChannelEditor{
         this.textSize =Font.getTextSize(label);
     }
 
-    addKey(frame: number,time:number) {
-        this.channel.addKey(frame,time);
+    addKey(frame: number) {
+        this.channel.addKey(frame);
     }
 
 

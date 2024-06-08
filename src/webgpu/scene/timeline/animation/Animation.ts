@@ -14,7 +14,10 @@ export default class Animation{
 
     channels: Array<AnimationChannel>=[];
     root: SceneObject3D;
+    label: string ="";
     constructor(renderer:Renderer, label:string,root:SceneObject3D) {
+        this.root =root;
+        this.label =label;
         this.root =root;
 
     }
@@ -24,7 +27,20 @@ export default class Animation{
         for(let c of this.channels){
             c.setTime(time);
         }
+    }
 
+    getAnimationData(animationData: Array<any>) {
+        let data:any ={}
+        data.rootID =this.root.UUID;
+        data.label =this.label;
+        data.numFrames =this.numFrames;
+        data.frameTime =this.frameTime;
+        data.channels =[]
+        for(let c of this.channels){
+            c.getChannelData(data.channels);
+        }
+
+        animationData.push(data)
 
     }
 }

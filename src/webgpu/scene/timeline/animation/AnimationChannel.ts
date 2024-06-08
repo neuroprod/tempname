@@ -5,7 +5,6 @@ import {Quaternion, Vector3} from "@math.gl/core";
 
 export class Key{
     frame:number =0;
-    time:number =0;
     data:any
 
 }
@@ -15,12 +14,26 @@ export default class AnimationChannel{
 
     public keys:Array<Key>=[]
 
-    private type: AnimationType;
-    private lastKeyIndex: number=0;
+    type: AnimationType;
+    lastKeyIndex: number=0;
 
     constructor(sceneObject3D:SceneObject3D, type: AnimationType) {
         this.sceneObject3D =sceneObject3D;
         this.type =type;
+
+    }
+    getChannelData(arr:Array<any>){
+        let data:any ={}
+        data.type =this.type;
+        data.id = this.sceneObject3D.UUID;
+        data.frames =[]
+        data.values =[]
+        for(let key of this.keys){
+            data.frames.push(key.frame)
+            data.values.push(key.data);
+
+        }
+        arr.push(data);
 
     }
     getCurrentData(){
@@ -43,17 +56,17 @@ export default class AnimationChannel{
 
 
 
-    addKey(frame: number,time:number) {
+    addKey(frame: number) {
         for(let k of this.keys){
             if(k.frame==frame){
-                k.time =time;
+
                 k.data =this.getCurrentData();
                 return;
             }
         }
         let key =new Key();
         key.frame =frame;
-        key.time =time;
+
         key.data =this.getCurrentData();
 
         this.keys.push(key)
@@ -73,15 +86,17 @@ export default class AnimationChannel{
     setTime(time: number) {
 
         if(this.keys.length==0)return;
+
         if(this.keys.length==1){
             this.setCurrentData(this.keys[0].data)
             return;
         }
-       if(time<=this.keys[0].time){
+       if(time<=this.keys[0].frame){
            this.setCurrentData(this.keys[0].data)
            return;
        }
-        if(time>=this.keys[ this.lastKeyIndex].time){
+
+        if(time>=this.keys[ this.lastKeyIndex].frame){
             this.setCurrentData(this.keys[this.lastKeyIndex].data)
             return;
         }
@@ -89,10 +104,11 @@ export default class AnimationChannel{
 
 
         for(let i =0;i< this.keys.length;i++){
-            if(this.keys[i].time>time){
+            if(this.keys[i].frame>time){
                 let k0 =this.keys[i-1];
                 let k1  =this.keys[i];
-                let lerpVal =(time-k0.time)/ (k1.time -k0.time)
+                let lerpVal =(time-k0.frame)/ (k1.frame -k0.frame);
+                console.log(this.type)
                 if(this.type==AnimationType.TRANSLATE) {
                     let v = new Vector3()
                     v.from(k0.data)
@@ -109,6 +125,7 @@ export default class AnimationChannel{
                     let q = new Quaternion()
                     q.from(k0.data)
                     q.slerp(k1.data, lerpVal)
+                    console.log(q)
                     this.sceneObject3D.setRotationQ(q);
                 }
                return;
@@ -117,8 +134,8 @@ export default class AnimationChannel{
 
     }
     setCurrentData(data:any){
-        if(this.type==AnimationType.TRANSLATE){
 
+        if(this.type==AnimationType.TRANSLATE){
             this.sceneObject3D.setPositionV(data);
         }
         else if(this.type==AnimationType.ROTATE){

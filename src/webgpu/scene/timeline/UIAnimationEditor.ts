@@ -50,6 +50,7 @@ export default class UIAnimationEditor extends Component{
     private cursorDragStartFrame: number =0;
     private addKeySettings: ButtonBaseSettings;
     private addKeyAllSettings: ButtonBaseSettings;
+    private playPauseSettings: ButtonBaseSettings;
 
 
     constructor(id: number, settings: UIAnimationEditorSettings) {
@@ -61,8 +62,12 @@ export default class UIAnimationEditor extends Component{
         posMargin+=75
         this.addKeyAllSettings =new ButtonBaseSettings()
         this.addKeyAllSettings.box.size.set(73,20)
-
         this.addKeyAllSettings.box.marginLeft=posMargin;
+        posMargin+=75+20
+        this.playPauseSettings =new ButtonBaseSettings()
+        this.playPauseSettings.box.size.set(73,20)
+        this.playPauseSettings.box.marginLeft=posMargin;
+
     }
     onMouseDown() {
         super.onMouseDown();
@@ -188,6 +193,16 @@ export default class UIAnimationEditor extends Component{
 
         if(UI_IC.buttonBase("+ Key",true,this.addKeySettings))AnimationEditor.addKeysSelected()
         if(UI_IC.buttonBase("+ Key all",true,this.addKeyAllSettings))AnimationEditor.addKeysAll()
+        if(AnimationEditor.isPlaying){
+            if(UI_IC.buttonBase("Pause",true,this.playPauseSettings)){
+                AnimationEditor.pause();
+            }
+        }else{
+            if(UI_IC.buttonBase("Play",true,this.playPauseSettings)){
+                AnimationEditor.play();
+            }
+        }
+
         // UI_IC.buttonBase("test2",true,this.testSettings2);
     }
 

@@ -68,7 +68,7 @@ export default class Object3D extends ObjectGPU {
         temp.applyMatrix4(this.worldMatrixInv);
         return new Vector3(temp.x, temp.y, temp.z);
     }
-    setPositionV(target: Vector3) {
+    setPositionV(target: Vector3|Array<number>) {
         if (this._position.equals(target)) return
         this._position.from(target);
         this.setDirty();
@@ -89,13 +89,13 @@ export default class Object3D extends ObjectGPU {
         this._scale.set(x, y, z)
         this.setDirty();
     }
-    setScaleV(val:Vector3) {
+    setScaleV(val:Vector3|Array<number>) {
         if (this._scale.equals(val)) return
         this._scale.from(val)
         this.setDirty();
     }
 
-    setRotationQ(newRot: Quaternion) {
+    setRotationQ(newRot: Quaternion|Array<number>) {
         if (this._rotation.equals(newRot as Array<number>)) return
         this._rotation.from(newRot)
         this.setDirty();

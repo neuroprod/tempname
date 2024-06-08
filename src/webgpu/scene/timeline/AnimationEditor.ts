@@ -9,72 +9,113 @@ import AnimationChannel from "./animation/AnimationChannel.ts";
 import AnimationChannelEditor from "./AnimationChannelEditor.ts";
 import AnimationEditorGroup from "./AnimationEditorGroup.ts";
 import Vec2 from "../../lib/UI/math/Vec2.ts";
+import Timer from "../../lib/Timer.ts";
 
 
 class AnimationEditor {
 
-    public readonly frameSize =10;
-    public readonly keyFramesOffset =new Vec2(200,40)
+    public readonly frameSize = 10;
+    public readonly keyFramesOffset = new Vec2(200, 40)
 
-    models:Array<SceneObject3D>=[]
-    private channelEditors: Array<AnimationChannelEditor>=[];
+    models: Array<SceneObject3D> = []
+    isDrawDirty: boolean = true
+    public currentAnimation: Animation | null = null;
+    root: AnimationEditorGroup | null = null;
+    private channelEditors: Array<AnimationChannelEditor> = [];
+    private isRecording = true;
+    isPlaying =false;
+    private currentModel!: SceneObject3D | null;
+    private playTime: number =0;
 
-
-    isDrawDirty: boolean =true
-
-    private _currentFrame =0;
-    private isRecording =true;
-    public currentAnimation: Animation|null =null;
-
-    root:AnimationEditorGroup|null=null;
-    private currentModel!: SceneObject3D|null;
-
+    private totalTime: number=0;
     constructor() {
 
 
     }
+
+    private _currentFrame = 0;
+
     get currentFrame(): number {
         return this._currentFrame;
     }
 
     set currentFrame(value: number) {
-        if(this.currentAnimation){
-            this.isDrawDirty =true;
-            this._currentFrame =Math.max( Math.min(value,this.currentAnimation?.numFrames),0);
-            this.currentAnimation.setTime(this._currentFrame* this.currentAnimation.frameTime)
+        if (this.currentAnimation) {
+            this.isDrawDirty = true;
+            this._currentFrame = Math.max(Math.min(value, this.currentAnimation?.numFrames), 0);
+            this.currentAnimation.setTime(this._currentFrame )
         }
 
 
     }
-    setAnimation(anime:Animation|null){
-        this.models =[]
+
+    setAnimation(anime: Animation | null) {
+        this.models = []
+        this.channelEditors=[]
+        this.isPlaying =false
+        this.isDrawDirty =true
+
+
 
         this.currentAnimation = anime;
-        if(this.currentAnimation){
-            this.currentModel =this.currentAnimation.root
+        if (this.currentAnimation) {
+            this.currentModel = this.currentAnimation.root
+            if (this.root) this.root.destroy();
 
-            if(this.root)this.root.destroy();
-            this.root =new AnimationEditorGroup("objects")
+            for(let channel of this.currentAnimation.channels){
+
+                let id =channel.sceneObject3D.UUID + "_" + channel.type;
+                let label = "Position"
+                if (channel.type == AnimationType.SCALE) label = "Scale"
+                if (channel.type  == AnimationType.ROTATE) label = "Rotation"
+                let channelEditor = new AnimationChannelEditor(label, channel, id);
+                this.channelEditors.push(channelEditor);
+            }
+
+
+            this.root = new AnimationEditorGroup("objects")
             this.currentAnimation.root.makeAnimationGroups(this.root)
 
 
             this.root.setData(0);
 
         }
-
+        this.currentFrame =0;
     }
-    drawUI(){
-        if(!this.root)return;
+    play() {
+        if(!this.currentAnimation)return;
+        this.isPlaying =true;
+        this.playTime = this.currentFrame;
+        this.totalTime = this.currentAnimation.numFrames;
+    }
 
+    pause() {
+        this.isPlaying =false;
+    }
+    public update(){
+        if(!this.currentAnimation)  {
+              return
+        }
+        if(this.isPlaying){
+            this.playTime+=Timer.delta/this.currentAnimation.frameTime;
+
+            if(this.playTime>this.totalTime){this.playTime-=this.totalTime}
+            this.currentAnimation.setTime(this.playTime)
+            this.currentFrame =Math.floor( this.playTime)
+        }
+    }
+    drawUI() {
+        if (!this.root) return;
         this.root.drawUI()
     }
-    onMouseDown(pos:Vector2){
+
+    onMouseDown(pos: Vector2) {
         console.log(pos);
 
     }
-     onUI()
-    {
-        if(this.currentAnimation) {
+
+    onUI() {
+        if (this.currentAnimation) {
             UI.pushWindow("Animation")
             if (!UI.initialized) return;
             let id = "timeLine";
@@ -86,13 +127,14 @@ class AnimationEditor {
             UI.popWindow()
         }
     }
-    getChannelEditor(model: SceneObject3D,type :AnimationType,makeNew:boolean=true){
-        if(!this.currentAnimation)return;
-        let id  =model.UUID+"_"+type;
-        for(let ch of this.channelEditors){
-            if(ch.id ==id)return ch;
+
+    getChannelEditor(model: SceneObject3D, type: AnimationType, makeNew: boolean = true) {
+        if (!this.currentAnimation) return;
+        let id = model.UUID + "_" + type;
+        for (let ch of this.channelEditors) {
+            if (ch.id == id) return ch;
         }
-        if(makeNew) {
+        if (makeNew) {
             //not found make new
             let channel = new AnimationChannel(model, type);
             this.currentAnimation.channels.push(channel);
@@ -106,50 +148,54 @@ class AnimationEditor {
         return null;
     }
 
-    addKeyData(model: SceneObject3D, type: AnimationType,force:boolean=false) {
-        if(!this.currentAnimation)return;
-        if(!this.isRecording && !force)return;
+    addKeyData(model: SceneObject3D, type: AnimationType, force: boolean = false) {
+        if (!this.currentAnimation) return;
+        if(this.isPlaying)return;
+        if (!this.isRecording && !force) return;
 
-
-        let  channelEditor =this.getChannelEditor(model,type,false)
-        if(channelEditor){
-            channelEditor.addKey(this.currentFrame,this.currentFrame*this.currentAnimation.frameTime)
-            this.isDrawDirty=true;
+        let channelEditor = this.getChannelEditor(model, type, false)
+        if (channelEditor) {
+            channelEditor.addKey(this.currentFrame)
+            this.isDrawDirty = true;
         }
 
+    }
 
+    addAllKeysToModel(model: SceneObject3D) {
+        this.addKeyData(model, AnimationType.TRANSLATE, true)
+        this.addKeyData(model, AnimationType.ROTATE, true)
+        this.addKeyData(model, AnimationType.SCALE, true)
     }
-    addAllKeysToModel(model: SceneObject3D){
-        this.addKeyData(model, AnimationType.TRANSLATE,true)
-        this.addKeyData(model, AnimationType.ROTATE,true)
-        this.addKeyData(model, AnimationType.SCALE,true)
-    }
+
     addKeysSelected() {
-        if(this.currentModel)
-        this.addAllKeysToModel(this.currentModel)
+        if (this.currentModel)
+            this.addAllKeysToModel(this.currentModel)
     }
 
     addKeysAll() {
-        for (let m  of this.models){
+        for (let m of this.models) {
             this.addAllKeysToModel(m)
         }
     }
 
-    setCurrentModel(currentModel:SceneObject3D|null) {
-        if(!this.currentAnimation)return;
-        if(currentModel){
+    setCurrentModel(currentModel: SceneObject3D | null) {
+        if (!this.currentAnimation) return;
+        if (currentModel) {
 
-            if(this.models.includes(currentModel)){
-                this.currentModel =currentModel;
+            if (this.models.includes(currentModel)) {
+                this.currentModel = currentModel;
 
                 return;
             }
 
         }
 
-        this.currentModel =null;
+        this.currentModel = null;
 
     }
+
+
 }
+
 export default new AnimationEditor()
 
