@@ -3,6 +3,7 @@ import Renderer from "../lib/Renderer.ts";
 import UI from "../lib/UI/UI.ts";
 import Model from "../lib/model/Model.ts";
 import AnimationEditorGroup from "./timeline/AnimationEditorGroup.ts";
+import AnimationEditor from "./timeline/AnimationEditor.ts";
 
 export default class SceneObject3D extends Object3D{
     setCurrentModel!: (value: (SceneObject3D | null)) => void;
@@ -49,11 +50,14 @@ export default class SceneObject3D extends Object3D{
         let group =new AnimationEditorGroup(this.label,this)
         root.addGroup(group)
 
+        AnimationEditor.models.push(this);
+
         for (let child of this.children)
         {
             let childSceneObject = child as SceneObject3D;
 
             if(childSceneObject.isSceneObject3D){
+
 
                 childSceneObject.makeAnimationGroups(group)
             }

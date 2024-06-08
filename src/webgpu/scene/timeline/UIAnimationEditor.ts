@@ -9,6 +9,8 @@ import Rect from "../../lib/UI/math/Rect.ts";
 import Vec2 from "../../lib/UI/math/Vec2.ts";
 
 import Font from "../../lib/UI/draw/Font.ts";
+import UI_IC from "../../lib/UI/UI_IC.ts";
+import {ButtonBaseSettings} from "../../lib/UI/components/internal/ButtonBase.ts";
 
 export class UIAnimationEditorSettings extends ComponentSettings
 {
@@ -22,13 +24,12 @@ export default class UIAnimationEditor extends Component{
 
 
 //settings
-    private frameSize =10;
-    private keyFramesOffset =new Vec2(100,20)
+
 
 //values
     private mousePos =new Vec2()
     private topLeft =new Vec2()
-
+    private topLeftItems =new Vec2()
     private keysBackgroundRect =new Rect()
     private keysBackgroundColor =new Color().setHex("#444444",1)
     private keysLineRect =new Rect()
@@ -47,14 +48,21 @@ export default class UIAnimationEditor extends Component{
 
     private mouseStartDragX: number=0;
     private cursorDragStartFrame: number =0;
+    private addKeySettings: ButtonBaseSettings;
+    private addKeyAllSettings: ButtonBaseSettings;
 
 
     constructor(id: number, settings: UIAnimationEditorSettings) {
                 super(id,settings)
 
+        let posMargin =0
+        this.addKeySettings =new ButtonBaseSettings()
+        this.addKeySettings.box.size.set(73,20)
+        posMargin+=75
+        this.addKeyAllSettings =new ButtonBaseSettings()
+        this.addKeyAllSettings.box.size.set(73,20)
 
-
-
+        this.addKeyAllSettings.box.marginLeft=posMargin;
     }
     onMouseDown() {
         super.onMouseDown();
@@ -89,7 +97,7 @@ export default class UIAnimationEditor extends Component{
 
         if(this.cursorDrag){
             let mouseOffset = UI_I.mouseListener.mousePos.x -this.mouseStartDragX;
-            let frameOffset =Math.round(mouseOffset/this.frameSize)
+            let frameOffset =Math.round(mouseOffset/AnimationEditor.frameSize)
             AnimationEditor.currentFrame =this.cursorDragStartFrame+frameOffset;
         }
        // this.mousePos.copy(UI_I.mouseListener.mousePos)
@@ -115,19 +123,20 @@ export default class UIAnimationEditor extends Component{
     //layout rect is set
     layoutAbsolute() {
         this.topLeft.copy(this.layoutRect.pos)
-        this.topLeft.add(this.keyFramesOffset);
-
+        this.topLeft.add(AnimationEditor.keyFramesOffset);
+        this.topLeftItems.copy(this.layoutRect.pos)
+        this.topLeftItems.y+=AnimationEditor.keyFramesOffset.y;
         //background
         this.keysBackgroundRect.pos.copy(this.topLeft)
         this.keysBackgroundRect.size.copy(this.layoutRect.size)
-        this.keysBackgroundRect.size.sub(this.keyFramesOffset)
+        this.keysBackgroundRect.size.sub(AnimationEditor.keyFramesOffset)
         this.keysLineRect.pos.copy(this.topLeft)
         this.keysLineRect.size.set(1, this.keysBackgroundRect.size.y)
 
 
         //cursor
         this.cursorPos.copy(this.topLeft)
-        this.cursorPos.x +=AnimationEditor.currentFrame*this.frameSize;
+        this.cursorPos.x +=AnimationEditor.currentFrame*AnimationEditor.frameSize;
         this.cursorPos.y -=2
         this.cursorLineRect.size.copy(this.keysLineRect.size);
         this.cursorLineRect.pos.copy(this.cursorPos)
@@ -142,6 +151,8 @@ export default class UIAnimationEditor extends Component{
         this.cursorTextPos.copy(this.cursorRect.pos)
         this.cursorTextPos.x+=this.cursorRect.size.x/2 -size.x/2
         this.cursorTextPos.y+=this.cursorRect.size.y/2 -size.y/2-1
+
+        AnimationEditor.root?.prepUI(this.topLeftItems);
     }
 
     prepDraw() {
@@ -156,12 +167,15 @@ export default class UIAnimationEditor extends Component{
         // @ts-ignore
         for(let i=1;i<=AnimationEditor.currentAnimation.numFrames;i++){
             UI_I.currentDrawBatch.fillBatch.addRect(this.keysLineRect, this.keysLineColor);
-            this.keysLineRect.pos.x+=this.frameSize;
+            this.keysLineRect.pos.x+=AnimationEditor.frameSize;
         }
         //cursor
         UI_I.currentDrawBatch.fillBatch.addRect(this.cursorLineRect, this.cursorColor);
         UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect, this.cursorColor);
         UI_I.currentDrawBatch.textBatch.addLine(this.cursorTextPos,this.cursorText,1000,this.cursorTextColor)
+
+        AnimationEditor.root?.drawUI()
+
         /*let p =new Vec2(40,40);
         p.add(this.layoutRect.pos);
         UI_I.currentDrawBatch.fillBatch.addKeyframe(p, new Color(1,1,1));*/
@@ -169,8 +183,11 @@ export default class UIAnimationEditor extends Component{
     }
     setSubComponents() {
         super.setSubComponents();
-      //  UI_IC.buttonBase("test",true,this.testSettings);
+      //  AnimationEditor.root?.drawUI()
 
+
+        if(UI_IC.buttonBase("+ Key",true,this.addKeySettings))AnimationEditor.addKeysSelected()
+        if(UI_IC.buttonBase("+ Key all",true,this.addKeyAllSettings))AnimationEditor.addKeysAll()
         // UI_IC.buttonBase("test2",true,this.testSettings2);
     }
 

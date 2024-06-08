@@ -166,10 +166,12 @@ export default class Scene {
             this.currentModel = value;
             this.outline.setCurrentModel(value.model)
             this.editCursor.setCurrentModel(this.currentModel);
+            AnimationEditor.setCurrentModel(this.currentModel);
         } else {
             this.currentModel = null;
-            this.outline.setCurrentModel(null)
+            this.outline.setCurrentModel(null);
             this.editCursor.setCurrentModel(null);
+            AnimationEditor.setCurrentModel(null);
         }
 
     }
