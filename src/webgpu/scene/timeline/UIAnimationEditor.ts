@@ -51,6 +51,8 @@ export default class UIAnimationEditor extends Component{
     private addKeySettings: ButtonBaseSettings;
     private addKeyAllSettings: ButtonBaseSettings;
     private playPauseSettings: ButtonBaseSettings;
+    private startRecordSettings: ButtonBaseSettings;
+    private stopRecordSettings: ButtonBaseSettings;
 
 
     constructor(id: number, settings: UIAnimationEditorSettings) {
@@ -67,6 +69,15 @@ export default class UIAnimationEditor extends Component{
         this.playPauseSettings =new ButtonBaseSettings()
         this.playPauseSettings.box.size.set(73,20)
         this.playPauseSettings.box.marginLeft=posMargin;
+        posMargin+=75
+        this.startRecordSettings =new ButtonBaseSettings()
+        this.startRecordSettings.box.size.set(73,20)
+        this.startRecordSettings.box.marginLeft=posMargin;
+
+        this.stopRecordSettings =new ButtonBaseSettings()
+        this.stopRecordSettings.box.size.set(73,20)
+        this.stopRecordSettings.backColor.set(1,0,0,1)
+        this.stopRecordSettings.box.marginLeft=posMargin;
 
     }
     onMouseDown() {
@@ -193,6 +204,8 @@ export default class UIAnimationEditor extends Component{
 
         if(UI_IC.buttonBase("+ Key",true,this.addKeySettings))AnimationEditor.addKeysSelected()
         if(UI_IC.buttonBase("+ Key all",true,this.addKeyAllSettings))AnimationEditor.addKeysAll()
+
+
         if(AnimationEditor.isPlaying){
             if(UI_IC.buttonBase("Pause",true,this.playPauseSettings)){
                 AnimationEditor.pause();
@@ -202,6 +215,17 @@ export default class UIAnimationEditor extends Component{
                 AnimationEditor.play();
             }
         }
+        if( AnimationEditor.isRecording){
+            if(UI_IC.buttonBase("Stop Rec",true,this.stopRecordSettings)){
+                AnimationEditor.isRecording =false;
+            }
+
+        }else{
+            if(UI_IC.buttonBase("Start Rec",true,this.startRecordSettings)){
+                AnimationEditor.isRecording =true;
+            }
+        }
+
 
         // UI_IC.buttonBase("test2",true,this.testSettings2);
     }

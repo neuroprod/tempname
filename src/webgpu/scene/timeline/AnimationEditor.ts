@@ -22,7 +22,7 @@ class AnimationEditor {
     public currentAnimation: Animation | null = null;
     root: AnimationEditorGroup | null = null;
     private channelEditors: Array<AnimationChannelEditor> = [];
-    private isRecording = true;
+    isRecording = true;
     isPlaying =false;
     private currentModel!: SceneObject3D | null;
     private playTime: number =0;
@@ -54,13 +54,16 @@ class AnimationEditor {
         this.channelEditors=[]
         this.isPlaying =false
         this.isDrawDirty =true
-
-
+        this.isRecording =false;
+        if (this.root){
+            this.root.destroy()
+            this.root =null;
+        }
 
         this.currentAnimation = anime;
         if (this.currentAnimation) {
             this.currentModel = this.currentAnimation.root
-            if (this.root) this.root.destroy();
+
 
             for(let channel of this.currentAnimation.channels){
 

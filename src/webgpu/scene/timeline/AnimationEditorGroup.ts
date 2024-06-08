@@ -42,7 +42,19 @@ export default class AnimationEditorGroup{
         }
     }
     destroy() {
-        console.log("implement destroy")
+      
+        for(let c of this.children){
+            c.destroy()
+        }
+
+        for(let c of this.channels){
+            c.destroy()
+        }
+        this.children =[]
+        this.channels =[]
+        this.parent =null;
+        this.obj =null;
+
     }
     setData(offset:number)
     {

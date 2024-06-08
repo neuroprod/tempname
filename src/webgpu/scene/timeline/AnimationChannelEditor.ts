@@ -48,4 +48,8 @@ export default class AnimationChannelEditor{
             this.keyPositions.push(v)
         }
     }
+
+    destroy() {
+
+    }
 }
