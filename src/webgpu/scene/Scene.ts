@@ -171,6 +171,14 @@ export default class Scene {
                 this.setCurrentModel(m);
                 this.addModel(m)
             }
+            if (UI.LButton("Add Empty +")) {
+                let m = new SceneObject3D(this.renderer,"newEmpty");
+
+                m.setCurrentModel = this.setCurrentModel.bind(this);
+                this.currentModel.addChild(m)
+                this.setCurrentModel(m);
+                this.addModel(m)
+            }
             this.currentModel.onDataUI()
 
         }
