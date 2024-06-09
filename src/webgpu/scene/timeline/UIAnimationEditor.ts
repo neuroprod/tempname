@@ -17,6 +17,7 @@ export class UIAnimationEditorSettings extends ComponentSettings
     constructor() {
         super();
         this.box.size.set(-1,-1)
+
     }
 
 }
@@ -27,7 +28,7 @@ export default class UIAnimationEditor extends Component{
 
 
 //values
-    private mousePos =new Vec2()
+
     private topLeft =new Vec2()
     private topLeftItems =new Vec2()
     private keysBackgroundRect =new Rect()
@@ -88,7 +89,10 @@ export default class UIAnimationEditor extends Component{
             this.mouseStartDragX =UI_I.mouseListener.mousePos.x
             this.cursorDrag =true;
             this.cursorDragStartFrame = AnimationEditor.currentFrame;
-            console.log("hit")
+
+
+        }else{
+           // AnimationEditor.onMouseDown(UI_I.mouseListener.mousePos)
 
         }
 
@@ -135,6 +139,8 @@ export default class UIAnimationEditor extends Component{
     //set the correct size
     layoutRelative() {
         //extend
+        this.size.y =300;
+        this.size.x =400;
     }
     //layout rect is set
     layoutAbsolute() {

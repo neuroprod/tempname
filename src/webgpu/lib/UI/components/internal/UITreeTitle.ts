@@ -8,8 +8,9 @@ import Font from "../../draw/Font";
 export class TreeTitleSettings extends ComponentSettings {
     constructor() {
         super();
-        this.box.marginLeft = 20;
-        this.box.size.set(-1, 20);
+        this.box.marginLeft = 16;
+
+        this.box.size.set(-1, 16);
     }
 
     public boxColor = new Color().setHex("#65625e", 1);

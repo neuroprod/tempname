@@ -149,14 +149,14 @@ export default class UI {
         }
         UI_I.groupDepth++;
     }
-    static pushTree(label: string, settings?: TreeSettings) {
+    static pushTree(label: string,isLeave:boolean, settings?: TreeSettings) {
         if (!UI.initialized) return;
         if (!UI_I.setComponent(label)) {
             if (!settings) settings = new TreeSettings();
             let comp = new Tree(UI_I.getID(label), label, settings);
             UI_I.addComponent(comp);
         }
-
+        (UI_I.currentComponent.parent as Tree).setLeave(isLeave);
         // @ts-ignore
         let result = UI_I.currentComponent.parent.getReturnValue();
 
@@ -414,7 +414,7 @@ export default class UI {
 
     static LVector(
         label: string,
-        vector: UI_VEC2 | UI_VEC3 | UI_VEC4,
+        vector: UI_VEC2 | UI_VEC3 | UI_VEC4 ,
         normalized = false,
         settings?: LVectorSettings
     ) {
@@ -499,13 +499,16 @@ export default class UI {
 
     static LFloat(
         label: string,
-        value: number,
+        value: number,labelOver:string,
         settings?: LNumberSettings
     ): number;
-    static LFloat(ref: any, property: string, settings?: LNumberSettings): number;
+    static LFloat(ref: any,
+                  property: string,labelOver:string,
+                  settings?: LNumberSettings): number;
     static LFloat(
         ref_or_label: any,
         property_or_value: any,
+        labelOver?:string,
         settings?: LNumberSettings
     ) {
         if (!UI.initialized) {
@@ -515,7 +518,7 @@ export default class UI {
                 return property_or_value;
             }
         }
-        return UI_IC.LFloat(ref_or_label, property_or_value, settings);
+        return UI_IC.LFloat(ref_or_label, property_or_value,labelOver, settings);
     }
 
     static LIntSlider(

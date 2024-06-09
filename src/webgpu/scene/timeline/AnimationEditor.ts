@@ -114,7 +114,7 @@ class AnimationEditor {
 
     onMouseDown(pos: Vector2) {
         console.log(pos);
-
+       // this.root.onMouseDown(pos)
     }
 
     onUI() {

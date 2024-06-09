@@ -5,8 +5,8 @@ import UI_I from "../../UI_I";
 export class ToggleIconSettings extends ComponentSettings {
     constructor() {
         super();
-        this.box.size.set(18, 18);
-        this.box.setMargin(2);
+        this.box.size.set(16, 16);
+        this.box.setMargin(0);
     }
 
     public colorOver: Color = new Color().setHex("#f6f6f6", 1);

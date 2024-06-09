@@ -51,6 +51,7 @@ export default class UI_IC {
     static LFloat(
         ref_or_label: any,
         property_or_value: any,
+        labelOver?:string,
         settings?: LNumberSettings
     ): number {
         let label;
@@ -73,7 +74,8 @@ export default class UI_IC {
                 value,
                 ref,
                 settings,
-                NumberType.FLOAT
+                NumberType.FLOAT,
+                labelOver
             );
             UI_I.addComponent(comp);
         }

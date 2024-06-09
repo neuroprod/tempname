@@ -40,9 +40,10 @@ export default class LNumber extends LComponent {
         value: number | null,
         ref: any,
         settings: LNumberSettings,
-        type: NumberType = NumberType.FLOAT
+        type: NumberType = NumberType.FLOAT,
+        labelOver =""
     ) {
-        super(id, label, settings);
+        super(id, labelOver.length==0?label:labelOver, settings);
         if (value) this.value = value;
         this.stringRef = label;
         this.ref = ref;

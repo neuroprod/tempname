@@ -1,29 +1,58 @@
-
 import Renderer from "../Renderer";
 
 import ObjectGPU from "../ObjectGPU.ts";
 import {Matrix4, Quaternion, Vector3, Vector4} from "@math.gl/core";
-import UI from "../UI/UI.ts";
-
 
 
 export default class Object3D extends ObjectGPU {
     public parent: Object3D | null = null
     public children: Array<Object3D> = []
-    private tempMatrix = new Matrix4()
     protected _dirty: boolean = true;
-    protected _drawDirty: boolean=true;
+    protected _drawDirty: boolean = true;
     protected _position = new Vector3(0, 0, 0);
+    private tempMatrix = new Matrix4()
     private _scale = new Vector3(1, 1, 1);
     private _rotation = new Quaternion(0, 0, 0, 1);
 
-
-
-    private temp4 =new Vector4()
-    private temp3 =new Vector3()
+    private eulerDirty: boolean = false;
+    private _euler = new Vector3(0, 0, 0);
     constructor(renderer: Renderer, label: string = "") {
         super(renderer, label);
 
+    }
+
+
+
+    public get euler() {
+        if (this.eulerDirty) {
+            const w = this._rotation[3];
+            const x = this._rotation[0];
+            const y = this._rotation[1];
+            const z = this._rotation[2];
+
+            const wx = w * x,
+                wy = w * y,
+                wz = w * z;
+            const xx = x * x,
+                xy = x * y,
+                xz = x * z;
+            const yy = y * y,
+                yz = y * z,
+                zz = z * z;
+
+            this._euler.set(
+                -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + yy)),
+                Math.asin(2 * (xz + wy)),
+                -Math.atan2(2 * (xy - wz), 1 - 2 * (yy + zz)));
+            this.eulerDirty = false
+        }
+        return this._euler as Vector3
+    }
+
+    public set euler(target: Vector3 | Array<number>) {
+        this._rotation.identity()
+        this._rotation.rotateZ(target[2]).rotateY(target[1]).rotateX(target[0]);
+        this.setDirty();
     }
 
     private _worldMatrix: Matrix4 = new Matrix4()
@@ -34,7 +63,124 @@ export default class Object3D extends ObjectGPU {
         return this._worldMatrix;
 
     }
+
+    public get x() {
+        return this._position.x
+    }
+
+    public set x(value: number) {
+        if (this._position.x != value) {
+            this._position.x = value;
+            this.setDirty();
+        }
+    }
+
+    public get y() {
+        return this._position.y
+    }
+
+    public set y(value: number) {
+        if (this._position.y != value) {
+
+            this._position.y = value;
+            this.setDirty();
+        }
+    }
+
+    public get z() {
+        return this._position.z
+    }
+
+    public set z(value: number) {
+        if (this._position.z != value) {
+
+            this._position.z = value;
+            this.setDirty();
+        }
+    }
+
+    public get rx() {
+        // @ts-ignore
+        return this.euler.x;
+    }
+
+    ////rotation
+    public set rx(value: number) {
+        // @ts-ignore
+        if (this.euler.x != value) {
+
+            this.setEuler( value, this._euler.y,this._euler.z)
+            this.setDirty();
+        }
+    }
+
+    public get ry() {
+        // @ts-ignore
+        return this.euler.y
+    }
+
+    public set ry(value: number) {
+
+        // @ts-ignore
+        if (this.euler.y != value) {
+            this.setEuler( this._euler.x,value,this._euler.z)
+            this.setDirty();
+        }
+    }
+
+    public get rz() {
+        // @ts-ignore
+        return this.euler.z
+    }
+
+    public set rz(value: number) {
+        // @ts-ignore
+        if (this.euler.z != value) {
+
+
+            this.setEuler( this._euler.x, this._euler.y,value)
+            this.setDirty();
+        }
+    }
+
+    public get sx() {
+        return this._scale.x
+    }
+
+    ////scale
+    public set sx(value: number) {
+        if (this._scale.x != value) {
+            this._scale.x = value;
+            this.setDirty();
+        }
+    }
+
+    public get sy() {
+        return this._scale.y
+    }
+
+    public set sy(value: number) {
+        if (this._scale.y != value) {
+
+            this._scale.y = value;
+            this.setDirty();
+        }
+    }
+
+    public get sz() {
+        return this._scale.z
+    }
+
+    public set sz(value: number) {
+        if (this._scale.z != value) {
+
+            this._scale.z = value;
+            this.setDirty();
+        }
+    }
+
     public _worldMatrixInv: Matrix4 = new Matrix4();
+
     public get worldMatrixInv() {
         if (!this._dirty) return this._worldMatrixInv;
         this.updateMatrices();
@@ -42,13 +188,7 @@ export default class Object3D extends ObjectGPU {
 
     }
 
-
-
-
-
-
     private _localMatrix: Matrix4 = new Matrix4()
-
 
     public get localMatrix() {
         if (!this._dirty) return this._localMatrix;
@@ -63,12 +203,15 @@ export default class Object3D extends ObjectGPU {
         temp.applyMatrix4(this.worldMatrix);
         return new Vector3(temp.x, temp.y, temp.z);
     }
+
     getLocalPos(worldPos: Vector3) {
         let temp = new Vector4(worldPos.x, worldPos.y, worldPos.z, 1)
         temp.applyMatrix4(this.worldMatrixInv);
         return new Vector3(temp.x, temp.y, temp.z);
     }
-    setPositionV(target: Vector3|Array<number>) {
+
+    //d
+    setPositionV(target: Vector3 | Array<number>) {
         if (this._position.equals(target)) return
         this._position.from(target);
         this.setDirty();
@@ -89,15 +232,17 @@ export default class Object3D extends ObjectGPU {
         this._scale.set(x, y, z)
         this.setDirty();
     }
-    setScaleV(val:Vector3|Array<number>) {
+
+    setScaleV(val: Vector3 | Array<number>) {
         if (this._scale.equals(val)) return
         this._scale.from(val)
         this.setDirty();
     }
 
-    setRotationQ(newRot: Quaternion|Array<number>) {
+    setRotationQ(newRot: Quaternion | Array<number>) {
         if (this._rotation.equals(newRot as Array<number>)) return
         this._rotation.from(newRot)
+        this.eulerDirty = true;
         this.setDirty();
     }
 
@@ -105,13 +250,20 @@ export default class Object3D extends ObjectGPU {
 
         if (this._rotation.equals([x, y, z, w])) return
         this._rotation.set(x, y, z, w)
+        this.eulerDirty = true;
         this.setDirty();
     }
 
     public setEuler(x: number, y: number, z: number) {
+        // @ts-ignore
+        if (this.euler.equals([x, y, z])) {
+            return;
+        }
+
         this._rotation.identity()
         this._rotation.rotateZ(z).rotateY(y).rotateX(x);
-
+     
+        this._euler.set(x, y, z)
         this.setDirty();
     }
 
@@ -129,6 +281,18 @@ export default class Object3D extends ObjectGPU {
         if (index < 0) return;
         child.parent = null;
         this.children.splice(index, 1);
+    }
+
+    getScale() {
+        return this._scale;
+    }
+
+    getRotation() {
+        return this._rotation;
+    }
+
+    getPosition() {
+        return this._position;
     }
 
     protected updateMatrices() {
@@ -149,6 +313,9 @@ export default class Object3D extends ObjectGPU {
         }
         this._worldMatrixInv.from(this._worldMatrix);
         this._worldMatrixInv.invert();
+        // this._rotation.
+        //this._euler
+
         this._dirty = false;
 
     }
@@ -163,46 +330,4 @@ export default class Object3D extends ObjectGPU {
     }
 
 
-    getScale() {
-        return this._scale;
-    }
-
-    getRotation() {
-        return this._rotation;
-    }
-
-    getPosition() {
-        return this._position;
-    }
-
-    getEulerXYZ() {
-        const w = this._rotation[3];
-        const x = this._rotation[0];
-        const y = this._rotation[1];
-        const z = this._rotation[2];
-
-        const wx = w * x,
-            wy = w * y,
-            wz = w * z;
-        const xx = x * x,
-            xy = x * y,
-            xz = x * z;
-        const yy = y * y,
-            yz = y * z,
-            zz = z * z;
-
-        return new Vector3([
-            -Math.atan2(2 * (yz - wx), 1 - 2 * (xx + yy)),
-            Math.asin(2 * (xz + wy)),
-            -Math.atan2(2 * (xy - wz), 1 - 2 * (yy + zz)),
-        ]);
-
-    }
-
-
-    onDataUI() {
-        UI.pushID(this.UUID)
-        UI.LTextInput("name",this,"label")
-        UI.popID()
-    }
 }

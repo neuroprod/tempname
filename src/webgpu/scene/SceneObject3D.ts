@@ -14,16 +14,37 @@ export default class SceneObject3D extends Object3D{
     }
 
     onUI(){
-        if(UI.pushTree(this.label)){
+
+        if(UI.pushTree(this.label,this.children.length<=1)){
             this.setCurrentModel(this);
         }
+
+
         for (let child of this.children){
             let co = child as SceneObject3D;
             if(co.onUI) co.onUI()
         }
         UI.popTree()
     }
+    onDataUI() {
+        UI.pushID(this.UUID)
+        UI.LTextInput("name",this,"label")
+        UI.LFloat(this,"x","Position X")
+        UI.LFloat(this,"y","Y")
+        UI.LFloat(this,"z","Z")
 
+        UI.LFloat(this,"rx","Rotation X")
+        UI.LFloat(this,"ry","Y")
+        UI.LFloat(this,"rz","Z")
+        if(this.model){
+
+            UI.LFloat(this.model,"sx","Scale X")
+            UI.LFloat(this.model,"sy","Y")
+            UI.LFloat(this.model,"sz","Z")
+        }
+
+        UI.popID()
+    }
 
     getSceneData(dataArr:Array<any>) {
        let obj:any ={}
