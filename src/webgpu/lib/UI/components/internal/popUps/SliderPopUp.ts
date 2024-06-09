@@ -87,14 +87,14 @@ export default class SliderPopUp extends PopUpWindow {
         UI_IC.pushVerticalLayout("v");
 
         UI_IC.pushComponent("min", this.hCompSettings);
-        UI_IC.LFloat(this, "min", this.lFloatSettings);
+        UI_IC.LFloat(this, "min","", this.lFloatSettings);
         if (UI_IC.buttonBase("set Current",true, this.btnSettings)) {
             this.min = this.value;
         }
         UI_I.popComponent();
 
         UI_IC.pushComponent("max", this.hCompSettings);
-        UI_IC.LFloat(this, "max", this.lFloatSettings);
+        UI_IC.LFloat(this, "max","" ,this.lFloatSettings);
         if (UI_IC.buttonBase("set Current",true, this.btnSettings)) {
             this.max = this.value;
         }
