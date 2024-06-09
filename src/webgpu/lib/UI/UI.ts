@@ -508,7 +508,7 @@ export default class UI {
     static LFloat(
         ref_or_label: any,
         property_or_value: any,
-        labelOver?:string,
+        labelOver:string="",
         settings?: LNumberSettings
     ) {
         if (!UI.initialized) {

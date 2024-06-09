@@ -262,7 +262,7 @@ export default class Object3D extends ObjectGPU {
 
         this._rotation.identity()
         this._rotation.rotateZ(z).rotateY(y).rotateX(x);
-     
+
         this._euler.set(x, y, z)
         this.setDirty();
     }
