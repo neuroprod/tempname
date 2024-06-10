@@ -67,16 +67,16 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 
 
 fn load_noise(pixel_coordinates: vec2<i32>) -> vec2<f32> {
-    var index = (textureLoad(noise, pixel_coordinates%3 , 0).rg*2.0)-vec2(1.0);
-
-  return index;
+    var index = textureLoad(noise, pixel_coordinates%3 , 0).r+5.0;//g*2.0)-vec2(1.0);
+   return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));
+ // return index;
 
    /* var index = textureLoad(hilbert_index_lut, pixel_coordinates % 64, 0).r;
 
 
 
     // R2 sequence - http://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences
-    return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));*/
+    //return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));*/
 }
 
 // Calculate differences in depth between neighbor pixels (later used by the spatial denoiser pass to preserve object edges)
@@ -149,9 +149,9 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
 {
    var output : AOOutput;
    
-    let slice_count = 5.0;
+    let slice_count = 9.0;
     let samples_per_slice_side =3.0;
-    let effect_radius = 0.1* 1.457;
+    let effect_radius = 0.3* 1.457;
     let falloff_range = 0.615 * effect_radius;
     let falloff_from = effect_radius * (1.0 - 0.615);
     let falloff_mul = -1.0 / falloff_range;
@@ -163,14 +163,14 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     
     let r = calculate_neighboring_depth_differences(uv);
     var pixel_depth = r.a;
-    pixel_depth += 0.00001; // Avoid depth precision issues
+    pixel_depth -= 0.00001; // Avoid depth precision issues
 
     let pixel_position = reconstruct_view_space_position(pixel_depth, uv);
     let pixel_normal =load_normal_view_space(uv);
     let view_vec = normalize(-pixel_position);
 
     let noise = load_noise(pixel_coordinates);
-    let sample_scale = (-0.5 * effect_radius * camera.viewMatrix[0][0]) / pixel_position.z;
+    let sample_scale = (-0.5 * effect_radius * camera.projectionMatrix[0][0]) / pixel_position.z;
 
     var visibility = 0.0;
     for (var slice_t = 0.0; slice_t < slice_count; slice_t += 1.0) {
@@ -198,23 +198,25 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
             sample_noise = fract(noise.y + sample_noise);
 
             var s = (sample_t + sample_noise) / samples_per_slice_side;
-            //s *= s; // https://github.com/GameTechDev/XeGTAO#sample-distribution
+           // s *= s; // https://github.com/GameTechDev/XeGTAO#sample-distribution
             let sample = s * sample_mul;
 
             // * view.viewport.zw gets us from [0, 1] to [0, viewport_size], which is needed for this to get the correct mip levels
             let sample_mip_level =round(clamp(log2(length(sample * textureSize)) - 3.3, 0.0, 5.0)); // https://github.com/GameTechDev/XeGTAO#memory-bandwidth-bottleneck
             var mis = 1.0;
-           
-            if(sample_mip_level ==1.0){
+            if(sample_mip_level ==0.0){
+            mis = 1.0;
+            }
+            else if(sample_mip_level ==1.0){
             mis=0.5;
             }
-            if(sample_mip_level ==2.0){
+            else if(sample_mip_level ==2.0){
             mis=0.25;
             }
-            if(sample_mip_level ==3.0){
+            else if(sample_mip_level ==3.0){
             mis=0.125;
             }
-            if(sample_mip_level ==4.0){
+            else if(sample_mip_level ==4.0){
             mis=0.125*0.5;
             }
             let sample_position_1 = load_and_reconstruct_view_space_position((uv + sample)*mis, sample_mip_level);
@@ -245,7 +247,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     visibility /= slice_count;
     visibility = clamp(visibility, 0.03, 1.0);
 
-    output.ao = vec4(visibility,0,0,0);
+    output.ao = vec4(visibility*visibility,0,0,0);
     output.depthDif = vec4<u32>(r.b,0,0,0);
     return output;
 }

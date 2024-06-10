@@ -1,7 +1,6 @@
 import Material from "../../lib/material/Material.ts";
 import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
-import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
 import {CompareFunction, FilterMode, TextureSampleType} from "../../lib/WebGPUConstants.ts";
 import {Textures} from "../../data/Textures.ts";
 
