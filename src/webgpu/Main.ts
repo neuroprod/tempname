@@ -13,6 +13,7 @@ import Scene from "./scene/Scene.ts";
 import JsonLoader from "./JsonLoader.ts";
 import GameRenderer from "./render/GameRenderer.ts";
 import AnimationEditor from "./scene/timeline/AnimationEditor.ts";
+import TextureLoader from "./lib/textures/TextureLoader.ts";
 
 enum MainState {
 
@@ -65,6 +66,8 @@ export default class Main {
         }, this.init.bind(this));
         this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         this.sceneLoader =new JsonLoader("scene1",this.preloader)
+
+        let t =new TextureLoader(this.renderer,"./BlueNoise.png")
     }
 
 

@@ -23,7 +23,7 @@ export default class GTAOMaterial extends Material
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addTexture("noise", DefaultTextures.getMagicNoise(this.renderer));
+        uniforms.addTexture("noise", this.renderer.getTexture("./BlueNoise.png"));
         uniforms.addTexture("preprocessed_depth", this.renderer.getTexture(Textures.DEPTH_BLUR))
         uniforms.addTexture("normals", this.renderer.getTexture(Textures.GNORMAL))
         uniforms.addSampler("point_clamp_sampler",GPUShaderStage.FRAGMENT,FilterMode.Nearest)
@@ -67,7 +67,7 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 
 
 fn load_noise(pixel_coordinates: vec2<i32>) -> vec2<f32> {
-    var index = textureLoad(noise, pixel_coordinates%3 , 0).r+5.0;//g*2.0)-vec2(1.0);
+    var index = textureLoad(noise, pixel_coordinates%64 , 0).r;//g*2.0)-vec2(1.0);
    return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));
  // return index;
 
@@ -128,9 +128,9 @@ fn reconstruct_view_space_position(depth: f32, uv: vec2<f32>) -> vec3<f32> {
     return view_xyz;
 }
 
-fn load_and_reconstruct_view_space_position(uv: vec2<f32>, sample_mip_level: f32) -> vec3<f32> {
+fn load_and_reconstruct_view_space_position(uv: vec2<f32>,uv2: vec2<f32>, sample_mip_level: f32) -> vec3<f32> {
     let depth = textureSampleLevel(preprocessed_depth, point_clamp_sampler, uv, sample_mip_level).r;
-    return reconstruct_view_space_position(depth, uv);
+    return reconstruct_view_space_position(depth, uv2);
 }
 
 fn fast_sqrt(x: f32) -> f32 {
@@ -149,13 +149,13 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
 {
    var output : AOOutput;
    
-    let slice_count = 9.0;
+    let slice_count = 5.0;
     let samples_per_slice_side =3.0;
-    let effect_radius = 0.3* 1.457;
-    let falloff_range = 0.615 * effect_radius;
-    let falloff_from = effect_radius * (1.0 - 0.615);
+     let effect_radius = 0.09 * 1.457;
+    let falloff_range = 0.615 * effect_radius*0.4;
+    let falloff_from = effect_radius * (1.0 - 0.615)*0.4;
     let falloff_mul = -1.0 / falloff_range;
-    let falloff_add =-0.1+ falloff_from / falloff_range + 1.0;
+    let falloff_add = falloff_from / falloff_range + 1.0;
   
     let textureSize =vec2<f32>( textureDimensions(normals));
      
@@ -163,7 +163,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     
     let r = calculate_neighboring_depth_differences(uv);
     var pixel_depth = r.a;
-    pixel_depth -= 0.00001; // Avoid depth precision issues
+    pixel_depth -= 0.0002; // Avoid depth precision issues
 
     let pixel_position = reconstruct_view_space_position(pixel_depth, uv);
     let pixel_normal =load_normal_view_space(uv);
@@ -198,11 +198,11 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
             sample_noise = fract(noise.y + sample_noise);
 
             var s = (sample_t + sample_noise) / samples_per_slice_side;
-           // s *= s; // https://github.com/GameTechDev/XeGTAO#sample-distribution
+           s *= s; // https://github.com/GameTechDev/XeGTAO#sample-distribution
             let sample = s * sample_mul;
 
             // * view.viewport.zw gets us from [0, 1] to [0, viewport_size], which is needed for this to get the correct mip levels
-            let sample_mip_level =round(clamp(log2(length(sample * textureSize)) - 3.3, 0.0, 5.0)); // https://github.com/GameTechDev/XeGTAO#memory-bandwidth-bottleneck
+            let sample_mip_level =round(clamp(log2(length(sample * textureSize)) - 3.3, 0.0,4.0)); // https://github.com/GameTechDev/XeGTAO#memory-bandwidth-bottleneck
             var mis = 1.0;
             if(sample_mip_level ==0.0){
             mis = 1.0;
@@ -219,8 +219,8 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
             else if(sample_mip_level ==4.0){
             mis=0.125*0.5;
             }
-            let sample_position_1 = load_and_reconstruct_view_space_position((uv + sample)*mis, sample_mip_level);
-            let sample_position_2 = load_and_reconstruct_view_space_position((uv - sample)*mis, sample_mip_level);
+            let sample_position_1 = load_and_reconstruct_view_space_position((uv+ sample)*mis, uv+ sample, sample_mip_level);
+            let sample_position_2 = load_and_reconstruct_view_space_position((uv - sample)*mis,uv - sample, sample_mip_level);
 
             let sample_difference_1 = sample_position_1 - pixel_position;
             let sample_difference_2 = sample_position_2 - pixel_position;
@@ -246,8 +246,11 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     }
     visibility /= slice_count;
     visibility = clamp(visibility, 0.03, 1.0);
-
+ // visibility = textureSampleLevel(preprocessed_depth, point_clamp_sampler, uv*0.5, 1).r;
     output.ao = vec4(visibility*visibility,0,0,0);
+    
+    
+    
     output.depthDif = vec4<u32>(r.b,0,0,0);
     return output;
 }

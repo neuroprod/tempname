@@ -164,7 +164,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        let N=normalize(textureLoad(gNormal,  uvPos ,0).xyz*2.0-1.0); 
        let V = normalize(camera.worldPosition.xyz - world);
        let F0 = mix(vec3(0.04), albedo, metallic);
-       var color =albedo*vec3(0.1,0.1,0.1);
+       var color =albedo*vec3(0.7,0.7,0.7)*ao;
        
        var shadowPos = uniforms.shadowMatrix* vec4(world,1.0);
        shadowPos = shadowPos/shadowPos.w;
@@ -175,8 +175,8 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        let s =ChebyshevUpperBound(m,distance(world,uniforms.shadowCameraPosition.xyz)-4.0);   
        
        
-       color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness);//*s;
-       color*=ao;
+       color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness)*s;
+     color*=ao;
     
       
      return vec4(acestonemap(color),1.0) ;
