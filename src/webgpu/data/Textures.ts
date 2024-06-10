@@ -11,4 +11,8 @@ export const Textures = {
     DEPTH_BLUR_MIP2: "DepthBlur_mip2",
     DEPTH_BLUR_MIP3: "DepthBlur_mip3",
     DEPTH_BLUR_MIP4: "DepthBlur_mip4",
+    GTAO: "GTAO",
+    DEPTH_DIFF: "Depth_Diff",
+    GTAO_DENOISE: "GTAO_DENOISE"
+
 }

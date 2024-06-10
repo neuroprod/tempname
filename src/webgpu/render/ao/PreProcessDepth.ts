@@ -2,10 +2,10 @@ import Renderer from "../../lib/Renderer";
 import RenderTexture from "../../lib/textures/RenderTexture";
 import {Textures} from "../../data/Textures.ts";
 import {TextureFormat} from "../../lib/WebGPUConstants.ts";
-import CopyMaterial from "./CopyMaterial.ts";
+import CopyMaterial from "./depthPre/CopyMaterial.ts";
 import Blit from "../../lib/blit/Blit.ts";
-import CopyPass from "./CopyPass.ts";
-import DepthBlurPass from "./DepthBlurPass.ts";
+import CopyPass from "./depthPre/CopyPass.ts";
+import DepthBlurPass from "./depthPre/DepthBlurPass.ts";
 import Texture from "../../lib/textures/Texture.ts";
 
 

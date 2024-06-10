@@ -1,11 +1,11 @@
 
-import RenderPass from "../../lib/RenderPass.ts";
-import RenderTexture from "../../lib/textures/RenderTexture.ts";
-import ColorAttachment from "../../lib/textures/ColorAttachment.ts";
-import Renderer from "../../lib/Renderer.ts";
+import RenderPass from "../../../lib/RenderPass.ts";
+import RenderTexture from "../../../lib/textures/RenderTexture.ts";
+import ColorAttachment from "../../../lib/textures/ColorAttachment.ts";
+import Renderer from "../../../lib/Renderer.ts";
 import CopyMaterial from "./CopyMaterial.ts";
-import {Textures} from "../../data/Textures.ts";
-import Blit from "../../lib/blit/Blit.ts";
+import {Textures} from "../../../data/Textures.ts";
+import Blit from "../../../lib/blit/Blit.ts";
 
 
 export default class CopyPass extends RenderPass {

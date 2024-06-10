@@ -1,8 +1,8 @@
-import Material from "../../lib/material/Material.ts";
-import {ShaderType} from "../../lib/material/ShaderTypes.ts";
-import UniformGroup from "../../lib/material/UniformGroup.ts";
-import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
-import {CompareFunction, TextureSampleType} from "../../lib/WebGPUConstants.ts";
+import Material from "../../../lib/material/Material.ts";
+import {ShaderType} from "../../../lib/material/ShaderTypes.ts";
+import UniformGroup from "../../../lib/material/UniformGroup.ts";
+import DefaultTextures from "../../../lib/textures/DefaultTextures.ts";
+import {CompareFunction, TextureSampleType} from "../../../lib/WebGPUConstants.ts";
 
 
 export default class CopyMaterial extends Material

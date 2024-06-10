@@ -1,8 +1,8 @@
-import Material from "../../lib/material/Material.ts";
-import {ShaderType} from "../../lib/material/ShaderTypes.ts";
-import UniformGroup from "../../lib/material/UniformGroup.ts";
-import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
-import {CompareFunction, FilterMode, TextureSampleType} from "../../lib/WebGPUConstants.ts";
+import Material from "../../../lib/material/Material.ts";
+import {ShaderType} from "../../../lib/material/ShaderTypes.ts";
+import UniformGroup from "../../../lib/material/UniformGroup.ts";
+import DefaultTextures from "../../../lib/textures/DefaultTextures.ts";
+import {CompareFunction, FilterMode, TextureSampleType} from "../../../lib/WebGPUConstants.ts";
 
 
 export default class DepthBlurMaterial extends Material
@@ -62,8 +62,7 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 @fragment
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
-      let textureSize =vec2<f32>( textureDimensions(srcTexture));
-      let uvPos = vec2<i32>(floor(uv0*textureSize));
+ 
       let result = textureGather(0, srcTexture, mySampler, uv0);
    
    

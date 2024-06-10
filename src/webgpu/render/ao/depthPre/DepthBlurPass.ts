@@ -1,8 +1,8 @@
-import RenderPass from "../../lib/RenderPass.ts";
-import ColorAttachment from "../../lib/textures/ColorAttachment.ts";
-import Blit from "../../lib/blit/Blit.ts";
-import Renderer from "../../lib/Renderer.ts";
-import RenderTexture from "../../lib/textures/RenderTexture.ts";
+import RenderPass from "../../../lib/RenderPass.ts";
+import ColorAttachment from "../../../lib/textures/ColorAttachment.ts";
+import Blit from "../../../lib/blit/Blit.ts";
+import Renderer from "../../../lib/Renderer.ts";
+import RenderTexture from "../../../lib/textures/RenderTexture.ts";
 
 import DepthBlurMaterial from "./DepthBlurMaterial.ts";
 

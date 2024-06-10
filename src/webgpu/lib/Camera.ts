@@ -33,6 +33,7 @@ export default class Camera extends UniformGroup {
 
         this.addUniform("viewProjectionMatrix", this.viewProjection)
         this.addUniform("inverseViewProjectionMatrix", this.viewProjection)
+        this.addUniform("viewMatrix", this.view)
         this.addUniform("inverseViewMatrix", this.viewInv)
         this.addUniform("inverseProjectionMatrix", this.projectionInv)
         this.addUniform("projectionMatrix", this.projection)
@@ -121,14 +122,43 @@ console.log("fix culling")
         this.cameraWorldU.set(this.cameraWorld.x, this.cameraWorld.y, this.cameraWorld.z, 1)
         this.setUniform("worldPosition", this.cameraWorldU)
         this.setUniform("inverseViewMatrix", this.viewInv)
+        this.setUniform("viewMatrix", this.view)
         this.setUniform("inverseProjectionMatrix", this.projectionInv)
         this.setUniform("projectionMatrix", this.projection)
     }
 
     private setProjection() {
 
+        let sin_fov=Math.sin(0.5 * this.fovy);
+        let cos_fov=Math.cos(0.5 * this.fovy);
 
-        let frustumTop = this.near * Math.tan(this.fovy / 2);
+        let h = cos_fov / sin_fov;
+        let w = h / this.ratio;
+        let r =this.far / (this.near - this.far);
+
+        this.projection[0] = w;
+        this.projection[1] = 0.0;
+        this.projection[2] = 0.0;
+        this.projection[3] = 0.0;
+
+        this.projection[4] = 0.0;
+        this.projection[5] = h;
+        this.projection[6] = 0.0;
+        this.projection[7] = 0.0;
+
+        this.projection[8] = 0;
+        this.projection[9] = 0;
+        this.projection[10] =r;
+        this.projection[11] = -1.0;
+
+        this.projection[12] = 0.0;
+        this.projection[13] = 0.0;
+        this.projection[14] = r*this.near ;
+        this.projection[15] = 0.0;
+
+
+
+        /*let frustumTop = this.near * Math.tan(this.fovy / 2);
         let frustumBottom = -frustumTop;
 
         let frustumRight = frustumTop * this.ratio;
@@ -168,7 +198,7 @@ console.log("fix culling")
         this.projection[12] = 0.0;
         this.projection[13] = 0.0;
         this.projection[14] = this.far * this.near / dz;
-        this.projection[15] = 0.0;
+        this.projection[15] = 0.0;*/
 
 
     }

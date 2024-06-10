@@ -39,7 +39,7 @@ export default class GBufferRenderPass extends RenderPass {
 
 
         this.normalTarget = new RenderTexture(renderer, Textures.GNORMAL, {
-            format: TextureFormat.RGBA8Unorm,
+            format: TextureFormat.RGB10A2Unorm,
             sampleCount: this.sampleCount,
             scaleToCanvas: true,
 

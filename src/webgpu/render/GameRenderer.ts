@@ -12,6 +12,8 @@ import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
 import DirectionalLight from "./lights/DirectionalLight.ts";
 import ShadowBlurRenderPass from "./shadow/ShadowBlurRenderPass.ts";
 import PreProcessDepth from "./ao/PreProcessDepth.ts";
+import GTAORenderPass from "./ao/GTAORenderPass.ts";
+import GTAODenoisePass from "./ao/GTAODenoisePass.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
@@ -27,6 +29,8 @@ export default class GameRenderer{
     public shadowPass: ShadowRenderPass;
     private shadowBlurPass: ShadowBlurRenderPass;
     preProcessDepth: PreProcessDepth;
+    private gtoaPass: GTAORenderPass;
+    private gtoaDenoisePass: GTAODenoisePass;
 
 
     constructor(renderer:Renderer,camera:Camera) {
@@ -36,8 +40,8 @@ export default class GameRenderer{
         this.shadowBlurPass =new ShadowBlurRenderPass(renderer);
         this.gBufferPass =new GBufferRenderPass(renderer,camera);
         this.preProcessDepth = new PreProcessDepth(renderer);
-
-
+        this.gtoaPass = new GTAORenderPass(renderer,camera);
+        this.gtoaDenoisePass = new GTAODenoisePass(renderer);
         this.lightPass =new LightRenderPass(renderer,camera,this.sunLight)
 
 
@@ -47,7 +51,8 @@ export default class GameRenderer{
 
         this.debugTextureMaterial = new DebugTextureMaterial(this.renderer,"debugTextureMaterial")
         this.blitFinal =new Blit(renderer,"blitFinal",this.debugTextureMaterial)
-
+        this.passSelect.push(new SelectItem( Textures.GTAO_DENOISE, {texture: Textures.GTAO_DENOISE, type: 1}));
+        this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
         this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 0}));
@@ -86,7 +91,8 @@ export default class GameRenderer{
         this.gBufferPass.add();
 
         this.preProcessDepth.add();
-
+        this.gtoaPass.add()
+        this.gtoaDenoisePass.add();
         this.shadowPass.add();
         this.shadowBlurPass.add();
 
