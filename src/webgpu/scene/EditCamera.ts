@@ -29,7 +29,7 @@ export default class EditCamera
     private camTargetStart=new Vector3();
 
 
-    public camDistance =2
+    public camDistance =1.5
     private isDragging: boolean =false;
 
     private camUp: Vector3 =new Vector3();

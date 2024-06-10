@@ -163,9 +163,10 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     
     let r = calculate_neighboring_depth_differences(uv);
     var pixel_depth = r.a;
-    pixel_depth -= 0.0002; // Avoid depth precision issues
+   pixel_depth -= 0.00002; // Avoid depth precision issues
 
-    let pixel_position = reconstruct_view_space_position(pixel_depth, uv);
+    var pixel_position = reconstruct_view_space_position(pixel_depth, uv);
+   // pixel_position.z = pixel_position.z +0.01;
     let pixel_normal =load_normal_view_space(uv);
     let view_vec = normalize(-pixel_position);
 

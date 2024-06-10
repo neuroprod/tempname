@@ -56,7 +56,7 @@ export default class Scene {
         this.camera.cameraLookAt.set(0, 0.2, 0)
         this.camera.near = 0.1
         this.camera.far = 20
-        this.camera.fovy = 1
+        this.camera.fovy = 0.8
 
         this.gameRenderer = new GameRenderer(this.renderer, this.camera)
 
