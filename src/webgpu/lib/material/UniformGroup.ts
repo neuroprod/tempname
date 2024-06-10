@@ -160,7 +160,7 @@ export default class UniformGroup extends ObjectGPU {
 
     }
 
-    addSampler(name: string, usage = GPUShaderStage.FRAGMENT, filter: GPUFilterMode = FilterMode.Linear, addressMode = AddressMode.ClampToEdge, maxAnisotropy: number = 4) {
+    addSampler(name: string, usage = GPUShaderStage.FRAGMENT, filter: GPUFilterMode = FilterMode.Linear, addressMode = AddressMode.ClampToEdge, maxAnisotropy: number = 1) {
         let sampler = this.renderer.device.createSampler({
             magFilter: filter,
             minFilter: filter,

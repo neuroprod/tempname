@@ -11,6 +11,7 @@ import LightRenderPass from "./light/LightRenderPass.ts";
 import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
 import DirectionalLight from "./lights/DirectionalLight.ts";
 import ShadowBlurRenderPass from "./shadow/ShadowBlurRenderPass.ts";
+import PreProcessDepth from "./ao/PreProcessDepth.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
@@ -25,6 +26,7 @@ export default class GameRenderer{
     private sunLight: DirectionalLight;
     public shadowPass: ShadowRenderPass;
     private shadowBlurPass: ShadowBlurRenderPass;
+    preProcessDepth: PreProcessDepth;
 
 
     constructor(renderer:Renderer,camera:Camera) {
@@ -33,6 +35,7 @@ export default class GameRenderer{
         this.shadowPass =new ShadowRenderPass(renderer,this.sunLight)
         this.shadowBlurPass =new ShadowBlurRenderPass(renderer);
         this.gBufferPass =new GBufferRenderPass(renderer,camera);
+        this.preProcessDepth = new PreProcessDepth(renderer);
 
 
         this.lightPass =new LightRenderPass(renderer,camera,this.sunLight)
@@ -48,6 +51,15 @@ export default class GameRenderer{
         this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 0}));
+
+        this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR, {texture: Textures.DEPTH_BLUR, type: 1}));
+        //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP4, {texture: Textures.DEPTH_BLUR_MIP4, type: 1}));
+        //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP3, {texture: Textures.DEPTH_BLUR_MIP3, type: 1}));
+        //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP2, {texture: Textures.DEPTH_BLUR_MIP2, type: 1}));
+        //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP1, {texture: Textures.DEPTH_BLUR_MIP1, type: 1}));
+        //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP0, {texture: Textures.DEPTH_BLUR_MIP0, type: 1}));
+
+
         this.passSelect.push(new SelectItem(Textures.GCOLOR, {texture: Textures.GCOLOR, type: 0}));
         this.passSelect.push(new SelectItem(Textures.GNORMAL, {texture: Textures.GNORMAL, type: 0}));
         this.passSelect.push(new SelectItem(Textures.GDEPTH, {texture: Textures.GDEPTH, type: 0}));
@@ -71,9 +83,13 @@ export default class GameRenderer{
     }
     //doPasses
     draw(){
+        this.gBufferPass.add();
+
+        this.preProcessDepth.add();
+
         this.shadowPass.add();
         this.shadowBlurPass.add();
-        this.gBufferPass.add();
+
         this.lightPass.add();
     }
 

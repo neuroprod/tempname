@@ -4,6 +4,11 @@ export const Textures = {
     GDEPTH: 'GDepth',
     LIGHT: "Light",
     SHADOW_DEPTH: "ShadowDepth",
-    SHADOW_DEPTH_BLUR: "ShadowDepthBlur"
-
+    SHADOW_DEPTH_BLUR: "ShadowDepthBlur",
+    DEPTH_BLUR: "DepthBlur",
+    DEPTH_BLUR_MIP0: "DepthBlur_mip0",
+    DEPTH_BLUR_MIP1: "DepthBlur_mip1",
+    DEPTH_BLUR_MIP2: "DepthBlur_mip2",
+    DEPTH_BLUR_MIP3: "DepthBlur_mip3",
+    DEPTH_BLUR_MIP4: "DepthBlur_mip4",
 }
