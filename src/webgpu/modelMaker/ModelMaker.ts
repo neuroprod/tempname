@@ -226,7 +226,7 @@ export default class ModelMaker {
             }
         }
         if (this.modelFocus == ModelFocus.drawPanel) {
-            this.drawing.setMouse(this.mouseLocal, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame)
+            this.drawing.setMouse(this.mouseLocal,this.mouseListener.pressure, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame)
         }
         if (this.modelFocus == ModelFocus.cutPanel) {
             this.cutting.setMouse(this.mouseLocal, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame)

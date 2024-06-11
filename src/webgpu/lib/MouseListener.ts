@@ -18,7 +18,7 @@ export default class MouseListener {
     private element: Document;
     private preventDefault = false;
     private renderer: Renderer;
-    private pressure:number =0;
+    pressure:number =0;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;

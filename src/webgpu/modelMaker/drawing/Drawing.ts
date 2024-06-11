@@ -11,7 +11,8 @@ export default class Drawing {
     private lineSize = 1;
     private lineColor = new ColorV(1, 0, 0, 1)
     private currentLine!: DrawLine;
-
+private smoothing =0.1;
+private pressure =0.5
     private isDrawing: boolean = false;
 
 
@@ -73,6 +74,8 @@ export default class Drawing {
 
         UI.LText("drawing")
         UI.LFloatSlider(this, "lineSize", 1, 100);
+        UI.LFloatSlider(this, "pressure", 0, 1);
+        UI.LFloatSlider(this, "smoothing", 0, 1);
         UI.LColor("LineColor", this.lineColor)
         if (this.project.drawLines.length) {
             if (UI.LButton("Undo Line")) {
@@ -84,7 +87,7 @@ export default class Drawing {
     }
 
 
-    setMouse(mouseLocal: Vector2, mouseDown: boolean, mouseUp: boolean) {
+    setMouse(mouseLocal: Vector2,pressureIn:number, mouseDown: boolean, mouseUp: boolean) {
 
         if(!this.project)return;
         if (mouseDown && !UI.needsMouse()) {
@@ -92,22 +95,23 @@ export default class Drawing {
 
 
             this.currentLine = new DrawLine(this.renderer, this.lineColor)
-            this.currentLine.drawSize = this.lineSize / 1000;
-
+            this.currentLine.lineSize = this.lineSize/1000;
+            this.currentLine.smoothing = this.smoothing;
             this.project.drawLines.push(this.currentLine);
 
             this.isDrawing = true;
             this.updateDrawing()
         }
         if (this.isDrawing) {
-            this.currentLine.addPoint(mouseLocal.clone());
+            let size  =(this.lineSize+((pressureIn-0.5)*this.pressure*this.lineSize)) / 1000;
+            this.currentLine.addPoint(mouseLocal.clone(),size);
             this.updateDrawing()
         }
         if (mouseUp) {
             if (this.isDrawing) {
 
                 this.isDrawing = false;
-                this.currentLine.addPoint(mouseLocal.clone());
+                this.currentLine.addPoint(mouseLocal.clone(),0.01);
                 this.currentLine.makeSmooth()
 
 

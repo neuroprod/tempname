@@ -7,14 +7,15 @@ import UniformGroup from "../../lib/material/UniformGroup.ts";
 export default class DrawLine {
 
     public points: Array<Vector2> = []
-
+    public lineSizes: Array<number> = []
     public buffer!: GPUBuffer;
     public numInstances: number = 0;
     public color = new ColorV()
     public uniformGroup: UniformGroup;
-    public drawSize = 0.01
+
     private readonly renderer: Renderer;
-    private smoothing: number=0.1;
+    smoothing: number=0.1;
+    lineSize: number =2;
 
     constructor(renderer: Renderer, color: ColorV) {
         this.renderer = renderer;
@@ -30,7 +31,8 @@ export default class DrawLine {
 
         let p1 = new Vector2()
         let p2 = new Vector2()
-        let smoothFactor = this.smoothing/this.drawSize;
+        let smoothFactor = this.smoothing/this.lineSize;
+        console.log(smoothFactor)
         for (let s = 0; s < smoothFactor; s++) {
             let temp: Array<Vector2> = []
             for (let p of this.points) {
@@ -54,26 +56,26 @@ export default class DrawLine {
         this.updateData();
     }
 
-    addPoint(p: Vector2) {
+    addPoint(p: Vector2,lineSize:number) {
         if (this.points.length > 1) {
 
             let lastPoint = this.points[this.points.length - 1];
-
+            let lastLineSize = this.lineSizes[this.points.length - 1];
             let dist = p.distance(lastPoint);
 
-            let numSteps = Math.floor(dist / this.drawSize * 6);
+            let numSteps = Math.floor(dist / lineSize * 6);
             if (numSteps == 0) return;
-            this.points.push(p)
 
 
             if (numSteps < 2) {
                 this.points.push(p)
+                this.lineSizes.push(lineSize)
             } else {
                 for (let i = 1; i < numSteps; i++) {
                     let pos = 1.0 / numSteps * i;
 
                     this.points.push(lerp(lastPoint, p, pos) as Vector2);
-
+                    this.lineSizes.push(lerp(lastLineSize, lineSize, pos))
                 }
 
             }
@@ -81,6 +83,7 @@ export default class DrawLine {
         } else {
 
             this.points.push(p)
+            this.lineSizes.push(lineSize)
         }
 
         this.updateData();
@@ -115,11 +118,11 @@ export default class DrawLine {
         let data = new Float32Array(this.numInstances * 3);
 
         let count = 0;
-
+let llCount =0
         for (let p of this.points) {
             data[count++] = p.x;
             data[count++] = p.y;
-            data[count++] = this.drawSize;
+            data[count++] = this.lineSizes[llCount++];
         }
         this.createBuffer(data, "instanceBuffer")
     }
