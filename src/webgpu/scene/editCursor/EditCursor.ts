@@ -280,6 +280,8 @@ export default class EditCursor {
 
         if(!this.currentModel)return;
         if (this.mouseListener.isDownThisFrame) {
+
+
             let intersections = this.ray.intersectModels([this.arrowX, this.arrowY, this.arrowZ])
 
 
@@ -371,7 +373,14 @@ export default class EditCursor {
             this.isDragging = false
         }
     }
+public isFront(vec:Vector3){
+        if(!this.currentModel)return 1
+    let z1 =this.currentModel.getWorldPos().transform(this.camera.view).z
+    let z2 =this.currentModel.getWorldPos(vec).transform(this.camera.view).z
 
+    if(z1>z2)return -1;
+    return 1
+}
     //alwaysLocal
     private checkMouseRotate() {
         if(!this.currentModel)return;
@@ -389,21 +398,24 @@ export default class EditCursor {
                 pos.transformByQuaternion(   this.rootRot.invert())
 
 
+
+
                 let poss=new Vector3()
                 poss.x =Math.abs(pos.x);
                 poss.y =Math.abs(pos.y);
                 poss.z =Math.abs(pos.z);
                 if(poss.x<poss.y && poss.x<poss.z){
                     this.move = "x"
-                    this.rotDir = Math.sign(pos.z)
+                    this.rotDir = this.isFront(new Vector3(1,0,0));
                 }else  if(poss.y<poss.x && poss.y<poss.z){
                     this.move = "y"
-                    this.rotDir = Math.sign(pos.z)
+                    this.rotDir = this.isFront(new Vector3(0,1,0));
                 }else  if(poss.z<poss.y && poss.z<poss.x){
                     this.move = "z"
-                    this.rotDir = Math.sign(pos.z)
+                    this.rotDir = this.isFront(new Vector3(0,0,1));
                 }
-                this.rotDir =1;
+
+
                 this.mouseStart.from(this.mouseListener.mousePos)
                 let world=new Vector4(objWorld.x,objWorld.y,objWorld.z,1.0);
                 world.transform(  this.camera.viewProjection)
