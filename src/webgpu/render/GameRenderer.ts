@@ -8,12 +8,13 @@ import {Textures} from "../data/Textures.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import UI from "../lib/UI/UI.ts";
 import LightRenderPass from "./light/LightRenderPass.ts";
-import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
+import ShadowMapRenderPass from "./shadow/ShadowMapRenderPass.ts";
 import DirectionalLight from "./lights/DirectionalLight.ts";
 import ShadowBlurRenderPass from "./shadow/ShadowBlurRenderPass.ts";
 import PreProcessDepth from "./ao/PreProcessDepth.ts";
 import GTAORenderPass from "./ao/GTAORenderPass.ts";
 import GTAODenoisePass from "./ao/GTAODenoisePass.ts";
+import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
@@ -26,22 +27,25 @@ export default class GameRenderer{
     private passSelect: Array<SelectItem> = []
     private lightPass: LightRenderPass;
     private sunLight: DirectionalLight;
-    public shadowPass: ShadowRenderPass;
+    public shadowMapPass: ShadowMapRenderPass;
     private shadowBlurPass: ShadowBlurRenderPass;
     preProcessDepth: PreProcessDepth;
     private gtoaPass: GTAORenderPass;
     private gtoaDenoisePass: GTAODenoisePass;
+    private shadowPass: ShadowRenderPass;
 
 
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.sunLight = new DirectionalLight(renderer)
-        this.shadowPass =new ShadowRenderPass(renderer,this.sunLight)
+        this.shadowMapPass =new ShadowMapRenderPass(renderer,this.sunLight)
         this.shadowBlurPass =new ShadowBlurRenderPass(renderer);
         this.gBufferPass =new GBufferRenderPass(renderer,camera);
         this.preProcessDepth = new PreProcessDepth(renderer);
         this.gtoaPass = new GTAORenderPass(renderer,camera);
+        this.shadowPass = new ShadowRenderPass(renderer,camera,this.sunLight)
         this.gtoaDenoisePass = new GTAODenoisePass(renderer);
+
         this.lightPass =new LightRenderPass(renderer,camera,this.sunLight)
 
 
@@ -51,14 +55,17 @@ export default class GameRenderer{
 
         this.debugTextureMaterial = new DebugTextureMaterial(this.renderer,"debugTextureMaterial")
         this.blitFinal =new Blit(renderer,"blitFinal",this.debugTextureMaterial)
+
+
+        this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
+        this.passSelect.push(new SelectItem(Textures.SHADOW, {texture: Textures.SHADOW, type: 0}));
+       // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
+        this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
+
+        this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR, {texture: Textures.DEPTH_BLUR, type: 1}));
         this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
         this.passSelect.push(new SelectItem( Textures.GTAO_DENOISE, {texture: Textures.GTAO_DENOISE, type: 1}));
 
-        this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
-        this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
-        this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 0}));
-
-        this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR, {texture: Textures.DEPTH_BLUR, type: 1}));
         //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP4, {texture: Textures.DEPTH_BLUR_MIP4, type: 1}));
         //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP3, {texture: Textures.DEPTH_BLUR_MIP3, type: 1}));
         //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP2, {texture: Textures.DEPTH_BLUR_MIP2, type: 1}));
@@ -94,8 +101,10 @@ export default class GameRenderer{
         this.preProcessDepth.add();
         this.gtoaPass.add()
         this.gtoaDenoisePass.add();
+
+        this.shadowMapPass.add();
         this.shadowPass.add();
-        this.shadowBlurPass.add();
+        //this.shadowBlurPass.add();
 
         this.lightPass.add();
     }

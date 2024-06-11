@@ -1,41 +1,45 @@
-import ModelRenderer from "../../lib/model/ModelRenderer.ts";
+
 import RenderPass from "../../lib/RenderPass.ts";
 import RenderTexture from "../../lib/textures/RenderTexture.ts";
 import ColorAttachment from "../../lib/textures/ColorAttachment.ts";
 import Renderer from "../../lib/Renderer.ts";
 import {TextureFormat} from "../../lib/WebGPUConstants.ts";
-import DepthStencilAttachment from "../../lib/textures/DepthStencilAttachment.ts";
-import Camera from "../../lib/Camera.ts";
+
 import {Textures} from "../../data/Textures.ts";
-import VarianceDepthMaterial from "./VarianceDepthMaterial.ts";
+
+import ShadowBlurMaterial from "./ShadowBlurMaterial.ts";
+import Blit from "../../lib/blit/Blit.ts";
+import Camera from "../../lib/Camera.ts";
 import DirectionalLight from "../lights/DirectionalLight.ts";
+import PCSSShadowMaterial from "./PCSSShadowMaterial.ts";
+import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 
 
 export default class ShadowRenderPass extends RenderPass {
 
-    public modelRenderer: ModelRenderer;
+
     public colorTarget: RenderTexture;
-    public depthTarget: RenderTexture;
+
 
 
     private colorAttachment: ColorAttachment;
-
-    private width =1024
-    private height =1024
-    private material: VarianceDepthMaterial;
+    private material: PCSSShadowMaterial;
+    private blit: Blit;
 
 
-    constructor(renderer: Renderer,dirLight:DirectionalLight) {
+
+
+
+    constructor(renderer: Renderer,camera:Camera,dirLight:DirectionalLight) {
 
         super(renderer, "ShadowRenderPass");
 
 
 
-        this.colorTarget = new RenderTexture(renderer, Textures.SHADOW_DEPTH, {
+        this.colorTarget = new RenderTexture(renderer, Textures.SHADOW, {
             format: TextureFormat.RG16Float,
             sampleCount: this.sampleCount,
-            width:this.width,
-            height:this.height,
+            scaleToCanvas:true,
 
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
@@ -43,24 +47,19 @@ export default class ShadowRenderPass extends RenderPass {
         this.colorAttachment = new ColorAttachment(this.colorTarget);
         this.colorAttachments = [this.colorAttachment];
 
-        this.depthTarget = new RenderTexture(renderer, Textures.GDEPTH, {
-            format: TextureFormat.Depth16Unorm,
-            sampleCount: 1,
-            width:this.width,
-            height:this.height,
-            usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
-        });
-        this.depthStencilAttachment = new DepthStencilAttachment(this.depthTarget);
+        this.material =new PCSSShadowMaterial(renderer,'shadowMat')
+        this.material.setUniform("shadowViewMatrix",dirLight.shadowCamera.view)
+        this.material.setUniform("shadowViewProjectionMatrix",dirLight.shadowCamera.viewProjection)
 
-        //
-        this.modelRenderer = new ModelRenderer(renderer,"modelRendererShadow",dirLight.shadowCamera)
-        this.material = new VarianceDepthMaterial(renderer,"varianceDepth");
-        this.modelRenderer.setMaterial(this.material)
+       // this.material.setUniform("shadowCameraPosition",[dirLight.shadowCamera.cameraWorld.x,dirLight.shadowCamera.cameraWorld.y,dirLight.shadowCamera.cameraWorld.z,0])
+        this.material.uniformGroups[0]=camera;
+        this.blit =new Blit(this.renderer,"shadowBlit",this.material)
+
     }
 
     draw() {
 
-        this.modelRenderer.draw(this);
+        this.blit.draw(this);
 
 
     }

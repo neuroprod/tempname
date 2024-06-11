@@ -53,7 +53,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
         return vec4(color.z,color.z,color.z,1.0) ;
       }
       else if(uniforms.renderType>1.5){
-        return vec4(color.y,color.y,color.y,1.0) ;
+        return vec4(-color.x/10.0,-color.x/10.0,-color.x/10.0,1.0) ;
       }
       else if(uniforms.renderType>0.5){
         return vec4(color.x,color.x,color.x,1.0) ;

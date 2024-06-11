@@ -30,7 +30,7 @@ export default class GTAOMaterial extends Material
 
         this.depthWrite = false
         this.depthCompare = CompareFunction.Always
-        this.logShader =true
+    //    this.logShader =true
 
     }
     getShader(): string {

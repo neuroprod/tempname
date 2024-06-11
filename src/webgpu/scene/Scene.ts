@@ -228,7 +228,7 @@ export default class Scene {
         }
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.removeModel(m.model)
-            this.gameRenderer.shadowPass.modelRenderer.removeModel(m.model)
+            this.gameRenderer.shadowMapPass.modelRenderer.removeModel(m.model)
 
             m.removeChild(m.model)
             m.model = null
@@ -240,7 +240,7 @@ export default class Scene {
     public addModel(m: SceneObject3D) {
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
-            this.gameRenderer.shadowPass.modelRenderer.addModel(m.model)
+            this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)
         }
     }
 

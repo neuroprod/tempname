@@ -8,6 +8,7 @@ import LightMaterial from "./LightMaterial.ts";
 import Blit from "../../lib/blit/Blit.ts";
 import Camera from "../../lib/Camera.ts";
 import DirectionalLight from "../lights/DirectionalLight.ts";
+import {Vector4} from "@math.gl/core";
 
 
 export default class LightRenderPass extends RenderPass{
@@ -31,6 +32,11 @@ export default class LightRenderPass extends RenderPass{
         this.lightMaterial =new LightMaterial(renderer,"LightMaterial")
         this.lightMaterial.setUniform("shadowMatrix",dirLight.shadowCamera.viewProjection)
         this.lightMaterial.setUniform("shadowCameraPosition",[dirLight.shadowCamera.cameraWorld.x,dirLight.shadowCamera.cameraWorld.y,dirLight.shadowCamera.cameraWorld.z,0])
+
+        this.lightMaterial.setUniform("lightDir", dirLight.lightDir);
+        this.lightMaterial.setUniform("lightColor", dirLight.lightColor);
+
+
         this.lightMaterial.uniformGroups[0]=camera;
 
         this.blit  =new Blit(renderer,"blitLight",this.lightMaterial)

@@ -157,7 +157,7 @@ export default class DefaultTextures {
         if (this.magicNoise) return this.magicNoise;
 
 
-        let size =4
+        let size =3
         this.magicNoise = new Texture(render, "magicNoise", {
             width: size,
             height: size,

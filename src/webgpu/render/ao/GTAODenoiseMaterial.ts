@@ -15,7 +15,7 @@ export default class GTAODenoiseMaterial extends Material
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addTexture("ambient_occlusion_noisy",this.renderer.getTexture(Textures.GTAO),{sampleType:TextureSampleType.Float });
+        uniforms.addTexture("ambient_occlusion_noisy",this.renderer.getTexture(Textures.SHADOW),{sampleType:TextureSampleType.Float });
         uniforms.addTexture("depth_differences",this.renderer.getTexture(Textures.DEPTH_DIFF),{sampleType:TextureSampleType.Uint });
         uniforms.addSampler("point_clamp_sampler",GPUShaderStage.FRAGMENT,FilterMode.Nearest)
         this.depthWrite = false
