@@ -140,9 +140,9 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        avgBlocker =0.0;
       }
 
-      size =size *0.01+0.001;
+      size =size *0.02+0.001;
       var  shadow = 0.0;
-      for(var i=0;i<16;i++)
+      for(var i=0;i<32;i++)
       {
       
         var offset = rotMat *kernel[i];
@@ -153,7 +153,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       
       
       }
-      shadow/=16.0;
+      shadow/=32.0;
       
       
     

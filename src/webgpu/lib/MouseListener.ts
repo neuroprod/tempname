@@ -18,13 +18,14 @@ export default class MouseListener {
     private element: Document;
     private preventDefault = false;
     private renderer: Renderer;
+    private pressure:number =0;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
         this.element = document;
 
         this.element.addEventListener(
-            "mousemove",
+            "pointermove",
             this.mouseMoveListener.bind(this),
             false
         );
@@ -40,7 +41,7 @@ export default class MouseListener {
             {passive: true}
         );
         this.element.addEventListener(
-            "mousedown",
+            "pointerdown",
             this.mouseDownListener.bind(this),
             false
         );
@@ -49,12 +50,12 @@ export default class MouseListener {
         this.element.addEventListener("mouseup", this.mouseUp.bind(this), false);
 
         this.element.addEventListener(
-            "mousecancel",
+            "pointercancel",
             this.cancelListener.bind(this),
             false
         );
         this.element.addEventListener(
-            "mouseout",
+            "pointerout",
             this.endListener.bind(this),
             false
         );
@@ -67,7 +68,7 @@ export default class MouseListener {
         this.element.addEventListener("wheel", (event) => {
             this.wheelDelta = event.deltaY;
         });
-        document.addEventListener("mouseleave", (event) => {
+        document.addEventListener("pointerleave", (event) => {
 
             //if (event.clientY <= 0 || event.clientX <= 0 || (event.clientX >= window.innerWidth || event.clientY >= window.innerHeight)) {
 
@@ -97,7 +98,7 @@ export default class MouseListener {
         this.mouseDown();
     }
 
-    mouseDownListener(e: MouseEvent) {
+    mouseDownListener(e: PointerEvent) {
         if (e.button == 0) {
             this.setMousePosition(e);
             if (this.preventDefault) {
@@ -120,7 +121,7 @@ export default class MouseListener {
         }
     }
 
-    mouseMoveListener(e: MouseEvent) {
+    mouseMoveListener(e: PointerEvent) {
 
         this.setMousePosition(e);
         if (this.preventDefault) {
@@ -155,6 +156,7 @@ export default class MouseListener {
     }
 
     setMousePosition(e: any) {
+        this.pressure =e.pressure;
         this.mousePos.x = e.offsetX * window.devicePixelRatio;
         this.mousePos.y = e.offsetY * window.devicePixelRatio;
         this.isDirty = 1;

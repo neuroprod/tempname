@@ -1,4 +1,4 @@
-import {lerp, Vector2, Vector4} from "@math.gl/core";
+import {lerp, Vector2} from "@math.gl/core";
 import Renderer from "../../lib/Renderer.ts";
 import ColorV from "../../lib/ColorV.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
@@ -9,36 +9,49 @@ export default class DrawLine {
     public points: Array<Vector2> = []
 
     public buffer!: GPUBuffer;
-    private readonly renderer: Renderer;
-    public numInstances: number=0;
-    public color =new ColorV()
+    public numInstances: number = 0;
+    public color = new ColorV()
     public uniformGroup: UniformGroup;
-    public drawSize =0.01
-    constructor(renderer:Renderer,color:ColorV) {
-        this.renderer =renderer;
-        this.uniformGroup=new UniformGroup(this.renderer,"uniforms",false);
+    public drawSize = 0.01
+    private readonly renderer: Renderer;
+    private smoothing: number=0.1;
 
-        this.uniformGroup.addUniform("color",color)
+    constructor(renderer: Renderer, color: ColorV) {
+        this.renderer = renderer;
+        this.uniformGroup = new UniformGroup(this.renderer, "uniforms", false);
+
+        this.uniformGroup.addUniform("color", color)
         this.uniformGroup.update();
     }
 
-    smoothing() {
+    makeSmooth() {
 
-        let temp: Array<Vector2> = []
-        for (let p of this.points) {
-            temp.push(p.clone())
+
+
+        let p1 = new Vector2()
+        let p2 = new Vector2()
+        let smoothFactor = this.smoothing/this.drawSize;
+        for (let s = 0; s < smoothFactor; s++) {
+            let temp: Array<Vector2> = []
+            for (let p of this.points) {
+                temp.push(p.clone())
+            }
+            for (let i = 1; i < this.points.length - 1; i++) {
+
+                p1.from(temp[i - 1])
+                p2.from(temp[i + 1])
+                p1.add(p2)
+                p1.scale(0.5)
+                p1.subtract(temp[i])
+                // p1.scale(0.5)
+
+                this.points[i].add(p1);
+            }
         }
-        for (let i = 1; i < this.points.length - 1; i++) {
 
-            let p1 = temp[i - 1]
-            let p2 = temp[i + 1]
-            p1.add(p2)
-            p1.scale(0.5)
-            p1.subtract(temp[i])
-            // p1.scale(0.5)
 
-            this.points[i].add(p1);
-        }
+
+        this.updateData();
     }
 
     addPoint(p: Vector2) {
@@ -73,19 +86,6 @@ export default class DrawLine {
         this.updateData();
 
     }
-    private updateData() {
-        this.numInstances = this.points.length;
-        let data =new Float32Array(this.numInstances*3);
-
-        let count =0;
-
-        for(let p of this.points) {
-            data[count++] = p.x;
-            data[count++] = p.y;
-            data[count++] = this.drawSize;
-        }
-        this.createBuffer(data,"instanceBuffer")
-    }
 
     createBuffer(data: Float32Array, name: string) {
 
@@ -100,14 +100,28 @@ export default class DrawLine {
         dst.set(data);
 
         this.buffer.unmap();
-        this.buffer.label =  name;
+        this.buffer.label = name;
 
 
     }
 
-    destroy(){
+    destroy() {
         if (this.buffer) this.buffer.destroy();
-        if(this.uniformGroup)this.uniformGroup.destroy();
+        if (this.uniformGroup) this.uniformGroup.destroy();
+    }
+
+    private updateData() {
+        this.numInstances = this.points.length;
+        let data = new Float32Array(this.numInstances * 3);
+
+        let count = 0;
+
+        for (let p of this.points) {
+            data[count++] = p.x;
+            data[count++] = p.y;
+            data[count++] = this.drawSize;
+        }
+        this.createBuffer(data, "instanceBuffer")
     }
 
 

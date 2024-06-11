@@ -8,7 +8,7 @@ import Project from "../Project.ts";
 
 
 export default class Drawing {
-    private lineSize = 20;
+    private lineSize = 1;
     private lineColor = new ColorV(1, 0, 0, 1)
     private currentLine!: DrawLine;
 
@@ -107,8 +107,9 @@ export default class Drawing {
             if (this.isDrawing) {
 
                 this.isDrawing = false;
-                this.currentLine.smoothing()
-                this.currentLine.smoothing()
+                this.currentLine.addPoint(mouseLocal.clone());
+                this.currentLine.makeSmooth()
+
 
                 this.updateDrawing()
 

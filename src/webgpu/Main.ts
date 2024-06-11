@@ -67,7 +67,7 @@ export default class Main {
         this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         this.sceneLoader =new JsonLoader("scene1",this.preloader)
 
-        let t =new TextureLoader(this.renderer,"./BlueNoise.png")
+
     }
 
 
@@ -81,7 +81,7 @@ export default class Main {
 
 
 
-        this.setMainState(MainState.editor)
+        this.setMainState(MainState.modelMaker)
         this.tick();
     }
     private setMainState(state: MainState) {
