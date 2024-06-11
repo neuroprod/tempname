@@ -1,5 +1,5 @@
 import Renderer from "./Renderer";
-import {lerp, Matrix4, Vector2, Vector3, Vector4} from "@math.gl/core";
+import {lerp, Matrix3, Matrix4, Vector2, Vector3, Vector4} from "@math.gl/core";
 import UniformGroup from "./material/UniformGroup.ts";
 import Model from "./model/Model.ts";
 
@@ -24,9 +24,10 @@ export default class Camera extends UniformGroup {
     public orthoBottom: number = -10;
     viewProjection: Matrix4 = new Matrix4();
     private cameraWorldU: Vector4 = new Vector4(0, 0, 10, 1.0);
-    private view: Matrix4 = new Matrix4();
+    view: Matrix4 = new Matrix4();
     private projection: Matrix4 = new Matrix4();
     private fplanes: Array<Vector4> = []
+
 
     constructor(renderer: Renderer) {
         super(renderer, "camera");
@@ -101,6 +102,9 @@ console.log("fix culling")
             center: this.cameraLookAt,
             up: this.cameraUp,
         });
+
+
+
         this.viewInv.from(this.view);
         this.viewInv.invert();
 
@@ -125,6 +129,7 @@ console.log("fix culling")
         this.setUniform("viewMatrix", this.view)
         this.setUniform("inverseProjectionMatrix", this.projectionInv)
         this.setUniform("projectionMatrix", this.projection)
+
     }
 
     private setProjection() {

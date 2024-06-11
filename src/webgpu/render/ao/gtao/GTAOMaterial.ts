@@ -23,10 +23,10 @@ export default class GTAOMaterial extends Material
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addTexture("noise", this.renderer.getTexture("./BlueNoise.png"));
+        uniforms.addTexture("noise", DefaultTextures.getMagicNoise(this.renderer));
         uniforms.addTexture("preprocessed_depth", this.renderer.getTexture(Textures.DEPTH_BLUR))
         uniforms.addTexture("normals", this.renderer.getTexture(Textures.GNORMAL))
-        uniforms.addSampler("point_clamp_sampler",GPUShaderStage.FRAGMENT,FilterMode.Nearest)
+        uniforms.addSampler("point_clamp_sampler",GPUShaderStage.FRAGMENT,FilterMode.Linear)
 
         this.depthWrite = false
         this.depthCompare = CompareFunction.Always
@@ -67,16 +67,14 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 
 
 fn load_noise(pixel_coordinates: vec2<i32>) -> vec2<f32> {
-    var index = textureLoad(noise, pixel_coordinates%64 , 0).r;//g*2.0)-vec2(1.0);
-   return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));
- // return index;
+    var index = textureLoad(noise, pixel_coordinates % 4, 0).r;
 
-   /* var index = textureLoad(hilbert_index_lut, pixel_coordinates % 64, 0).r;
 
+  //  index += 288u * (globals.frame_count % 64u);
 
 
     // R2 sequence - http://extremelearning.com.au/unreasonable-effectiveness-of-quasirandom-sequences
-    //return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));*/
+    return fract(0.5 + f32(index) * vec2<f32>(0.75487766624669276005, 0.5698402909980532659114));
 }
 
 // Calculate differences in depth between neighbor pixels (later used by the spatial denoiser pass to preserve object edges)
@@ -112,13 +110,15 @@ dd.b = pack4x8unorm(edge_info);
 fn load_normal_view_space(uv: vec2<f32>) -> vec3<f32> {
     var world_normal = textureSampleLevel(normals, point_clamp_sampler, uv, 0.0).xyz;
     world_normal = (world_normal * 2.0) - 1.0;
+
     let view_from_world = mat3x3<f32>(
         camera.viewMatrix[0].xyz,
        camera.viewMatrix[1].xyz,
         camera.viewMatrix[2].xyz,
   
     );
-    return  view_from_world *world_normal;
+    
+    return  view_from_world*world_normal;
 }
 
 fn reconstruct_view_space_position(depth: f32, uv: vec2<f32>) -> vec3<f32> {
@@ -149,27 +149,29 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
 {
    var output : AOOutput;
    
-    let slice_count = 5.0;
-    let samples_per_slice_side =3.0;
-     let effect_radius = 0.09 * 1.457;
+    let slice_count = 9.0;
+    let samples_per_slice_side =2.0;
+     let effect_radius = 0.3 * 1.457;
     let falloff_range = 0.615 * effect_radius*0.4;
     let falloff_from = effect_radius * (1.0 - 0.615)*0.4;
     let falloff_mul = -1.0 / falloff_range;
-    let falloff_add = falloff_from / falloff_range + 1.0;
+    let falloff_add = falloff_from / falloff_range+ 1.0;
   
     let textureSize =vec2<f32>( textureDimensions(normals));
-     
-    let pixel_coordinates = vec2<i32>(floor(uv*textureSize));;
+  
+    let pixel_coordinates = vec2<i32>(round(uv*textureSize));;
     
     let r = calculate_neighboring_depth_differences(uv);
     var pixel_depth = r.a;
-   pixel_depth -= 0.00002; // Avoid depth precision issues
+   pixel_depth -= 0.0002; // Avoid depth precision issues
 
-    var pixel_position = reconstruct_view_space_position(pixel_depth, uv);
-   // pixel_position.z = pixel_position.z +0.01;
+    let pixel_position = reconstruct_view_space_position(pixel_depth, uv);
+
     let pixel_normal =load_normal_view_space(uv);
-    let view_vec = normalize(-pixel_position);
+    
 
+    let view_vec = normalize(-pixel_position);
+  
     let noise = load_noise(pixel_coordinates);
     let sample_scale = (-0.5 * effect_radius * camera.projectionMatrix[0][0]) / pixel_position.z;
 
@@ -203,7 +205,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
             let sample = s * sample_mul;
 
             // * view.viewport.zw gets us from [0, 1] to [0, viewport_size], which is needed for this to get the correct mip levels
-            let sample_mip_level =round(clamp(log2(length(sample * textureSize)) - 3.3, 0.0,4.0)); // https://github.com/GameTechDev/XeGTAO#memory-bandwidth-bottleneck
+            let sample_mip_level =0.0;//round(clamp(log2(length(sample * textureSize)) - 3.3, 0.0,5.0)); // https://github.com/GameTechDev/XeGTAO#memory-bandwidth-bottleneck
             var mis = 1.0;
             if(sample_mip_level ==0.0){
             mis = 1.0;
@@ -239,15 +241,19 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
             cos_horizon_2 = max(cos_horizon_2, sample_cos_horizon_2);
         }
 
-        let horizon_1 = fast_acos(cos_horizon_1);
-        let horizon_2 = -fast_acos(cos_horizon_2);
+        var horizon_1 = fast_acos(cos_horizon_1);
+        var horizon_2 = -fast_acos(cos_horizon_2);
+        
+        
+
+        
         let v1 = (cos_norm + 2.0 * horizon_1 * sin(n) - cos(2.0 * horizon_1 - n)) / 4.0;
         let v2 = (cos_norm + 2.0 * horizon_2 * sin(n) - cos(2.0 * horizon_2 - n)) / 4.0;
         visibility += projected_normal_length * (v1 + v2);
     }
     visibility /= slice_count;
     visibility = clamp(visibility, 0.03, 1.0);
- // visibility = textureSampleLevel(preprocessed_depth, point_clamp_sampler, uv*0.5, 1).r;
+
     output.ao = vec4(visibility*visibility,0,0,0);
     
     
