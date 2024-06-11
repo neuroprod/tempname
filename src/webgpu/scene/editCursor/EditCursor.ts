@@ -9,7 +9,7 @@ import Camera from "../../lib/Camera.ts";
 import RevolveMesh from "../../lib/mesh/geometry/RevolveMesh.ts";
 import MouseListener from "../../lib/MouseListener.ts";
 import Ray from "../../lib/Ray.ts";
-import {Matrix3, Quaternion, Vector2, Vector3, Vector4} from "@math.gl/core";
+import {Matrix3, Matrix4, Quaternion, Vector2, Vector3, Vector4} from "@math.gl/core";
 import CircleMesh from "./CircleMesh.ts";
 import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
@@ -66,6 +66,8 @@ export default class EditCursor {
     private rootScale: number =1;
     private rootRot: Quaternion =new Quaternion();
     private rotDir: number =1;
+    private matrixTemp =new Matrix4()
+    private moveDir: Vector3 =new Vector3();
 
     constructor(renderer: Renderer, camera: Camera, mouseListener: MouseListener, ray: Ray) {
 
@@ -316,7 +318,8 @@ export default class EditCursor {
             let pos:Vector3|null
             if(this.localSpace){
                 //we are going to transform the ray to the cursor local space
-                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.root.worldMatrixInv)
+                this.matrixTemp.from(this.root.worldMatrixInv)
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.matrixTemp)
             }else{
                 //we are going to check in world
                 pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
@@ -334,29 +337,49 @@ export default class EditCursor {
             let pos:Vector3|null
             if(this.localSpace){
                 //we are going to transform the ray to the cursor local space
-                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.root.worldMatrixInv)
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.matrixTemp)
             }else{
                 //we are going to check in world
                 pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
             }
             if (pos) {
+                if(this.localSpace ) {
 
-                //TODO replace with mask vector
-                if (this.move == "x") {
-                    let dist = this.planePos.x - pos.x;
-                    this.movePos.set(this.startDragPos.x+dist,this.startDragPos.y,this.startDragPos.z);
-                }
-                if (this.move == "y") {
-                    let dist = this.planePos.y - pos.y;
-                    this.movePos.set(this.startDragPos.x,this.startDragPos.y+dist,this.startDragPos.z);
-                }
-                if (this.move == "z") {
-                    let dist = this.planePos.z - pos.z;
-                    this.movePos.set(this.startDragPos.x,this.startDragPos.y,this.startDragPos.z+dist);
-                }
+                   // transformByQuaternion(this.currentModel.getRotation()
+                    if (this.move == "x") {
+                        let dist = this.planePos.x - pos.x;
+                        this.moveDir.set(dist, 0,0);
+                    }
+                    if (this.move == "y") {
+                        let dist = this.planePos.y - pos.y;
+                        this.moveDir.set(0,   dist, 0);
+                    }
+                    if (this.move == "z") {
+                        let dist = this.planePos.z - pos.z;
+                        this.moveDir.set(0, 0,  dist);
+                    }
+                    this.moveDir.transformByQuaternion(this.currentModel.getRotation());
+                    this.movePos.from(this.startDragPos);
+                    this.movePos.add(this.moveDir)
+
+                }else{
+                    if (this.move == "x") {
+                        let dist = this.planePos.x - pos.x;
+                        this.movePos.set(this.startDragPos.x + dist, this.startDragPos.y, this.startDragPos.z);
+                    }
+                    if (this.move == "y") {
+                        let dist = this.planePos.y - pos.y;
+                        this.movePos.set(this.startDragPos.x, this.startDragPos.y + dist, this.startDragPos.z);
+                    }
+                    if (this.move == "z") {
+                        let dist = this.planePos.z - pos.z;
+                        this.movePos.set(this.startDragPos.x, this.startDragPos.y, this.startDragPos.z + dist);
+                    }
 
 
-                if(this.localSpace || !this.currentModel.parent){
+                }
+
+                if(this.localSpace ){
                     this.currentModel.setPositionV(this.movePos)
                 }else{
                     let lp = this.currentModel.parent?.getLocalPos(this.movePos);
