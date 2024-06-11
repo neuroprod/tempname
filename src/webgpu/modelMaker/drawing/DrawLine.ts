@@ -32,12 +32,13 @@ export default class DrawLine {
         let p1 = new Vector2()
         let p2 = new Vector2()
         let smoothFactor = this.smoothing/this.lineSize;
-        console.log(smoothFactor)
+        let temp: Array<Vector2> = []
+        for (let p of this.points) {
+            temp.push(p.clone())
+        }
         for (let s = 0; s < smoothFactor; s++) {
-            let temp: Array<Vector2> = []
-            for (let p of this.points) {
-                temp.push(p.clone())
-            }
+
+
             for (let i = 1; i < this.points.length - 1; i++) {
 
                 p1.from(temp[i - 1])
