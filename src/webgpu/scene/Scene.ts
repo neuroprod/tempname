@@ -128,7 +128,7 @@ export default class Scene {
         UI.separator("Tools")
 
 
-        this.editCursor.localSpace = UI.LBool("Translate local", true);
+        this.editCursor.localSpace = UI.LBool("Translate local", false);
         if (UI.LButton("Translate", "", this.currentToolState != ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (UI.LButton("Rotate", "", this.currentToolState != ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
         if (UI.LButton("Scale", "", this.currentToolState != ToolState.scale)) this.setCurrentToolState(ToolState.scale);
