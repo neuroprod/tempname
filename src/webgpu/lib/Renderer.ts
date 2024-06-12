@@ -77,16 +77,17 @@ export default class Renderer {
         this.updateSize();
         this.updateModels();
         this.updateUniformGroups()
+
         //
+this.device.queue.onSubmittedWorkDone().then(()=> {
+    this.canvasTextureView = this.context.getCurrentTexture();
+    this.canvasColorAttachment.setTarget(this.canvasTextureView.createView())
 
-        this.canvasTextureView = this.context.getCurrentTexture();
-        this.canvasColorAttachment.setTarget(this.canvasTextureView.createView())
 
-
-        this.commandEncoder = this.device.createCommandEncoder();
-        setCommands();
-        this.device.queue.submit([this.commandEncoder.finish()]);
-
+    this.commandEncoder = this.device.createCommandEncoder();
+    setCommands();
+    this.device.queue.submit([this.commandEncoder.finish()]);
+});
 
     }
     addUniformGroup(uniformGroup: UniformGroup) {
