@@ -152,7 +152,8 @@ export default class AnimationEditorGroup {
         this.channels = []
         this.parent = null;
         this.obj = null;
-
+       this.keyDataMain.destroy()
+        this.keyDataTrans.destroy();
     }
 
 

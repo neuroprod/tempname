@@ -20,7 +20,7 @@ export default class AnimationChannelEditor{
         this.textSize =Font.getTextSize(label);
         this.keyData =new UIKeyFrameData()
 
-
+        this.keyData.channel =channel;
 
 
     }
@@ -43,7 +43,7 @@ export default class AnimationChannelEditor{
 
 
     destroy() {
-
+this.keyData.destroy()
     }
 
     drawKeyData() {
