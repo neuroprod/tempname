@@ -29,7 +29,7 @@ export default class AnimationEditorGroup {
     private buttonSettings: ButtonBaseSettings;
     private isOpen: boolean = false;
     private transOpen: boolean = false;
-    private keyDataMain: UIKeyFrameData;
+     keyDataMain: UIKeyFrameData;
     private keyDataTrans: UIKeyFrameData;
 
     constructor(label: string, obj: SceneObject3D | null = null) {

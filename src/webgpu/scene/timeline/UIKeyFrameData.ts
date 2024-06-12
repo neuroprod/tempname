@@ -2,6 +2,7 @@ import Component, {ComponentSettings} from "../../lib/UI/components/Component.ts
 import UI_I from "../../lib/UI/UI_I.ts";
 import Vec2 from "../../lib/UI/math/Vec2.ts";
 import Color from "../../lib/UI/math/Color.ts";
+import AnimationEditor from "./AnimationEditor.ts";
 
 
 export default class UIKeyFrameData {
@@ -13,8 +14,15 @@ export default class UIKeyFrameData {
     isDrawDirty: boolean =false;
 
     moveFrame =-1
+    selectedFrame=-1;
     constructor() {
 
+    }
+    clearAllSelectFrames(){
+        this.selectedFrame=-1
+        for(let child of this.children){
+            child.clearAllSelectFrames()
+        }
     }
     addChild(child:UIKeyFrameData){
         this.children.push(child)
@@ -26,31 +34,43 @@ export default class UIKeyFrameData {
             if(this.parent)this.parent.addKey(frame)
         }
     }
-    setMoveFrame(frame:number){
+    setMoveFrame(frame:number,first:boolean=true){
         if( this.startDragFrame<0)return;
         if(this.moveFrame!=frame){
+
             this.moveFrame =frame;
             this.isDrawDirty =true;
             for(let child of this.children){
-                child.setMoveFrame(frame)
+                child.setMoveFrame(frame,false)
             }
         }
     }
-    startMove(frame: number) {
+    startMove(frame: number,first:boolean=true) {
         if(!this.frames.includes(frame))return
+        if(first)AnimationEditor.clearAllSelectFrames()
         this.startDragFrame =frame;
         for(let child of this.children){
-            child.startMove(frame)
+            child.startMove(frame,false)
         }
     }
 
-    endMove(frame: number) {
+    endMove(frame: number,first:boolean=true) {
         if( this.startDragFrame<0)return;
-        console.log("move",this.startDragFrame,"-->",frame)
+        if(this.startDragFrame ==frame){
+            if(first)AnimationEditor.clearAllSelectFrames()
+            this.selectedFrame =frame;
+        
+            this.isDrawDirty =true;
+
+        }else{
+            console.log("move",this.startDragFrame,"-->",frame)
+        }
+
+
         this.startDragFrame =-1;
         this.moveFrame =-1;
         for(let child of this.children){
-            child.endMove(frame)
+            child.endMove(frame,false)
         }
 
     }
@@ -81,7 +101,7 @@ class KeyFramesComp extends Component {
     private temp: Vec2 = new Vec2()
     private frameColor = new Color(1, 1, 1,0.7)
     private frameColorStartDrag = new Color(1, 1, 1,0.1)
-    private moveFrameColor = new Color(1, 1, 1)
+    private moveFrameColor = new Color(1, 0.5, 0)
     private isDragging: boolean =false;
 
 
@@ -89,6 +109,7 @@ class KeyFramesComp extends Component {
         super(id, new KeyFramesCompSetting())
         this.keyData = keyData;
     }
+
     onAdded() {
         super.onAdded();
         if(this.keyData.isDrawDirty){
@@ -152,6 +173,12 @@ class KeyFramesComp extends Component {
         if(this.keyData.moveFrame>-1){
             this.temp.copy(this.tempStart)
             this.temp.x += this.keyData.moveFrame * 10;
+
+            UI_I.currentDrawBatch.fillBatch.addKeyframe(this.temp, this.moveFrameColor);
+        }
+        if(this.keyData.selectedFrame>-1){
+            this.temp.copy(this.tempStart)
+            this.temp.x += this.keyData.selectedFrame * 10;
 
             UI_I.currentDrawBatch.fillBatch.addKeyframe(this.temp, this.moveFrameColor);
         }

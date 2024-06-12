@@ -208,6 +208,10 @@ class AnimationEditor {
             UI.popID();
         }
     }
+
+    clearAllSelectFrames() {
+        this.root?.keyDataMain.clearAllSelectFrames();
+    }
 }
 
 export default new AnimationEditor()
