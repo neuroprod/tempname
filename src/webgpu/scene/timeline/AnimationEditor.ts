@@ -15,7 +15,7 @@ import Timer from "../../lib/Timer.ts";
 class AnimationEditor {
 
     public readonly frameSize = 10;
-    public readonly keyFramesOffset = new Vec2(200, 40)
+
 
     models: Array<SceneObject3D> = []
     isDrawDirty: boolean = true
@@ -42,7 +42,7 @@ class AnimationEditor {
     set currentFrame(value: number) {
         if (this.currentAnimation) {
             this.isDrawDirty = true;
-            this._currentFrame = Math.max(Math.min(value, this.currentAnimation?.numFrames), 0);
+            this._currentFrame = Math.max(Math.min(value, this.currentAnimation.numFrames), 0);
             this.currentAnimation.setTime(this._currentFrame )
         }
 
@@ -76,11 +76,11 @@ class AnimationEditor {
             }
 
 
-            this.root = new AnimationEditorGroup("objects")
+            this.root = new AnimationEditorGroup(this.currentAnimation.label)
             this.currentAnimation.root.makeAnimationGroups(this.root)
 
+            this.root.setInitialUIKeys()
 
-            this.root.setData(0);
 
         }
         this.currentFrame =0;
@@ -107,10 +107,7 @@ class AnimationEditor {
             this.currentFrame =Math.floor( this.playTime)
         }
     }
-    drawUI() {
-        if (!this.root) return;
-        this.root.drawUI()
-    }
+
 
     onMouseDown(pos: Vector2) {
         console.log(pos);
@@ -119,8 +116,9 @@ class AnimationEditor {
 
     onUI() {
         if (this.currentAnimation) {
-            UI.pushWindow("Animation")
             if (!UI.initialized) return;
+            UI.pushWindow("Animation")
+
             let id = "timeLine";
             if (!UI_I.setComponent(id)) {
                 let comp = new UIAnimationEditor(UI_I.getID(id), new UIAnimationEditorSettings());
@@ -198,6 +196,18 @@ class AnimationEditor {
     }
 
 
+    drawUITree() {
+        if(this.root)
+        this.root.drawUITree()
+    }
+
+    drawKeyFrames() {
+        if(this.root){
+            UI.pushID(this.root.label)
+            this.root.drawUIKeyframes()
+            UI.popID();
+        }
+    }
 }
 
 export default new AnimationEditor()

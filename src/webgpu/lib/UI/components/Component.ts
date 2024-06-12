@@ -86,6 +86,7 @@ export default class Component {
     }
 
     setSubComponents() {
+
     }
 
     setChildrenDirty() {

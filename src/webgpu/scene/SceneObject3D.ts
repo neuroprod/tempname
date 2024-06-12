@@ -4,18 +4,24 @@ import UI from "../lib/UI/UI.ts";
 import Model from "../lib/model/Model.ts";
 import AnimationEditorGroup from "./timeline/AnimationEditorGroup.ts";
 import AnimationEditor from "./timeline/AnimationEditor.ts";
+import {TreeSettings} from "../lib/UI/components/Tree.ts";
 
 export default class SceneObject3D extends Object3D{
     setCurrentModel!: (value: (SceneObject3D | null)) => void;
     public  isSceneObject3D =true
     model:Model|null =null;
+    private static emptyTreeSettings: TreeSettings;
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
+        if(!SceneObject3D.emptyTreeSettings) {
+            SceneObject3D.emptyTreeSettings = new TreeSettings();
+            SceneObject3D.emptyTreeSettings.btnColor.setHex("#6e4e4e", 1)
+        }
     }
 
     onUI(){
 
-        if(UI.pushTree(this.label,this.children.length<=1)){
+        if(UI.pushTree(this.label,this.children.length<=1,this.model?undefined: SceneObject3D.emptyTreeSettings).clicked){
             this.setCurrentModel(this);
         }
 
