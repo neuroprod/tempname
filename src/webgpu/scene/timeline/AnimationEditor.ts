@@ -8,7 +8,7 @@ import SceneObject3D from "../SceneObject3D.ts";
 import AnimationChannel from "./animation/AnimationChannel.ts";
 import AnimationChannelEditor from "./AnimationChannelEditor.ts";
 import AnimationEditorGroup from "./AnimationEditorGroup.ts";
-import Vec2 from "../../lib/UI/math/Vec2.ts";
+
 import Timer from "../../lib/Timer.ts";
 
 
