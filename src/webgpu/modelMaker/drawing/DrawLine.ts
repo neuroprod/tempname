@@ -2,6 +2,7 @@ import {lerp, Vector2} from "@math.gl/core";
 import Renderer from "../../lib/Renderer.ts";
 import ColorV from "../../lib/ColorV.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
+import {NumericArray} from "@math.gl/types";
 
 
 export default class DrawLine {
@@ -43,12 +44,15 @@ export default class DrawLine {
 
                 p1.from(temp[i - 1])
                 p2.from(temp[i + 1])
-                p1.add(p2)
+                p1.add(p2 as NumericArray)
                 p1.scale(0.5)
-                p1.subtract(temp[i])
+                p1.subtract(temp[i] as NumericArray)
                 // p1.scale(0.5)
 
-                this.points[i].add(p1);
+                this.points[i].add(p1 as NumericArray );
+            }
+            for(let i=0;i<this.points.length;i++){
+                temp[i].from(this.points[i])
             }
         }
 

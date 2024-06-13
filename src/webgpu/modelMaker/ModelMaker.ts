@@ -248,7 +248,7 @@ export default class ModelMaker {
 
             this.modelRoot.x +=this.mouseListener.mousePos.x -newWorld.x
             this.modelRoot.y -=newWorld.y-(this.renderer.height -this.mouseListener.mousePos.y)
-   
+
            // this.modelRoot.x +=newWorld.x;
             //this.modelRoot.y -=newWorld.y;
         }
