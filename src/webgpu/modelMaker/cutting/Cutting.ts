@@ -38,11 +38,11 @@ export default class Cutting{
 
         let path = new Path()
         path.moveTo([0,0])
-        path.lineTo([50,0])
-        path.lineTo([50,50])
-        path.moveTo([0,0])
-        path.lineTo([0,50])
+        path.lineTo([0,3])
 
+        path.moveTo([0,0])
+        path.bezierCurveTo([1,-1],[3,1],[4,0])
+        path.lineTo([4,3])
         path.end()
 
         this.shapeLineModelTest.setPath(path);

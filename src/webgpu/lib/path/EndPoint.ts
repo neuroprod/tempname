@@ -8,7 +8,7 @@ export default class EndPoint extends Curve {
         this.type =3;
         this.p =endPoint;
     }
-    public setMeshData(indices: Array<Number>, vertices: Array<Number>){
-        vertices.push(this.p.x,this.p.y,this.p.z);
+    public setMeshData(indices: Array<Number>, positions: Array<Number>){
+        positions.push(this.p.x,this.p.y,this.p.z);
     }
 }

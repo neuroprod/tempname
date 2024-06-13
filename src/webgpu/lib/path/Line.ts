@@ -13,11 +13,11 @@ export default class Line extends Curve{
 
 
     }
-    public setMeshData(indices: Array<Number>, vertices: Array<Number>){
+    public setMeshData(indices: Array<Number>, positions: Array<Number>){
 
-        let l=vertices.length/3
+        let l=positions.length/3
         indices.push(l)
-        vertices.push(this.p1.x,this.p1.y,this.p1.z)
+        positions.push(this.p1.x,this.p1.y,this.p1.z)
         indices.push(l+1)
     }
 

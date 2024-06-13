@@ -23,7 +23,7 @@ export default class Path{
         let vec =new Vector3()
         vec.from(p)
         if(vec.z ==undefined) vec.z =0;
-        vec.scale(0.01)
+        vec.scale(0.1)
         vec.x+=0.5;
         vec.y+=0.5;
         return vec;
@@ -56,6 +56,7 @@ export default class Path{
         let c2n =this.getNewPoint(c2);
         let bezier = new Bezier(this.currentPoint,c1n,newPoint,c2n);
         this.curves.push(bezier)
+        this.currentPoint =newPoint;
     }
 
 
@@ -65,8 +66,9 @@ export default class Path{
         let numCurves =this.curves.length
         for (let i=0;i<numCurves;i++){
             this.curves[i].setMeshData(indices,positions)
-
+console.log(this.curves[i])
         }
+        console.log(indices,positions)
     }
 }
 

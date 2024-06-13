@@ -66,7 +66,7 @@ export default class ShapeLineModel extends Model{
         this.positions=[]
         this.indices=[]
         path.setMeshData(this.indices,this.positions)
-       
+
         this.mesh.setPositions(new Float32Array(this.positions))
         this.mesh.setIndices(new Uint16Array(this.indices))
     }
