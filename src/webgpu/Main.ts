@@ -81,7 +81,7 @@ export default class Main {
 
 
 
-        this.setMainState(MainState.editor)
+        this.setMainState(MainState.modelMaker)
         this.tick();
     }
     private setMainState(state: MainState) {

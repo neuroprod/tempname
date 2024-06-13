@@ -10,7 +10,8 @@ export default class ShapeLineMaterial extends Material{
         this.addAttribute("aPos", ShaderType.vec3);
 
 
-        this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer), true);
+        this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer));
+        this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer), true);
         this.topology =PrimitiveTopology.LineList;
         this.depthCompare = CompareFunction.Always;
         this.depthWrite =false;
@@ -28,7 +29,7 @@ ${this.getShaderUniforms()}
 fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 {
     var output : VertexOutput;
-    output.position =camera.viewProjectionMatrix*vec4( aPos,1.0);
+    output.position =camera.viewProjectionMatrix*model.modelMatrix*vec4( aPos,1.0);
 
 
     return output;

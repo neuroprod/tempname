@@ -2,6 +2,7 @@ import Renderer from "../Renderer";
 
 import ObjectGPU from "../ObjectGPU.ts";
 import {Matrix4, Quaternion, Vector3, Vector4} from "@math.gl/core";
+import {NumericArray} from "@math.gl/types";
 
 
 export default class Object3D extends ObjectGPU {
@@ -212,7 +213,7 @@ export default class Object3D extends ObjectGPU {
 
     //d
     setPositionV(target: Vector3 | Array<number>) {
-        if (this._position.equals(target)) return
+        if (this._position.equals(target as NumericArray)) return
         this._position.from(target);
         this.setDirty();
     }
@@ -234,7 +235,7 @@ export default class Object3D extends ObjectGPU {
     }
 
     setScaleV(val: Vector3 | Array<number>) {
-        if (this._scale.equals(val)) return
+        if (this._scale.equals(val as NumericArray)) return
         this._scale.from(val)
         this.setDirty();
     }

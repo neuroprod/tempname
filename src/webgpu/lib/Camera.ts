@@ -60,13 +60,13 @@ export default class Camera extends UniformGroup {
         return Camera.instance.getShaderText(id);
     }
 
-    setOrtho(right = 1,left = -1, top = 1, bottom = 1, near = -1, far = 2) {
+    setOrtho(right = 1,left = -1, top = 1, bottom = 1) {
         this.orthoRight =right;
         this.orthoLeft =left;
         this.orthoTop =top;
         this.orthoBottom =bottom;
-        this.near = near;
-        this.far =far;
+       // this.near = near;
+       // this.far =far;
         this.perspective = false
     }
 

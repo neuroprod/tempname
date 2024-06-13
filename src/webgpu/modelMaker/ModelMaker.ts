@@ -16,6 +16,14 @@ import Project from "./Project.ts";
 import Cutting from "./cutting/Cutting.ts";
 import Preview from "./preview/Preview.ts";
 import Timer from "../lib/Timer.ts";
+import Model from "../lib/model/Model.ts";
+import Quad from "../lib/mesh/geometry/Quad.ts";
+import Plane from "../lib/mesh/geometry/Plane.ts";
+import DrawingPreviewMaterial from "./drawing/DrawingPreviewMaterial.ts";
+import Box from "../lib/mesh/geometry/Box.ts";
+import Object3D from "../lib/model/Object3D.ts";
+import {NumericArray} from "@math.gl/types";
+
 
 enum ModelMainState {
     draw,
@@ -29,6 +37,8 @@ enum ModelFocus {
     cutPanel,
     viewPanel
 }
+
+
 
 
 export default class ModelMaker {
@@ -47,62 +57,81 @@ export default class ModelMaker {
     private modelRenderer2D: ModelRenderer;
     private camera2D: Camera;
 
-    private modelRenderer3D: ModelRenderer;
-    private camera3D: Camera;
-
-    private previewWidth = 0;
 
 
     private modelMainState = ModelMainState.draw;
     private modelFocus = ModelFocus.none
-    private blitTextureMaterial: BaseBlitMaterial;
-    private backgroundBlit: Blit;
+
     private currentProject!: Project;
+    private textureModel: Model;
+    private drawingPreviewMaterial: DrawingPreviewMaterial;
+    private modelRoot: Object3D;
+    private zoomScale: number =1;
+    private isDragging: boolean =false;
+    private prevDragMouse: Vector2 =new Vector2();
+    private currentDragMouse: Vector2 =new Vector2();
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
         this.camera2D = new Camera(this.renderer)
-        this.camera2D.setOrtho(1, 0, 1, 0)
 
+        this.camera2D.cameraWorld.set(0, 0, 5)
+        this.camera2D.cameraLookAt.set(0,0,0);
+        this.camera2D.far = 10;
+        this.camera2D.near = -1;
         this.preview = new Preview(renderer)
 
         this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
 
-        this.camera3D = new Camera(this.renderer);
-        this.camera3D.cameraWorld.set(0, 0, 2)
-        this.camera3D.far = 10;
-        this.camera3D.near = 1;
+       // this.camera3D = new Camera(this.renderer);
+        //this.camera3D.cameraWorld.set(0, 0, 5)
+        //this.camera3D.cameraLookAt.set(0,0,0);
+        //this.camera3D.far = 10;
+        //this.camera3D.near = -1;
 
         this.drawing = new Drawing(renderer);
         this.cutting = new Cutting(renderer);
 
+
+        this.textureModel =new Model(renderer,"textureModel");
+        this.textureModel.mesh =  new Quad(renderer)
+
+        this.drawingPreviewMaterial =new DrawingPreviewMaterial(renderer,"materprev");
+        this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
+        this.textureModel.material = this.drawingPreviewMaterial;
+        this.textureModel.setScaler(0.5)
+        this.textureModel.x =0.5;
+        this.textureModel.y =0.5;
+
+        this.modelRoot =new Object3D(renderer,"drawingModelRoot");
+        this.modelRoot.addChild(this.textureModel)
+        this.modelRoot.addChild(this.cutting.shapeLineModel)
+        this.modelRoot.setScaler(100)
+        this.modelRenderer2D.addModel( this.textureModel )
         this.modelRenderer2D.addModel(this.cutting.shapeLineModel);
 
-        this.modelRenderer3D = new ModelRenderer(this.renderer, "3D", this.camera3D);
 
 
-        this.modelRenderer3D.addModel(this.cutting.model3D)
-
-
-        this.blitTextureMaterial = new BaseBlitMaterial(renderer, "blitTexture")
-        this.blitTextureMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
-        this.backgroundBlit = new Blit(renderer, "bgBlit", this.blitTextureMaterial)
         this.setProjects(data);
+        this.scaleToFit()
+        setTimeout(this.scaleToFit.bind(this),10)
     }
 
-
+    public scaleToFit(){
+        this.zoomScale = this.renderer.height;
+        this.modelRoot.setScaler(this.zoomScale)
+        this.modelRoot.x = (this.renderer.width-this.renderer.height)/2
+    }
     update() {
+        //this.camera2D.setOrtho(10, 0, 10, 0)
+        this.camera2D.setOrtho(this.renderer.width,0, this.renderer.height,0)
 
-        this.previewWidth = Math.min(this.renderer.width - this.renderer.height)
-        this.camera3D.ratio = this.previewWidth / this.renderer.height
-        if(this.cutting.model3D){
-            this.cutting.model3D.setEuler(Math.sin(Timer.time/3)*0.2,Math.sin(Timer.time)*0.8,0)
-        }
+
         this.handleMouse();
-       // this.onUI();
+
 
 
     }
@@ -119,23 +148,18 @@ export default class ModelMaker {
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-        pass.passEncoder.setViewport(0, 0, Math.min(this.renderer.width, this.renderer.height), this.renderer.height, 0, 1)
-        this.backgroundBlit.draw(pass)
+
 
         this.modelRenderer2D.draw(pass);
 
-        if (this.previewWidth > 1) {
 
-            pass.passEncoder.setViewport(this.renderer.height, 0, this.previewWidth, this.renderer.height, 0, 1)
-            this.modelRenderer3D.draw(pass);
-        }
-
-        pass.passEncoder.setViewport(0, 0, this.renderer.width, this.renderer.height, 0, 1)
     }
 
     public remapMouse(pos: Vector2) {
-        this.mouseLocal.x = pos.x / this.renderer.height
-        this.mouseLocal.y = 1 - pos.y / this.renderer.height
+
+        let posR = this.cutting.shapeLineModel.getLocalPos(new Vector3(pos.x,this.renderer.height-pos.y,0));
+        this.mouseLocal.x = posR.x;
+        this.mouseLocal.y =posR.y;
     }
 
     public onUI() {
@@ -210,7 +234,50 @@ export default class ModelMaker {
     private handleMouse() {
         this.remapMouse(this.mouseListener.mousePos)
 
-        if (this.mouseListener.isDownThisFrame && !UI.needsMouse()) {
+        if(this.mouseListener.wheelDelta && !UI.needsMouse()){
+
+            let local =this.modelRoot.getLocalPos(new Vector3(this.mouseListener.mousePos.x,this.renderer.height -this.mouseListener.mousePos.y,0));
+
+            if(this.mouseListener.wheelDelta>0){
+                this.zoomScale *= 1.03;
+            }else{
+                this.zoomScale *= 0.97;
+            }
+            this.modelRoot.setScaler(this.zoomScale)
+            let newWorld  =this.modelRoot.getWorldPos(local);
+
+            this.modelRoot.x +=this.mouseListener.mousePos.x -newWorld.x
+            this.modelRoot.y -=newWorld.y-(this.renderer.height -this.mouseListener.mousePos.y)
+   
+           // this.modelRoot.x +=newWorld.x;
+            //this.modelRoot.y -=newWorld.y;
+        }
+        if (this.mouseListener.isDownThisFrame&& this.mouseListener.shiftKey && !UI.needsMouse()){
+
+            this.isDragging = true;
+            this.prevDragMouse.from(this.mouseListener.mousePos)
+        }
+        if(this.isDragging){
+            this.currentDragMouse.from(this.mouseListener.mousePos)
+            this.currentDragMouse.subtract(this.prevDragMouse as NumericArray);
+
+            this.prevDragMouse.from(this.mouseListener.mousePos)
+            if(this.currentDragMouse.lengthSquared()!=0){
+
+                this.modelRoot.x +=this.currentDragMouse.x
+                this.modelRoot.y -=this.currentDragMouse.y
+            }
+
+        }
+        if (this.mouseListener.isUpThisFrame && this.isDragging){
+
+            this.isDragging = false;
+
+        }
+
+        if(this.isDragging)return;
+
+            if (this.mouseListener.isDownThisFrame && !UI.needsMouse()) {
             //this.mouseListener.reset()
             if (this.mouseLocal.x > 1) {
                 //rightPanel
