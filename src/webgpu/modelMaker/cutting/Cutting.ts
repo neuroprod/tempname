@@ -8,6 +8,7 @@ import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
 import ShapeLineModel from "./ShapeLineModel.ts";
 import ProjectMesh from "../ProjectMesh.ts";
 import Path from "../../lib/path/Path.ts";
+import PathEditor from "../../lib/path/editor/PathEditor.ts";
 
 
 enum CurveType{
@@ -20,6 +21,7 @@ export default class Cutting{
     private readonly renderer: Renderer;
     model3D: Model;
     shapeLineModel:ShapeLineModel;
+
     private readonly mesh: ExtrudeMesh;
 
     private project!: Project;
@@ -29,6 +31,7 @@ export default class Cutting{
     private path: Path;
 
     private curveType:CurveType =CurveType.Line;
+    pathEditor: PathEditor;
 
     constructor(renderer:Renderer) {
 
@@ -46,6 +49,9 @@ export default class Cutting{
         this.model3D.mesh = this.mesh;
         this.model3D.visible = false;
         this.model3D.material.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"])
+
+        this.pathEditor = new PathEditor(renderer)
+
 
        /* let path = new Path()
         path.moveTo([0,0])
@@ -108,12 +114,13 @@ console.log("down")
             }
 
             this.updateLine();
+            this.pathEditor.setPath(this.path)
         }
     }
 
     private updateLine() {
 
-console.log()
+
         this.shapeLineModel.setPath(this.path)
         //this.shapeLineModel.setLine(this.)
 /*
@@ -195,5 +202,9 @@ console.log()
             }
 
         }
+    }
+
+    update() {
+        this.pathEditor.update()
     }
 }

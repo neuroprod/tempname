@@ -13,6 +13,7 @@ export default class Line extends Curve{
 
 
     }
+    getP1():Vector3{return this.p1;}
     public setMeshData(indices: Array<Number>, positions: Array<Number>){
 
         let l=positions.length/3

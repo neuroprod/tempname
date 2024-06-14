@@ -11,4 +11,5 @@ export default class EndPoint extends Curve {
     public setMeshData(indices: Array<Number>, positions: Array<Number>){
         positions.push(this.p.x,this.p.y,this.p.z);
     }
+    getP1():Vector3{return this.p;}
 }

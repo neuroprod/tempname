@@ -16,6 +16,7 @@ export default class Bezier extends Curve{
         this.c2 =c2;
 
     }
+    getP1():Vector3{return this.p1;}
     public setMeshData(indices: Array<Number>, positions: Array<Number>){
 
         let l=positions.length/3

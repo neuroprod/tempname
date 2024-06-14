@@ -10,8 +10,8 @@ import EndPoint from "./EndPoint.ts";
 export default class Path {
 
     started: boolean = false;
-    private currentPoint: Vector3 = new Vector3()
-    private curves: Array<Curve> = [];
+     currentPoint: Vector3 = new Vector3()
+   curves: Array<Curve> = [];
 
     constructor() {
     }
@@ -77,10 +77,10 @@ export default class Path {
 
     autoBezier(p: Vector2 | Vector3 | NumericArray) {
         let l = this.curves.length;
-console.log("autobezier")
+
         //prev is also bezier
         if (l >= 1 && this.curves[l - 1].type == 2) {
-console.log("bezier to bezier")
+
 
             let prevBezier = this.curves[l - 1] as Bezier;
             let newPoint = this.getNewPoint(p);
@@ -104,10 +104,10 @@ console.log("bezier to bezier")
             dir1.add(this.currentPoint as NumericArray)
 
 
-            dir2.from(newPoint)
-            dir2.subtract(this.currentPoint as NumericArray);
-            dir2.scale(2 / 3);
-            dir2.add(this.currentPoint as NumericArray)
+            dir2.from(dir1)
+            dir2.subtract(newPoint as NumericArray);
+            dir2.scale(0.5);
+            dir2.add(newPoint as NumericArray)
            // let c1n =new Vector3()
            // let c2n =new Vector3()
 
@@ -142,5 +142,11 @@ console.log("bezier to bezier")
         }
 
     }
+
+
+
+
+
+
 }
 

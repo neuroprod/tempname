@@ -109,13 +109,13 @@ export default class ModelMaker {
         this.modelRoot =new Object3D(renderer,"drawingModelRoot");
         this.modelRoot.addChild(this.textureModel)
         this.modelRoot.addChild(this.cutting.shapeLineModel)
-
+        this.modelRoot.addChild(this.cutting.pathEditor.pointModel)
         this.modelRoot.setScaler(100)
         this.modelRenderer2D.addModel( this.textureModel )
 
 
         this.modelRenderer2D.addModel(this.cutting.shapeLineModel);
-
+        this.modelRenderer2D.addModel(this.cutting.pathEditor.pointModel);
         this.setProjects(data);
         this.scaleToFit()
         setTimeout(this.scaleToFit.bind(this),10)
@@ -129,7 +129,7 @@ export default class ModelMaker {
     update() {
         //this.camera2D.setOrtho(10, 0, 10, 0)
         this.camera2D.setOrtho(this.renderer.width,0, this.renderer.height,0)
-
+this.cutting.update()
 
         this.handleMouse();
 

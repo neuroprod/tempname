@@ -4,6 +4,7 @@ import ColorAttachment from "./textures/ColorAttachment.ts";
 import UniformGroup from "./material/UniformGroup.ts";
 import Model from "./model/Model.ts";
 import UI from "./UI/UI.ts";
+import {Vector2} from "@math.gl/core";
 
 
 export default class Renderer {
@@ -12,7 +13,7 @@ export default class Renderer {
     public ratio: number=1;
     public width: number = 1;
     public height: number = 1;
-
+    public inverseSizePixelRatio =new Vector2()
 
 
     canvas!: HTMLCanvasElement;
@@ -79,7 +80,7 @@ export default class Renderer {
         this.updateUniformGroups()
 
         //
-this.device.queue.onSubmittedWorkDone().then(()=> {
+    this.device.queue.onSubmittedWorkDone().then(()=> {
     this.canvasTextureView = this.context.getCurrentTexture();
     this.canvasColorAttachment.setTarget(this.canvasTextureView.createView())
 
@@ -109,6 +110,9 @@ this.device.queue.onSubmittedWorkDone().then(()=> {
             this.width = this.canvas.width;
             this.height = this.canvas.height;
             this.ratio = this.width / this.height;
+
+
+            this.inverseSizePixelRatio.set(this.pixelRatio/this.width,this.pixelRatio/this.height)
          //   this.size.x =this.width;
            // this.size.y =this.height;
 
