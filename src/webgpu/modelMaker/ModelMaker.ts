@@ -109,11 +109,11 @@ export default class ModelMaker {
         this.modelRoot =new Object3D(renderer,"drawingModelRoot");
         this.modelRoot.addChild(this.textureModel)
         this.modelRoot.addChild(this.cutting.shapeLineModel)
-        this.modelRoot.addChild(this.cutting.shapeLineModelTest)
+
         this.modelRoot.setScaler(100)
         this.modelRenderer2D.addModel( this.textureModel )
 
-        this.modelRenderer2D.addModel(this.cutting.shapeLineModelTest);
+
         this.modelRenderer2D.addModel(this.cutting.shapeLineModel);
 
         this.setProjects(data);

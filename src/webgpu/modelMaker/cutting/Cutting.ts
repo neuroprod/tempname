@@ -18,7 +18,7 @@ export default class Cutting{
     private project!: Project;
     private currentMesh!: ProjectMesh|null;
     private setCenter: boolean =false;
-    shapeLineModelTest: ShapeLineModel;
+   // shapeLineModelTest: ShapeLineModel;
     constructor(renderer:Renderer) {
 
 
@@ -27,7 +27,7 @@ export default class Cutting{
 
         this.renderer =renderer
         this.shapeLineModel = new ShapeLineModel(this.renderer,"lines1");
-        this.shapeLineModelTest = new ShapeLineModel(this.renderer,"lines2");
+       // this.shapeLineModelTest = new ShapeLineModel(this.renderer,"lines2");
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
 
@@ -36,7 +36,7 @@ export default class Cutting{
         this.model3D.visible = false;
         this.model3D.material.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"])
 
-        let path = new Path()
+       /* let path = new Path()
         path.moveTo([0,0])
         path.lineTo([0,3])
 
@@ -45,7 +45,7 @@ export default class Cutting{
         path.lineTo([4,3])
         path.end()
 
-        this.shapeLineModelTest.setPath(path);
+        this.shapeLineModelTest.setPath(path);*/
 
 
 
