@@ -17,6 +17,7 @@ enum CurveType {
     Bezier,
     Center,
     Edit,
+    Move,
 
 }
 
@@ -30,14 +31,15 @@ export default class Cutting {
     private currentMesh!: ProjectMesh | null;
     private curveType: CurveType = CurveType.Line;
     private camera: Camera;
-    private currentHitPoint: Vector3 | null;
-    private currentMousePoint: Vector2 =new Vector2();
-    private prevMousePoint: Vector2 =new Vector2();
-    private isDraggingPoint: boolean =false;
+    private currentHitPoint!: Vector3 | null;
+    private currentMousePoint: Vector2 = new Vector2();
+    private prevMousePoint: Vector2 = new Vector2();
+    private isDraggingPoint: boolean = false;
+    private isDraggingMove: boolean = false;
 
-    constructor(renderer: Renderer,camera:Camera) {
+    constructor(renderer: Renderer, camera: Camera) {
 
-        this.camera =camera
+        this.camera = camera
         this.renderer = renderer
         this.shapeLineModel = new ShapeLineModel(this.renderer, "lines1");
 
@@ -72,32 +74,48 @@ export default class Cutting {
             if (this.curveType == CurveType.Center) {
                 this.currentMesh.setCenter(mouseLocal);
                 this.updateLine()
-            }  if (this.curveType == CurveType.Edit) {
+            }
+            if (this.curveType == CurveType.Edit) {
 
-               this.currentHitPoint =this.pathEditor.getHitPoint(new Vector3(mouseLocal.x,mouseLocal.y,0))
-                if(this.currentHitPoint){
-                   this.prevMousePoint.from(mouseLocal)
-                   this.isDraggingPoint =true;
+                this.currentHitPoint = this.pathEditor.getHitPoint(new Vector3(mouseLocal.x, mouseLocal.y, 0))
+                if (this.currentHitPoint) {
+                    this.prevMousePoint.from(mouseLocal)
+                    this.isDraggingPoint = true;
                 }
             }
+            if (this.curveType == CurveType.Move) {
 
-            else {
+
+                this.prevMousePoint.from(mouseLocal)
+                this.isDraggingMove = true;
+
+            } else {
 
 
                 this.addVectorPoint(mouseLocal);
             }
-        }
-        else if(this.isDraggingPoint && this.currentHitPoint){
+        } else if (this.isDraggingPoint && this.currentHitPoint) {
             this.currentMousePoint.from(mouseLocal);
             this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
 
-            if(this.currentMousePoint.lengthSquared()>0) {
-                this.currentHitPoint.add([this.currentMousePoint.x,this.currentMousePoint.y,0]);
+            if (this.currentMousePoint.lengthSquared() > 0) {
+                this.currentHitPoint.add([this.currentMousePoint.x, this.currentMousePoint.y, 0]);
 
                 this.prevMousePoint.from(mouseLocal);
                 this.updateLine()
             }
-            if(isUpThisFrame)this.isDraggingPoint =false;
+            if (isUpThisFrame) this.isDraggingPoint = false;
+        } else if (this.isDraggingMove) {
+            this.currentMousePoint.from(mouseLocal);
+            this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
+
+            if (this.currentMousePoint.lengthSquared() > 0) {
+
+                this.pathEditor.moveAllPoints(new Vector3(this.currentMousePoint.x, this.currentMousePoint.y, 0))
+                this.prevMousePoint.from(mouseLocal);
+                this.updateLine()
+            }
+            if (isUpThisFrame) this.isDraggingMove = false;
         }
     }
 
@@ -135,7 +153,10 @@ export default class Cutting {
                     this.curveType = CurveType.Edit;
 
                 }
+                if (UI.LButton("Move", "", this.curveType != CurveType.Move)) {
+                    this.curveType = CurveType.Move;
 
+                }
                 if (UI.LButton("Remove Last Line")) {
 
                     this.currentMesh.path.removeLastCurve()
