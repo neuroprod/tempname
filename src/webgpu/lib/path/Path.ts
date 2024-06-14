@@ -170,5 +170,25 @@ export default class Path {
         }
 
     }
+
+    getPoints() {
+        let indices=[]
+        let positions=[]
+        this.setMeshData(indices, positions)
+
+        let arr:Array<Vector2> =[]
+        for(let i=0;i<positions.length;i+=3){
+            let p =new Vector2(positions[i],positions[i+1])
+            arr.push(p);
+        }
+        return arr;
+
+
+    }
+
+    removeLastCurve() {
+        let lc =this.curves.pop()
+        this.currentPoint =lc.getP1();
+    }
 }
 

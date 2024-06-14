@@ -4,6 +4,7 @@ import Model from "../../model/Model.ts";
 import Quad from "../../mesh/geometry/Quad.ts";
 import PathPointMaterial from "./PathPointMaterial.ts";
 import Bezier from "../Bezier.ts";
+import {Vector2, Vector3} from "@math.gl/core";
 
 export default class PathEditor{
     pointModel: Model;
@@ -20,7 +21,7 @@ export default class PathEditor{
 
 
     }
-    setPath(path:Path){
+    setPath(path:Path,center:Vector2|null){
 
         if(!path.started){
             this.pointModel.visible =false
@@ -45,6 +46,9 @@ export default class PathEditor{
 
         }
         pointDrawData.push(path.currentPoint.x,path.currentPoint.y,path.currentPoint.z,0)
+        if(center){
+            pointDrawData.push(center.x,center.y,0,2)
+        }
         this.pointModel.visible =true
         this.createBuffer(new Float32Array(pointDrawData))
         this.pointModel.addBuffer("positionData" ,this.positionBuffer)

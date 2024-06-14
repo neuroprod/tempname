@@ -8,19 +8,18 @@ import Camera from "../lib/Camera.ts";
 
 
 import Drawing from "./drawing/Drawing.ts";
-import Blit from "../lib/blit/Blit.ts";
-import BaseBlitMaterial from "../lib/blit/BaseBlitMaterial.ts";
+
 import {sendTextureToServer} from "../lib/SaveUtils.ts";
 import Project from "./Project.ts";
 
 import Cutting from "./cutting/Cutting.ts";
-import Preview from "./preview/Preview.ts";
+
 import Timer from "../lib/Timer.ts";
 import Model from "../lib/model/Model.ts";
 import Quad from "../lib/mesh/geometry/Quad.ts";
-import Plane from "../lib/mesh/geometry/Plane.ts";
+
 import DrawingPreviewMaterial from "./drawing/DrawingPreviewMaterial.ts";
-import Box from "../lib/mesh/geometry/Box.ts";
+
 import Object3D from "../lib/model/Object3D.ts";
 import {NumericArray} from "@math.gl/types";
 
@@ -46,7 +45,7 @@ export default class ModelMaker {
     public projects: Array<Project> = []
     private cutting: Cutting;
     private drawing: Drawing
-    private preview: Preview
+
 
 
     private mouseListener: MouseListener
@@ -83,7 +82,7 @@ export default class ModelMaker {
         this.camera2D.cameraLookAt.set(0,0,0);
         this.camera2D.far = 10;
         this.camera2D.near = -1;
-        this.preview = new Preview(renderer)
+
 
         this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
@@ -184,7 +183,7 @@ export default class ModelMaker {
                 this.currentProject = p;
                 this.drawing.setProject(this.currentProject);
                 this.cutting.setProject(this.currentProject)
-                this.preview.setProject(this.currentProject)
+
             }
             count++;
         }
@@ -209,7 +208,7 @@ export default class ModelMaker {
                 this.currentProject.name = newName;
                 this.drawing.setProject(this.currentProject);
                 this.cutting.setProject(this.currentProject)
-                this.preview.setProject(this.currentProject)
+
                 this.projects.push(this.currentProject);
             }
         }
@@ -326,7 +325,7 @@ export default class ModelMaker {
             this.currentProject =this.projects[0];
             this.drawing.setProject(this.currentProject);
             this.cutting.setProject(this.currentProject)
-            this.preview.setProject(this.currentProject)
+
         }
     }
 }

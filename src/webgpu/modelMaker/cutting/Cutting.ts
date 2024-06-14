@@ -7,39 +7,31 @@ import ModelPreviewMaterial from "../ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
 import ShapeLineModel from "./ShapeLineModel.ts";
 import ProjectMesh from "../ProjectMesh.ts";
-import Path from "../../lib/path/Path.ts";
 import PathEditor from "../../lib/path/editor/PathEditor.ts";
 
 
-enum CurveType{
+enum CurveType {
     Line,
-    Bezier
+    Bezier,
+    Center,
 
 }
 
-export default class Cutting{
-    private readonly renderer: Renderer;
+export default class Cutting {
     model3D: Model;
-    shapeLineModel:ShapeLineModel;
-
-    private readonly mesh: ExtrudeMesh;
-
-    private project!: Project;
-    private currentMesh!: ProjectMesh|null;
-    private setCenter: boolean =false;
-
-
-    private curveType:CurveType =CurveType.Line;
+    shapeLineModel: ShapeLineModel;
     pathEditor: PathEditor;
+    private readonly renderer: Renderer;
+    private readonly mesh: ExtrudeMesh;
+    private project!: Project;
+    private currentMesh!: ProjectMesh | null;
+    private curveType: CurveType = CurveType.Line;
 
-    constructor(renderer:Renderer) {
+    constructor(renderer: Renderer) {
 
 
-
-
-
-        this.renderer =renderer
-        this.shapeLineModel = new ShapeLineModel(this.renderer,"lines1");
+        this.renderer = renderer
+        this.shapeLineModel = new ShapeLineModel(this.renderer, "lines1");
 
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
@@ -52,30 +44,27 @@ export default class Cutting{
         this.pathEditor = new PathEditor(renderer)
 
 
-
-
     }
 
 
     setProject(project: Project) {
         this.project = project;
-        if(this.project.meshes.length){
+        if (this.project.meshes.length) {
             this.currentMesh = this.project.meshes[0];
-        }else{
-            this.currentMesh =null;
+        } else {
+            this.currentMesh = null;
         }
 
         this.updateLine();
     }
 
     setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean) {
-        if(!this.currentMesh)return;
+        if (!this.currentMesh) return;
         if (isDownThisFrame && !UI.needsMouse()) {
-            if(this.setCenter){
+            if (this.curveType == CurveType.Center) {
                 this.currentMesh.setCenter(mouseLocal);
-                this.setCenter =false;
                 this.updateLine()
-            }else {
+            } else {
 
 
                 this.addVectorPoint(mouseLocal);
@@ -83,56 +72,45 @@ export default class Cutting{
         }
     }
 
-    private addVectorPoint(point: Vector2) {
-        if(this.currentMesh){
+    positionsToVec2(positions: Array<number>): Array<Vector2> {
 
-            if(!this.currentMesh.path.started){
-                this.currentMesh.path.moveTo(point)
-
-            }
-            else {
-                if(this.curveType ==CurveType.Line){
-
-                    this.currentMesh.path.lineTo(point)
-                }
-                else if(this.curveType ==CurveType.Bezier){
-                    this.currentMesh.path.autoBezier(point);
-                }
-
-            }
-
-            this.updateLine();
-
-        }
-    }
-
-    private updateLine() {
-
-        if(!this.currentMesh)return;
-        this.shapeLineModel.setPath(this.currentMesh.path)
-        if(this.currentMesh.path.numCurves>1) {
-            this.model3D.visible =true;
-            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModel.positions), 0.03, new Vector3())
-        }
-        this.pathEditor.setPath(this.currentMesh.path)
-
-
-    }
-    positionsToVec2(positions:Array<number>):Array<Vector2>{
-
-        let arr:Array<Vector2> =[]
-        for(let i=0;i<positions.length;i+=3){
-            let p =new Vector2(positions[i],positions[i+1])
+        let arr: Array<Vector2> = []
+        for (let i = 0; i < positions.length; i += 3) {
+            let p = new Vector2(positions[i], positions[i + 1])
             arr.push(p);
 
 
         }
 
 
-
         return arr;
     }
+
     onUI() {
+
+
+        if (this.currentMesh) {
+            if (UI.LButton("Line", "", this.curveType != CurveType.Line)) {
+                this.curveType = CurveType.Line
+            }
+            if (UI.LButton("Bezier", "", this.curveType != CurveType.Bezier)) {
+                this.curveType = CurveType.Bezier
+            }
+            if (UI.LButton("Set Center", "", this.curveType != CurveType.Center)) {
+                this.curveType = CurveType.Center;
+            }
+            if (this.currentMesh.path.numCurves > 0) {
+
+                if (UI.LButton("Remove Last Line")) {
+
+                    this.currentMesh.path.removeLastCurve()
+                    this.updateLine()
+                }
+            }
+
+
+            UI.separator("meshSep", false)
+        }
         UI.pushLList("Meshes", 100);
 
         for (let m of this.project.meshes) {
@@ -165,33 +143,44 @@ export default class Cutting{
                 this.project.meshes.push(this.currentMesh)
             }
         }
-        UI.separator("meshSep",false)
-        if(UI.LButton("Line"))
-        {
-            this.curveType =CurveType.Line
-        }
-        if(UI.LButton("Bezier"))
-        {
-            this.curveType =CurveType.Bezier
-        }
-        if( this.currentMesh){
-           /* if(this.currentMesh.points.length>0){
-                if(UI.LButton("Remove last point"))
-                {
-                    this.currentMesh.points.pop()
-                    this.updateLine();
-                }
 
-            }*/
-            if(UI.LButton("Set Center"))
-            {
-                this.setCenter =true;
-            }
-
-        }
     }
 
     update() {
         this.pathEditor.update()
+    }
+
+    private addVectorPoint(point: Vector2) {
+        if (this.currentMesh) {
+
+            if (!this.currentMesh.path.started) {
+                this.currentMesh.path.moveTo(point)
+
+            } else {
+                if (this.curveType == CurveType.Line) {
+
+                    this.currentMesh.path.lineTo(point)
+                } else if (this.curveType == CurveType.Bezier) {
+                    this.currentMesh.path.autoBezier(point);
+                }
+
+            }
+
+            this.updateLine();
+
+        }
+    }
+
+    private updateLine() {
+
+        if (!this.currentMesh) return;
+        this.shapeLineModel.setPath(this.currentMesh.path)
+        if (this.currentMesh.path.numCurves > 1) {
+            this.model3D.visible = true;
+            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModel.positions), 0.03, new Vector3())
+        }
+        this.pathEditor.setPath(this.currentMesh.path, this.currentMesh.center)
+
+
     }
 }

@@ -1,6 +1,7 @@
 import Mesh from "./Mesh.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import earcut from "earcut";
+import {NumericArray} from "@math.gl/types";
 
 export default class ExtrudeMesh extends Mesh {
     private uv_temp: Array<number> = [];
@@ -23,6 +24,10 @@ export default class ExtrudeMesh extends Mesh {
             edgeSum += (p2.x - p1.x) * (p2.y + p1.y)
 
         }
+        let p1 = points[points.length - 1]
+        let p2 = points[0]
+        edgeSum += (p2.x - p1.x) * (p2.y + p1.y)
+
         if (edgeSum < 0) points.reverse()
 
         let numPoints =points.length
@@ -40,15 +45,15 @@ export default class ExtrudeMesh extends Mesh {
             let pP =points[iP];
 
             N1.from(pN)
-            N1.subtract(p)
+            N1.subtract(p as NumericArray)
 
             N2.from(p)
-            N2.subtract(pP)
+            N2.subtract(pP as NumericArray)
 
             //N1.normalize()
             //N2.normalize()
 
-            N1.add(N2)
+            N1.add(N2 as NumericArray)
             let N =new Vector2(N1.y,-N1.x)
             N.normalize()
             normals.push(N)

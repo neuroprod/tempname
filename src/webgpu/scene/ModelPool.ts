@@ -1,14 +1,15 @@
 import Renderer from "../lib/Renderer.ts";
 import Model from "../lib/model/Model.ts";
-import ModelPreviewMaterial from "../modelMaker/ModelPreviewMaterial.ts";
+
 import ExtrudeMesh from "../lib/mesh/ExtrudeMesh.ts";
 import {Vector2, Vector3} from "@math.gl/core";
-import Object3D from "../lib/model/Object3D.ts";
+
 import SceneObject3D from "./SceneObject3D.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
-import {ModelNames} from "../data/ModelNames.ts";
+
 import Box from "../lib/mesh/geometry/Box.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
+import Path from "../lib/path/Path.ts";
 
 
 export default class ModelPool {
@@ -66,12 +67,10 @@ export default class ModelPool {
 
         let mesh   =new ExtrudeMesh(this.renderer,name);
 
-        let points :Array<Vector2>=[];
-        for(let i=0;i<meshData.points.length;i+=2){
-            points.push(new Vector2(meshData.points[i],meshData.points[i+1]));
-        }
+        let path =new Path()
+        path.deSerialize(meshData.path)
 
-        mesh.setExtrusion(points,0.01,new Vector3(meshData.center))
+        mesh.setExtrusion(path.getPoints(),0.01,new Vector3(meshData.center))
         model.mesh  =mesh;
 
         if(newName=="")newName =name;
