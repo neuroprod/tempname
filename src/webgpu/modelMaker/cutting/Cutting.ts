@@ -9,6 +9,13 @@ import ShapeLineModel from "./ShapeLineModel.ts";
 import ProjectMesh from "../ProjectMesh.ts";
 import Path from "../../lib/path/Path.ts";
 
+
+enum CurveType{
+    Line,
+    Bezier
+
+}
+
 export default class Cutting{
     private readonly renderer: Renderer;
     model3D: Model;
@@ -19,6 +26,10 @@ export default class Cutting{
     private currentMesh!: ProjectMesh|null;
     private setCenter: boolean =false;
    // shapeLineModelTest: ShapeLineModel;
+    private path: Path;
+
+    private curveType:CurveType =CurveType.Line;
+
     constructor(renderer:Renderer) {
 
 
@@ -47,7 +58,7 @@ export default class Cutting{
 
         this.shapeLineModelTest.setPath(path);*/
 
-
+        this.path =new Path()
 
     }
 
@@ -71,6 +82,8 @@ export default class Cutting{
                 this.setCenter =false;
                 this.updateLine()
             }else {
+console.log("down")
+
                 this.addVectorPoint(mouseLocal);
             }
         }
@@ -78,13 +91,33 @@ export default class Cutting{
 
     private addVectorPoint(point: Vector2) {
         if(this.currentMesh){
-            this.currentMesh.points.push(point.clone())
+            console.log("oke",this.path.started)
+            if(!this.path.started){
+                this.path.moveTo(point)
+
+            }
+            else {
+                if(this.curveType ==CurveType.Line){
+
+                    this.path.lineTo(point)
+                }
+                else if(this.curveType ==CurveType.Bezier){
+                    this.path.autoBezier(point);
+                }
+
+            }
+
             this.updateLine();
         }
     }
 
     private updateLine() {
 
+console.log()
+        this.shapeLineModel.setPath(this.path)
+        //this.shapeLineModel.setLine(this.)
+/*
+        this.currentMesh.
         if(this.currentMesh){
             this.currentMesh.updateCenter()
            this.shapeLineModel.setLine(this.currentMesh.points,this.currentMesh.center)
@@ -100,7 +133,7 @@ export default class Cutting{
             this.model3D.visible = false;
         }
 
-
+*/
 
 
     }
@@ -139,6 +172,14 @@ export default class Cutting{
             }
         }
         UI.separator("meshSep",false)
+        if(UI.LButton("Line"))
+        {
+            this.curveType =CurveType.Line
+        }
+        if(UI.LButton("Bezier"))
+        {
+            this.curveType =CurveType.Bezier
+        }
         if( this.currentMesh){
             if(this.currentMesh.points.length>0){
                 if(UI.LButton("Remove last point"))

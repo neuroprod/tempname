@@ -2,10 +2,10 @@ import {Vector3} from "@math.gl/core";
 import Curve from "./Curve.ts";
 
 export default class Bezier extends Curve{
-    private p1: Vector3;
-    private p2: Vector3;
-    private c1: Vector3;
-    private c2: Vector3;
+     p1: Vector3;
+     p2: Vector3;
+     c1: Vector3;
+   c2: Vector3;
     private temp=new Vector3()
     constructor(p1:Vector3,c1:Vector3,p2:Vector3,c2:Vector3) {
         super();
