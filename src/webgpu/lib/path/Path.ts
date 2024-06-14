@@ -188,8 +188,8 @@ export default class Path {
 
     removeLastCurve() {
         if(this.curves.length>1) {
-            let lc = this.curves.pop()
-            this.currentPoint = lc.getP1();
+            let lc = this.curves.pop();
+            if(lc) this.currentPoint = lc.getP1();
         }
     }
 }

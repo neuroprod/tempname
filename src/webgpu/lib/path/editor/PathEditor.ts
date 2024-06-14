@@ -9,7 +9,7 @@ import {Vector2, Vector3} from "@math.gl/core";
 export default class PathEditor{
     pointModel: Model;
     private renderer: Renderer;
-    private positionBuffer:GPUBuffer;
+    private positionBuffer!:GPUBuffer;
 
     constructor(renderer:Renderer) {
         this.renderer =renderer;
