@@ -71,6 +71,8 @@ export default class ModelMaker {
     private prevDragMouse: Vector2 =new Vector2();
     private currentDragMouse: Vector2 =new Vector2();
 
+    private camera3D: Camera;
+    private modelRenderer3D: ModelRenderer;
 
     constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
         this.renderer = renderer;
@@ -86,11 +88,11 @@ export default class ModelMaker {
         this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
 
-       // this.camera3D = new Camera(this.renderer);
-        //this.camera3D.cameraWorld.set(0, 0, 5)
-        //this.camera3D.cameraLookAt.set(0,0,0);
-        //this.camera3D.far = 10;
-        //this.camera3D.near = -1;
+       this.camera3D = new Camera(this.renderer);
+        this.camera3D.cameraWorld.set(0, 0, 5)
+        this.camera3D.cameraLookAt.set(0,0,0);
+        this.camera3D.far = 10;
+        this.camera3D.near = -1;
 
         this.drawing = new Drawing(renderer);
         this.cutting = new Cutting(renderer);
@@ -112,10 +114,13 @@ export default class ModelMaker {
         this.modelRoot.addChild(this.cutting.pathEditor.pointModel)
         this.modelRoot.setScaler(100)
         this.modelRenderer2D.addModel( this.textureModel )
-
-
         this.modelRenderer2D.addModel(this.cutting.shapeLineModel);
         this.modelRenderer2D.addModel(this.cutting.pathEditor.pointModel);
+
+
+        this.modelRenderer3D = new ModelRenderer(this.renderer, "3D", this.camera3D);
+        this.modelRenderer3D.addModel(this.cutting.model3D)
+
         this.setProjects(data);
         this.scaleToFit()
         setTimeout(this.scaleToFit.bind(this),10)
@@ -129,7 +134,14 @@ export default class ModelMaker {
     update() {
         //this.camera2D.setOrtho(10, 0, 10, 0)
         this.camera2D.setOrtho(this.renderer.width,0, this.renderer.height,0)
-this.cutting.update()
+        this.camera3D.ratio = this.renderer.ratio;
+        if(this.cutting.model3D){
+            this.cutting.model3D.setEuler(Math.sin(Timer.time/3)*0.2,Math.sin(Timer.time)*0.8,0)
+        }
+
+
+
+        this.cutting.update()
 
         this.handleMouse();
 
@@ -151,8 +163,8 @@ this.cutting.update()
     drawInCanvas(pass: CanvasRenderPass) {
 
 
-        this.modelRenderer2D.draw(pass);
-
+       this.modelRenderer2D.draw(pass);
+        this.modelRenderer3D.draw(pass);
 
     }
 

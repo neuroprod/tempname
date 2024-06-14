@@ -3,6 +3,7 @@ import Renderer from "../../lib/Renderer.ts";
 import ColorV from "../../lib/ColorV.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import {NumericArray} from "@math.gl/types";
+import {CompareFunction} from "../../lib/WebGPUConstants.ts";
 
 
 export default class DrawLine {
@@ -24,6 +25,8 @@ export default class DrawLine {
 
         this.uniformGroup.addUniform("color", color)
         this.uniformGroup.update();
+
+
     }
 
     makeSmooth() {

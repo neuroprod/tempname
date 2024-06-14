@@ -10,7 +10,7 @@ import Path from "../../lib/path/Path.ts";
 
 export default class ShapeLineModel extends Model{
 
-    private positions:Array<number>=[];
+    positions:Array<number>=[];
 
     private indices:Array<number>=[];
 

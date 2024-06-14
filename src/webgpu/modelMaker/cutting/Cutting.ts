@@ -27,8 +27,7 @@ export default class Cutting{
     private project!: Project;
     private currentMesh!: ProjectMesh|null;
     private setCenter: boolean =false;
-   // shapeLineModelTest: ShapeLineModel;
-    private path: Path;
+
 
     private curveType:CurveType =CurveType.Line;
     pathEditor: PathEditor;
@@ -41,7 +40,7 @@ export default class Cutting{
 
         this.renderer =renderer
         this.shapeLineModel = new ShapeLineModel(this.renderer,"lines1");
-       // this.shapeLineModelTest = new ShapeLineModel(this.renderer,"lines2");
+
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
 
@@ -53,18 +52,7 @@ export default class Cutting{
         this.pathEditor = new PathEditor(renderer)
 
 
-       /* let path = new Path()
-        path.moveTo([0,0])
-        path.lineTo([0,3])
 
-        path.moveTo([0,0])
-        path.bezierCurveTo([1,-1],[3,1],[4,0])
-        path.lineTo([4,3])
-        path.end()
-
-        this.shapeLineModelTest.setPath(path);*/
-
-        this.path =new Path()
 
     }
 
@@ -88,7 +76,7 @@ export default class Cutting{
                 this.setCenter =false;
                 this.updateLine()
             }else {
-console.log("down")
+
 
                 this.addVectorPoint(mouseLocal);
             }
@@ -97,54 +85,53 @@ console.log("down")
 
     private addVectorPoint(point: Vector2) {
         if(this.currentMesh){
-            console.log("oke",this.path.started)
-            if(!this.path.started){
-                this.path.moveTo(point)
+
+            if(!this.currentMesh.path.started){
+                this.currentMesh.path.moveTo(point)
 
             }
             else {
                 if(this.curveType ==CurveType.Line){
 
-                    this.path.lineTo(point)
+                    this.currentMesh.path.lineTo(point)
                 }
                 else if(this.curveType ==CurveType.Bezier){
-                    this.path.autoBezier(point);
+                    this.currentMesh.path.autoBezier(point);
                 }
 
             }
 
             this.updateLine();
-            this.pathEditor.setPath(this.path)
+
         }
     }
 
     private updateLine() {
 
-
-        this.shapeLineModel.setPath(this.path)
-        //this.shapeLineModel.setLine(this.)
-/*
-        this.currentMesh.
-        if(this.currentMesh){
-            this.currentMesh.updateCenter()
-           this.shapeLineModel.setLine(this.currentMesh.points,this.currentMesh.center)
-            if (this.currentMesh.points.length >= 3) {
-                this.model3D.visible = true;
-                this.mesh.setExtrusion(this.currentMesh.points, 0.03, new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0))
-            } else {
-                this.model3D.visible = false;
-            }
-        }else{
-
-            this.shapeLineModel.setLine([],new Vector2(0.5,0.5));
-            this.model3D.visible = false;
+        if(!this.currentMesh)return;
+        this.shapeLineModel.setPath(this.currentMesh.path)
+        if(this.currentMesh.path.numCurves>1) {
+            this.model3D.visible =true;
+            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModel.positions), 0.03, new Vector3())
         }
-
-*/
+        this.pathEditor.setPath(this.currentMesh.path)
 
 
     }
+    positionsToVec2(positions:Array<number>):Array<Vector2>{
 
+        let arr:Array<Vector2> =[]
+        for(let i=0;i<positions.length;i+=3){
+            let p =new Vector2(positions[i],positions[i+1])
+            arr.push(p);
+
+
+        }
+
+
+
+        return arr;
+    }
     onUI() {
         UI.pushLList("Meshes", 100);
 
@@ -188,14 +175,14 @@ console.log("down")
             this.curveType =CurveType.Bezier
         }
         if( this.currentMesh){
-            if(this.currentMesh.points.length>0){
+           /* if(this.currentMesh.points.length>0){
                 if(UI.LButton("Remove last point"))
                 {
                     this.currentMesh.points.pop()
                     this.updateLine();
                 }
 
-            }
+            }*/
             if(UI.LButton("Set Center"))
             {
                 this.setCenter =true;

@@ -1,6 +1,6 @@
 import Material from "../../lib/material/Material.ts";
 import {ShaderType} from "../../lib/material/ShaderTypes.ts";
-import {VertexStepMode} from "../../lib/WebGPUConstants.ts";
+import {CompareFunction, VertexStepMode} from "../../lib/WebGPUConstants.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import {Vector4} from "@math.gl/core";
 import Blend from "../../lib/material/Blend.ts";
@@ -18,6 +18,8 @@ export default class LineMaterial extends Material{
         uniforms.addUniform("color",new Vector4(0.5,0.5,0.5,1))
 
         this.blendModes=[Blend.preMultAlpha()]
+        this.depthCompare = CompareFunction.Always;
+        this.depthWrite =false;
     }
     getShader(): string {
         return /* wgsl */ `

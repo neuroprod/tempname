@@ -10,8 +10,8 @@ import EndPoint from "./EndPoint.ts";
 export default class Path {
 
     started: boolean = false;
-     currentPoint: Vector3 = new Vector3()
-   curves: Array<Curve> = [];
+    currentPoint: Vector3 = new Vector3()
+    curves: Array<Curve> = [];
 
     constructor() {
     }
@@ -72,7 +72,6 @@ export default class Path {
             positions.push(this.currentPoint.x, this.currentPoint.y, this.currentPoint.z);
         }
 
-        console.log(indices, positions)
     }
 
     autoBezier(p: Vector2 | Vector3 | NumericArray) {
@@ -85,22 +84,22 @@ export default class Path {
             let prevBezier = this.curves[l - 1] as Bezier;
             let newPoint = this.getNewPoint(p);
 
-            let dir1 =this.currentPoint.clone().subtract( prevBezier.p1 as NumericArray);
-            let dir2 =newPoint.clone().subtract(this.currentPoint as NumericArray);
-            let l1 =dir1.len()
-            let l2 =dir2.len()
+            let dir1 = this.currentPoint.clone().subtract(prevBezier.p1 as NumericArray);
+            let dir2 = newPoint.clone().subtract(this.currentPoint as NumericArray);
+            let l1 = dir1.len()
+            let l2 = dir2.len()
 
-            dir1.scale(1/l1)
-            dir2.scale(1/l2)
+            dir1.scale(1 / l1)
+            dir2.scale(1 / l2)
 
             dir1.add(dir2 as NumericArray);
             dir1.normalize()
 
             prevBezier.c2.from(dir1)
-            prevBezier.c2.scale(-l1/2)
+            prevBezier.c2.scale(-l1 / 2)
             prevBezier.c2.add(this.currentPoint as NumericArray);
 
-            dir1.scale(l2/2)
+            dir1.scale(l2 / 2)
             dir1.add(this.currentPoint as NumericArray)
 
 
@@ -108,18 +107,11 @@ export default class Path {
             dir2.subtract(newPoint as NumericArray);
             dir2.scale(0.5);
             dir2.add(newPoint as NumericArray)
-           // let c1n =new Vector3()
-           // let c2n =new Vector3()
-
-
-
-
 
 
             let bezier = new Bezier(this.currentPoint, dir1, newPoint, dir2);
             this.curves.push(bezier);
             this.currentPoint = newPoint;
-
 
 
         } else {
@@ -144,9 +136,39 @@ export default class Path {
     }
 
 
+    serialize() {
+        //TODO handel all cases
+        let data:any = [];
+        data.push(["m", this.curves[0].getP1()])
+        for(let c of this.curves){
+            if(c.type==1){
+                data.push(["l", (c as Line).p2])
+            }
+            if(c.type==2){
+                data.push(["b", (c as Bezier).c1, (c as Bezier).c2, (c as Bezier).p2])
+            }
+
+        }
+        data.push(["cp", this.currentPoint])
+        return data;
+    }
 
 
+    deSerialize(commands:Array<any>) {
+        for(let c of commands){
+            console.log(c)
+            let com  =c[0]
+            if(com=="m"){
+                this.moveTo(c[1]);
+            }else  if(com=="l"){
+                this.lineTo(c[1]);
+            }else  if(com=="b"){
+                this.bezierCurveTo(c[1],c[2],c[3]);
+            }else  if(com=="cp"){
+                this.currentPoint.fromArray(c[1]);
+            }
+        }
 
-
+    }
 }
 

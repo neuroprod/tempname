@@ -3,7 +3,7 @@ import Curve from "./Curve.ts";
 
 export default class Line extends Curve{
     private p1: Vector3;
-    private p2: Vector3;
+    public p2: Vector3;
 
     constructor(p1:Vector3,p2:Vector3) {
         super();

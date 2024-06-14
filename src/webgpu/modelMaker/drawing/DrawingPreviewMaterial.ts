@@ -3,7 +3,7 @@ import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import DefaultUniformGroups from "../../lib/material/DefaultUniformGroups.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
-import {CullMode} from "../../lib/WebGPUConstants.ts";
+import {CompareFunction, CullMode} from "../../lib/WebGPUConstants.ts";
 
 
 export default class DrawingPreviewMaterial extends Material{
@@ -27,7 +27,8 @@ export default class DrawingPreviewMaterial extends Material{
         uniforms.addSampler("mySampler")
 
         this.cullMode =CullMode.None;
-
+        this.depthCompare = CompareFunction.Always;
+        this.depthWrite =false;
         //this.logShader =true;
     }
     getShader(): string {
