@@ -62,7 +62,7 @@ export default class PathEditor {
 
     getHitPoint(mouseLocal: Vector3) {
 
-        let ps: Vector3;
+        let ps: Vector3 =new Vector3();
         let dist = Number.MAX_VALUE
         for (let p of this.points) {
             let ds = p.distanceSquared(mouseLocal as NumericArray)
