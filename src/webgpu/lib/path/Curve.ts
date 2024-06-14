@@ -8,7 +8,7 @@ export default class Curve{
     public setMeshData(indices: Array<Number>, positions: Array<Number>){
 
     }
-    override getP1():Vector3{return new Vector3()}
+     getP1():Vector3{return new Vector3()}
 
 
 }

@@ -156,7 +156,7 @@ export default class Path {
 
     deSerialize(commands:Array<any>) {
         for(let c of commands){
-        
+
             let com  =c[0]
             if(com=="m"){
                 this.moveTo(c[1]);
@@ -172,8 +172,8 @@ export default class Path {
     }
 
     getPoints() {
-        let indices=[]
-        let positions=[]
+        let indices:Array<number>=[]
+        let positions:Array<number>=[]
         this.setMeshData(indices, positions)
 
         let arr:Array<Vector2> =[]
@@ -187,8 +187,10 @@ export default class Path {
     }
 
     removeLastCurve() {
-        let lc =this.curves.pop()
-        this.currentPoint =lc.getP1();
+        if(this.curves.length>1) {
+            let lc = this.curves.pop()
+            this.currentPoint = lc.getP1();
+        }
     }
 }
 
