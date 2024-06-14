@@ -94,7 +94,7 @@ export default class ModelMaker {
         this.camera3D.near = -1;
 
         this.drawing = new Drawing(renderer);
-        this.cutting = new Cutting(renderer);
+        this.cutting = new Cutting(renderer,this.camera2D);
 
 
         this.textureModel =new Model(renderer,"textureModel");

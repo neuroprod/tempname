@@ -8,12 +8,15 @@ import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
 import ShapeLineModel from "./ShapeLineModel.ts";
 import ProjectMesh from "../ProjectMesh.ts";
 import PathEditor from "../../lib/path/editor/PathEditor.ts";
+import Camera from "../../lib/Camera.ts";
+import {NumericArray} from "@math.gl/types";
 
 
 enum CurveType {
     Line,
     Bezier,
     Center,
+    Edit,
 
 }
 
@@ -26,10 +29,15 @@ export default class Cutting {
     private project!: Project;
     private currentMesh!: ProjectMesh | null;
     private curveType: CurveType = CurveType.Line;
+    private camera: Camera;
+    private currentHitPoint: Vector3 | null;
+    private currentMousePoint: Vector2 =new Vector2();
+    private prevMousePoint: Vector2 =new Vector2();
+    private isDraggingPoint: boolean =false;
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: Renderer,camera:Camera) {
 
-
+        this.camera =camera
         this.renderer = renderer
         this.shapeLineModel = new ShapeLineModel(this.renderer, "lines1");
 
@@ -64,11 +72,32 @@ export default class Cutting {
             if (this.curveType == CurveType.Center) {
                 this.currentMesh.setCenter(mouseLocal);
                 this.updateLine()
-            } else {
+            }  if (this.curveType == CurveType.Edit) {
+
+               this.currentHitPoint =this.pathEditor.getHitPoint(new Vector3(mouseLocal.x,mouseLocal.y,0))
+                if(this.currentHitPoint){
+                   this.prevMousePoint.from(mouseLocal)
+                   this.isDraggingPoint =true;
+                }
+            }
+
+            else {
 
 
                 this.addVectorPoint(mouseLocal);
             }
+        }
+        else if(this.isDraggingPoint && this.currentHitPoint){
+            this.currentMousePoint.from(mouseLocal);
+            this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
+
+            if(this.currentMousePoint.lengthSquared()>0) {
+                this.currentHitPoint.add([this.currentMousePoint.x,this.currentMousePoint.y,0]);
+
+                this.prevMousePoint.from(mouseLocal);
+                this.updateLine()
+            }
+            if(isUpThisFrame)this.isDraggingPoint =false;
         }
     }
 
@@ -90,6 +119,7 @@ export default class Cutting {
 
 
         if (this.currentMesh) {
+
             if (UI.LButton("Line", "", this.curveType != CurveType.Line)) {
                 this.curveType = CurveType.Line
             }
@@ -100,6 +130,11 @@ export default class Cutting {
                 this.curveType = CurveType.Center;
             }
             if (this.currentMesh.path.numCurves > 0) {
+
+                if (UI.LButton("Edit", "", this.curveType != CurveType.Edit)) {
+                    this.curveType = CurveType.Edit;
+
+                }
 
                 if (UI.LButton("Remove Last Line")) {
 
@@ -181,6 +216,10 @@ export default class Cutting {
         }
         this.pathEditor.setPath(this.currentMesh.path, this.currentMesh.center)
 
+
+    }
+
+    private getClosestCurvePoint(mouseLocal: Vector2) {
 
     }
 }
