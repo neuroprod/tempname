@@ -156,7 +156,7 @@ export default class Path {
 
     deSerialize(commands:Array<any>) {
         for(let c of commands){
-            console.log(c)
+        
             let com  =c[0]
             if(com=="m"){
                 this.moveTo(c[1]);
