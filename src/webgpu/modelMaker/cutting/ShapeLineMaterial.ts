@@ -39,7 +39,7 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 @fragment
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
-    return vec4f(1.0,0.0,0.0,1.0);
+    return vec4f(0.0,0.5,1.0,1.0);
 }
 ///////////////////////////////////////////////////////////
         `

@@ -96,15 +96,16 @@ export default class GameRenderer{
     }
     //doPasses
     draw(){
+        this.shadowMapPass.add();
         this.gBufferPass.add();
 
-        this.preProcessDepth.add();
-        this.gtoaPass.add()
-        this.gtoaDenoisePass.add();
+      //  this.preProcessDepth.add();
+        ///this.gtoaPass.add()
+       /// this.gtoaDenoisePass.add();
 
-        this.shadowMapPass.add();
+
         this.shadowPass.add();
-        //this.shadowBlurPass.add();
+        this.shadowBlurPass.add();
 
         this.lightPass.add();
     }

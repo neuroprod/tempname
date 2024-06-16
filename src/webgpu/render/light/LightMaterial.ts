@@ -28,7 +28,7 @@ export default class LightMaterial extends Material {
         uniforms.addTexture("gColor",this.renderer.getTexture(Textures.GCOLOR), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("gNormal",this.renderer.getTexture(Textures.GNORMAL), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("gDepth",this.renderer.getTexture(Textures.GDEPTH), {sampleType:TextureSampleType.UnfilterableFloat})
-        uniforms.addTexture("shadow",this.renderer.getTexture(Textures.GTAO_DENOISE), {sampleType:TextureSampleType.UnfilterableFloat})
+        uniforms.addTexture("shadow",this.renderer.getTexture(Textures.SHADOW), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addSampler("mySampler");
 
 
@@ -146,12 +146,12 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        
        let albedo=pow(textureLoad(gColor,  uvPos ,0).xyz,vec3(2.2)); 
         let ao=textureLoad(aotexture,  uvPos ,0).x; 
-       let roughness = 0.7;
+       let roughness = 0.6;
        let metallic = 0.0;
        let N=normalize(textureLoad(gNormal,  uvPos ,0).xyz*2.0-1.0); 
        let V = normalize(camera.worldPosition.xyz - world);
        let F0 = mix(vec3(0.04), albedo, metallic);
-       var color =albedo*vec3(0.3,0.3,0.3)*ao;
+       var color =albedo*vec3(0.3,0.3,0.3);//*ao;
        
 
        
