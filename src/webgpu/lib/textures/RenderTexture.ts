@@ -18,7 +18,7 @@ export default class RenderTexture extends Texture {
 
     constructor(renderer: Renderer, label: string = "", options: Partial<BaseRenderTextureOptions>) {
         super(renderer, label, options);
-        this.options = { ...BaseRenderTextureOptionsDefault,...options} ;
+        this.options = { ...BaseRenderTextureOptionsDefault,...options} as TextureOptions;
 
         if((this.options as BaseRenderTextureOptions).scaleToCanvas){
             this.renderer.textureHandler.addScaleToCanvasTexture(this);

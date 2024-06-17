@@ -14,6 +14,9 @@ import JsonLoader from "./JsonLoader.ts";
 import GameRenderer from "./render/GameRenderer.ts";
 import AnimationEditor from "./scene/timeline/AnimationEditor.ts";
 import TextureLoader from "./lib/textures/TextureLoader.ts";
+import UI_IC from "./lib/UI/UI_IC.ts";
+import UI_I from "./lib/UI/UI_I.ts";
+import {ComponentSettings} from "./lib/UI/components/Component.ts";
 
 enum MainState {
 
@@ -53,7 +56,9 @@ export default class Main {
         }).catch((e) => {
             // console.warn("no WebGPU ->"+e);
         })
-
+        var s = '';
+        for (var i=32; i<=127;i++) s += String.fromCharCode(i);
+        console.log(s)
     }
 
     public preload() {
@@ -108,8 +113,15 @@ export default class Main {
 
     private onUI() {
 
-
-
+let s = new ComponentSettings()
+        s.hasBackground =true;
+s.backgroundColor.setHex("FF0000");
+s.box.size.set(100,100)
+        s.box.setMargin(10)
+        s.box.setPadding(0);
+UI_I.currentComponent = UI_I.panelLayer;
+        UI_IC.pushComponent("test",s)
+        UI_I.popComponent()
 
 
         UI.pushWindow("Main")
