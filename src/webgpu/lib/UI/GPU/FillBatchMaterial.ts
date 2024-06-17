@@ -121,7 +121,7 @@ fn mainFragment(
         if (needsDepth) {
             desc.depthStencil = {
                 depthWriteEnabled: false,
-                depthCompare: "less",
+                depthCompare: "always",
 
                 format: "depth16unorm",
             };

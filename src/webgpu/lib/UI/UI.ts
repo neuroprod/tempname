@@ -11,7 +11,7 @@ import UITexture from "./draw/UITexture";
 import LTexture, {LTextureSettings} from "./components/LTexture";
 import LTextInput, {LTextInputSettings} from "./components/LTextInput";
 import Local from "./local/Local";
-import Viewport, {ViewportSettings} from "./components/Viewport";
+
 import WindowComp, {WindowSettings} from "./components/WindowComp";
 import SelectItem from "./math/SelectItem";
 import {LSelectSettings} from "./components/LSelect";
@@ -31,7 +31,7 @@ import Tree, {TreeSettings} from "./components/Tree.ts";
 
 
 export default class UI {
-    private static viewPort: Viewport | null;
+
     public static initialized: boolean = false;
 
     static set floatPrecision(val: number) {
@@ -39,21 +39,7 @@ export default class UI {
         UI_Vars.floatPrecision = val;
     }
 
-    static setWebgl(
-        gl: WebGL2RenderingContext | WebGLRenderingContext,
-        canvas: HTMLCanvasElement,
-        settings?: any
-    ) {
-        if (UI.initialized) {
-            console.warn("UI already initialized, ");
-            UI_I.crashed = true;
-            return;
-        }
-
-        UI_I.setWebgl(gl, canvas, settings);
-        UI.initialized = true;
-    }
-
+  
     static setWebGPU(
         renderer: Renderer, settings?: any
     ) {
@@ -94,51 +80,9 @@ export default class UI {
         UI_I.popComponent();
     }
 
-    static pushViewport(
-        label: string,
-        view: UI_VEC4,
-        settings?: ViewportSettings
-    ): UI_VEC4 {
-        if (!this.initialized) return view;
 
-        UI_I.currentComponent = UI_I.panelLayer;
-        if (!UI_I.setComponent(label)) {
-            if (!settings) settings = new ViewportSettings();
-            let comp = new Viewport(UI_I.getID(label), label, settings);
-            UI_I.addComponent(comp);
-        }
 
-        let vp = UI_I.currentComponent as Viewport;
-        UI_I.popComponent();
 
-        if (vp.collapsed) {
-            UI.viewPort = null;
-            return view;
-        }
-        if (vp.isDocked) {
-            UI.viewPort = null;
-
-            view.x = vp.layoutRect.pos.x * UI_I.pixelRatio;
-            view.y =
-                (UI_I.screenSize.y - vp.layoutRect.pos.y - vp.layoutRect.size.y) *
-                UI_I.pixelRatio;
-            view.z = vp.layoutRect.size.x * UI_I.pixelRatio;
-            view.w = vp.layoutRect.size.y * UI_I.pixelRatio;
-            return view;
-        }
-        UI.viewPort = vp;
-
-        vp.startRender();
-        view.z = vp.renderSize.x;
-        view.w = vp.renderSize.y;
-        return view;
-    }
-
-    static popViewport() {
-        //  if(!UI.initialized) return false
-        if (!UI.viewPort) return;
-        UI.viewPort.stopRender();
-    }
 
     static pushGroup(label: string, settings?: GroupSettings) {
         if (!UI.initialized) return;

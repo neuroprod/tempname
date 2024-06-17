@@ -2,12 +2,17 @@ import FillBatch from "./FillBatch";
 import Rect from "../math/Rect";
 import TextBatch from "./TextBatch";
 import TextureBatch from "./TextureBatch";
+import SDFBatch from "./SDFBatch.ts";
 
 export default class DrawBatch {
     public isDirty: boolean = false;
+
     public fillBatch = new FillBatch();
     public textBatch = new TextBatch();
     public textureBatch = new TextureBatch();
+    public sdfBatch = new SDFBatch();
+
+
     public parent: DrawBatch | null = null;
     public children: Array<DrawBatch> = [];
     public id: number;

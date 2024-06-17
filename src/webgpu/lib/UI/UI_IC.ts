@@ -38,8 +38,7 @@ import LText, {LTextSettings} from "./components/LText";
 import LNumber, {LNumberSettings} from "./components/LNumber";
 import Separator, {SeparatorSettings} from "./components/Separator";
 import Component, {ComponentSettings} from "./components/Component";
-import Viewport from "./components/Viewport";
-import ViewportPopUp, {ViewportPopUpSettings,} from "./components/internal/popUps/ViewportPopUp";
+
 import LVector from "./components/LVector";
 import DragPopUp, {DragPopUpSettings,} from "./components/internal/popUps/DragPopUp";
 
@@ -459,24 +458,7 @@ export default class UI_IC {
     }
 
     // Popups
-    static viewportPopUp(
-        comp: Viewport,
-        pos: Vec2,
-        settings: ViewportPopUpSettings = new ViewportPopUpSettings()
-    ) {
-        let old = UI_I.currentComponent;
 
-        UI_I.currentComponent = UI_I.popupLayer;
-        let compPopup = new ViewportPopUp(
-            UI_I.getID(comp.id + ""),
-            comp,
-            pos,
-            settings
-        );
-        UI_I.addComponent(compPopup);
-
-        UI_I.currentComponent = old;
-    }
 
     static sliderPopUp(
         comp: LSlider,

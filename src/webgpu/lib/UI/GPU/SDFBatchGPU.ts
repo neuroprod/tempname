@@ -1,6 +1,7 @@
-import FillBatch from "../draw/FillBatch";
 
-export default class FillBatchGPU {
+import SDFBatch from "../draw/SDFBatch.ts";
+
+export default class SDFBatchGPU {
     public vertexBuffer!: GPUBuffer;
     public indexBuffer!: GPUBuffer;
     numIndices: number = 0;
@@ -9,9 +10,6 @@ export default class FillBatchGPU {
 
     constructor(device: GPUDevice) {
         this.device = device;
-
-        // this.vertexBuffer = gl.createBuffer();
-        // this.indexBuffer = gl.createBuffer();
     }
 
     destroy() {
@@ -20,13 +18,13 @@ export default class FillBatchGPU {
         this.numIndices = 0;
     }
 
-    setRenderData(fillBatch: FillBatch) {
-        if (fillBatch.indices.length == 0) {
+    setRenderData(textBatch: SDFBatch) {
+        if (textBatch.indices.length == 0) {
             if (this.numIndices > 0) this.destroy();
             return;
         }
 
-        this.numIndices = fillBatch.indices.length;
+        this.numIndices = textBatch.indices.length;
 
         // console.log(fillBatch.indices.length)
         // console.log(fillBatch.vertices.length)
@@ -34,12 +32,12 @@ export default class FillBatchGPU {
         // https://toji.dev/webgpu-best-practices/buffer-uploads.html
         ////vertices
 
-        let vertices = new Float32Array(fillBatch.vertices);
-        this.numVertices = fillBatch.vertices.length;
+        let vertices = new Float32Array(textBatch.vertices);
+        this.numVertices = textBatch.vertices.length;
 
         if (this.vertexBuffer) this.vertexBuffer.destroy();
         this.vertexBuffer = this.device.createBuffer({
-            label: "UI_fill_vertexBuffer",
+            label: "UI_textsdf_vertexBuffer",
             size: vertices.byteLength,
             usage: GPUBufferUsage.VERTEX,
             mappedAtCreation: true,
@@ -50,7 +48,7 @@ export default class FillBatchGPU {
         this.vertexBuffer.unmap();
 
         ////indices
-        let indices = new Uint16Array(fillBatch.indices);
+        let indices = new Uint16Array(textBatch.indices);
 
         let size = Math.ceil(indices.byteLength / 4) * 4;
         if (this.indexBuffer) this.indexBuffer.destroy();
@@ -64,6 +62,6 @@ export default class FillBatchGPU {
         dstI.set(indices);
 
         this.indexBuffer.unmap();
-        this.indexBuffer.label = "UI_fill_indexBuffer";
+        this.indexBuffer.label = "UI_text_indexBuffer";
     }
 }

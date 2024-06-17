@@ -6,6 +6,8 @@ import FillBatchMaterial from "./FillBatchMaterial";
 
 import FontTextureData from "../draw/FontTextureData";
 import TextBatchMaterial from "./TextBatchMaterial";
+import SDFBatchMaterial from "./SDFBatchMaterial.ts";
+import SDFFontTexture from "./SDFFontTexture.ts";
 
 export default class RendererGPU {
 
@@ -18,6 +20,7 @@ export default class RendererGPU {
     >();
     private fillBatchMaterial!: FillBatchMaterial;
     private textBatchMaterial!: TextBatchMaterial;
+    private sdfBatchMaterial!: SDFBatchMaterial;
     private mvpBuffer!: GPUBuffer;
     private mvpBufferData!: Float32Array;
     private mvpBindGroupLayout!: GPUBindGroupLayout;
@@ -29,6 +32,9 @@ export default class RendererGPU {
     private width: number = 0;
     private height: number = 0;
     private mvp = new Float32Array(16);
+    private sdfFontTexture: SDFFontTexture;
+    private sdfFontBindGroup: GPUBindGroup;
+    private sdfFontBindGroupLayout: GPUBindGroupLayout;
 
     constructor() {
     }
@@ -71,6 +77,10 @@ export default class RendererGPU {
             ],
         });
 
+
+
+
+
         this.fontTexture = this.device.createTexture({
             label: "UI_fontTexture",
             size: [FontTextureData.width, FontTextureData.height, 1],
@@ -78,6 +88,7 @@ export default class RendererGPU {
             sampleCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST,
         });
+
         this.device.queue.writeTexture(
             {texture: this.fontTexture},
             FontTextureData.getData(),
@@ -105,6 +116,27 @@ export default class RendererGPU {
             ],
         });
 
+        this.sdfFontTexture  =new SDFFontTexture(device)
+        this.sdfFontBindGroupLayout = this.device.createBindGroupLayout({
+            label: "UI_font_BindGroupLayout",
+            entries: [
+                {
+                    binding: 0,
+                    visibility: GPUShaderStage.FRAGMENT,
+                    texture: {sampleType: "float"},
+                },
+            ],
+        });
+        this.sdfFontBindGroup = device.createBindGroup({
+            layout:  this.sdfFontBindGroupLayout,
+            entries: [
+                {
+                    binding: 0,
+                    resource: this.sdfFontTexture.texture.createView(),
+                },
+            ],
+        });
+
         this.fillBatchMaterial = new FillBatchMaterial(
             device,
             presentationFormat,
@@ -116,9 +148,12 @@ export default class RendererGPU {
             this.mvpBindGroupLayout,
             this.fontBindGroupLayout
         );
-        /*this.fillRenderer = new FillRenderer(gl);
-            this.textRenderer = new TextRenderer(gl);
-            this.textureRenderer = new TextureRenderer(gl);*/
+        this.sdfBatchMaterial = new SDFBatchMaterial(
+            device,
+            presentationFormat,
+            this.mvpBindGroupLayout,
+            this.sdfFontBindGroupLayout
+        );
     }
 
     delete(id: number) {
@@ -175,6 +210,7 @@ export default class RendererGPU {
 
         this.fillBatchMaterial.makePipeline(needsDepth);
         this.textBatchMaterial.makePipeline(needsDepth);
+        this.sdfBatchMaterial.makePipeline(needsDepth)
         let vpSize = UI_I.screenSize;
 
         //this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
@@ -208,6 +244,14 @@ export default class RendererGPU {
                 passEncoder.setVertexBuffer(0, batch.textBatchGPU.vertexBuffer);
                 passEncoder.setIndexBuffer(batch.textBatchGPU.indexBuffer, "uint16");
                 passEncoder.drawIndexed(batch.textBatchGPU.numIndices, 1, 0, 0);
+            }
+            if (batch.sdfBatchGPU.numIndices > 0) {
+                passEncoder.setPipeline(this.sdfBatchMaterial.pipeLine);
+                passEncoder.setBindGroup(0, this.mvpBindGroup);
+                passEncoder.setBindGroup(1, this.sdfFontBindGroup);
+                passEncoder.setVertexBuffer(0, batch.sdfBatchGPU.vertexBuffer);
+                passEncoder.setIndexBuffer(batch.sdfBatchGPU.indexBuffer, "uint16");
+                passEncoder.drawIndexed(batch.sdfBatchGPU.numIndices, 1, 0, 0);
             }
         }
     }

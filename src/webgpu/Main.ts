@@ -16,7 +16,10 @@ import AnimationEditor from "./scene/timeline/AnimationEditor.ts";
 import TextureLoader from "./lib/textures/TextureLoader.ts";
 import UI_IC from "./lib/UI/UI_IC.ts";
 import UI_I from "./lib/UI/UI_I.ts";
-import {ComponentSettings} from "./lib/UI/components/Component.ts";
+import Component, {ComponentSettings} from "./lib/UI/components/Component.ts";
+import TestUI from "./UI/TestUI.ts";
+import SDFFont from "./lib/UI/draw/SDFFont.ts";
+
 
 enum MainState {
 
@@ -54,15 +57,21 @@ export default class Main {
         this.renderer.setup(this.canvas).then(() => {
             this.preload()
         }).catch((e) => {
-            // console.warn("no WebGPU ->"+e);
+        console.warn("no WebGPU ->"+e);
         })
         var s = '';
         for (var i=32; i<=127;i++) s += String.fromCharCode(i);
         console.log(s)
+let f =new SDFFont()
+
+
     }
 
     public preload() {
         UI.setWebGPU(this.renderer)
+
+       // let font =new SDFFont();
+
         //setup canvas
         this.canvasRenderPass = new CanvasRenderPass(this.renderer)
         this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
@@ -71,13 +80,14 @@ export default class Main {
         }, this.init.bind(this));
         this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         this.sceneLoader =new JsonLoader("scene1",this.preloader)
-
+        console.log("go")
 
     }
 
 
 
     private init() {
+        console.log("go")
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
@@ -113,14 +123,19 @@ export default class Main {
 
     private onUI() {
 
-let s = new ComponentSettings()
+     let s = new ComponentSettings()
         s.hasBackground =true;
-s.backgroundColor.setHex("FF0000");
-s.box.size.set(100,100)
+        s.backgroundColor.setHex('#0059ff',1);
+        s.box.size.set(100,100)
         s.box.setMargin(10)
         s.box.setPadding(0);
-UI_I.currentComponent = UI_I.panelLayer;
-        UI_IC.pushComponent("test",s)
+        UI_I.currentComponent = UI_I.panelLayer;
+        if (!UI_I.setComponent("kaka")) {
+
+            let comp = new TestUI(UI_I.getID("kaka"), s);
+            UI_I.addComponent(comp);
+        }
+
         UI_I.popComponent()
 
 

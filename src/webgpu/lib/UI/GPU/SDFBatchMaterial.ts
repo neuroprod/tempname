@@ -1,4 +1,4 @@
-export default class TextBatchMaterial {
+export default class SDFBatchMaterial {
     private device: GPUDevice;
     private shader: GPUShaderModule;
     public pipeLine!: GPURenderPipeline;
@@ -135,10 +135,10 @@ fn mainFragment(
      @location(1) color: vec4f,
 ) -> @location(0) vec4f
 {
-    //var a :f32= textureSample(fontTexture, fontSampler, uv).x;
-   var a= textureLoad(fontTexture,   vec2<i32>(floor(uv*128)),0).x;
-   // a=pow(a,100.2);
-    let c:vec4f  = vec4f(color.xyz*a,a)*color.w;
+
+   var text= textureLoad(fontTexture,   vec2<i32>(floor(uv*512)),0);
+let dist = max(min(text.r, text.g), min(max(text.r, text.g), text.b));
+    let c:vec4f  =vec4f(dist,dist,dist,1.0);
      return c;
 }
 ///////////////////////////////////////////////////////////

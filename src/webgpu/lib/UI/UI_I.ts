@@ -1,4 +1,4 @@
-import RendererGL from "./GL/RendererGL";
+
 import Layer from "./components/Layer";
 import Component, {ComponentSettings} from "./components/Component";
 import Panel from "./components/Panel";
@@ -45,7 +45,7 @@ export default class UI_I {
     static eventLayer: EventCenter;
     static crashed: boolean = false;
     static rendererGPU: RendererGPU;
-    static rendererGL: RendererGL;
+
     private static mainDrawBatch: DrawBatch;
     static mouseOverComponent: Component | null = null;
     private static mouseDownComponent: Component | null = null;
@@ -196,9 +196,7 @@ export default class UI_I {
                 batch.parent = null;
             }
             this.drawBatches.delete(comp.id);
-            if (UI_I.renderType == "gl") {
-                this.rendererGL.delete(comp.id);
-            }
+
             if (UI_I.renderType == "gpu") {
                 this.rendererGPU.delete(comp.id);
             }
@@ -383,18 +381,7 @@ export default class UI_I {
     }
 
     //impl
-    public static setWebgl(
-        gl: WebGL2RenderingContext | WebGLRenderingContext,
-        canvas: HTMLCanvasElement,
-        settings?: any
-    ) {
-        UI_I.renderType = "gl";
-        UI_I.rendererGL = new RendererGL();
-        UI_I.rendererGL.init(gl, canvas);
 
-        if (settings) Local.setSettings(settings);
-        UI_I.init(canvas);
-    }
 
     static setWebGPU(
         renderer: Renderer,
@@ -414,9 +401,7 @@ export default class UI_I {
     //draw
     public static draw() {
         this.update();
-        if (UI_I.renderType == "gl") {
-            UI_I.rendererGL.draw();
-        }
+
     }
 
     public static update() {
@@ -467,11 +452,9 @@ export default class UI_I {
             //collect drawBatches
             let drawBatches: Array<DrawBatch> = [];
             this.mainDrawBatch.collectBatches(drawBatches);
-            if (UI_I.rendererGL) {
-                UI_I.rendererGL.setDrawBatches(drawBatches);
-            } else if (UI_I.rendererGPU) {
+
                 UI_I.rendererGPU.setDrawBatches(drawBatches);
-            }
+
             this.mainComp.isDirty = false;
         }
 
