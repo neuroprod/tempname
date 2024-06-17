@@ -1,7 +1,7 @@
 import FillBatch from "./FillBatch";
 import Rect from "../math/Rect";
 import TextBatch from "./TextBatch";
-import TextureBatch from "./TextureBatch";
+
 import SDFBatch from "./SDFBatch.ts";
 
 export default class DrawBatch {
@@ -9,7 +9,7 @@ export default class DrawBatch {
 
     public fillBatch = new FillBatch();
     public textBatch = new TextBatch();
-    public textureBatch = new TextureBatch();
+
     public sdfBatch = new SDFBatch();
 
 
@@ -40,7 +40,7 @@ export default class DrawBatch {
         }
         drawBatch.fillBatch.clear();
         drawBatch.textBatch.clear();
-        drawBatch.textureBatch.clear();
+        drawBatch.sdfBatch.clear();
         drawBatch.parent = null;
     }
 
@@ -57,7 +57,7 @@ export default class DrawBatch {
         if (this.isDirty) {
             this.fillBatch.clear();
             this.textBatch.clear();
-            this.textureBatch.clear();
+            this.sdfBatch.clear()
         }
     }
 

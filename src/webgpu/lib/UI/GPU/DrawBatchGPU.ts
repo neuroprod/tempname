@@ -35,7 +35,7 @@ export default class DrawBatchGPU {
             this.textBatchGPU.setRenderData(batch.textBatch);
         }
         if (batch.sdfBatch) {
-            if (!this.sdfBatchGPU) this.sdfBatchGPU = new TextBatchGPU(this.device);
+            if (!this.sdfBatchGPU) this.sdfBatchGPU = new SDFBatchGPU(this.device);
             this.sdfBatchGPU.setRenderData(batch.sdfBatch);
         }
         /* if(batch.textureBatch)

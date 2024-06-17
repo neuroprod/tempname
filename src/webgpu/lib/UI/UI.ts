@@ -7,8 +7,7 @@ import {LTextSettings} from "./components/LText";
 import LColor, {LColorSettings} from "./components/LColor";
 import LBoolean, {LBooleanSettings} from "./components/LBoolean";
 import Group, {GroupSettings} from "./components/Group";
-import UITexture from "./draw/UITexture";
-import LTexture, {LTextureSettings} from "./components/LTexture";
+
 import LTextInput, {LTextInputSettings} from "./components/LTextInput";
 import Local from "./local/Local";
 
@@ -39,7 +38,7 @@ export default class UI {
         UI_Vars.floatPrecision = val;
     }
 
-  
+
     static setWebGPU(
         renderer: Renderer, settings?: any
     ) {
@@ -252,19 +251,7 @@ export default class UI {
         UI_IC.separator(id, idAsLabel, settings);
     }
 
-    static LTexture(
-        label: string,
-        texture: UITexture,
-        settings?: LTextureSettings
-    ) {
-        if (!UI.initialized) return;
-        if (!UI_I.setComponent(label)) {
-            if (!settings) settings = new LTextureSettings();
-            let comp = new LTexture(UI_I.getID(label), label, texture, settings);
-            UI_I.addComponent(comp);
-        }
-        UI_I.popComponent();
-    }
+
 
     static LTextInput(
         label: string,

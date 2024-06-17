@@ -13,7 +13,7 @@ import Color from "./math/Color";
 import ColorPicker, {ColorPickerSettings,} from "./components/internal/ColorPicker";
 import CheckBox, {CheckBoxSettings} from "./components/internal/CheckBox";
 import GroupTitle, {GroupTitleSettings,} from "./components/internal/GroupTitle";
-import Texture, {TextureSettings} from "./components/internal/Texture";
+
 import InputBase, {InputBaseSettings} from "./components/internal/InputBase";
 import ToggleIcon, {ToggleIconSettings,} from "./components/internal/ToggleIcon";
 import SelectPopUp, {SelectPopUpSettings,} from "./components/internal/popUps/SelectPopUp";
