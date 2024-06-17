@@ -1,4 +1,5 @@
-import TextBatch from "../draw/TextBatch";
+
+import SDFBatch from "../draw/SDFBatch.ts";
 
 export default class TextBatchGPU {
     public vertexBuffer!: GPUBuffer;
@@ -17,7 +18,7 @@ export default class TextBatchGPU {
         this.numIndices = 0;
     }
 
-    setRenderData(textBatch: TextBatch) {
+    setRenderData(textBatch: SDFBatch) {
         if (textBatch.indices.length == 0) {
             if (this.numIndices > 0) this.destroy();
             return;

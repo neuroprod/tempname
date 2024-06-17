@@ -8,7 +8,7 @@ export default class SDFBatch {
     public indices: Array<number> = [];
     public vertices: Array<number> = [];
     private indicesPos: number = 0;
-    private startPos: Vec2;
+    private startPos!: Vec2;
 
     constructor() {
     }

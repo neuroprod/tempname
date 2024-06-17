@@ -332,7 +332,10 @@ export default class UI_I {
             return;
         }
         while (comp.parent && !(comp instanceof Panel)) {
-            comp = comp.parent;
+
+            if (comp.parent) {
+                comp = comp.parent;
+            }
         }
 
         if (!comp.parent) {

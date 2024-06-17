@@ -32,9 +32,9 @@ export default class RendererGPU {
     private width: number = 0;
     private height: number = 0;
     private mvp = new Float32Array(16);
-    private sdfFontTexture: SDFFontTexture;
-    private sdfFontBindGroup: GPUBindGroup;
-    private sdfFontBindGroupLayout: GPUBindGroupLayout;
+    private sdfFontTexture!: SDFFontTexture;
+    private sdfFontBindGroup!: GPUBindGroup;
+    private sdfFontBindGroupLayout!: GPUBindGroupLayout;
 
     constructor() {
     }
