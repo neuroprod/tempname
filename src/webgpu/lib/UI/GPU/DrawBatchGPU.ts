@@ -2,13 +2,14 @@ import Rect from "../math/Rect";
 import DrawBatch from "../draw/DrawBatch";
 import FillBatchGPU from "./FillBatchGPU";
 import TextBatchGPU from "./TextBatchGPU";
+import SDFBatchGPU from "./SDFBatchGPU.ts";
 
 export default class DrawBatchGPU {
     public id: number;
 
     public fillBatchGPU!: FillBatchGPU;
     public textBatchGPU!: TextBatchGPU;
-    public sdfBatchGPU!: TextBatchGPU;
+    public sdfBatchGPU!: SDFBatchGPU;
     public clipRect!: Rect | null;
     public needsClipping: boolean = false;
     public useThisUpdate: boolean = true;

@@ -13,7 +13,6 @@ import Color from "./math/Color";
 import ColorPicker, {ColorPickerSettings,} from "./components/internal/ColorPicker";
 import CheckBox, {CheckBoxSettings} from "./components/internal/CheckBox";
 import GroupTitle, {GroupTitleSettings,} from "./components/internal/GroupTitle";
-import UITexture from "./draw/UITexture";
 import Texture, {TextureSettings} from "./components/internal/Texture";
 import InputBase, {InputBaseSettings} from "./components/internal/InputBase";
 import ToggleIcon, {ToggleIconSettings,} from "./components/internal/ToggleIcon";
@@ -288,14 +287,7 @@ export default class UI_IC {
         return comp.getReturnValue();
     }
 
-    static texture(name: string, texture: UITexture, settings?: TextureSettings) {
-        if (!UI_I.setComponent(name)) {
-            if (!settings) settings = new TextureSettings();
-            let comp = new Texture(UI_I.getID(name), texture, settings);
-            UI_I.addComponent(comp);
-        }
-        UI_I.popComponent();
-    }
+
 
     static selectButton(buttonText: string, settings?: SelectButtonSettings) {
         if (!UI_I.setComponent(buttonText)) {

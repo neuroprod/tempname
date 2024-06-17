@@ -1,4 +1,4 @@
-import FontTextureData from "./lib/UI/draw/FontTextureData.ts";
+
 
 export default class SDFFontTexture {
     private device: GPUDevice;
