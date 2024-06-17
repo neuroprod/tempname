@@ -10,8 +10,10 @@ export default class TestUI extends Component{
     prepDraw() {
         super.prepDraw();
 //test
-        UI_I.currentDrawBatch.textBatch.addLine(new Vec2(10,10),"hello",100,new Color(1,1,1))
-       UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(10,30),"Hello is this ok?",100,new Color(1,1,1))
+      UI_I.currentDrawBatch.textBatch.addLine(new Vec2(10,10),"Hello is this ok?",200,new Color(1,1,1))
+       UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(10,30),"Hello is this ok?",8,new Color(1,1,1))
+        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(10,40),"Hello is this ok?",10,new Color(1,1,1))
+        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(10,50),"Hello is this ok?",40,new Color(0,1,1))
     }
 
 

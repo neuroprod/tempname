@@ -142,7 +142,7 @@ export default class UniformGroup extends ObjectGPU {
 
     addTexture(name: string, value: Texture, options: Partial< TextureUniformOptions> ={}) {
 
-        let opt = { ...TextureUniformOptionsDefault,...options} ;
+        let opt:TextureUniformOptions = { ...TextureUniformOptionsDefault,...options} ;
         this.textureUniforms.push({
             name: name,
             sampleType: opt.sampleType,

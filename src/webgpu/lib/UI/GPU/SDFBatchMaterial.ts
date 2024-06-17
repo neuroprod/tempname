@@ -113,6 +113,7 @@ struct VertexOutput{
 @group(0) @binding(0) var<uniform> mvp :  mat4x4 <f32>;
 
 @group(1) @binding(0) var fontTexture: texture_2d<f32>;
+@group(1) @binding(1) var mySampler: sampler;
 @vertex
 fn mainVertex( 
     @location(0) position : vec2f,
@@ -136,9 +137,18 @@ fn mainFragment(
 ) -> @location(0) vec4f
 {
 
-   var text= textureLoad(fontTexture,   vec2<i32>(floor(uv*512)),0);
-let dist = max(min(text.r, text.g), min(max(text.r, text.g), text.b));
-    let c:vec4f  =vec4f(dist,dist,dist,1.0);
+   var text= textureSample(fontTexture, mySampler,  uv);//textureLoad(fontTexture,  mySampler,0);
+    let dist = max(min(text.r, text.g), min(max(text.r, text.g), text.b));
+
+
+let unitRange = vec2(4.0)/vec2(512.0);
+let screenTexSize = vec2(1.0)/fwidth(uv);
+let screenPxDistance = max(0.5*dot(unitRange, screenTexSize), 1.0);
+
+let a = clamp(screenPxDistance *(dist - 0.5) + 0.5, 0., 1.);
+
+
+    let c  =color *a;
      return c;
 }
 ///////////////////////////////////////////////////////////

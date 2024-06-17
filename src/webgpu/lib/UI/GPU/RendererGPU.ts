@@ -8,6 +8,7 @@ import FontTextureData from "../draw/FontTextureData";
 import TextBatchMaterial from "./TextBatchMaterial";
 import SDFBatchMaterial from "./SDFBatchMaterial.ts";
 import SDFFontTexture from "./SDFFontTexture.ts";
+import {FilterMode, SamplerBindingType} from "../../WebGPUConstants.ts";
 
 export default class RendererGPU {
 
@@ -115,9 +116,12 @@ export default class RendererGPU {
                 },
             ],
         });
-
-        this.sdfFontTexture  =new SDFFontTexture(device)
-        this.sdfFontBindGroupLayout = this.device.createBindGroupLayout({
+        let sampler: GPUSampler =device.createSampler({
+            magFilter: FilterMode.Linear,
+            minFilter: FilterMode.Linear,
+            mipmapFilter: FilterMode.Linear});
+            this.sdfFontTexture  =new SDFFontTexture(device)
+            this.sdfFontBindGroupLayout = this.device.createBindGroupLayout({
             label: "UI_font_BindGroupLayout",
             entries: [
                 {
@@ -125,14 +129,26 @@ export default class RendererGPU {
                     visibility: GPUShaderStage.FRAGMENT,
                     texture: {sampleType: "float"},
                 },
+                {
+                    binding: 1,
+                    visibility: GPUShaderStage.FRAGMENT,
+                    sampler: {type: SamplerBindingType.Filtering},
+                },
             ],
         });
+
+
+
         this.sdfFontBindGroup = device.createBindGroup({
             layout:  this.sdfFontBindGroupLayout,
             entries: [
                 {
                     binding: 0,
                     resource: this.sdfFontTexture.texture.createView(),
+                },
+                {
+                    binding: 1,
+                    resource: sampler,
                 },
             ],
         });
