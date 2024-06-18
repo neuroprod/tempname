@@ -26,7 +26,7 @@ export default class UI_I {
     static screenSize: Vec2 = new Vec2();
     static canvasSize: Vec2 = new Vec2();
 
-    static pixelRatio: number;
+    static pixelRatio: number =1;
 
     static renderType: string;
     static numDrawCalls: number = 0;
@@ -52,21 +52,24 @@ export default class UI_I {
     private static canvas: HTMLCanvasElement;
     private static keyboardListener: KeyboardListener;
     private static oldDrawBatchIDs: number[] = [];
+    static pixelSize =new Vec2();
 
     constructor() {
     }
 
     static setSize(width:number, height:number) {
-        this.screenSize.set(width, height);
+
+        this.pixelSize.set(width/ this.pixelRatio , height/ this.pixelRatio );
+        this.screenSize.set(width , height );
         this.canvasSize.set(width, height)
 
-
+        console.log(this.pixelRatio,this.pixelSize)
     }
 
     static init(canvas:HTMLCanvasElement) {
 
         this.pixelRatio = window.devicePixelRatio;
-
+        UI_I.setSize(canvas.width,canvas.height)
         this.globalStyle = new UI_Style();
 
         // this.setSize(canvas.offsetWidth, this.canvas.offsetHeight);

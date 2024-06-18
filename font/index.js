@@ -24,7 +24,7 @@ function makeSVGFont(){
         fontName: 'icons', // font name
         css: false, // Create CSS files.
         useNameAsUnicode: true,
-        fontHeight: 10,
+        fontHeight: 42,
     }).then(() => {
         go()
     });

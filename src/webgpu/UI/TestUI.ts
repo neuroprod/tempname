@@ -12,12 +12,12 @@ export default class TestUI extends Component{
 //test
         let text ='Aa!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
       UI_I.currentDrawBatch.textBatch.addLine(new Vec2(0,0),text,200,new Color(1,1,1))
-      UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(0,100),text,16,new Color(0,0,0))
+      UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(0,100-16),text,16,new Color(0,0,0))
         UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(0,200),text,16,new Color(0,0,0),true)
-        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(0,100),"a",1,new Color(0,0,0))
-        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(50,100),"b",1,new Color(1,1,1))
-        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(100,100),"c",1,new Color(1,1,1))
-        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(150,100),"d",1,new Color(1,1,1))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(0,100-16),"a",16,new Color(0,0,0))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(50,100-16),"b",16,new Color(0,0,0))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(100,100-16),"c",16,new Color(0,0,0))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(150,100-16),"d",16,new Color(0,0,0))
     }
 
 

@@ -19,6 +19,9 @@ import UI_I from "./lib/UI/UI_I.ts";
 import Component, {ComponentSettings} from "./lib/UI/components/Component.ts";
 import TestUI from "./UI/TestUI.ts";
 import SDFFont from "./lib/UI/draw/SDFFont.ts";
+import {popMainMenu, pushMainMenu} from "./UI/MainMenu.ts";
+import {popToolBar, pushToolBar} from "./UI/ToolBar.ts";
+import {addMainMenuButton} from "./UI/MainMenuButton.ts";
 
 
 enum MainState {
@@ -123,7 +126,16 @@ let f =new SDFFont()
 
     private onUI() {
 
-     let s = new ComponentSettings()
+        pushMainMenu()
+        //addMainMenuButton("Site","a");
+        addMainMenuButton("Scene Editor","d");
+        addMainMenuButton("Model Maker","d");
+
+        popMainMenu()
+
+        pushToolBar()
+        popToolBar()
+     /*let s = new ComponentSettings()
         s.hasBackground =true;
         s.backgroundColor.setHex('#0059ff',1);
         s.box.size.set(100,100)
@@ -136,7 +148,7 @@ let f =new SDFFont()
             UI_I.addComponent(comp);
         }
 
-        UI_I.popComponent()
+        UI_I.popComponent()*/
 
 
         UI.pushWindow("Main")

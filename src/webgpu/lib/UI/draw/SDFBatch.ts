@@ -15,6 +15,7 @@ export default class SDFBatch {
 
 
     addIcon(pos: Vec2, a: any,fontSize: number, color: Color) {
+        fontSize =1/42*fontSize ;
         this.startPos = pos.clone();
         let c = a.charCodeAt(0);
         let char =SDFFont.charArrayIcons[c]

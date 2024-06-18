@@ -1,7 +1,8 @@
 import Vec2 from "../math/Vec2";
 import Color from "../math/Color";
 import Rect from "../math/Rect";
-import {Vector2} from "@math.gl/core";
+import RoundedRect from "./RoundedRect.ts";
+
 
 export default class FillBatch {
     public indices: Array<number> = [];
@@ -33,10 +34,41 @@ export default class FillBatch {
         );
         this.indicesPos += 3;
     }
+    addRoundedRect(rect: Rect, color: Color,radius=10) {
+        //let points =[rect.pos.x+]
+        let points =RoundedRect.getRect(rect,radius)
 
+        for (let p of points){
+            this.vertices = this.vertices.concat(
+                p.getArray(),
+                color.getArray())
+        }
+        let posStart = this.indicesPos;
+        let posTemp = this.indicesPos;
+        for(let i=0;i<points.length-2;i++){
+            this.indices.push(
+                posStart,
+                posTemp + 1,
+                posTemp + 2
+            );
+            posTemp+=1;
+           // this.indicesPos+=1;
+        }
+        posTemp-=1;
+        this.indices.push(
+            posStart,
+            posTemp + 1,
+            posTemp + 2
+        );
+        this.indicesPos+=points.length;
+    }
     addRect(rect: Rect, color: Color) {
         if (rect.size.x < 0) return;
         //rect.round()
+
+
+
+
 
         this.vertices = this.vertices.concat(
             rect.getTopLeft().getArray(),
@@ -234,6 +266,7 @@ export default class FillBatch {
             pos.y += size;
         }
     }
+
 
 
 }
