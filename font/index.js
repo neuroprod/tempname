@@ -1,30 +1,89 @@
+const svgtofont = require('svgtofont');
+const path = require('path');
 const generateBMFont = require('msdf-bmfont-xml');
 const fs = require('fs');
+const sharp = require("sharp");
 
 function go() {
 
     let opt= {};
     opt.outputType ='json';
-
-makeFont('Inter-Bold.ttf')
-    makeFont('Inter-Regular.ttf')
+    makeFont('fonts/icons.ttf',"icons")
+    makeFont('Roboto-Regular.ttf',"regular")
+    makeFont('Roboto-Bold.ttf',"bold")
 
 }
-function makeFont(name){
+
+function makeSVGFont(){
+
+
+    svgtofont({
+        src: path.resolve(process.cwd(), 'svg'), // svg path
+        dist: path.resolve(process.cwd(), 'fonts'), // output path
+        fontName: 'icons', // font name
+        css: false, // Create CSS files.
+        useNameAsUnicode: true
+    }).then(() => {
+        go()
+    });
+
+
+}
+var doneCount =0;
+function checkDone(){
+    doneCount++
+    if(doneCount<3)return;
+    console.log(doneCount)
+    combine().then(()=>{
+        console.log("done")
+
+    })
+
+}
+
+async function combine(){
+    const regBuffer = await sharp('regular.png').toBuffer()
+    const boldBuffer = await sharp('bold.png').toBuffer()
+    const iconBuffer = await sharp('icons.png').toBuffer()
+    const image = await sharp('font_white.png')
+        .composite([{
+            input: regBuffer, // Can I put Sharp object here?
+            top:0,
+            left:0
+            // I want bottom right with 10px margin
+        },{
+            input: boldBuffer, // Can I put Sharp object here?
+            top:0,
+            left:256
+            // I want bottom right with 10px margin
+        },{
+            input: iconBuffer, // Can I put Sharp object here?
+            top:0,
+            left:512
+            // I want bottom right with 10px margin
+        }]).toFile('font.png');
+
+}
+
+function makeFont(name,targetName){
     let opt= {};
     opt.outputType ='json';
+    opt.distanceRange =4;
 
     generateBMFont(name, opt,(error, textures, font) => {
         if (error) throw error;
         textures.forEach((texture, index) => {
-            fs.writeFile(texture.filename+".png", texture.texture, (err) => {
+            fs.writeFile(targetName+".png", texture.texture, (err) => {
                 if (err) throw err;
             });
         });
-        fs.writeFile(font.filename, font.data, (err) => {
+        fs.writeFile(targetName+".json", font.data, (err) => {
             if (err) throw err;
         });
+
+        checkDone()
     });
 
 }
-go();
+//go();
+makeSVGFont()

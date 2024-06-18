@@ -138,17 +138,22 @@ fn mainFragment(
 {
 
    var text= textureSample(fontTexture, mySampler,  uv);//textureLoad(fontTexture,  mySampler,0);
-    let dist = max(min(text.r, text.g), min(max(text.r, text.g), text.b));
+      let sigDist = max(min(text.r, text.g), min(max(text.r, text.g), text.b))- 0.5;
+
+  let pxRange = 4.0;
+  let sz = vec2f(textureDimensions(fontTexture, 0));
+  let dx = sz.x*length(vec2f(dpdxFine(uv.x), dpdyFine(uv.x)));
+  let dy = sz.y*length(vec2f(dpdxFine(uv.y), dpdyFine(uv.y)));
+  let toPixels = pxRange * inverseSqrt(dx * dx + dy * dy);
+
+  let pxDist = sigDist * toPixels;
+
+  let edgeWidth = 0.5;
+
+  let alpha = smoothstep(-edgeWidth, edgeWidth, pxDist);
 
 
-let unitRange = vec2(4.0)/vec2(512.0);
-let screenTexSize = vec2(1.0)/fwidth(uv);
-let screenPxDistance = max(0.5*dot(unitRange, screenTexSize), 1.0);
-
-let a = clamp(screenPxDistance *(dist - 0.5) + 0.5, 0., 1.);
-
-
-    let c  =color *a;
+    let c  =color *alpha;
      return c;
 }
 ///////////////////////////////////////////////////////////

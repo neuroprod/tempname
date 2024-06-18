@@ -13,7 +13,7 @@ export default class SDFFontTexture {
             sampleCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT,
         });
-        this.loadURL("Inter-Regular.png").then();
+        this.loadURL("Inter-Bold.png").then();
     }
     async loadURL(url: string) {
         const response = await fetch(url);

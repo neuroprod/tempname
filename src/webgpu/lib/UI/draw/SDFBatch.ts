@@ -19,7 +19,7 @@ export default class SDFBatch {
         this.startPos = pos.clone();
 
 
-        fontSize =1/42*fontSize ;
+        fontSize =5;//1/42*fontSize ;
 
       //  let rect = new Rect(startPos, Font.charSize);
         for (let i = 0; i < text.length; i++) {

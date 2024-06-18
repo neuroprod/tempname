@@ -15,6 +15,7 @@
     "fs": "^0.0.1-security",
     "msdf-bmfont-xml": "^2.5.4",
     "multer": "^1.4.5-lts.1",
-    "sharp": "^0.33.2"
+    "sharp": "^0.33.2",
+    "svgtofont": "^4.2.1"
   }
 }

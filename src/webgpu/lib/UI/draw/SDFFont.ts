@@ -60,7 +60,7 @@ export default class SDFFont {
 
 
 
-        this.loadURL("Inter-Regular").then(() => {
+        this.loadURL("Inter-Bold").then(() => {
 
         });
 
