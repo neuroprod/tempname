@@ -10,17 +10,14 @@ export default class TestUI extends Component{
     prepDraw() {
         super.prepDraw();
 //test
-      UI_I.currentDrawBatch.textBatch.addLine(new Vec2(10,10),"is this ok?",200,new Color(1,1,1))
-      //UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(30,500),"is this ok?",8,new Color(1,1,1))
-       /* UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(10,40),"is this ok?",12,new Color(1,1,1))
-        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(10,50),"Hello is this ok?",40,new Color(1,1,1))
-
-
-
-        UI_I.currentDrawBatch.textBatch.addLine(new Vec2(200,10),"i s this ok?",200,new Color(0,0,0))
-        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(200,30),"Hello is this ok?",8,new Color(0,0,0))
-        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(200,100),"Hello is this ok pil?",48,new Color(0,0,0))
-        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(200,50),"Hello is this ok?",40,new Color(0,0,0))*/
+        let text ='Aa!"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~'
+      UI_I.currentDrawBatch.textBatch.addLine(new Vec2(0,0),text,200,new Color(1,1,1))
+      UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(0,100),text,16,new Color(0,0,0))
+        UI_I.currentDrawBatch.sdfBatch.addLine(new Vec2(0,200),text,16,new Color(0,0,0),true)
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(0,100),"a",1,new Color(0,0,0))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(50,100),"b",1,new Color(1,1,1))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(100,100),"c",1,new Color(1,1,1))
+        UI_I.currentDrawBatch.sdfBatch.addIcon(new Vec2(150,100),"d",1,new Color(1,1,1))
     }
 
 

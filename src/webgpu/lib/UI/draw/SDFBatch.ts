@@ -14,18 +14,27 @@ export default class SDFBatch {
     }
 
 
+    addIcon(pos: Vec2, a: any,fontSize: number, color: Color) {
+        this.startPos = pos.clone();
+        let c = a.charCodeAt(0);
+        let char =SDFFont.charArrayIcons[c]
+        this.addChar( char, color,fontSize);
+    }
 
-    addLine(pos: Vec2, text: string, fontSize: number, color: Color) {
+    addLine(pos: Vec2, text: string, fontSize: number, color: Color,bold:boolean =false) {
         this.startPos = pos.clone();
 
 
-        fontSize =5;//1/42*fontSize ;
-
+        fontSize =1/42*fontSize ;
+        let fontArr = SDFFont.charArrayRegular;
+        if(bold){
+            fontArr  = SDFFont.charArrayBold;
+        }
       //  let rect = new Rect(startPos, Font.charSize);
         for (let i = 0; i < text.length; i++) {
             let c = text.charCodeAt(i);
 
-            let char =SDFFont.charArray[c];
+            let char =fontArr[c];
 
 
             this.addChar( char, color,fontSize);
@@ -82,4 +91,6 @@ export default class SDFBatch {
         this.vertices = [];
         this.indicesPos = 0;
     }
+
+
 }

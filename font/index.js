@@ -9,6 +9,7 @@ function go() {
     let opt= {};
     opt.outputType ='json';
     makeFont('fonts/icons.ttf',"icons")
+   // makeFont('testfont.ttf',"icons")
     makeFont('Roboto-Regular.ttf',"regular")
     makeFont('Roboto-Bold.ttf',"bold")
 
@@ -22,7 +23,8 @@ function makeSVGFont(){
         dist: path.resolve(process.cwd(), 'fonts'), // output path
         fontName: 'icons', // font name
         css: false, // Create CSS files.
-        useNameAsUnicode: true
+        useNameAsUnicode: true,
+        fontHeight: 10,
     }).then(() => {
         go()
     });
@@ -35,6 +37,12 @@ function checkDone(){
     if(doneCount<3)return;
     console.log(doneCount)
     combine().then(()=>{
+
+
+        fs.copyFileSync("font.png","../public/font.png")
+        fs.copyFileSync("icons.json","../src/webgpu/lib/UI/draw/icons.json")
+        fs.copyFileSync("regular.json","../src/webgpu/lib/UI/draw/regular.json")
+        fs.copyFileSync("bold.json","../src/webgpu/lib/UI/draw/bold.json")
         console.log("done")
 
     })
@@ -69,7 +77,7 @@ function makeFont(name,targetName){
     let opt= {};
     opt.outputType ='json';
     opt.distanceRange =4;
-
+//opt.fieldType="sdf"
     generateBMFont(name, opt,(error, textures, font) => {
         if (error) throw error;
         textures.forEach((texture, index) => {

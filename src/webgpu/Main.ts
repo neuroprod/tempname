@@ -127,7 +127,7 @@ let f =new SDFFont()
         s.hasBackground =true;
         s.backgroundColor.setHex('#0059ff',1);
         s.box.size.set(100,100)
-        s.box.setMargin(10)
+        s.box.setMargin(0)
         s.box.setPadding(0);
         UI_I.currentComponent = UI_I.panelLayer;
         if (!UI_I.setComponent("kaka")) {
