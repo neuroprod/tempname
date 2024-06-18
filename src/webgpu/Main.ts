@@ -28,6 +28,7 @@ enum MainState {
 
     modelMaker,
     editor,
+    game,
 
 }
 
@@ -127,9 +128,9 @@ let f =new SDFFont()
     private onUI() {
 
         pushMainMenu()
-        //addMainMenuButton("Site","a");
-        addMainMenuButton("Scene Editor","d");
-        addMainMenuButton("Model Maker","d");
+        if(addMainMenuButton("Game","b",this.currentMainState==MainState.game))this.setMainState(MainState.game);
+        if(addMainMenuButton("Scene Editor","a",this.currentMainState==MainState.editor))this.setMainState(MainState.editor);
+        if(addMainMenuButton("Model Maker","d",this.currentMainState==MainState.modelMaker))this.setMainState(MainState.modelMaker);
 
         popMainMenu()
 

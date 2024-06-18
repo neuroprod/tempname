@@ -3,6 +3,8 @@ import UI_I from "../lib/UI/UI_I.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import {MenuBGColor} from "./Style.ts";
 
+import Rect from "../lib/UI/math/Rect.ts";
+
 
 export function pushMainMenu(){
 
@@ -11,12 +13,12 @@ export function pushMainMenu(){
     if (!UI_I.setComponent("MainMenu")) {
 
         let s = new ComponentSettings()
-        s.hasBackground =true;
-        s.backgroundColor.copy(MenuBGColor)
-        s.box.size.set(400,40)
+
+        s.box.size.set(400,50)
         s.box.setMargin(0)
         s.box.setPadding(5);
-        s.box.paddingLeft=3
+        s.box.paddingLeft=3;
+        s.box.paddingRight=3;
 
 
 
@@ -35,6 +37,7 @@ export function popMainMenu(){
  class MainMenu extends Component{
 
     screenSize = new Vec2()
+     mainSelectRect =new Rect()
     constructor(id:number,s:ComponentSettings) {
 
         super(id,s);
@@ -61,10 +64,13 @@ export function popMainMenu(){
     }
     layoutAbsolute() {
         super.layoutAbsolute();
+        this.mainSelectRect.copy(this.layoutRect)
+        this.mainSelectRect.size.x=46*3;
     }
 
      prepDraw() {
         super.prepDraw();
+         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.mainSelectRect,MenuBGColor,12)
     }
 
 

@@ -76,7 +76,7 @@ export default class SDFFont {
 
         }
         for (let data of iconData.chars) {
-            SDFFont.charArrayIcons[data.id] = new SDFChar(data,0.5,0.5,true)
+            SDFFont.charArrayIcons[data.id] = new SDFChar(data,0.5,0.5,false)
 
         }
 

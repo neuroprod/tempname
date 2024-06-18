@@ -3,19 +3,19 @@ import UI_I from "../lib/UI/UI_I.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import Color from "../lib/UI/math/Color.ts";
 import Rect from "../lib/UI/math/Rect.ts";
+import {SelectButtonColor, TextColorDefault, TextColorDisabled} from "./Style.ts";
 
 
 
-export function addMainMenuButton(label:string,icon:string){
+export function addMainMenuButton(label:string,icon:string,selected:boolean){
 
 
 
     if (!UI_I.setComponent(label)) {
 
         let s = new ComponentSettings()
-        s.hasBackground =true;
-        s.backgroundColor.setHex("#ffffff")
-        s.box.size.set(100,-1)
+
+        s.box.size.set(40,40)
         s.box.setMargin(0)
         s.box.marginLeft =2;
         s.box.marginRight =2;
@@ -26,8 +26,11 @@ export function addMainMenuButton(label:string,icon:string){
         let comp = new MainMenuButton(UI_I.getID(label), s,label,icon);
         UI_I.addComponent(comp);
     }
-    UI_I.popComponent()
+    let r = UI_I.currentComponent as MainMenuButton;
+    r.setSelected(selected);
 
+    UI_I.popComponent()
+    return r.getReturnValue();
 }
 
 
@@ -37,6 +40,7 @@ class MainMenuButton extends Component{
     private icon: string;
     private labelPos:Vec2 =new Vec2()
     private iconPos:Vec2 =new Vec2()
+    public selected =false;
 
     constructor(id:number,s:ComponentSettings,label:string,icon:string) {
 
@@ -56,22 +60,38 @@ class MainMenuButton extends Component{
         this.labelPos.copy(this.layoutRect.pos);
 
 
-        this.labelPos.y +=this.layoutRect.size.y/2 -6
-        this.labelPos.x +=40
 
         this.iconPos.copy(this.layoutRect.pos);
-        this.iconPos.y +=this.layoutRect.size.y/2 -10
-        this.iconPos.x +=10
+        this.iconPos.y +=0
+        this.iconPos.x +=3
     }
 
     prepDraw() {
         super.prepDraw();
-let rect =new Rect(new Vec2(100,100),new Vec2(400,400))
 
-        UI_I.currentDrawBatch.fillBatch.addRoundedRect(rect,new Color(1,0,0.0),100)
-        UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,12,new Color(0.3,0.3,0.3),false)
-        UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,new Color(0.3,0.3,0.3))
+        if(this.selected){
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,SelectButtonColor,8)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,35,TextColorDefault)
+        }else if(this.isOver){
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,35,TextColorDefault)
+
+        }else{
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,35,TextColorDisabled)
+        }
+
+       // UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,12,new Color(0.3,0.3,0.3),false)
+
     }
 
 
+    setSelected(selected: boolean) {
+        if(this.selected!=selected){
+            this.selected =selected;
+            this.setDirty();
+        }
+    }
+    getReturnValue(): any {
+        if(this.selected)return false;
+        return this.isClicked;
+    }
 }
