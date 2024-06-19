@@ -12,7 +12,7 @@ export default class SplitNode{
 
 
     public border = 10;
-    public size: Vec2 = new Vec2();
+    public size: Vec2 = new Vec2(100,100);
     public pos: Vec2 = new Vec2(10,10);
     public rect = new Rect();
     public panelID = 0;
@@ -71,11 +71,13 @@ export default class SplitNode{
 
         this.panel =panel;
         this.size.copy(this.panel.size)
+        console.log(this.size)
         this.updateRootLayout()
     }
 
     resize(size:Vec2,force=false) {
         if(size.equal(this.size) && !force)return false;
+        if(size.x==0)return;
 
         this.size.copy(size);
 ///console.log(this.size,this.pos);
@@ -162,6 +164,7 @@ export default class SplitNode{
                 panelSize.x = clearSize.x = this.size.x;
                 panelSize.y = panelChild.size.y;
                 if(panelSize.y==0)panelSize.y = this.size.y/2
+
                 clearSize.y = this.size.y - panelSize.y - this.border;
 
                 if (clearSize.y < 0) return;
@@ -225,7 +228,7 @@ export default class SplitNode{
     setDividerPos(newPos: Vec2) {
         let size = newPos.clone().sub(this.pos);
         size.x -= this.border / 2;
-        size.y -= this.border / 2;
+        size.y += this.border / 2;
         if (this.splitType == DockSplit.Vertical) {
             let leftChild = this.children[0];
             let rightChild = this.children[1];
@@ -236,7 +239,7 @@ export default class SplitNode{
 
             leftChild.size.x = size.x;
             rightChild.size.x = this.size.x - leftChild.size.x - this.border;
-            this.resize(this.size, true);
+            //this.resize(this.size, true);
         }
         if (this.splitType == DockSplit.Horizontal) {
             let topChild = this.children[0];
@@ -248,7 +251,7 @@ export default class SplitNode{
 
             topChild.size.y = size.y - this.border / 2;
             bottomChild.size.y = this.size.y - topChild.size.y - this.border;
-            this.resize(this.size, true);
+           // this.resize(this.size, true);
         }
         this.updateRootLayout();
 

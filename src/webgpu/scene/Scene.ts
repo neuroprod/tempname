@@ -55,7 +55,8 @@ export default class Scene {
     private nodeRight: SplitNode;
     private nodeRightTop: SplitNode;
     private nodeRightBottom: SplitNode;
-
+    private nodeTop: SplitNode;
+    private nodeBottom: SplitNode;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
@@ -82,14 +83,18 @@ export default class Scene {
         this.setCurrentToolState(ToolState.translate)
 
         this.rootSplit =new SplitNode("root")
-         let a = this.rootSplit.split(DockSplit.Vertical,"center","right")
-        this.nodeCenter =a[0];
-        this.nodeRight =a[1];
-        let b =  this.nodeRight.split(DockSplit.Horizontal,"rightTop","rightLeft");
-        this.nodeRightTop =b[0];
-        this.nodeRightBottom =b[1];
-        // this.testAnimation = new Animation(renderer,"testAnimation")
-        // AnimationEditor.setAnimation(this.testAnimation);
+
+        let a = this.rootSplit.split(DockSplit.Horizontal,"top","bottom")
+        this.nodeTop =a[0];
+        this.nodeBottom =a[1];
+
+      let b =  this.nodeTop.split(DockSplit.Vertical,"center","right")
+        this.nodeCenter =b[0];
+        this.nodeRight =b[1];
+
+        let c =  this.nodeRight.split(DockSplit.Horizontal,"rightTop","rightLeft");
+        this.nodeRightTop =c[0];
+        this.nodeRightBottom =c[1];
 
 
     }
@@ -126,6 +131,8 @@ export default class Scene {
     onUINice() {
 
 
+        pushSplitPanel("horizontal panel",  this.nodeBottom);
+        popSplitPanel()
 
         pushSplitPanel("Top panel",  this.nodeRightTop);
 
@@ -136,13 +143,16 @@ export default class Scene {
         popSplitPanel()
 
 
-let s = UI_I.pixelSize.clone()
+        this.rootSplit.setDividers();
+
+        let s = UI_I.pixelSize.clone()
         s.x-=20
         s.y-=20
         if (this.rootSplit.resize(s)) {
           this.rootSplit.updateLayout();
         }
-        this.rootSplit.setDividers();
+
+
 
     }
     public onUI() {

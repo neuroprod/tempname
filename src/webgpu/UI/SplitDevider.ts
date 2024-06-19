@@ -29,7 +29,7 @@ export class SplitDividerSettings extends ComponentSettings {
     public color: Color = new Color().setHex("#868686", 1);
     public colorOver: Color = new Color().setHex("#d7d7d7", 1);
     public wideSize = 50;
-    public smallSize = 7;
+    public smallSize = 6;
 
     constructor(type: DockSplit) {
         super();
@@ -64,7 +64,7 @@ export  class SplitDivider extends Component {
         super.onMouseDown();
         this.isDragging = true;
 
-        this.startDragPos = this.center.clone();
+        this.startDragPos = this.posOffset.clone();
     }
 
     updateOnMouseDown() {
@@ -72,19 +72,23 @@ export  class SplitDivider extends Component {
             let dir = UI_I.mouseListener.mousePosDown.clone();
             dir.sub(UI_I.mouseListener.mousePos);
             let newPos = this.startDragPos.clone();
+
             newPos.sub(dir);
+
             newPos.clamp(this.posMin, this.posMax);
+
             this.splitNode.setDividerPos(newPos);
 
-            this.center.copy(newPos);
+           // this.center.copy(newPos);
 
-            this.setDirty(true);
+          //  this.setDirty(true);
         }
     }
 
     onMouseUp() {
         super.onMouseUp();
         this.isDragging = false;
+        this.setDirty()
     }
 
     place(node: SplitNode, dividerPos: Vec2, min: Vec2, max: Vec2) {
@@ -109,21 +113,18 @@ export  class SplitDivider extends Component {
     layoutAbsolute() {
         super.layoutAbsolute();
         this.drawRect.copy(this.layoutRect);
-        this.drawRect.size.x -= 5;
-        this.drawRect.size.y -= 5;
-        this.drawRect.pos.x += 2.5;
-        this.drawRect.pos.y += 2.5;
+
     }
 
     prepDrawInt() {
         let settings = this.settings as SplitDividerSettings;
-        if (this.isOver || this.isFocus) {
-            UI_I.currentDrawBatch.fillBatch.addRect(
+        if (this.isOver || this.isDragging) {
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(
                 this.drawRect,
-                settings.colorOver
+                settings.colorOver,2
             );
         } else {
-            UI_I.currentDrawBatch.fillBatch.addRect(this.drawRect, settings.color);
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.drawRect, settings.color,2);
         }
     }
 }
