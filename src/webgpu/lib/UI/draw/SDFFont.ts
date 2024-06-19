@@ -34,8 +34,8 @@ export class SDFChar {
         this.xOffset = data.xoffset ;
         this.yOffset = data.yoffset;
         if(resetOffset){
-            this.xOffset = 0 ;
-            this.yOffset =0
+            this.xOffset =-this.w/2 ;
+            this.yOffset =-this.h/2
         }
 
 
@@ -73,7 +73,7 @@ export default class SDFFont {
 
         }
         for (let data of iconData.chars) {
-            SDFFont.charArrayIcons[data.id] = new SDFChar(data,0.5,0.5,false)
+            SDFFont.charArrayIcons[data.id] = new SDFChar(data,0.5,0.5,true)
 
         }
 

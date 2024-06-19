@@ -29,7 +29,7 @@ export function addMainMenuButton(label:string,icon:string,selected:boolean){
 
 
 
-        let comp = new MainMenuButton(UI_I.getID(label), s,label,icon);
+        let comp = new MainMenuButton(UI_I.getID(label), s,icon);
         UI_I.addComponent(comp);
     }
     let r = UI_I.currentComponent as MainMenuButton;
@@ -42,17 +42,17 @@ export function addMainMenuButton(label:string,icon:string,selected:boolean){
 
 
 class MainMenuButton extends Component{
-    private label: string;
+
     private icon: string;
-    private labelPos:Vec2 =new Vec2()
+
     private iconPos:Vec2 =new Vec2()
     public selected =false;
 
-    constructor(id:number,s:ComponentSettings,label:string,icon:string) {
+    constructor(id:number,s:ComponentSettings,icon:string) {
 
         super(id,s);
 
-        this.label = label;
+
         this.icon =icon;
     }
 
@@ -63,13 +63,13 @@ class MainMenuButton extends Component{
     layoutAbsolute() {
         super.layoutAbsolute();
 
-        this.labelPos.copy(this.layoutRect.pos);
 
 
 
-        this.iconPos.copy(this.layoutRect.pos);
-        this.iconPos.y +=0+4
-        this.iconPos.x +=3+3
+
+        this.iconPos.copy(this.layoutRect.size)
+        this.iconPos.scale(0.5)
+        this.iconPos.add(this.layoutRect.pos);
     }
 
     prepDraw() {
