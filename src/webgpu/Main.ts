@@ -89,8 +89,7 @@ export default class Main {
         this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data, this.sceneLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
 
-
-        let state = AppState.getState(AppStates.MAIN_STATE)
+        let state = AppState.getState(AppStates.MAIN_STATE);
         if (state != undefined) {
             this.setMainState(state)
         } else {
@@ -101,9 +100,7 @@ export default class Main {
     }
 
     private setMainState(state: MainState) {
-
-        console.log(state)
-        AppState.setState(AppStates.MAIN_STATE, state)
+        AppState.setState(AppStates.MAIN_STATE, state);
         this.currentMainState = state;
     }
 
@@ -118,10 +115,10 @@ export default class Main {
 
     private update() {
         if (this.currentMainState == MainState.editor) {
-            this.scene.update()
+            this.scene.update();
         }
         if (this.currentMainState == MainState.modelMaker) {
-            this.modelMaker.update()
+            this.modelMaker.update();
         }
         this.onUI()
     }
@@ -136,20 +133,6 @@ export default class Main {
         popMainMenu()
 
 
-        /*let s = new ComponentSettings()
-           s.hasBackground =true;
-           s.backgroundColor.setHex('#0059ff',1);
-           s.box.size.set(100,100)
-           s.box.setMargin(0)
-           s.box.setPadding(0);
-           UI_I.currentComponent = UI_I.panelLayer;
-           if (!UI_I.setComponent("kaka")) {
-
-               let comp = new TestUI(UI_I.getID("kaka"), s);
-               UI_I.addComponent(comp);
-           }
-
-           UI_I.popComponent()*/
 
         if (this.currentMainState != MainState.game) {
             UI.pushWindow("Main")

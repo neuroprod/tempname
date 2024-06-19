@@ -17,7 +17,10 @@ import Animation from "./timeline/animation/Animation.ts";
 import AnimationEditor from "./timeline/AnimationEditor.ts";
 import AnimationChannel, {Key} from "./timeline/animation/AnimationChannel.ts";
 import {Quaternion, Vector3} from "@math.gl/core";
-import {popDockPanel, pushDockPanel} from "../UI/DockPanel.ts";
+import {popSplitPanel, pushSplitPanel} from "../UI/SplitPanel.ts";
+import SplitNode from "../UI/SplitNode.ts";
+import {DockSplit} from "../lib/UI/docking/DockType.ts";
+import UI_I from "../lib/UI/UI_I.ts";
 
 
 export enum ToolState {
@@ -47,6 +50,12 @@ export default class Scene {
     private currentToolState: ToolState = ToolState.translate;
     private currentAnimation!: Animation;
     private animations: Array<Animation> = [];
+    private rootSplit:SplitNode
+    private nodeCenter: SplitNode;
+    private nodeRight: SplitNode;
+    private nodeRightTop: SplitNode;
+    private nodeRightBottom: SplitNode;
+
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
@@ -72,6 +81,13 @@ export default class Scene {
         this.makeScene(sceneData);
         this.setCurrentToolState(ToolState.translate)
 
+        this.rootSplit =new SplitNode("root")
+         let a = this.rootSplit.split(DockSplit.Vertical,"center","right")
+        this.nodeCenter =a[0];
+        this.nodeRight =a[1];
+        let b =  this.nodeRight.split(DockSplit.Horizontal,"rightTop","rightLeft");
+        this.nodeRightTop =b[0];
+        this.nodeRightBottom =b[1];
         // this.testAnimation = new Animation(renderer,"testAnimation")
         // AnimationEditor.setAnimation(this.testAnimation);
 
@@ -108,9 +124,25 @@ export default class Scene {
         AnimationEditor.update();
     }
     onUINice() {
-        pushDockPanel("sceneSSSS")
 
-        popDockPanel()
+
+
+        pushSplitPanel("Top panel",  this.nodeRightTop);
+
+        popSplitPanel()
+
+        pushSplitPanel("bottom panel",  this.nodeRightBottom);
+
+        popSplitPanel()
+
+
+let s = UI_I.pixelSize.clone()
+        s.x-=20
+        s.y-=20
+        if (this.rootSplit.resize(s)) {
+          this.rootSplit.updateLayout();
+        }
+        this.rootSplit.setDividers();
 
     }
     public onUI() {

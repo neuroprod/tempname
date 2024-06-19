@@ -46,9 +46,6 @@ export class SDFChar {
         this.uv2.set((this.uvPos.x)*xUVScale+xUVOffset,1-this.uvPos.y)
         this.uv3.set((this.uvPos.x+this.uvSize.x)*xUVScale+xUVOffset,1-this.uvPos.y)
 
-
-
-
         this.char =data.char;
 
     }
@@ -58,7 +55,7 @@ export class SDFChar {
 
 
 export default class SDFFont {
-    private json: any;
+
 
     static charArrayRegular: Array<SDFChar> = new Array<SDFChar>(200);
     static charArrayBold: Array<SDFChar> = new Array<SDFChar>(200);
@@ -66,7 +63,7 @@ export default class SDFFont {
     constructor() {
 
 
-       console.log( boldData)
+
         for (let data of regularData.chars) {
             SDFFont.charArrayRegular[data.id] = new SDFChar(data,0.5,0)
 

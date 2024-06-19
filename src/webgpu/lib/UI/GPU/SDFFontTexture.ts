@@ -16,21 +16,15 @@ export default class SDFFontTexture {
         this.loadURL("font.png").then();
     }
     async loadURL(url: string) {
+
         const response = await fetch(url);
-
         const imageBitmap = await createImageBitmap(await response.blob());
-        let width = imageBitmap.width;
-        let height = imageBitmap.height;
-
 
         this.device.queue.copyExternalImageToTexture(
             {source: imageBitmap},
             {texture: this.texture},
             [imageBitmap.width, imageBitmap.height]
         );
-
-
-        console.log(width,height);
 
     }
 

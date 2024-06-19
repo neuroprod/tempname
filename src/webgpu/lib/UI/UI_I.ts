@@ -58,12 +58,9 @@ export default class UI_I {
     }
 
     static setSize(width:number, height:number) {
-
         this.pixelSize.set(width/ this.pixelRatio , height/ this.pixelRatio );
         this.screenSize.set(width , height );
-        this.canvasSize.set(width, height)
-
-        console.log(this.pixelRatio,this.pixelSize)
+        this.canvasSize.set(width, height);
     }
 
     static init(canvas:HTMLCanvasElement) {
