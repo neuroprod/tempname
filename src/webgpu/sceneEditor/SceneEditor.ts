@@ -31,7 +31,7 @@ export enum ToolState {
 
 }
 
-export default class Scene {
+export default class SceneEditor {
 
 
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
@@ -136,10 +136,13 @@ export default class Scene {
 
         pushSplitPanel("Top panel",  this.nodeRightTop);
 
+        this.root.onUI()
         popSplitPanel()
 
         pushSplitPanel("bottom panel",  this.nodeRightBottom);
-
+        if(this.currentModel) {
+            this.currentModel.onDataUI()
+        }
         popSplitPanel()
 
 

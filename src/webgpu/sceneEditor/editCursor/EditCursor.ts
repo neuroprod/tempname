@@ -13,7 +13,7 @@ import {Matrix3, Matrix4, Quaternion, Vector2, Vector3, Vector4} from "@math.gl/
 import CircleMesh from "./CircleMesh.ts";
 import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
-import {ToolState} from "../Scene.ts";
+import {ToolState} from "../SceneEditor.ts";
 import SceneObject3D from "../SceneObject3D.ts";
 import AnimationEditor from "../timeline/AnimationEditor.ts";
 import {AnimationType} from "../timeline/animation/Animation.ts";

@@ -15,7 +15,7 @@ export function pushMainMenu(){
         let s = new ComponentSettings()
 
         s.box.size.set(400,50)
-        s.box.setMargin(0)
+        s.box.setMargin(10)
         s.box.setPadding(5);
         s.box.paddingLeft=3;
         s.box.paddingRight=3;
@@ -60,7 +60,7 @@ export function popMainMenu(){
      }
     layoutRelative() {
         super.layoutRelative();
-        this.posOffset.set(this.screenSize.x/2-this.size.x/2,10)
+        //this.posOffset.set(this.screenSize.x/2-this.size.x/2,10)
     }
     layoutAbsolute() {
         super.layoutAbsolute();

@@ -9,9 +9,9 @@ import UI from "./lib/UI/UI.ts";
 import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
 import ModelLoader from "./ModelLoader.ts";
-import Scene from "./scene/Scene.ts";
+import SceneEditor from "./sceneEditor/SceneEditor.ts";
 import JsonLoader from "./JsonLoader.ts";
-import AnimationEditor from "./scene/timeline/AnimationEditor.ts";
+import AnimationEditor from "./sceneEditor/timeline/AnimationEditor.ts";
 import SDFFont from "./lib/UI/draw/SDFFont.ts";
 import {popMainMenu, pushMainMenu} from "./UI/MainMenu.ts";
 import {addMainMenuButton} from "./UI/MainMenuButton.ts";
@@ -43,7 +43,7 @@ export default class Main {
     private modelLoader!: ModelLoader;
 
     private currentMainState!: MainState
-    private scene!: Scene;
+    private sceneEditor!: SceneEditor;
     private sceneLoader!: JsonLoader;
 
 
@@ -86,7 +86,7 @@ export default class Main {
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
-        this.scene = new Scene(this.renderer, this.mouseListener, this.modelLoader.data, this.sceneLoader.data)
+        this.sceneEditor = new SceneEditor(this.renderer, this.mouseListener, this.modelLoader.data, this.sceneLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
@@ -115,7 +115,7 @@ export default class Main {
 
     private update() {
         if (this.currentMainState == MainState.editor) {
-            this.scene.update();
+            this.sceneEditor.update();
         }
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.update();
@@ -136,7 +136,7 @@ export default class Main {
 
         if (this.currentMainState != MainState.game) {
             UI.pushWindow("Main")
-            this.scene.gameRenderer.onUI()
+            this.sceneEditor.gameRenderer.onUI()
             //  if (UI.LButton("Editor", "Views", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);
             // if (UI.LButton("ModelMaker", "", this.currentMainState != MainState.modelMaker)) this.setMainState(MainState.modelMaker);
             UI.separator("msep", false)
@@ -145,12 +145,12 @@ export default class Main {
 
                 this.modelMaker.onUI()
             } else if (this.currentMainState == MainState.editor) {
-                this.scene.onUI()
+                this.sceneEditor.onUI()
                 UI.popWindow()
-                this.scene.onObjectUI()
+                //this.scene.onObjectUI()
                 AnimationEditor.onUI();
 
-                this.scene.onUINice()
+                this.sceneEditor.onUINice()
             }
         }
 
@@ -162,10 +162,10 @@ export default class Main {
             this.canvasRenderPass.drawInCanvas = this.modelMaker.drawInCanvas.bind(this.modelMaker);
         }
         if (this.currentMainState == MainState.editor) {
-            this.scene.draw()
+            this.sceneEditor.draw()
 
 
-            this.canvasRenderPass.drawInCanvas = this.scene.drawInCanvas.bind(this.scene);
+            this.canvasRenderPass.drawInCanvas = this.sceneEditor.drawInCanvas.bind(this.sceneEditor);
         }
         this.canvasRenderPass.add();
 

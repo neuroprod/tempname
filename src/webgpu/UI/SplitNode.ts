@@ -5,6 +5,7 @@ import {DockSplit} from "../lib/UI/docking/DockType.ts";
 import {SplitPanel} from "./SplitPanel.ts";
 
 import {setSplitDivider, SplitDivider, SplitDividerSettings} from "./SplitDevider.ts";
+import AppState from "../AppState.ts";
 
 export default class SplitNode{
 
@@ -12,14 +13,14 @@ export default class SplitNode{
 
 
     public border = 10;
-    public size: Vec2 = new Vec2(100,100);
+    public size: Vec2 = new Vec2(500,500);
     public pos: Vec2 = new Vec2(10,10);
     public rect = new Rect();
-    public panelID = 0;
+ //   public panelID = 0;
     public panel: SplitPanel | null = null;
     public children: Array<SplitNode> = [];
     public parent: SplitNode | null = null;
-    public id: number;
+   // public id: number =0;
     public splitType: DockSplit =DockSplit.Center ;
     private name: string;
 
@@ -31,6 +32,10 @@ export default class SplitNode{
 
     constructor(name:string) {
         this.name= name;
+        let p =AppState.getState("splitNode"+this.name)
+        if(p){
+            this.size.set(p[0],p[1])
+        }
 
     }
 
@@ -76,7 +81,7 @@ export default class SplitNode{
     }
 
     resize(size:Vec2,force=false) {
-        if(size.equal(this.size) && !force)return false;
+       // if(size.equal(this.size) && !force)return false;
         if(size.x==0)return;
 
         this.size.copy(size);
@@ -187,7 +192,7 @@ export default class SplitNode{
     }
 
     updateLayout() {
-
+AppState.setState("splitNode"+this.name,this.size.getArray())
         if (this.panel) {
 
            this.panel.posOffset.copy(this.pos);

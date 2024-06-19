@@ -35,7 +35,7 @@ export default class DockManager {
 
     public startDragging(panel: Panel) {
       return;
-        let node = this.mainDockNode.getNodeWithPanel(panel);
+        /*let node = this.mainDockNode.getNodeWithPanel(panel);
         if (node) {
             if (node.splitType === DockSplit.Center) {
                 node.panel = null;
@@ -72,22 +72,22 @@ export default class DockManager {
         this.tabItems = [];
         this.collectTabItems(UI_I.panelDockingLayer);
         this.collectTabItems(UI_I.panelLayer);
-        this.dragComponent = panel;
+        this.dragComponent = panel;*/
     }
 
     public stopDragging(panel: Panel) {
         return;
-        this.dragComponent = null;
+        /*this.dragComponent = null;
 
         this.mainDockNode.updateLayout();
         this.overlayLayer.setDirty(true);
-        this.dockLayer.setDirty(true);
+        this.dockLayer.setDirty(true);*/
     }
 
     update() {
         return;
         //wait for panels rendered 1 time
-        if (this.setPanelsFirst == 1) {
+       /* if (this.setPanelsFirst == 1) {
             this.setPanelsFirst++;
             this.restoreLocalData();
         }
@@ -136,7 +136,7 @@ export default class DockManager {
             }
         }
 
-        this.mainDockNode.setDividers();
+        this.mainDockNode.setDividers();*/
     }
 
     split(type: DockType, doc: DockNode) {

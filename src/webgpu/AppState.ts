@@ -1,30 +1,32 @@
-
-export const AppStates={
-    MAIN_STATE:"mainState"
+export const AppStates = {
+    MAIN_STATE: "mainState"
 
 
 }
 
 
-class AppState{
+class AppState {
 
 
-    public data={}
+    public data: any = {}
 
-    setState(state:string,value:any){
-        this.data[state] =value;
+    setState(state: string, value: any) {
+        this.data[state] = value;
         this.save()
     }
-    getState(state:string){
+
+    getState(state: string) {
         return this.data[state];
     }
 
     init() {
         let dataS = localStorage.getItem("appState")
-        let data = JSON.parse(dataS)
-        if (data) {
-            for (let value of Object.keys(data)) {
+        if (dataS) {
+            let data = JSON.parse(dataS)
+            if (data) {
+                for (let value of Object.keys(data)) {
                     this.data[value] = data[value];
+                }
             }
         }
     }
@@ -33,7 +35,6 @@ class AppState{
         let s = JSON.stringify(this.data);
         localStorage.setItem("appState", s);
     }
-
 
 
 }
