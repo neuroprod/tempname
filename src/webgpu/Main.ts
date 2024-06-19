@@ -16,6 +16,8 @@ import SDFFont from "./lib/UI/draw/SDFFont.ts";
 import {popMainMenu, pushMainMenu} from "./UI/MainMenu.ts";
 import {addMainMenuButton} from "./UI/MainMenuButton.ts";
 import AppState, {AppStates} from "./AppState.ts";
+import {Icons} from "./UI/Icons.ts";
+import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
 
 
 enum MainState {
@@ -125,10 +127,10 @@ export default class Main {
 
     private onUI() {
 
-        pushMainMenu()
-        if (addMainMenuButton("Game", "e", this.currentMainState == MainState.game)) this.setMainState(MainState.game);
-        if (addMainMenuButton("Scene Editor", "d", this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
-        if (addMainMenuButton("Model Maker", "b", this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+        pushMainMenu("MainMenu",129,0)
+        if (addMainMenuToggleButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
+        if (addMainMenuToggleButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
+        if (addMainMenuToggleButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
 
         popMainMenu()
 

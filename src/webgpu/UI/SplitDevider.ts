@@ -5,6 +5,7 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import SplitNode from "./SplitNode.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import UI_I from "../lib/UI/UI_I.ts";
+import {MenuBGColor, SelectButtonColor} from "./Style.ts";
 
 
 
@@ -26,8 +27,8 @@ export function setSplitDivider(name: string, settings: SplitDividerSettings):Sp
 
 export class SplitDividerSettings extends ComponentSettings {
     public splitType: DockSplit;
-    public color: Color = new Color().setHex("#868686", 1);
-    public colorOver: Color = new Color().setHex("#d7d7d7", 1);
+
+
     public wideSize = 50;
     public smallSize = 6;
 
@@ -113,7 +114,8 @@ export  class SplitDivider extends Component {
     layoutAbsolute() {
         super.layoutAbsolute();
         this.drawRect.copy(this.layoutRect);
-
+        this.drawRect.size.y-=2;
+        this.drawRect.size.x-=2;
     }
 
     prepDrawInt() {
@@ -121,10 +123,10 @@ export  class SplitDivider extends Component {
         if (this.isOver || this.isDragging) {
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(
                 this.drawRect,
-                settings.colorOver,2
+                SelectButtonColor,1
             );
         } else {
-            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.drawRect, settings.color,2);
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.drawRect,MenuBGColor,1);
         }
     }
 }

@@ -21,6 +21,11 @@ import {popSplitPanel, pushSplitPanel} from "../UI/SplitPanel.ts";
 import SplitNode from "../UI/SplitNode.ts";
 import {DockSplit} from "../lib/UI/docking/DockType.ts";
 import UI_I from "../lib/UI/UI_I.ts";
+import {popMainMenu, pushMainMenu} from "../UI/MainMenu.ts";
+import {addMainMenuButton} from "../UI/MainMenuButton.ts";
+import {Icons} from "../UI/Icons.ts";
+import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
+import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
 
 
 export enum ToolState {
@@ -129,7 +134,23 @@ export default class SceneEditor {
         AnimationEditor.update();
     }
     onUINice() {
+        pushMainMenu("tools",200,134);
+        if (addMainMenuButton("Save", Icons.SAVE,false)){
+            this.saveAll();
+        }
 
+
+
+
+        addMainMenuDivider("tooldDiv1")
+        if ( addMainMenuToggleButton("Move", Icons.MOVE,this.currentToolState == ToolState.translate)) this.setCurrentToolState(ToolState.translate);
+        if (addMainMenuToggleButton("Rotate", Icons.ROTATE,this.currentToolState == ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
+        if (addMainMenuToggleButton("Scale", Icons.SCALE,this.currentToolState == ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+   //     if (addMainMenuButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
+     //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
+      //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+
+        popMainMenu()
 
         pushSplitPanel("horizontal panel",  this.nodeBottom);
         popSplitPanel()
@@ -158,11 +179,26 @@ export default class SceneEditor {
 
 
     }
+
+    public saveAll(){
+        let sceneData: Array<any> = []
+        this.root.getSceneData(sceneData);
+
+        let animationData: Array<any> = []
+        for (let a of this.animations) {
+            a.getAnimationData(animationData);
+        }
+        let data: any = {}
+        data.scene = sceneData;
+        data.animation = animationData;
+        saveScene("scene1", JSON.stringify(data)).then()
+    }
+
     public onUI() {
-        if (UI.LButton("Save Scene")) {
+       /* if (UI.LButton("Save Scene")) {
 
-
-            let sceneData: Array<any> = []
+            this.saveAll();
+           let sceneData: Array<any> = []
             this.root.getSceneData(sceneData);
 
             let animationData: Array<any> = []
@@ -174,15 +210,15 @@ export default class SceneEditor {
             data.animation = animationData;
             saveScene("scene1", JSON.stringify(data)).then()
         }
-
+*/
 
         UI.separator("Tools")
 
 
         this.editCursor.localSpace = UI.LBool("Translate local", false);
-        if (UI.LButton("Translate", "", this.currentToolState != ToolState.translate)) this.setCurrentToolState(ToolState.translate);
-        if (UI.LButton("Rotate", "", this.currentToolState != ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
-        if (UI.LButton("Scale", "", this.currentToolState != ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+      //  if (UI.LButton("Translate", "", this.currentToolState != ToolState.translate)) this.setCurrentToolState(ToolState.translate);
+        //if (UI.LButton("Rotate", "", this.currentToolState != ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
+        //if (UI.LButton("Scale", "", this.currentToolState != ToolState.scale)) this.setCurrentToolState(ToolState.scale);
         UI.separator("Animation")
         if (this.currentModel) {
             if (UI.LButton("New Animation For Model")) {

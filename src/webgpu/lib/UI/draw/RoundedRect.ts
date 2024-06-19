@@ -4,7 +4,7 @@ import Rect from "../math/Rect.ts";
 class RoundedRect{
     private basePoint:Array<Vec2>=[]
     private tempPoints:Array<Vec2>=[]
-    private numSteps=3;
+    private numSteps=5;
     constructor() {
 
         let stepSize =(Math.PI/2)/this.numSteps;

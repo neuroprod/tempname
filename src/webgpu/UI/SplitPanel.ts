@@ -1,7 +1,7 @@
 
 import UI_I from "../lib/UI/UI_I.ts";
 
-import {MenuBGColor, TextColorDefault} from "./Style.ts";
+import {MenuBGColor, PanelRadius, TextColorDefault} from "./Style.ts";
 
 
 import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
@@ -71,7 +71,7 @@ export class SplitPanel extends Component{
     prepDraw() {
         super.prepDraw();
 
-        UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,MenuBGColor,12)
+        UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,MenuBGColor,PanelRadius)
         UI_I.currentDrawBatch.sdfBatch.addLine(this.layoutRect.pos,this.name,16,TextColorDefault)
     }
     setSubComponents() {
@@ -79,7 +79,7 @@ export class SplitPanel extends Component{
 
         UI_IC.pushVerticalLayout("panelVert", this.contentVLSetting);
 
-       
+
     }
 
 }

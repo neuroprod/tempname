@@ -12,7 +12,7 @@ export default class SplitNode{
 
 
 
-    public border = 10;
+    public border = 4;
     public size: Vec2 = new Vec2(500,500);
     public pos: Vec2 = new Vec2(10,10);
     public rect = new Rect();
@@ -81,7 +81,7 @@ export default class SplitNode{
     }
 
     resize(size:Vec2,force=false) {
-       // if(size.equal(this.size) && !force)return false;
+        if(size.equal(this.size) && !force)return false;
         if(size.x==0)return;
 
         this.size.copy(size);
