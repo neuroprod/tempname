@@ -34,7 +34,7 @@ export default class DockManager {
     }
 
     public startDragging(panel: Panel) {
-        console.log("startDragg")
+      return;
         let node = this.mainDockNode.getNodeWithPanel(panel);
         if (node) {
             if (node.splitType === DockSplit.Center) {
@@ -76,6 +76,7 @@ export default class DockManager {
     }
 
     public stopDragging(panel: Panel) {
+        return;
         this.dragComponent = null;
 
         this.mainDockNode.updateLayout();
@@ -84,6 +85,7 @@ export default class DockManager {
     }
 
     update() {
+        return;
         //wait for panels rendered 1 time
         if (this.setPanelsFirst == 1) {
             this.setPanelsFirst++;

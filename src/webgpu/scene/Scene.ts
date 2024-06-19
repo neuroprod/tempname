@@ -17,6 +17,7 @@ import Animation from "./timeline/animation/Animation.ts";
 import AnimationEditor from "./timeline/AnimationEditor.ts";
 import AnimationChannel, {Key} from "./timeline/animation/AnimationChannel.ts";
 import {Quaternion, Vector3} from "@math.gl/core";
+import {popDockPanel, pushDockPanel} from "../UI/DockPanel.ts";
 
 
 export enum ToolState {
@@ -106,7 +107,12 @@ export default class Scene {
         this.editCursor.update()
         AnimationEditor.update();
     }
+    onUINice() {
+        pushDockPanel("sceneSSSS")
 
+        popDockPanel()
+
+    }
     public onUI() {
         if (UI.LButton("Save Scene")) {
 
@@ -308,4 +314,6 @@ export default class Scene {
         this.currentToolState = toolState;
         this.editCursor.setToolState(this.currentToolState);
     }
+
+
 }
