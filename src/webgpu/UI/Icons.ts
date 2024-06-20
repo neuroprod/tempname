@@ -16,4 +16,6 @@ export const Icons  = {
     SELECT_FULL: 'o',
     BEZIER: 'p',
     LINE: 'q',
+    CLOSE: 'r',
+    NEXT: 's',
 }

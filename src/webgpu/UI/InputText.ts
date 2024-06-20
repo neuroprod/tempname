@@ -16,7 +16,7 @@ export function addInputText(id:string,ref:any,refValue:string,left:number=0,top
 
         let s = new ComponentSettings()
 
-        s.box.size.set(200,40)
+        s.box.size.set(200,36)
         s.box.marginLeft =left;
         s.box.marginTop =top;
 
@@ -52,6 +52,8 @@ export class InputText extends Component{
         this.refValue =refValue;
         this.text = ref[refValue];
         this.cursorPos =this.text.length
+
+        UI_I.setFocusComponent(this);
     }
     limitMouseCursor(pos: number) {
         if (pos < 0) pos = 0;
@@ -126,8 +128,9 @@ export class InputText extends Component{
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,TextColorDisabled,InputTextRadius);
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
 
-        UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect,TextColorBright)
-
+        if(this.isFocus){
+            UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect,TextColorBright)
+        }
 
         UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.text,14,TextColorBright);
     }

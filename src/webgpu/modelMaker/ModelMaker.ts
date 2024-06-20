@@ -191,7 +191,9 @@ export default class ModelMaker {
         }
         addMainMenuDivider("tooldDiv1")
         if(addMainMenuButton("NewImage", Icons.NEW_IMAGE,true)){
-            setNewPopup("add Image")
+            setNewPopup("+ Add new Image","new_image",(name:string)=>{
+                this.makeNewProject(name);
+            })
         }
         addMainMenuButton("Open", Icons.FOLDER,false)
 
@@ -227,6 +229,34 @@ export default class ModelMaker {
 
         popMainMenu()
     }
+
+    makeNewProject(newName:string){
+        let fail = false;
+        if (newName.length == 0) {
+            UI.logEvent("x", "Model needs a name", true);
+            fail = true
+        }
+        for (let p of this.projects) {
+            if (p.name == newName) {
+                UI.logEvent("xxx", "Model needs unique name", true);
+                fail = true
+                break;
+            }
+        }
+        if (!fail) {
+            this.currentProject = new Project(this.renderer);
+            this.currentProject.name = newName;
+            this.drawing.setProject(this.currentProject);
+            this.cutting.setProject(this.currentProject)
+
+            this.projects.push(this.currentProject);
+        }
+    }
+
+
+
+
+
     public onUI() {
 
         UI.pushLList("Models", 100);

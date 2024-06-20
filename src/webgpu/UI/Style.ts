@@ -10,6 +10,17 @@ export const OverButtonColor =new Color().setHex("#2b2c31");
 export const DownButtonColor =new Color().setHex("#343844");
 export const ButtonColor =new Color().setHex("#26272a");
 
+
+
+export const OverButtonColorBright =new Color().setHex("#1474f3");
+export const DownButtonColorBright =new Color().setHex("#3488f5");
+export const ButtonColorBright =new Color().setHex("#036efa");
+
+
+
+
+
+
 export const ButtonIconSize =18;
 export const ButtonBorderColor =new Color().setHex("#3c3c3d");
 export const ColorButtonBorderColor =new Color().setHex("#6d6d70");
