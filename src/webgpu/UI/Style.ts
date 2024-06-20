@@ -8,10 +8,11 @@ export const ButtonColor =new Color().setHex("#26272a");
 
 export const ButtonIconSize =18;
 export const ButtonBorderColor =new Color().setHex("#3c3c3d");
+export const ColorButtonBorderColor =new Color().setHex("#6d6d70");
 export const TextColorSelect =new Color().setHex("#d8e6f3");
 export const TextColorDefault =new Color().setHex("#c7c7c7");
 export const TextColorDisabled =new Color().setHex("#858585");
-
-export const MenuDividerColor =new Color().setHex("#393b42");
+export const TextColorBright =new Color().setHex("#efefef");
+export const MenuDividerColor =new Color().setHex("#464952");
 export const PanelRadius =17;
 export const ButtonRadius =8;

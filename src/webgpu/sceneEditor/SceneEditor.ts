@@ -26,6 +26,7 @@ import {addMainMenuButton} from "../UI/MainMenuButton.ts";
 import {Icons} from "../UI/Icons.ts";
 import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
 import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
+import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 
 
 export enum ToolState {
@@ -134,8 +135,8 @@ export default class SceneEditor {
       //  AnimationEditor.update();
     }
     onUINice() {
-        pushMainMenu("tools",200,134);
-        if (addMainMenuButton("Save", Icons.SAVE,false)){
+        pushMainMenu("tools",400,134);
+        if (addMainMenuTextButton("Save",false)){
             this.saveAll();
         }
         addMainMenuDivider("tooldDiv1")
@@ -156,7 +157,7 @@ export default class SceneEditor {
      //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
       //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
 
-        popMainMenu()
+       /* popMainMenu()
 
         pushSplitPanel("horizontal panel",  this.nodeBottom);
         popSplitPanel()
@@ -180,7 +181,7 @@ export default class SceneEditor {
         s.y-=20
         if (this.rootSplit.resize(s)) {
          this.rootSplit.updateLayout();
-        }
+        }*/
 
 
 

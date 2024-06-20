@@ -4,7 +4,7 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 
 import {
     ButtonBorderColor,
-    ButtonColor, ButtonIconSize,
+    ButtonColor,
     ButtonRadius, DownButtonColor, OverButtonColor, TextColorBright,
 
     TextColorDefault,
@@ -15,7 +15,7 @@ import Rect from "../lib/UI/math/Rect.ts";
 
 
 
-export function addMainMenuButton(label:string,icon:string,enabled:boolean=true){
+export function addMainMenuTextButton(label:string,enabled:boolean=true){
 
 
 
@@ -31,10 +31,10 @@ export function addMainMenuButton(label:string,icon:string,enabled:boolean=true)
 
 
 
-        let comp = new MainMenuButton(UI_I.getID(label), s,icon);
+        let comp = new MainMenuTextButton(UI_I.getID(label), s,label);
         UI_I.addComponent(comp);
     }
-    let r = UI_I.currentComponent as MainMenuButton;
+    let r = UI_I.currentComponent as MainMenuTextButton;
     r.setEnabled(enabled);
 
     UI_I.popComponent()
@@ -43,32 +43,32 @@ export function addMainMenuButton(label:string,icon:string,enabled:boolean=true)
 
 
 
-class MainMenuButton extends Component{
+class MainMenuTextButton extends Component{
 
-    private icon: string;
+    private label: string;
 
-    private iconPos:Vec2 =new Vec2()
+    private labelPos:Vec2 =new Vec2()
     public enabled =false;
     public borderRect:Rect =new Rect();
-    constructor(id:number,s:ComponentSettings,icon:string) {
+    private fontSize =14;
+    constructor(id:number,s:ComponentSettings,label:string) {
 
         super(id,s);
 
 
-        this.icon =icon;
+        this.label =label;
     }
 
     layoutRelative() {
         super.layoutRelative();
-
+        this.size.x =    UI_I.currentDrawBatch.sdfBatch.getLineSize(this.label,this.fontSize)+26;
     }
     layoutAbsolute() {
         super.layoutAbsolute();
 
-        this.iconPos.copy(this.layoutRect.size);
-        this.iconPos.scale(0.5);
-        this.iconPos.add(this.layoutRect.pos);
-
+        this.labelPos.copy(this.layoutRect.pos)
+        this.labelPos.y+=this.layoutRect.size.y/2 -(this.fontSize/2);
+        this.labelPos.x+=13;
         this.borderRect.copy(this.layoutRect);
         this.borderRect.size.x-=2;
         this.borderRect.size.y-=2;
@@ -80,21 +80,21 @@ class MainMenuButton extends Component{
         super.prepDraw();
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonBorderColor,ButtonRadius+1)
 
-        if(this.isDown ){
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorBright)
+        if(this.isDown){
+            UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,this.fontSize,TextColorBright)
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.borderRect,DownButtonColor,ButtonRadius)
 
         }
-       else if(this.isOver){
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorBright)
+        else if(this.isOver){
+            UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,this.fontSize,TextColorBright)
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.borderRect,OverButtonColor,ButtonRadius)
 
         }else{
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorDefault)
+            UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,this.fontSize,TextColorDefault)
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.borderRect,ButtonColor,ButtonRadius)
         }
 
-       // UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,12,new Color(0.3,0.3,0.3),false)
+        // UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,12,new Color(0.3,0.3,0.3),false)
 
     }
 

@@ -12,4 +12,8 @@ export const Icons  = {
     NEW_IMAGE: 'k',
     MIN_CUBE: 'l',
     PLUS_CUBE: 'm',
+    SELECT: 'n',
+    SELECT_FULL: 'o',
+    BEZIER: 'p',
+    LINE: 'q',
 }

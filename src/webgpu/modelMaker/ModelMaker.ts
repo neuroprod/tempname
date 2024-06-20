@@ -29,6 +29,9 @@ import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
 import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
 import {ToolState} from "../sceneEditor/SceneEditor.ts";
 import {addMainMenuText} from "../UI/MainMenuText.ts";
+import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
+import {addMenuColorButton} from "../UI/MenuColorButton.ts";
+import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
 
 
 enum ModelMainState {
@@ -181,26 +184,40 @@ export default class ModelMaker {
         this.mouseLocal.y =posR.y;
     }
     onUINice() {
-        pushMainMenu("paint",400,134);
+        pushMainMenu("paint",800,134);
+        if (addMainMenuTextButton("Save",false)){
+            //this.saveAll();
+        }
+        addMainMenuDivider("tooldDiv1")
         addMainMenuButton("NewImage", Icons.NEW_IMAGE,false)
         addMainMenuButton("Open", Icons.FOLDER,false)
-        addMainMenuButton("Save", Icons.SAVE,false)
 
 
 
-
-
-        addMainMenuDivider("tooldDiv1")
+        addMainMenuDivider("tooldDiv2")
         addMainMenuText("DRAW")
 
-        addMainMenuToggleButton("Rotate", Icons.ROTATE,false)
-        addMainMenuToggleButton("Scale", Icons.SCALE,false)
-        addMainMenuButton("Trash", Icons.TRASH,false)
+        addMainMenuToggleButton("Brush", Icons.PAINT,true)
+        addMenuBrushButton(4)
+        addMenuColorButton("#FF0000")
+        addMainMenuDivider("tooldDiv3")
+        //addMainMenuButton("Trash", Icons.TRASH,false)
         addMainMenuText("CUT MESH")
+        if (addMainMenuButton("Add", Icons.PLUS_CUBE,false)){
 
+        }
+        if (addMainMenuButton("Remove", Icons.MIN_CUBE,false)){
 
+        }
+        addMainMenuDivider("tooldDiv4")
+        addMainMenuToggleButton("Select", Icons.SELECT,false)
+        addMainMenuToggleButton("Edit", Icons.SELECT_FULL,false)
+        addMainMenuToggleButton("Line", Icons.LINE,false)
+        addMainMenuToggleButton("Bezier", Icons.BEZIER,false)
+        addMainMenuToggleButton("Move", Icons.MOVE,false)
+        addMainMenuToggleButton("setCenter", Icons.CENTER,false)
 
-        addMainMenuButton("Trash", Icons.TRASH,false)
+        //addMainMenuButton("Trash", Icons.TRASH,false)
         //     if (addMainMenuButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
         //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
         //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);

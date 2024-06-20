@@ -21,7 +21,7 @@ export function addMainMenuDivider(label:string){
 
         let s = new ComponentSettings()
 
-        s.box.size.set(1,22)
+        s.box.size.set(1,24)
         s.box.setMargin(0)
         s.box.marginTop=5;
         s.box.marginLeft =8;

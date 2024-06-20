@@ -270,7 +270,9 @@ export default class UI_I {
 
                 this.mouseDownComponent.onMouseUp();
                 this.mouseDownComponent.isDown = false;
+                this.mouseDownComponent.setDirty()
                 this.mouseDownComponent = null;
+
             }
         }
         this.mouseListener.reset();
@@ -409,7 +411,7 @@ export default class UI_I {
 
     public static update() {
 
-        this.dockManager.update();
+        //this.dockManager.update();
         if (UI_I.renderType == "gpu") {
             UI_I.rendererGPU.setProjection();
         }
