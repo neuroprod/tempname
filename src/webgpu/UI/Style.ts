@@ -5,6 +5,9 @@ export const SelectButtonColor =new Color().setHex("#036efa");
 export const OverButtonColor =new Color().setHex("#2b2c31");
 export const DownButtonColor =new Color().setHex("#343844");
 export const ButtonColor =new Color().setHex("#26272a");
+
+export const ButtonIconSize =18;
+export const ButtonBorderColor =new Color().setHex("#3c3c3d");
 export const TextColorSelect =new Color().setHex("#d8e6f3");
 export const TextColorDefault =new Color().setHex("#c7c7c7");
 export const TextColorDisabled =new Color().setHex("#858585");

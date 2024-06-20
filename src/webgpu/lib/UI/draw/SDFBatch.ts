@@ -13,7 +13,22 @@ export default class SDFBatch {
     constructor() {
     }
 
+    getLineSize(text: string, fontSize: number,bold:boolean =false){
+        fontSize =1/42*fontSize ;
+        let fontArr = SDFFont.charArrayRegular;
+        if(bold){
+            fontArr  = SDFFont.charArrayBold;
+        }
+        let size =0
+        for (let i = 0; i < text.length; i++) {
+            let c = text.charCodeAt(i);
+            let char =fontArr[c];
+            size+=char.xadvance*fontSize
 
+        }
+        return size;
+
+    }
     addIcon(pos: Vec2, a: any,fontSize: number, color: Color) {
         fontSize =1/42*fontSize ;
         this.startPos = pos.clone();

@@ -131,18 +131,24 @@ export default class SceneEditor {
         }
 
         this.editCursor.update()
-        AnimationEditor.update();
+      //  AnimationEditor.update();
     }
     onUINice() {
         pushMainMenu("tools",200,134);
         if (addMainMenuButton("Save", Icons.SAVE,false)){
             this.saveAll();
         }
-
-
-
-
         addMainMenuDivider("tooldDiv1")
+        if (addMainMenuButton("Add", Icons.PLUS_CUBE,false)){
+
+        }
+        if (addMainMenuButton("Remove", Icons.MIN_CUBE,false)){
+
+        }
+
+        addMainMenuDivider("tooldDiv2")
+
+
         if ( addMainMenuToggleButton("Move", Icons.MOVE,this.currentToolState == ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (addMainMenuToggleButton("Rotate", Icons.ROTATE,this.currentToolState == ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
         if (addMainMenuToggleButton("Scale", Icons.SCALE,this.currentToolState == ToolState.scale)) this.setCurrentToolState(ToolState.scale);
@@ -167,13 +173,13 @@ export default class SceneEditor {
         popSplitPanel()
 
 
-        this.rootSplit.setDividers();
+        //this.rootSplit.setDividers();
 
         let s = UI_I.pixelSize.clone()
         s.x-=20
         s.y-=20
         if (this.rootSplit.resize(s)) {
-          this.rootSplit.updateLayout();
+         this.rootSplit.updateLayout();
         }
 
 

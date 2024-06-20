@@ -8,4 +8,8 @@ export const Icons  = {
     ROTATE: 'h',
     SCALE: 'g',
     SAVE: 'i',
+    TRASH: 'j',
+    NEW_IMAGE: 'k',
+    MIN_CUBE: 'l',
+    PLUS_CUBE: 'm',
 }

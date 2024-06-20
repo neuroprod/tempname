@@ -2,7 +2,14 @@ import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 
-import {ButtonRadius, SelectButtonColor, TextColorDefault, TextColorDisabled, TextColorSelect} from "./Style.ts";
+import {
+    ButtonIconSize,
+    ButtonRadius,
+    SelectButtonColor,
+    TextColorDefault,
+    TextColorDisabled,
+    TextColorSelect
+} from "./Style.ts";
 
 
 
@@ -66,12 +73,12 @@ class MainMenuToggleButton extends Component{
 
         if(this.selected){
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,SelectButtonColor,ButtonRadius)
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,TextColorSelect)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorSelect)
         }else if(this.isOver){
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,TextColorDefault)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorDefault)
 
         }else{
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,TextColorDisabled)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorDisabled)
         }
 
        // UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,12,new Color(0.3,0.3,0.3),false)

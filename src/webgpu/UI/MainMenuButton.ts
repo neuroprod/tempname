@@ -3,13 +3,15 @@ import UI_I from "../lib/UI/UI_I.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 
 import {
-    ButtonColor,
+    ButtonBorderColor,
+    ButtonColor, ButtonIconSize,
     ButtonRadius, DownButtonColor, OverButtonColor,
     SelectButtonColor,
     TextColorDefault,
     TextColorDisabled,
     TextColorSelect
 } from "./Style.ts";
+import Rect from "../lib/UI/math/Rect.ts";
 
 
 
@@ -47,7 +49,7 @@ class MainMenuButton extends Component{
 
     private iconPos:Vec2 =new Vec2()
     public selected =false;
-
+    public borderRect:Rect =new Rect();
     constructor(id:number,s:ComponentSettings,icon:string) {
 
         super(id,s);
@@ -63,29 +65,33 @@ class MainMenuButton extends Component{
     layoutAbsolute() {
         super.layoutAbsolute();
 
-
-
-
-
-        this.iconPos.copy(this.layoutRect.size)
-        this.iconPos.scale(0.5)
+        this.iconPos.copy(this.layoutRect.size);
+        this.iconPos.scale(0.5);
         this.iconPos.add(this.layoutRect.pos);
+
+        this.borderRect.copy(this.layoutRect);
+        this.borderRect.size.x-=2;
+        this.borderRect.size.y-=2;
+        this.borderRect.pos.x+=1;
+        this.borderRect.pos.y+=1;
     }
 
     prepDraw() {
         super.prepDraw();
+        UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonBorderColor,ButtonRadius+1)
+
         if(this.isDown){
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,TextColorDefault)
-            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,DownButtonColor,ButtonRadius)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorDefault)
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.borderRect,DownButtonColor,ButtonRadius)
 
         }
        else if(this.isOver){
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,TextColorDefault)
-            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,OverButtonColor,ButtonRadius)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorDefault)
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.borderRect,OverButtonColor,ButtonRadius)
 
         }else{
-            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,20,TextColorDisabled)
-            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonColor,ButtonRadius)
+            UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos,this.icon,ButtonIconSize,TextColorDisabled)
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.borderRect,ButtonColor,ButtonRadius)
         }
 
        // UI_I.currentDrawBatch.sdfBatch.addLine(this.labelPos,this.label,12,new Color(0.3,0.3,0.3),false)

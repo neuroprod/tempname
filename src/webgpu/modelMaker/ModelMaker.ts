@@ -22,6 +22,13 @@ import DrawingPreviewMaterial from "./drawing/DrawingPreviewMaterial.ts";
 
 import Object3D from "../lib/model/Object3D.ts";
 import {NumericArray} from "@math.gl/types";
+import {popMainMenu, pushMainMenu} from "../UI/MainMenu.ts";
+import {addMainMenuButton} from "../UI/MainMenuButton.ts";
+import {Icons} from "../UI/Icons.ts";
+import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
+import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
+import {ToolState} from "../sceneEditor/SceneEditor.ts";
+import {addMainMenuText} from "../UI/MainMenuText.ts";
 
 
 enum ModelMainState {
@@ -173,7 +180,33 @@ export default class ModelMaker {
         this.mouseLocal.x = posR.x;
         this.mouseLocal.y =posR.y;
     }
+    onUINice() {
+        pushMainMenu("paint",400,134);
+        addMainMenuButton("NewImage", Icons.NEW_IMAGE,false)
+        addMainMenuButton("Open", Icons.FOLDER,false)
+        addMainMenuButton("Save", Icons.SAVE,false)
 
+
+
+
+
+        addMainMenuDivider("tooldDiv1")
+        addMainMenuText("DRAW")
+
+        addMainMenuToggleButton("Rotate", Icons.ROTATE,false)
+        addMainMenuToggleButton("Scale", Icons.SCALE,false)
+        addMainMenuButton("Trash", Icons.TRASH,false)
+        addMainMenuText("CUT MESH")
+
+
+
+        addMainMenuButton("Trash", Icons.TRASH,false)
+        //     if (addMainMenuButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
+        //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
+        //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+
+        popMainMenu()
+    }
     public onUI() {
 
         UI.pushLList("Models", 100);

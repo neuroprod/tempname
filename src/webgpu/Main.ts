@@ -133,7 +133,14 @@ export default class Main {
         if (addMainMenuToggleButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
 
         popMainMenu()
+        if (this.currentMainState == MainState.modelMaker) {
 
+            this.modelMaker.onUINice()
+
+        } else if (this.currentMainState == MainState.editor) {
+
+            this.sceneEditor.onUINice()
+        }
 
 
         if (this.currentMainState != MainState.game) {
@@ -152,7 +159,7 @@ export default class Main {
                 //this.scene.onObjectUI()
                 AnimationEditor.onUI();
 
-                this.sceneEditor.onUINice()
+             
             }
         }
 
