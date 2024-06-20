@@ -14,7 +14,7 @@ import {
 import Rect from "../lib/UI/math/Rect.ts";
 
 
-export function addIconButton(label:string,icon:string,enabled:boolean=true,left:number,top:Number,size:number,bright:boolean=false){
+export function addIconButton(label:string,icon:string,enabled:boolean=true,left:number,top:number,size:number,bright:boolean=false){
 
 
 

@@ -1,11 +1,11 @@
 import PopUp, {PopUpSettings} from "../lib/UI/components/internal/popUps/PopUp.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 
-import {MenuBGColor, PanelRadius, TextColorBright, TextColorDefault} from "./Style.ts";
+import {MenuBGColor, PanelRadius, TextColorDefault} from "./Style.ts";
 import {addInputText} from "./InputText.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
-import {addMainMenuTextButton} from "./MainMenuTextButton.ts";
-import {addIconButton, addMainMenuButton} from "./MainMenuButton.ts";
+
+import {addIconButton} from "./MainMenuButton.ts";
 import {Icons} from "./Icons.ts";
 
 
@@ -36,7 +36,7 @@ export  class NewPopup extends PopUp{
     private title: string;
     private text: string;
     private textPos=new Vec2();
-    private callBack:(string) => void;
+    private callBack:(name:string) => void;
     constructor(id:number, settings:PopUpSettings,title:string,defaultName:string, callBack:(name:string) => void) {
         super(id,settings);
         this.title =title;
@@ -47,7 +47,7 @@ export  class NewPopup extends PopUp{
         super.layoutAbsolute();
         this.textPos.copy(this.layoutRect.pos)
         this.textPos.x+=25
-        this.textPos.y+=10
+        this.textPos.y+=15
     }
 
     prepDraw() {
@@ -57,14 +57,14 @@ export  class NewPopup extends PopUp{
     }
     setSubComponents() {
         super.setSubComponents();
-        if(addIconButton("add",Icons.NEXT,true,225,35,35,true)){
+        if(addIconButton("add",Icons.NEXT,true,225,40,35,true)){
             this.callBack(this.text);
             UI_I.removePopup(this);
         }
-        if(addIconButton("close",Icons.CLOSE,true,265,35,35)){
+        if(addIconButton("close",Icons.CLOSE,true,265,40,35)){
             UI_I.removePopup(this);
         }
-        addInputText("new_image",this,"text" ,20,35)
+        addInputText("new_image",this,"text" ,20,40)
         //addIconButton("add",Icons.NEW_IMAGE,true,100,35,35)
     }
 
