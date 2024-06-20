@@ -32,6 +32,7 @@ import {addMainMenuText} from "../UI/MainMenuText.ts";
 import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 import {addMenuColorButton} from "../UI/MenuColorButton.ts";
 import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
+import {setNewPopup} from "../UI/NewPopup.ts";
 
 
 enum ModelMainState {
@@ -189,7 +190,9 @@ export default class ModelMaker {
             //this.saveAll();
         }
         addMainMenuDivider("tooldDiv1")
-        addMainMenuButton("NewImage", Icons.NEW_IMAGE,false)
+        if(addMainMenuButton("NewImage", Icons.NEW_IMAGE,true)){
+            setNewPopup("add Image")
+        }
         addMainMenuButton("Open", Icons.FOLDER,false)
 
 
