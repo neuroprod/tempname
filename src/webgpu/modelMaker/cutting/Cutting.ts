@@ -36,8 +36,8 @@ export default class Cutting {
 
         this.camera = camera
         this.renderer = renderer
-        this.shapeLineModelSelect = new ShapeLineModel(this.renderer, "linesSelect");
-        this.shapeLineModelAll= new ShapeLineModel(this.renderer, "linesAll");
+        this.shapeLineModelSelect = new ShapeLineModel(this.renderer, "linesSelect",false);
+        this.shapeLineModelAll= new ShapeLineModel(this.renderer, "linesAll",true);
 
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
@@ -84,6 +84,12 @@ export default class Cutting {
 
                 this.prevMousePoint.from(mouseLocal)
                 this.isDraggingMove = true;
+
+            }  if (this.toolType == ToolType.Select) {
+
+
+               console.log(mouseLocal)
+                this.getPathFromMousePoint(mouseLocal);
 
             } else {
 
@@ -240,7 +246,7 @@ export default class Cutting {
 
     setTool(currentTool: ToolType) {
         this.toolType = currentTool
-        if(this.toolType==ToolType.Select || this.toolType==ToolType.Paint){
+        if(this.toolType==ToolType.Select|| this.toolType==ToolType.Paint){
             let paths:Array<Path>  =[];
             for (let m of this.project.meshes) {
                 paths.push(m.path)
@@ -248,7 +254,8 @@ export default class Cutting {
 
             }
             this.shapeLineModelAll.setPaths(paths)
-            this.shapeLineModelSelect.visible =false;
+
+            this.shapeLineModelSelect.visible =(this.toolType==ToolType.Select);
             this.pathEditor.pointModel.visible =false;
         }else{
             this.shapeLineModelAll.visible =false
@@ -256,5 +263,36 @@ export default class Cutting {
             this.pathEditor.pointModel.visible =true;
 
         }
+    }
+
+    private getPathFromMousePoint(mouseLocal: Vector2) {
+
+        let dist = Number.MAX_VALUE
+        let mouse3D = new Vector3(mouseLocal.x,mouseLocal.y,0);
+        let pm:ProjectMesh|null =null
+
+        for (let m of this.project.meshes) {
+            let pDist = m.path.getDistance(mouse3D);
+
+            if(pDist<dist){
+                dist =pDist;
+                pm =m;
+            }
+
+
+        }
+        console.log(pm?.name)
+        this.shapeLineModelAll.visible =true;
+        this.shapeLineModelSelect.visible =true;
+        this.setCurrentMesh(pm)
+        this.pathEditor.pointModel.visible =false;
+
+
+    }
+
+    private setCurrentMesh(pm: ProjectMesh|null) {
+        this.currentMesh =pm;
+        this.updateLine()
+
     }
 }

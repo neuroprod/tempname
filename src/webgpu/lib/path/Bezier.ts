@@ -1,5 +1,6 @@
-import {Vector3} from "@math.gl/core";
+import {Vector2, Vector3} from "@math.gl/core";
 import Curve from "./Curve.ts";
+import {NumericArray} from "@math.gl/types";
 
 export default class Bezier extends Curve{
      p1: Vector3;
@@ -51,6 +52,11 @@ export default class Bezier extends Curve{
         p.z = this.p1.z * factor1 + this.c1.z * factor2 + this.c2.z * factor3 + this.p2.z * factor4;
 
     }
+    getDistanceToPoint(point: Vector3) {
+        //TODO make it correct
 
+            return  (this.p1.distanceToSquared(point as NumericArray)+this.p2.distanceToSquared(point as NumericArray))/2
+
+    }
 
 }

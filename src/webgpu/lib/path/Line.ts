@@ -1,5 +1,6 @@
-import {Vector3} from "@math.gl/core";
+import {Vector2, Vector3} from "@math.gl/core";
 import Curve from "./Curve.ts";
+import {NumericArray} from "@math.gl/types";
 
 export default class Line extends Curve{
     private p1: Vector3;
@@ -22,5 +23,8 @@ export default class Line extends Curve{
         indices.push(l+1)
     }
 
-
+    //TODO make it correct
+    getDistanceToPoint(point: Vector3) {
+      return  (this.p1.distanceToSquared(point as NumericArray)+this.p2.distanceToSquared(point as NumericArray))/2
+    }
 }

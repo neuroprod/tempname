@@ -192,5 +192,16 @@ export default class Path {
             if(lc) this.currentPoint = lc.getP1();
         }
     }
+
+    getDistance(pos: Vector3) {
+
+
+        let minDistance =Number.MAX_VALUE
+        for(let c of this.curves){
+            let dist = c.getDistanceToPoint(pos)
+            minDistance =Math.min(minDistance,dist);
+        }
+        return minDistance
+    }
 }
 

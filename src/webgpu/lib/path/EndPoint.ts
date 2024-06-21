@@ -1,5 +1,5 @@
 import Curve from "./Curve.ts";
-import {Vector3} from "@math.gl/core";
+import {Vector2, Vector3} from "@math.gl/core";
 
 export default class EndPoint extends Curve {
     private p: Vector3;
@@ -12,4 +12,5 @@ export default class EndPoint extends Curve {
         positions.push(this.p.x,this.p.y,this.p.z);
     }
     getP1():Vector3{return this.p;}
+
 }

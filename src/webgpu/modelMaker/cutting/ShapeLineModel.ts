@@ -5,6 +5,7 @@ import Model from "../../lib/model/Model.ts";
 import Mesh from "../../lib/mesh/Mesh.ts";
 import Renderer from "../../lib/Renderer.ts";
 import Path from "../../lib/path/Path.ts";
+import ColorV from "../../lib/ColorV.ts";
 
 
 
@@ -17,10 +18,17 @@ export default class ShapeLineModel extends Model{
 
 
 
-    constructor(renderer: Renderer,label:string) {
+    constructor(renderer: Renderer,label:string,all:boolean) {
         super(renderer,label);
         this.mesh =new Mesh(this.renderer,label+"m")
         this.material = new ShapeLineMaterial(this.renderer,"ShapeLineMaterial")
+        if(all){
+            this.material.setUniform("color",new ColorV().setHex("#ffae00"))
+        }else{
+            this.material.setUniform("color",new ColorV().setHex("#0066ff"))
+        }
+
+
         this.material.depthWrite =false;
         this.material.depthCompare ="always";
         this.visible =false;
