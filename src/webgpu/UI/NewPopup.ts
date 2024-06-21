@@ -16,7 +16,7 @@ export function setNewPopup(title: string, defaultName: string, callBack: (name:
 
     UI_I.currentComponent = UI_I.popupLayer;
     let settings: PopUpSettings = new PopUpSettings()
-    let width =320
+    let width =312
     let height =100
     settings.box.size.set(width,height)
     settings.box.marginLeft =UI_I.pixelSize.x/2 -width/2;
@@ -57,14 +57,14 @@ export  class NewPopup extends PopUp{
     }
     setSubComponents() {
         super.setSubComponents();
-        if(addIconButton("add",Icons.NEXT,true,225,40,35,true)){
+        if(addIconButton("add",Icons.NEXT,true,223,40,33,true)){
             this.callBack(this.text);
             UI_I.removePopup(this);
         }
-        if(addIconButton("close",Icons.CLOSE,true,265,40,35)){
+        if(addIconButton("close",Icons.CLOSE,true,260,40,33)){
             UI_I.removePopup(this);
         }
-        addInputText("new_image",this,"text" ,20,40)
+        addInputText("new_image",this,"text" ,true,20,40)
         //addIconButton("add",Icons.NEW_IMAGE,true,100,35,35)
     }
 

@@ -27,6 +27,8 @@ import {Icons} from "../UI/Icons.ts";
 import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
 import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
 import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
+import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
+import {addInputText} from "../UI/InputText.ts";
 
 
 export enum ToolState {
@@ -157,9 +159,18 @@ export default class SceneEditor {
      //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
       //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
 
-       /* popMainMenu()
+        popMainMenu()
 
-        pushSplitPanel("horizontal panel",  this.nodeBottom);
+        pushSplitPanel("horizontal panel",  this.nodeBottom,false);
+        pushPanelMenu("animationMenu")
+        addMainMenuButton("AddAnime", "u",false)
+        addMainMenuButton("RemoveAnime", "v",false)
+        addMainMenuButton("open", Icons.FOLDER,false)
+        if(AnimationEditor.currentAnimation){
+        addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
+        }
+        popPanelMenu()
+        AnimationEditor.onUI();
         popSplitPanel()
 
         pushSplitPanel("Top panel",  this.nodeRightTop);
@@ -168,20 +179,21 @@ export default class SceneEditor {
         popSplitPanel()
 
         pushSplitPanel("bottom panel",  this.nodeRightBottom);
+
         if(this.currentModel) {
             this.currentModel.onDataUI()
         }
         popSplitPanel()
 
 
-        //this.rootSplit.setDividers();
+        this.rootSplit.setDividers();
 
         let s = UI_I.pixelSize.clone()
         s.x-=20
         s.y-=20
         if (this.rootSplit.resize(s)) {
          this.rootSplit.updateLayout();
-        }*/
+        }
 
 
 
@@ -391,6 +403,7 @@ export default class SceneEditor {
             }
 
             this.animations.push(animation)
+            AnimationEditor.setAnimation(this.animations[0]);
 
         }
 

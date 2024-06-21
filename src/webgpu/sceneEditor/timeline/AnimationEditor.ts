@@ -117,7 +117,7 @@ class AnimationEditor {
     onUI() {
         if (this.currentAnimation) {
             if (!UI.initialized) return;
-            UI.pushWindow("Animation")
+
 
             let id = "timeLine";
             if (!UI_I.setComponent(id)) {
@@ -125,7 +125,7 @@ class AnimationEditor {
                 UI_I.addComponent(comp);
             }
             UI_I.popComponent();
-            UI.popWindow()
+
         }
     }
 

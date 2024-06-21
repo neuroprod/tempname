@@ -10,7 +10,7 @@ import UI_IC from "../lib/UI/UI_IC.ts";
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 
 
-export function pushSplitPanel(name:string,splitNode:SplitNode){
+export function pushSplitPanel(name:string,splitNode:SplitNode,needsScroll=true){
 
 
     UI_I.currentComponent = UI_I.panelLayer;
@@ -20,13 +20,13 @@ export function pushSplitPanel(name:string,splitNode:SplitNode){
 
         s.box.size.set(200,200)
         s.box.setMargin(0)
-        s.box.setPadding(5);
+        s.box.setPadding(10);
         //s.box.paddingLeft=3;
         //s.box.paddingRight=3;
 
 
 
-        let comp = new SplitPanel(UI_I.getID(name), s,splitNode,name);
+        let comp = new SplitPanel(UI_I.getID(name), s,splitNode,name,needsScroll);
         UI_I.addComponent(comp);
     }
 
@@ -43,7 +43,7 @@ export class SplitPanel extends Component{
     private contentVLSetting: VerticalLayoutSettings;
 
 
-    constructor(id:number,s:ComponentSettings,splitNode:SplitNode,name:string) {
+    constructor(id:number,s:ComponentSettings,splitNode:SplitNode,name:string,needsScroll:boolean) {
 
         super(id,s);
         splitNode.setPanel(this);
@@ -52,7 +52,9 @@ export class SplitPanel extends Component{
         this.hasOwnDrawBatch =true
        // this.splitNode =splitNode;
         this.contentVLSetting = new VerticalLayoutSettings();
-        this.contentVLSetting.box.marginTop = 24;
+        this.contentVLSetting.needScrollBar =needsScroll
+        this.contentVLSetting.box.marginTop = 0;
+
     }
 
 
@@ -72,7 +74,7 @@ export class SplitPanel extends Component{
         super.prepDraw();
 
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,MenuBGColor,PanelRadius)
-        UI_I.currentDrawBatch.sdfBatch.addLine(this.layoutRect.pos,this.name,16,TextColorDefault)
+       // UI_I.currentDrawBatch.sdfBatch.addLine(this.layoutRect.pos,this.name,16,TextColorDefault)
     }
     setSubComponents() {
 

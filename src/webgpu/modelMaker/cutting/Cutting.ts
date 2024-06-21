@@ -281,7 +281,7 @@ export default class Cutting {
 
 
         }
-        console.log(pm?.name)
+  
         this.shapeLineModelAll.visible =true;
         this.shapeLineModelSelect.visible =true;
         this.setCurrentMesh(pm)

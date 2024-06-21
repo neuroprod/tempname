@@ -5,7 +5,7 @@ export const InputTextBG =new Color().setHex("#aa00ff");
 export const InputTextRadius =8;
 
 export const MenuBGColor =new Color().setHex("#1b1c1e");
-export const SelectButtonColor =new Color().setHex("#5920d0");//new Color().setHex("#036efa");
+export const SelectButtonColor =new Color().setHex("#1474f3");//new Color().setHex("#036efa");
 export const OverButtonColor =new Color().setHex("#2b2c31");
 export const DownButtonColor =new Color().setHex("#343844");
 export const ButtonColor =new Color().setHex("#26272a");

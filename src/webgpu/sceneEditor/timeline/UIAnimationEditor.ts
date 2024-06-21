@@ -12,11 +12,18 @@ import Font from "../../lib/UI/draw/Font.ts";
 import UI_IC from "../../lib/UI/UI_IC.ts";
 import {ButtonBaseSettings} from "../../lib/UI/components/internal/ButtonBase.ts";
 import {VerticalLayoutSettings} from "../../lib/UI/components/VerticalLayout.ts";
+import UI from "../../lib/UI/UI.ts";
+import ColorButton from "../../lib/UI/components/internal/ColorButton.ts";
+import {ButtonBorderColor, ButtonColor, SelectButtonColor, TextColorBright} from "../../UI/Style.ts";
 
 export class UIAnimationEditorSettings extends ComponentSettings {
     constructor() {
         super();
         this.box.size.set(-1, -1)
+        this.box.setMargin(0)
+        this.box.setPadding(0)
+        this.box.paddingBottom =0
+        this.box.marginBottom=70
         this.hasOwnDrawBatch = true;
     }
 
@@ -33,69 +40,40 @@ export default class UIAnimationEditor extends Component {
     private topLeft = new Vec2()
     private topLeftItems = new Vec2()
     private keysBackgroundRect = new Rect()
-    private keysBackgroundColor = new Color().setHex("#444444", 1)
+    private keysBackgroundColor =ButtonColor
     private keysLineRect = new Rect()
-    private keysLineColor = new Color().setHex("#5e5e5e", 1)
+    private keysLineColor =ButtonBorderColor
     //cursor
     private cursorDrag: boolean = false;
     private cursorPos = new Vec2()
     private cursorRect = new Rect(new Vec2(0, -21), new Vec2(20, 16))
     private cursorLineRect = new Rect()
-    private cursorColor = new Color().setHex("#ff156c", 1)
+    private cursorColor = SelectButtonColor
     private cursorText: string = "";
-    private cursorTextColor: Color = new Color().setHex("#FFFFFF", 1)
+    private cursorTextColor: Color = TextColorBright
     private cursorTextPos = new Vec2()
     private keyFramesOffset = new Vec2()
     //temps
 
     private mouseStartDragX: number = 0;
     private cursorDragStartFrame: number = 0;
-    private addKeySettings: ButtonBaseSettings;
-    private addKeyAllSettings: ButtonBaseSettings;
-    private playPauseSettings: ButtonBaseSettings;
-    private startRecordSettings: ButtonBaseSettings;
-    private stopRecordSettings: ButtonBaseSettings;
-    private threeHolderSetting: ComponentSettings;
-    private keyFrameSettings: VerticalLayoutSettings;
+
+    private panelVertSettings: VerticalLayoutSettings;
 
 
     constructor(id: number, settings: UIAnimationEditorSettings) {
         super(id, settings)
         this.size.copy(settings.box.size);
-        let posMargin = 0
-        this.addKeySettings = new ButtonBaseSettings()
-        this.addKeySettings.box.size.set(73, 20)
-        posMargin += 75
-        this.addKeyAllSettings = new ButtonBaseSettings()
-        this.addKeyAllSettings.box.size.set(73, 20)
-        this.addKeyAllSettings.box.marginLeft = posMargin;
-        posMargin += 75 + 20
-        this.playPauseSettings = new ButtonBaseSettings()
-        this.playPauseSettings.box.size.set(73, 20)
-        this.playPauseSettings.box.marginLeft = posMargin;
-        posMargin += 75
-        this.startRecordSettings = new ButtonBaseSettings()
-        this.startRecordSettings.box.size.set(73, 20)
-        this.startRecordSettings.box.marginLeft = posMargin;
-
-        this.stopRecordSettings = new ButtonBaseSettings()
-        this.stopRecordSettings.box.size.set(73, 20)
-        this.stopRecordSettings.backColor.set(1, 0, 0, 1)
-        this.stopRecordSettings.box.marginLeft = posMargin;
 
 
-        this.threeHolderSetting = new ComponentSettings()
-        this.threeHolderSetting.box.size.x = 250;
-        this.threeHolderSetting.box.marginTop = 22 + 20;
+        this.panelVertSettings =   new VerticalLayoutSettings()
+        this.panelVertSettings.box.setMargin(0)
+        this.panelVertSettings.box.setPadding(0)
+        this.panelVertSettings.box.marginTop=18;
+        this.panelVertSettings.box.marginBottom=0;
 
-        this.keyFrameSettings = new VerticalLayoutSettings()
-        this.keyFrameSettings.box.marginLeft = 260
-        this.keyFrameSettings.box.marginTop = 22 + 20;
-        this.keyFrameSettings.needScrollBar = false
-
-
-        this.keyFramesOffset.y = 40;
-        this.keyFramesOffset.x = this.keyFrameSettings.box.marginLeft;
+        this.keyFramesOffset.y = 0;
+        this.keyFramesOffset.x = 250;//this.keyFrameSettings.box.marginLeft;
 
     }
 
@@ -167,28 +145,32 @@ export default class UIAnimationEditor extends Component {
     //layout rect is set
     layoutAbsolute() {
         super.layoutAbsolute()
-        this.topLeft.copy(this.layoutRect.pos)
+       this.topLeft.copy(this.layoutRect.pos)
         this.topLeft.add(this.keyFramesOffset);
+
         this.topLeftItems.copy(this.layoutRect.pos)
         this.topLeftItems.y += this.keyFramesOffset.y;
         //background
         this.keysBackgroundRect.pos.copy(this.topLeft)
+        this.keysBackgroundRect.pos.y+=20;
         this.keysBackgroundRect.size.copy(this.layoutRect.size)
+        this.keysBackgroundRect.size.y-=20;
         this.keysBackgroundRect.size.sub(this.keyFramesOffset)
         this.keysLineRect.pos.copy(this.topLeft)
         this.keysLineRect.size.set(1, this.keysBackgroundRect.size.y)
-
+        this.keysLineRect.pos.y+=20;
 
         //cursor
         this.cursorPos.copy(this.topLeft)
         this.cursorPos.x += AnimationEditor.currentFrame * AnimationEditor.frameSize;
-        this.cursorPos.y -= 2
+        //this.cursorPos.y -= 2
         this.cursorLineRect.size.copy(this.keysLineRect.size);
+        this.cursorLineRect.size.y+=40;
         this.cursorLineRect.pos.copy(this.cursorPos)
 
         this.cursorRect.pos.copy(this.cursorLineRect.pos)
         this.cursorRect.pos.x -= this.cursorRect.size.x / 2;
-        this.cursorRect.pos.y -= 16;
+       // this.cursorRect.pos.y -= 16;
         this.cursorRect.setMinMax();
 
         this.cursorText = AnimationEditor.currentFrame + "";
@@ -203,15 +185,18 @@ export default class UIAnimationEditor extends Component {
     prepDraw() {
         if (this.layoutRect.size.x < 0 || this.layoutRect.size.y < 0) return;
         super.prepDraw();
+        UI_I.currentDrawBatch.needsClipping = true;
+       // UI_I.currentDrawBatch.fillBatch.addRect( this.layoutRect, this.keysBackgroundColor);
 
 //background
-        UI_I.currentDrawBatch.fillBatch.addRect(this.keysBackgroundRect, this.keysBackgroundColor);
+        UI_I.currentDrawBatch.fillBatch.addRect( this.keysBackgroundRect, this.keysBackgroundColor);
 
 //backgroundLines
         // @ts-ignore
-        for (let i = 1; i <= AnimationEditor.currentAnimation.numFrames; i++) {
+       for (let i = 1; i <= AnimationEditor.currentAnimation.numFrames; i++) {
             UI_I.currentDrawBatch.fillBatch.addRect(this.keysLineRect, this.keysLineColor);
             this.keysLineRect.pos.x += AnimationEditor.frameSize;
+
         }
         //cursor
         UI_I.currentDrawBatch.fillBatch.addRect(this.cursorLineRect, this.cursorColor);
@@ -230,7 +215,7 @@ export default class UIAnimationEditor extends Component {
         super.setSubComponents();
         //  AnimationEditor.root?.drawUI()
 
-
+/*
         if (UI_IC.buttonBase("+ Key", true, this.addKeySettings)) AnimationEditor.addKeysSelected()
         if (UI_IC.buttonBase("+ Key all", true, this.addKeyAllSettings)) AnimationEditor.addKeysAll()
         if (AnimationEditor.isPlaying) {
@@ -250,15 +235,20 @@ export default class UIAnimationEditor extends Component {
             if (UI_IC.buttonBase("Start Rec", true, this.startRecordSettings)) {
                 AnimationEditor.isRecording = true;
             }
-        }
-        UI_IC.pushComponent("threeHolder", this.threeHolderSetting)
+        }*/
 
+       //UI_IC.pushVerticalLayout("panelVert",this.);
+
+        //UI_IC.pushComponent("threeHolder", this.threeHolderSetting)
+        UI_IC.pushVerticalLayout("panelVert",this.panelVertSettings);
         AnimationEditor.drawUITree()
-
         UI_I.popComponent();
-        UI_IC.pushVerticalLayout("keyframes", this.keyFrameSettings);
+      //  UI_I.popComponent();
+       /* UI_IC.pushVerticalLayout("keyframes", this.keyFrameSettings);
         AnimationEditor.drawKeyFrames()
-        UI_I.popComponent();
+        UI_I.popComponent();*/
+
+       // UI_I.popComponent();
         // UI_IC.buttonBase("test2",true,this.testSettings2);
     }
 

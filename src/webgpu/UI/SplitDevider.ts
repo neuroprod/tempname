@@ -114,8 +114,10 @@ export  class SplitDivider extends Component {
     layoutAbsolute() {
         super.layoutAbsolute();
         this.drawRect.copy(this.layoutRect);
-        this.drawRect.size.y-=2;
-        this.drawRect.size.x-=2;
+        this.drawRect.pos.x+=2
+        this.drawRect.pos.y+=2
+        this.drawRect.size.y-=4;
+        this.drawRect.size.x-=4;
     }
 
     prepDrawInt() {

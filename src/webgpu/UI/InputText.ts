@@ -1,7 +1,8 @@
 import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 import {
-    ButtonColor,
+    ButtonBorderColor,
+    ButtonColor, ButtonColorBright,
     InputTextBG,
     InputTextRadius,
     TextColorBright,
@@ -11,17 +12,18 @@ import {
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import {ActionKey} from "../lib/UI/input/KeyboardListener.ts";
-export function addInputText(id:string,ref:any,refValue:string,left:number=0,top:number =0){
+import {b} from "vite/dist/node/types.d-aGj9QkWt";
+export function addInputText(id:string,ref:any,refValue:string,autoFocus=false,left:number=0,top:number =0,size:number=200){
     if (!UI_I.setComponent(id)) {
 
         let s = new ComponentSettings()
 
-        s.box.size.set(200,36)
+        s.box.size.set(size,33)
         s.box.marginLeft =left;
         s.box.marginTop =top;
 
 
-        let comp = new InputText(UI_I.getID(id), s,ref,refValue);
+        let comp = new InputText(UI_I.getID(id), s,ref,refValue,autoFocus);
         UI_I.addComponent(comp);
     }
     let r = UI_I.currentComponent as InputText;
@@ -46,14 +48,13 @@ export class InputText extends Component{
 
     private _textIsDirty: boolean =false;
     private offsetArray:Array<number> =[];
-    constructor(id:number, settings:ComponentSettings,ref:any,refValue:string) {
+    constructor(id:number, settings:ComponentSettings,ref:any,refValue:string,autoFocus:boolean) {
         super(id,settings);
         this.ref = ref;
         this.refValue =refValue;
         this.text = ref[refValue];
         this.cursorPos =this.text.length
-
-        UI_I.setFocusComponent(this);
+        if(autoFocus) UI_I.setFocusComponent(this);
     }
     limitMouseCursor(pos: number) {
         if (pos < 0) pos = 0;
@@ -107,7 +108,7 @@ export class InputText extends Component{
     }
     layoutAbsolute() {
         super.layoutAbsolute();
-        this.textPos.x =this.layoutRect.pos.x+20;
+        this.textPos.x =this.layoutRect.pos.x+10;
         this.textPos.y = this.layoutRect.pos.y+this.layoutRect.size.y/2 -7;
 
         this.textRect.copy( this.layoutRect);
@@ -125,11 +126,15 @@ export class InputText extends Component{
 
     prepDraw() {
         super.prepDraw();
-        UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,TextColorDisabled,InputTextRadius);
-        UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
+
 
         if(this.isFocus){
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonColorBright,InputTextRadius);
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
             UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect,TextColorBright)
+        }else{
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonBorderColor,InputTextRadius);
+            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
         }
 
         UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.text,14,TextColorBright);

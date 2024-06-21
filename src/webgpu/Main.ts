@@ -142,7 +142,7 @@ export default class Main {
             this.sceneEditor.onUINice()
         }
 
-
+return;
         if (this.currentMainState != MainState.game) {
             UI.pushWindow("Main")
             this.sceneEditor.gameRenderer.onUI()
@@ -157,9 +157,9 @@ export default class Main {
                 this.sceneEditor.onUI()
                 UI.popWindow()
                 //this.scene.onObjectUI()
-                AnimationEditor.onUI();
+              //  AnimationEditor.onUI();
 
-             
+
             }
         }
 
