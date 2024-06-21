@@ -41,4 +41,39 @@ export default class ShapeLineModel extends Model{
         this.mesh.setPositions(new Float32Array(this.positions))
         this.mesh.setIndices(new Uint16Array(this.indices))
     }
+    setPaths(paths:Array<Path> ){
+        if(paths.length ==0){
+            this.visible =false;
+            return;
+        }
+
+        this.positions=[];
+        this.indices=[];
+        let indexPos =0;
+        for(let path of paths){
+            let positionsTemp=[]
+            let indicesTemp=[]
+            path.setMeshData(indicesTemp,positionsTemp)
+            for(let i=0;i<indicesTemp.length;i++){
+                indicesTemp[i]+=indexPos;
+
+            }
+
+            this.positions =this.positions.concat(positionsTemp)
+            this.indices=this.indices.concat(indicesTemp)
+
+            indexPos+=positionsTemp.length/3;
+
+        }
+
+        if(indexPos==0) {
+            this.visible =false;
+            return;
+        }
+        this.visible =true;
+        this.mesh.setPositions(new Float32Array(this.positions))
+        this.mesh.setIndices(new Uint16Array(this.indices))
+
+
+    }
 }

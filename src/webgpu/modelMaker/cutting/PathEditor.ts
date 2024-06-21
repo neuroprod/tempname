@@ -1,9 +1,9 @@
-import Renderer from "../../Renderer.ts";
-import Path from "../Path.ts";
-import Model from "../../model/Model.ts";
-import Quad from "../../mesh/geometry/Quad.ts";
+import Renderer from "../../lib/Renderer.ts";
+import Path from "../../lib/path/Path.ts";
+import Model from "../../lib/model/Model.ts";
+import Quad from "../../lib/mesh/geometry/Quad.ts";
 import PathPointMaterial from "./PathPointMaterial.ts";
-import Bezier from "../Bezier.ts";
+import Bezier from "../../lib/path/Bezier.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import {NumericArray} from "@math.gl/types";
 

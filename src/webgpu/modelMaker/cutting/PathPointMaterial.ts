@@ -1,8 +1,8 @@
-import Material from "../../material/Material.ts";
-import {ShaderType} from "../../material/ShaderTypes.ts";
-import DefaultUniformGroups from "../../material/DefaultUniformGroups.ts";
-import {CompareFunction,  VertexStepMode} from "../../WebGPUConstants.ts";
-import UniformGroup from "../../material/UniformGroup.ts";
+import Material from "../../lib/material/Material.ts";
+import {ShaderType} from "../../lib/material/ShaderTypes.ts";
+import DefaultUniformGroups from "../../lib/material/DefaultUniformGroups.ts";
+import {CompareFunction,  VertexStepMode} from "../../lib/WebGPUConstants.ts";
+import UniformGroup from "../../lib/material/UniformGroup.ts";
 
 
 export default class PathPointMaterial extends Material{

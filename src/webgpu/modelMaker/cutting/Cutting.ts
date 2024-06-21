@@ -7,29 +7,24 @@ import ModelPreviewMaterial from "../ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
 import ShapeLineModel from "./ShapeLineModel.ts";
 import ProjectMesh from "../ProjectMesh.ts";
-import PathEditor from "../../lib/path/editor/PathEditor.ts";
+import PathEditor from "./PathEditor.ts";
 import Camera from "../../lib/Camera.ts";
 import {NumericArray} from "@math.gl/types";
+import {ToolType} from "../ModelMaker.ts";
+import * as path from "path";
+import Path from "../../lib/path/Path.ts";
 
-
-enum CurveType {
-    Line,
-    Bezier,
-    Center,
-    Edit,
-    Move,
-
-}
 
 export default class Cutting {
     model3D: Model;
-    shapeLineModel: ShapeLineModel;
+    shapeLineModelSelect: ShapeLineModel;
+    shapeLineModelAll: ShapeLineModel;
     pathEditor: PathEditor;
     private readonly renderer: Renderer;
     private readonly mesh: ExtrudeMesh;
     private project!: Project;
     private currentMesh!: ProjectMesh | null;
-    private curveType: CurveType = CurveType.Line;
+    private toolType: ToolType =ToolType.None;
     private camera: Camera;
     private currentHitPoint!: Vector3 | null;
     private currentMousePoint: Vector2 = new Vector2();
@@ -41,7 +36,8 @@ export default class Cutting {
 
         this.camera = camera
         this.renderer = renderer
-        this.shapeLineModel = new ShapeLineModel(this.renderer, "lines1");
+        this.shapeLineModelSelect = new ShapeLineModel(this.renderer, "linesSelect");
+        this.shapeLineModelAll= new ShapeLineModel(this.renderer, "linesAll");
 
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
@@ -71,11 +67,11 @@ export default class Cutting {
     setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean) {
         if (!this.currentMesh) return;
         if (isDownThisFrame && !UI.needsMouse()) {
-            if (this.curveType == CurveType.Center) {
+            if (this.toolType == ToolType.Center) {
                 this.currentMesh.setCenter(mouseLocal);
                 this.updateLine()
             }
-            if (this.curveType == CurveType.Edit) {
+            if (this.toolType == ToolType.Edit) {
 
                 this.currentHitPoint = this.pathEditor.getHitPoint(new Vector3(mouseLocal.x, mouseLocal.y, 0))
                 if (this.currentHitPoint) {
@@ -83,7 +79,7 @@ export default class Cutting {
                     this.isDraggingPoint = true;
                 }
             }
-            if (this.curveType == CurveType.Move) {
+            if (this.toolType == ToolType.Move) {
 
 
                 this.prevMousePoint.from(mouseLocal)
@@ -138,7 +134,7 @@ export default class Cutting {
 
         if (this.currentMesh) {
 
-            if (UI.LButton("Line", "", this.curveType != CurveType.Line)) {
+          /*  if (UI.LButton("Line", "", this.curveType != CurveType.Line)) {
                 this.curveType = CurveType.Line
             }
             if (UI.LButton("Bezier", "", this.curveType != CurveType.Bezier)) {
@@ -164,7 +160,7 @@ export default class Cutting {
                 }
             }
 
-
+*/
             UI.separator("meshSep", false)
         }
         UI.pushLList("Meshes", 100);
@@ -213,10 +209,10 @@ export default class Cutting {
                 this.currentMesh.path.moveTo(point)
 
             } else {
-                if (this.curveType == CurveType.Line) {
+                if (this.toolType == ToolType.Line) {
 
                     this.currentMesh.path.lineTo(point)
-                } else if (this.curveType == CurveType.Bezier) {
+                } else if (this.toolType == ToolType.Bezier) {
                     this.currentMesh.path.autoBezier(point);
                 }
 
@@ -230,17 +226,35 @@ export default class Cutting {
     private updateLine() {
 
         if (!this.currentMesh) return;
-        this.shapeLineModel.setPath(this.currentMesh.path)
+        this.shapeLineModelSelect.setPath(this.currentMesh.path)
         if (this.currentMesh.path.numCurves > 1) {
             this.model3D.visible = true;
-            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModel.positions), 0.03, new Vector3())
+            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), 0.03, new Vector3())
         }
         this.pathEditor.setPath(this.currentMesh.path, this.currentMesh.center)
 
 
     }
 
-    private getClosestCurvePoint(mouseLocal: Vector2) {
 
+
+    setTool(currentTool: ToolType) {
+        this.toolType = currentTool
+        if(this.toolType==ToolType.Select || this.toolType==ToolType.Paint){
+            let paths:Array<Path>  =[];
+            for (let m of this.project.meshes) {
+                paths.push(m.path)
+
+
+            }
+            this.shapeLineModelAll.setPaths(paths)
+            this.shapeLineModelSelect.visible =false;
+            this.pathEditor.pointModel.visible =false;
+        }else{
+            this.shapeLineModelAll.visible =false
+            this.shapeLineModelSelect.visible =true;
+            this.pathEditor.pointModel.visible =true;
+
+        }
     }
 }
