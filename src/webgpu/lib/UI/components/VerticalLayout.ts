@@ -52,6 +52,7 @@ export default class VerticalLayout extends Component {
                 Math.min(this.placeCursor.y, Utils.getMaxInnerHeight(this.parent)) -
                 this.settings.box.marginBottom -
                 this.settings.box.marginTop;
+
         }
         //this.hasOwnDrawBatch =false;
         if (this.size.y < this.placeCursor.y) {

@@ -33,6 +33,7 @@ import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 import {addMenuColorButton} from "../UI/MenuColorButton.ts";
 import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
 import {setNewPopup} from "../UI/NewPopup.ts";
+import {setItemsPopup} from "../UI/ItemsPopup.ts";
 
 
 enum ModelMainState {
@@ -186,8 +187,8 @@ export default class ModelMaker {
     }
     onUINice() {
         pushMainMenu("paint",800,134);
-        if (addMainMenuTextButton("Save",false)){
-            //this.saveAll();
+        if (addMainMenuTextButton("Save",true)){
+            this.saveAll();
         }
         addMainMenuDivider("tooldDiv1")
         if(addMainMenuButton("NewImage", Icons.NEW_IMAGE,true)){
@@ -195,7 +196,14 @@ export default class ModelMaker {
                 this.makeNewProject(name);
             })
         }
-        addMainMenuButton("Open", Icons.FOLDER,false)
+        if(addMainMenuButton("Open", Icons.FOLDER,true)){
+
+            setItemsPopup("Open Image",this.projects,(project:Project)=>{
+                this.openProject(project)
+
+            })
+
+        }
 
 
 
@@ -230,28 +238,7 @@ export default class ModelMaker {
         popMainMenu()
     }
 
-    makeNewProject(newName:string){
-        let fail = false;
-        if (newName.length == 0) {
-            UI.logEvent("x", "Model needs a name", true);
-            fail = true
-        }
-        for (let p of this.projects) {
-            if (p.name == newName) {
-                UI.logEvent("xxx", "Model needs unique name", true);
-                fail = true
-                break;
-            }
-        }
-        if (!fail) {
-            this.currentProject = new Project(this.renderer);
-            this.currentProject.name = newName;
-            this.drawing.setProject(this.currentProject);
-            this.cutting.setProject(this.currentProject)
 
-            this.projects.push(this.currentProject);
-        }
-    }
 
 
 
@@ -405,10 +392,46 @@ export default class ModelMaker {
 
         }
         if(this.projects.length){
-            this.currentProject =this.projects[0];
-            this.drawing.setProject(this.currentProject);
-            this.cutting.setProject(this.currentProject)
+           this.openProject(this.projects[0])
+
 
         }
+    }
+    private makeNewProject(newName:string){
+        let fail = false;
+        if (newName.length == 0) {
+            UI.logEvent("x", "Model needs a name", true);
+            fail = true
+        }
+        for (let p of this.projects) {
+            if (p.name == newName) {
+                UI.logEvent("xxx", "Model needs unique name", true);
+                fail = true
+                break;
+            }
+        }
+        if (!fail) {
+            let newProject = new Project(this.renderer);
+            newProject.name = newName;
+            this.projects.push(newProject);
+            this.openProject(newProject)
+
+        }
+    }
+    private openProject(project:Project) {
+        this.currentProject = project;
+        this.drawing.setProject(this.currentProject);
+        this.cutting.setProject(this.currentProject)
+    }
+
+    private saveAll() {
+        let s = this.currentProject.getSaveString();
+
+        sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name,s).then(() => {
+            UI.logEvent("","saved!")
+
+        }).catch(()=>{
+            UI.logEvent("","error saving",true)
+        })
     }
 }
