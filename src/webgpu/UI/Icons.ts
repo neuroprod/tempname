@@ -18,4 +18,5 @@ export const Icons  = {
     LINE: 'q',
     CLOSE: 'r',
     NEXT: 's',
+    DELETE_IMAGE: 't',
 }

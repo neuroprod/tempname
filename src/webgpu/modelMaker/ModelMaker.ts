@@ -34,6 +34,7 @@ import {addMenuColorButton} from "../UI/MenuColorButton.ts";
 import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
 import {setNewPopup} from "../UI/NewPopup.ts";
 import {setItemsPopup} from "../UI/ItemsPopup.ts";
+import AppState from "../AppState.ts";
 
 
 enum ModelMainState {
@@ -195,6 +196,9 @@ export default class ModelMaker {
             setNewPopup("+ Add new Image","new_image",(name:string)=>{
                 this.makeNewProject(name);
             })
+        }
+        if(addMainMenuButton("DeleteImage", Icons.DELETE_IMAGE,true)){
+          this.deleteCurrentProject();
         }
         if(addMainMenuButton("Open", Icons.FOLDER,true)){
 
@@ -392,6 +396,14 @@ export default class ModelMaker {
 
         }
         if(this.projects.length){
+
+            let newName = AppState.getState("currentImage");
+            for(let p of this.projects){
+                if(p.name ==newName){
+                    this.openProject(p)
+                    return;
+                }
+            }
            this.openProject(this.projects[0])
 
 
@@ -421,9 +433,20 @@ export default class ModelMaker {
     private openProject(project:Project) {
         this.currentProject = project;
         this.drawing.setProject(this.currentProject);
-        this.cutting.setProject(this.currentProject)
-    }
+        this.cutting.setProject(this.currentProject);
+        AppState.setState("currentImage",this.currentProject.name)
 
+    }
+    private deleteCurrentProject() {
+        let index = this.projects.indexOf(this.currentProject);
+        if(index>=0){
+            this.projects.splice(index,1);
+            if(this.projects.length){
+                this.openProject(this.projects[0])
+            }
+        }
+
+    }
     private saveAll() {
         let s = this.currentProject.getSaveString();
 
@@ -434,4 +457,6 @@ export default class ModelMaker {
             UI.logEvent("","error saving",true)
         })
     }
+
+
 }
