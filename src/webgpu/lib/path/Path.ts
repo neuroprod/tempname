@@ -106,10 +106,10 @@ export default class Path {
             dir1.normalize()
 
             prevBezier.c2.from(dir1)
-            prevBezier.c2.scale(-l1 / 2)
+            prevBezier.c2.scale(-l1 / 3)
             prevBezier.c2.add(this.currentPoint as NumericArray);
 
-            dir1.scale(l2 / 2)
+            dir1.scale(l2 / 3)
             dir1.add(this.currentPoint as NumericArray)
 
 
