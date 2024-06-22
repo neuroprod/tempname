@@ -7,7 +7,7 @@ import Renderer from "../../lib/Renderer.ts";
 import Path from "../../lib/path/Path.ts";
 import ColorV from "../../lib/ColorV.ts";
 import FatShapeLineMaterial from "./FatShapeLineMaterial.ts";
-import Quad from "../../lib/mesh/geometry/Quad.ts";
+
 import FatLineMesh from "../../lib/mesh/geometry/FatLineMesh.ts";
 
 
@@ -49,7 +49,7 @@ export default class FatShapeLineModel extends Model{
         this.positions=[]
         this.indices=[]
         path.setMeshData(this.indices,this.positions)
-this.makeBuffers()
+        this.makeBuffers()
        // this.mesh.setPositions(new Float32Array(this.positions))
         //this.mesh.setIndices(new Uint16Array(this.indices))
     }
@@ -63,8 +63,8 @@ this.makeBuffers()
         this.indices=[];
         let indexPos =0;
         for(let path of paths){
-            let positionsTemp=[]
-            let indicesTemp=[]
+            let positionsTemp:Array<number>=[]
+            let indicesTemp:Array<number>=[]
             path.setMeshData(indicesTemp,positionsTemp)
             for(let i=0;i<indicesTemp.length;i++){
                 indicesTemp[i]+=indexPos;

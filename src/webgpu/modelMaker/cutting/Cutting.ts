@@ -5,13 +5,13 @@ import UI from "../../lib/UI/UI.ts";
 import Model from "../../lib/model/Model.ts";
 import ModelPreviewMaterial from "../ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
-import ShapeLineModel from "./ShapeLineModel.ts";
+
 import ProjectMesh from "../ProjectMesh.ts";
 import PathEditor from "./PathEditor.ts";
 import Camera from "../../lib/Camera.ts";
 import {NumericArray} from "@math.gl/types";
 import {ToolType} from "../ModelMaker.ts";
-import * as path from "path";
+
 import Path from "../../lib/path/Path.ts";
 import FatShapeLineModel from "./FatShapeLineModel.ts";
 
