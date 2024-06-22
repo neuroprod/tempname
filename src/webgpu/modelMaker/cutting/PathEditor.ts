@@ -10,7 +10,7 @@ import {NumericArray} from "@math.gl/types";
 export default class PathEditor {
     pointModel: Model;
     private renderer: Renderer;
-    private positionBuffer!: GPUBuffer;
+
     private points: Array<Vector3> = []
 
     constructor(renderer: Renderer) {
@@ -54,8 +54,8 @@ export default class PathEditor {
             pointDrawData.push(center.x, center.y, 0, 0.5)
         }
         this.pointModel.visible = true
-        this.createBuffer(new Float32Array(pointDrawData))
-        this.pointModel.addBuffer("positionData", this.positionBuffer)
+
+        this.pointModel.createBuffer( new Float32Array(pointDrawData),"positionData")
         this.pointModel.numInstances = pointDrawData.length / 4;
 
     }
@@ -86,26 +86,7 @@ export default class PathEditor {
 
     }
 
-    createBuffer(data: Float32Array) {
 
-        if (this.positionBuffer) {
-
-            this.positionBuffer.destroy()
-        }
-
-        this.positionBuffer = this.renderer.device.createBuffer({
-            size: data.byteLength,
-            usage: GPUBufferUsage.VERTEX,
-            mappedAtCreation: true,
-        });
-        const dst = new Float32Array(this.positionBuffer.getMappedRange());
-        dst.set(data);
-
-        this.positionBuffer.unmap();
-        this.positionBuffer.label = "instancePositionBuffer";
-
-
-    }
 
     update() {
         this.pointModel.material.setUniform("scale", this.renderer.inverseSizePixelRatio)

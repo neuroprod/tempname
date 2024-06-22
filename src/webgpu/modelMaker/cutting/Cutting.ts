@@ -13,12 +13,13 @@ import {NumericArray} from "@math.gl/types";
 import {ToolType} from "../ModelMaker.ts";
 import * as path from "path";
 import Path from "../../lib/path/Path.ts";
+import FatShapeLineModel from "./FatShapeLineModel.ts";
 
 
 export default class Cutting {
     model3D: Model;
-    shapeLineModelSelect: ShapeLineModel;
-    shapeLineModelAll: ShapeLineModel;
+    shapeLineModelSelect: FatShapeLineModel;
+    shapeLineModelAll: FatShapeLineModel;
     pathEditor: PathEditor;
     private readonly renderer: Renderer;
     private readonly mesh: ExtrudeMesh;
@@ -36,8 +37,8 @@ export default class Cutting {
 
         this.camera = camera
         this.renderer = renderer
-        this.shapeLineModelSelect = new ShapeLineModel(this.renderer, "linesSelect",false);
-        this.shapeLineModelAll= new ShapeLineModel(this.renderer, "linesAll",true);
+        this.shapeLineModelSelect = new FatShapeLineModel(this.renderer, "linesSelect",false);
+        this.shapeLineModelAll= new FatShapeLineModel(this.renderer, "linesAll",true);
 
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
@@ -88,12 +89,10 @@ export default class Cutting {
             }  if (this.toolType == ToolType.Select) {
 
 
-               console.log(mouseLocal)
+
                 this.getPathFromMousePoint(mouseLocal);
 
             } else {
-
-
                 this.addVectorPoint(mouseLocal);
             }
         } else if (this.isDraggingPoint && this.currentHitPoint) {
@@ -206,6 +205,12 @@ export default class Cutting {
 
     update() {
         this.pathEditor.update()
+
+        this.shapeLineModelAll.material.setUniform("ratio",this.renderer.ratio)
+        this.shapeLineModelAll.material.setUniform("lineSize",3/this.renderer.height)
+
+        this.shapeLineModelSelect.material.setUniform("ratio",this.renderer.ratio)
+        this.shapeLineModelSelect.material.setUniform("lineSize",3/this.renderer.height)
     }
 
     private addVectorPoint(point: Vector2) {
@@ -251,7 +256,6 @@ export default class Cutting {
             for (let m of this.project.meshes) {
                 paths.push(m.path)
 
-
             }
             this.shapeLineModelAll.setPaths(paths)
 
@@ -281,7 +285,7 @@ export default class Cutting {
 
 
         }
-  
+
         this.shapeLineModelAll.visible =true;
         this.shapeLineModelSelect.visible =true;
         this.setCurrentMesh(pm)

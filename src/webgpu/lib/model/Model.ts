@@ -15,7 +15,8 @@ export default class Model extends Object3D {
     public modelTransform: ModelTransform;
     public visible: boolean = true;
 
-    public buffersByName: { [name: string]: GPUBuffer } = {};
+    private buffers: Array<GPUBuffer> = [];
+    private bufferMap: Map<string, GPUBuffer> = new Map<string, GPUBuffer>();
     numInstances: number = 1;
 
 
@@ -32,13 +33,32 @@ export default class Model extends Object3D {
         this.modelTransform.setWorldMatrix(this.worldMatrix);
 
     }
+    createBuffer(data: Float32Array, name: string) {
+        let bufferOld = this.getBufferByName(name);
+        if (bufferOld) {
+            let i = this.buffers.indexOf(bufferOld)
+            this.buffers.splice(i, 1);
+            bufferOld.destroy()
+        }
 
-    addBuffer(name:string,buffer: GPUBuffer) {
-       this.buffersByName[name] = buffer;
+        const buffer = this.device.createBuffer({
+            size: data.byteLength,
+            usage: GPUBufferUsage.VERTEX,
+            mappedAtCreation: true,
+        });
+        const dst = new Float32Array(buffer.getMappedRange());
+        dst.set(data);
+
+        buffer.unmap();
+        buffer.label = "vertexBuffer_" + this.label + "_" + name;
+
+        this.buffers.push(buffer);
+        this.bufferMap.set(name, buffer);
     }
 
+
     getBufferByName(name: string) {
-        return this.buffersByName[name];
+        return this.bufferMap.get(name);
     }
 
 
