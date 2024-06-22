@@ -170,7 +170,10 @@ export default class Path {
         }
 
     }
+getBezierPoints(){
 
+
+}
     getPoints() {
         let indices:Array<number>=[]
         let positions:Array<number>=[]

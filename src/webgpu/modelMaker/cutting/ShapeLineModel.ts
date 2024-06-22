@@ -59,8 +59,8 @@ export default class ShapeLineModel extends Model{
         this.indices=[];
         let indexPos =0;
         for(let path of paths){
-            let positionsTemp=[]
-            let indicesTemp=[]
+            let positionsTemp:Array<number>=[]
+            let indicesTemp:Array<number>=[]
             path.setMeshData(indicesTemp,positionsTemp)
             for(let i=0;i<indicesTemp.length;i++){
                 indicesTemp[i]+=indexPos;

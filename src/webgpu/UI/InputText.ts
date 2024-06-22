@@ -3,16 +3,15 @@ import UI_I from "../lib/UI/UI_I.ts";
 import {
     ButtonBorderColor,
     ButtonColor, ButtonColorBright,
-    InputTextBG,
+ 
     InputTextRadius,
     TextColorBright,
-    TextColorDefault,
-    TextColorDisabled
+
 } from "./Style.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import {ActionKey} from "../lib/UI/input/KeyboardListener.ts";
-import {b} from "vite/dist/node/types.d-aGj9QkWt";
+
 export function addInputText(id:string,ref:any,refValue:string,autoFocus=false,left:number=0,top:number =0,size:number=200){
     if (!UI_I.setComponent(id)) {
 
