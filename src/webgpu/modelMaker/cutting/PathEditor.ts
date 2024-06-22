@@ -13,7 +13,7 @@ import Line from "../../lib/path/Line.ts";
 class PathPoint {
     main!: Vector3;
     friends: Array<Vector3> = []
-    type!: number = 0;//0 =mainPoint
+    type: number = 0;//0 =mainPoint
     center!: Vector3;
     opposite!: Vector3;
     add(offset: Vector2,split:boolean =false) {
@@ -45,7 +45,7 @@ export default class PathEditor {
     private renderer: Renderer;
     private pathPoints: Array<PathPoint> = []
 
-    private path: Path;
+    private path!: Path;
     private currentPathPoint: PathPoint | null = null;
     private currentMousePoint: Vector2 = new Vector2();
     private prevMousePoint: Vector2 = new Vector2();
@@ -102,7 +102,7 @@ export default class PathEditor {
 
     getHitPoint(mouseLocal: Vector3) {
 
-        let ps: PathPoint;
+        let ps: PathPoint|null=null;
         let dist = Number.MAX_VALUE
         for (let p of this.pathPoints) {
             let ds = p.main.distanceSquared(mouseLocal as NumericArray)
