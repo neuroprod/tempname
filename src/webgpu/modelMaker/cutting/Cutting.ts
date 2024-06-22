@@ -29,10 +29,10 @@ export default class Cutting {
     private currentMesh!: ProjectMesh | null;
     private toolType: ToolType =ToolType.None;
     private camera: Camera;
-    private currentHitPoint!: Vector3 | null;
+   // private currentHitPoint!: Vector3 | null;
     private currentMousePoint: Vector2 = new Vector2();
     private prevMousePoint: Vector2 = new Vector2();
-    private isDraggingPoint: boolean = false;
+   // private isDraggingPoint: boolean = false;
     private isDraggingMove: boolean = false;
 
     constructor(renderer: Renderer, camera: Camera) {
@@ -68,7 +68,7 @@ export default class Cutting {
         this.updateLine();
     }
 
-    setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean) {
+    setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean,ctrlDown:boolean) {
         if (!this.currentMesh) return;
         if (isDownThisFrame && !UI.needsMouse()) {
             if (this.toolType == ToolType.Center) {
@@ -76,12 +76,12 @@ export default class Cutting {
                 this.updateLine()
             }
             if (this.toolType == ToolType.Edit) {
-
-                this.currentHitPoint = this.pathEditor.getHitPoint(new Vector3(mouseLocal.x, mouseLocal.y, 0))
+                this.pathEditor.onMouseDown(new Vector3(mouseLocal.x, mouseLocal.y, 0),ctrlDown)
+               /* this.currentHitPoint = this.pathEditor.getHitPoint(new Vector3(mouseLocal.x, mouseLocal.y, 0))
                 if (this.currentHitPoint) {
                     this.prevMousePoint.from(mouseLocal)
                     this.isDraggingPoint = true;
-                }
+                }*/
             }
             if (this.toolType == ToolType.Move) {
 
@@ -98,7 +98,11 @@ export default class Cutting {
             } else {
                 this.addVectorPoint(mouseLocal);
             }
-        } else if (this.isDraggingPoint && this.currentHitPoint) {
+        }else if(this.toolType == ToolType.Edit){
+
+            if(this.pathEditor.onMouseMove(new Vector3(mouseLocal.x, mouseLocal.y, 0),isUpThisFrame))  this.updateLine()
+
+            /*else if (this.isDraggingPoint && this.currentHitPoint) {
             this.currentMousePoint.from(mouseLocal);
             this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
 
@@ -108,7 +112,7 @@ export default class Cutting {
                 this.prevMousePoint.from(mouseLocal);
                 this.updateLine()
             }
-            if (isUpThisFrame) this.isDraggingPoint = false;
+            if (isUpThisFrame) this.isDraggingPoint = false;*/
         } else if (this.isDraggingMove) {
             this.currentMousePoint.from(mouseLocal);
             this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
@@ -271,6 +275,10 @@ export default class Cutting {
             this.shapeLineModelSelect.visible =true;
             this.shapeLineModelSelectControl.visible =true;
             this.pathEditor.pointModel.visible =true;
+            if(this.toolType==ToolType.Edit){
+
+                this.pathEditor.createEditStruct()
+            }
 
         }
     }

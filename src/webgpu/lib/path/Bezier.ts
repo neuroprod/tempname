@@ -41,7 +41,7 @@ export default class Bezier extends Curve{
         indices.push(l++)
         positions.push(this.p1.x,this.p1.y,this.p1.z)//startPoint
         //indices.push(l++)
-        let numDivisions =4;
+        let numDivisions =8;
         let step = 1/numDivisions;
         for(let i=1;i<numDivisions;i++)
         {
