@@ -18,6 +18,7 @@ import {addMainMenuButton} from "./UI/MainMenuButton.ts";
 import AppState, {AppStates} from "./AppState.ts";
 import {Icons} from "./UI/Icons.ts";
 import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
+import TextureLoader from "./lib/textures/TextureLoader.ts";
 
 
 enum MainState {
@@ -76,6 +77,9 @@ export default class Main {
 
         this.preloader = new PreLoader(() => {
         }, this.init.bind(this));
+//Todo handle bitmap preload
+        new TextureLoader(this.renderer,"bezierPoints.png")
+
         this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         this.sceneLoader = new JsonLoader("scene1", this.preloader)
 

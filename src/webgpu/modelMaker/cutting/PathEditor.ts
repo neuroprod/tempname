@@ -76,22 +76,22 @@ export default class PathEditor {
         for (let c of path.curves) {
             let p = c.getP1();
             // this.points.push(p)
-            pointDrawData.push(p.x, p.y, p.z, 0)
+            pointDrawData.push(p.x, p.y, 0, 6)
             if (c.type == 2) {
                 let c1 = (c as Bezier).c1
                 // this.points.push(c1)
-                pointDrawData.push(c1.x, c1.y, c1.z, 1)
+                pointDrawData.push(c1.x, c1.y, 0.25, 6)
 
                 let c2 = (c as Bezier).c2
                 // this.points.push(c2)
-                pointDrawData.push(c2.x, c2.y, c2.z, 1)
+                pointDrawData.push(c2.x, c2.y, 0.25, 6)
             }
 
         }
         //   this.points.push(path.currentPoint)
-        pointDrawData.push(path.currentPoint.x, path.currentPoint.y, path.currentPoint.z, 0)
+        pointDrawData.push(path.currentPoint.x, path.currentPoint.y,  0, 6)
         if (center) {
-            pointDrawData.push(center.x, center.y, 0, 2)
+            pointDrawData.push(center.x, center.y, 0.5, 18)
         }
         this.pointModel.visible = true
 
