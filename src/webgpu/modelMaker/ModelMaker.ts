@@ -134,11 +134,14 @@ export default class ModelMaker {
         this.modelRoot.addChild(this.textureModel)
         this.modelRoot.addChild(this.cutting.shapeLineModelAll)
         this.modelRoot.addChild(this.cutting.shapeLineModelSelect)
+        this.modelRoot.addChild(this.cutting.shapeLineModelSelectControl)
+
         this.modelRoot.addChild(this.cutting.pathEditor.pointModel)
         this.modelRoot.setScaler(100)
         this.modelRenderer2D.addModel(this.textureModel)
         this.modelRenderer2D.addModel(this.cutting.shapeLineModelAll);
         this.modelRenderer2D.addModel(this.cutting.shapeLineModelSelect);
+        this.modelRenderer2D.addModel(this.cutting.shapeLineModelSelectControl);
         this.modelRoot.addChild(this.cutting.shapeLineModelSelect)
         this.modelRenderer2D.addModel(this.cutting.pathEditor.pointModel);
 

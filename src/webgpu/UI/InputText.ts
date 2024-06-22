@@ -3,7 +3,7 @@ import UI_I from "../lib/UI/UI_I.ts";
 import {
     ButtonBorderColor,
     ButtonColor, ButtonColorBright,
- 
+
     InputTextRadius,
     TextColorBright,
 

@@ -14,11 +14,13 @@ import {ToolType} from "../ModelMaker.ts";
 
 import Path from "../../lib/path/Path.ts";
 import FatShapeLineModel from "./FatShapeLineModel.ts";
+import ShapeLineModel from "./ShapeLineModel.ts";
 
 
 export default class Cutting {
     model3D: Model;
     shapeLineModelSelect: FatShapeLineModel;
+    shapeLineModelSelectControl: ShapeLineModel;
     shapeLineModelAll: FatShapeLineModel;
     pathEditor: PathEditor;
     private readonly renderer: Renderer;
@@ -38,6 +40,7 @@ export default class Cutting {
         this.camera = camera
         this.renderer = renderer
         this.shapeLineModelSelect = new FatShapeLineModel(this.renderer, "linesSelect",false);
+        this.shapeLineModelSelectControl =new ShapeLineModel(this.renderer, "linesControll",false)
         this.shapeLineModelAll= new FatShapeLineModel(this.renderer, "linesAll",true);
 
         this.model3D = new Model(renderer, "model3D")
@@ -238,6 +241,7 @@ export default class Cutting {
 
         if (!this.currentMesh) return;
         this.shapeLineModelSelect.setPath(this.currentMesh.path)
+        this.shapeLineModelSelectControl.setPathControlPoints(this.currentMesh.path);
         if (this.currentMesh.path.numCurves > 1) {
             this.model3D.visible = true;
             this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), 0.03, new Vector3())
@@ -261,9 +265,11 @@ export default class Cutting {
 
             this.shapeLineModelSelect.visible =(this.toolType==ToolType.Select);
             this.pathEditor.pointModel.visible =false;
+            this.shapeLineModelSelectControl.visible =false;
         }else{
             this.shapeLineModelAll.visible =false
             this.shapeLineModelSelect.visible =true;
+            this.shapeLineModelSelectControl.visible =true;
             this.pathEditor.pointModel.visible =true;
 
         }
@@ -289,7 +295,9 @@ export default class Cutting {
         this.shapeLineModelAll.visible =true;
         this.shapeLineModelSelect.visible =true;
         this.setCurrentMesh(pm)
+
         this.pathEditor.pointModel.visible =false;
+        this.shapeLineModelSelectControl.visible =false;
 
 
     }

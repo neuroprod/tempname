@@ -18,6 +18,23 @@ export default class Bezier extends Curve{
 
     }
     getP1():Vector3{return this.p1;}
+
+    public setMeshDataControlPoints(indices: Array<Number>, positions: Array<Number>){
+
+        let l=positions.length/3
+       indices.push(l)
+        positions.push(this.p1.x,this.p1.y,this.p1.z)
+        indices.push(l+1)
+        positions.push(this.c1.x,this.c1.y,this.c1.z)
+
+
+        indices.push(l+2)
+        positions.push(this.p2.x,this.p2.y,this.p2.z)
+       indices.push(l+3)
+        positions.push(this.c2.x,this.c2.y,this.c2.z)
+
+    }
+
     public setMeshData(indices: Array<Number>, positions: Array<Number>){
 
         let l=positions.length/3

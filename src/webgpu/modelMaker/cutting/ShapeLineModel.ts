@@ -35,7 +35,18 @@ export default class ShapeLineModel extends Model{
     }
 
 
+    setPathControlPoints(path: Path) {
 
+        if(path.numCurves<1)return;
+
+        this.visible =true;
+        this.positions=[]
+        this.indices=[]
+        path.setMeshDataControlPoints(this.indices,this.positions)
+
+        this.mesh.setPositions(new Float32Array(this.positions))
+        this.mesh.setIndices(new Uint16Array(this.indices))
+    }
 
     setPath(path: Path) {
 

@@ -60,7 +60,17 @@ export default class Path {
         this.currentPoint = newPoint;
     }
 
+    public setMeshDataControlPoints(indices: Array<Number>, positions: Array<Number>){
+        let numCurves = this.curves.length
+        for (let i = 0; i < numCurves; i++) {
+            if(this.curves[i].type==2){
+                (this.curves[i] as Bezier).setMeshDataControlPoints(indices, positions)
+            }
 
+
+        }
+
+    }
     public setMeshData(indices: Array<Number>, positions: Array<Number>) {
         let numCurves = this.curves.length
         for (let i = 0; i < numCurves; i++) {
