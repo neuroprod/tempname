@@ -119,6 +119,7 @@ export default class Cutting {
 
             if (this.currentMousePoint.lengthSquared() > 0) {
 
+                this.currentMesh.center.add(new Vector3(this.currentMousePoint.x, this.currentMousePoint.y, 0) as NumericArray)
                 this.pathEditor.moveAllPoints(new Vector3(this.currentMousePoint.x, this.currentMousePoint.y, 0))
                 this.prevMousePoint.from(mouseLocal);
                 this.updateLine()
@@ -275,7 +276,7 @@ export default class Cutting {
             this.shapeLineModelSelect.visible =true;
             this.shapeLineModelSelectControl.visible =true;
             this.pathEditor.pointModel.visible =true;
-            if(this.toolType==ToolType.Edit){
+            if(this.toolType==ToolType.Edit || this.toolType==ToolType.Move){
 
                 this.pathEditor.createEditStruct()
             }

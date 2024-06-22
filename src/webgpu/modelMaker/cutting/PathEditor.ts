@@ -132,13 +132,13 @@ export default class PathEditor {
     }
 
 
-    moveAllPoints(vector3: Vector3) {
+    moveAllPoints(vec: Vector3) {
 
-        console.log("moveAll");
-        /*
-        for (let p of this.points) {
-            p.add(vector3 as NumericArray)
-        }*/
+
+        for (let p of this.pathPoints) {
+            p.main.add(vec as NumericArray)
+        }
+
     }
 
     createEditStruct() {
