@@ -13,7 +13,7 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import {addSdfToggleIcon} from "./SDFToggleIcon.ts";
 import {Icons} from "./Icons.ts";
 
-export function pushObjectTree(label: string, isLeave: boolean, depth: number, selected) {
+export function pushObjectTree(label: string, isLeave: boolean, depth: number, selected:boolean) {
 
     if (!UI_I.setComponent(label)) {
         let settings = new ComponentSettings()

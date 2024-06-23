@@ -43,28 +43,28 @@ class SceneEditor {
 
 
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
-    gameRenderer: GameRenderer;
-    private renderer: Renderer;
-    private camera: Camera;
-    private modelRenderer: ModelRenderer;
-    private root: SceneObject3D
-    private modelPool: ModelPool;
-    private mouseListener: MouseListener;
+    gameRenderer!: GameRenderer;
+    private renderer!: Renderer;
+    private camera!: Camera;
+    private modelRenderer!: ModelRenderer;
+    private root!: SceneObject3D
+    private modelPool!: ModelPool;
+    private mouseListener!: MouseListener;
     private ray: Ray = new Ray();
     currentModel: SceneObject3D | null = null;
-    private outline: Outline;
-    private editCursor: EditCursor;
-    private editCamera: EditCamera;
+    private outline!: Outline;
+    private editCursor!: EditCursor;
+    private editCamera!: EditCamera;
     private currentToolState: ToolState = ToolState.translate;
     private currentAnimation!: Animation;
     private animations: Array<Animation> = [];
-    private rootSplit:SplitNode
-    private nodeCenter: SplitNode;
-    private nodeRight: SplitNode;
-    private nodeRightTop: SplitNode;
-    private nodeRightBottom: SplitNode;
-    private nodeTop: SplitNode;
-    private nodeBottom: SplitNode;
+    private rootSplit!:SplitNode
+    private nodeCenter!: SplitNode;
+    private nodeRight!: SplitNode;
+    private nodeRightTop!: SplitNode;
+    private nodeRightBottom!: SplitNode;
+    private nodeTop!: SplitNode;
+    private nodeBottom!: SplitNode;
 
     constructor() {
     }
@@ -156,9 +156,6 @@ class SceneEditor {
         if ( addMainMenuToggleButton("Move", Icons.MOVE,this.currentToolState == ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (addMainMenuToggleButton("Rotate", Icons.ROTATE,this.currentToolState == ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
         if (addMainMenuToggleButton("Scale", Icons.SCALE,this.currentToolState == ToolState.scale)) this.setCurrentToolState(ToolState.scale);
-   //     if (addMainMenuButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
-     //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
-      //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
 
         popMainMenu()
 
@@ -260,7 +257,7 @@ class SceneEditor {
     }
 
     public onObjectUI() {
-        UI.pushWindow("scene")
+      /*  UI.pushWindow("scene")
        // this.root.onUI()
 
         if (this.currentModel) {
@@ -291,7 +288,7 @@ class SceneEditor {
         }
 
 
-        UI.popWindow()
+        UI.popWindow()*/
     }
 
     setCurrentModel(value: SceneObject3D | null) {

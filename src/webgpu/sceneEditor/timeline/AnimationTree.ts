@@ -1,20 +1,20 @@
-import {TreeReturn} from "../lib/UI/components/Tree.ts";
-import UI_I from "../lib/UI/UI_I.ts";
-import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
-import VerticalLayout, {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
+import {TreeReturn} from "../../lib/UI/components/Tree.ts";
+import UI_I from "../../lib/UI/UI_I.ts";
+import Component, {ComponentSettings} from "../../lib/UI/components/Component.ts";
+import VerticalLayout, {VerticalLayoutSettings} from "../../lib/UI/components/VerticalLayout.ts";
 
-import Local from "../lib/UI/local/Local.ts";
+import Local from "../../lib/UI/local/Local.ts";
 
-import UI_IC from "../lib/UI/UI_IC.ts";
+import UI_IC from "../../lib/UI/UI_IC.ts";
 
-import {ButtonColor, OverButtonColor, SelectButtonColor, TextColorBright, TextColorDefault} from "./Style.ts";
-import Rect from "../lib/UI/math/Rect.ts";
-import Vec2 from "../lib/UI/math/Vec2.ts";
-import {addSdfToggleIcon} from "./SDFToggleIcon.ts";
-import {Icons} from "./Icons.ts";
-import UIKeyFrameData, {UIKeyFrames} from "../sceneEditor/timeline/UIKeyFrameData.ts";
+import {ButtonColor, OverButtonColor, SelectButtonColor, TextColorBright, TextColorDefault} from "../../UI/Style.ts";
+import Rect from "../../lib/UI/math/Rect.ts";
+import Vec2 from "../../lib/UI/math/Vec2.ts";
+import {addSdfToggleIcon} from "../../UI/SDFToggleIcon.ts";
+import {Icons} from "../../UI/Icons.ts";
+import UIKeyFrameData, {UIKeyFrames} from "./UIKeyFrameData.ts";
 
-export function pushAnimationTree(label: string, isLeave: boolean, depth: number, selected, keyDataMain: UIKeyFrameData):any {
+export function pushAnimationTree(label: string, isLeave: boolean, depth: number, selected:boolean, keyDataMain: UIKeyFrameData):any {
 
     if (!UI_I.setComponent(label)) {
         let settings = new ComponentSettings()
@@ -31,7 +31,7 @@ export function pushAnimationTree(label: string, isLeave: boolean, depth: number
     return (UI_I.currentComponent.parent as AnimationTree).getReturnValue();
 }
 
-export function popObjectTree(): void {
+export function popAnimationTree(): void {
     UI_I.popComponent();
     UI_I.popComponent();
 }
@@ -102,7 +102,7 @@ export default class AnimationTree extends Component {
         super.layoutAbsolute();
         this.backRect.copy(this.layoutRect)
         this.backRect.size.y = 20;
-        this.backRect.size.x =this.keyFrameOffset;
+        this.backRect.size.x =this.keyFrameOffset-10;
         this.textPos.copy(this.layoutRect.pos)
         this.textPos.x += this.depth * 10 + 17
         this.textPos.y += 4
@@ -184,7 +184,7 @@ export default class AnimationTree extends Component {
     setSelected(selected: boolean) {
         if (this.selected != selected) {
             this.selected = selected
-console.log("setSelected")
+
             this.setDirty();
         }
     }

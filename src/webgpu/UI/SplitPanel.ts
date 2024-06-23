@@ -20,11 +20,14 @@ export function pushSplitPanel(name:string,splitNode:SplitNode,needsScroll=true)
 
         s.box.size.set(200,200)
         s.box.setMargin(0)
-        s.box.setPadding(10);
-       // if(needsScroll) {
-            s.box.paddingLeft = 0;
-            s.box.paddingRight = 0;
-        //}
+        s.box.setPadding(14);
+        s.box.paddingLeft = 0;
+        s.box.paddingRight = 0;
+        s.box.paddingBottom= 15;
+        if(!needsScroll) {
+            s.box.paddingTop= 15;
+            s.box.paddingBottom= 25;
+       }
 
 
         let comp = new SplitPanel(UI_I.getID(name), s,splitNode,name,needsScroll);

@@ -152,13 +152,13 @@ export default class UIAnimationEditor extends Component {
         this.topLeftItems.y += this.keyFramesOffset.y;
         //background
         this.keysBackgroundRect.pos.copy(this.topLeft)
-        this.keysBackgroundRect.pos.y+=20;
+        this.keysBackgroundRect.pos.y+=18;
         this.keysBackgroundRect.size.copy(this.layoutRect.size)
-        this.keysBackgroundRect.size.y-=20;
+        this.keysBackgroundRect.size.y-=18;
         this.keysBackgroundRect.size.sub(this.keyFramesOffset)
         this.keysLineRect.pos.copy(this.topLeft)
         this.keysLineRect.size.set(1, this.keysBackgroundRect.size.y)
-        this.keysLineRect.pos.y+=20;
+        this.keysLineRect.pos.y+=18;
 
         //cursor
         this.cursorPos.copy(this.topLeft)
@@ -174,10 +174,10 @@ export default class UIAnimationEditor extends Component {
         this.cursorRect.setMinMax();
 
         this.cursorText = AnimationEditor.currentFrame + "";
-        let size = Font.getTextSize(this.cursorText);
+        let size =  UI_I.currentDrawBatch.sdfBatch.getLineSize(this.cursorText,10);
         this.cursorTextPos.copy(this.cursorRect.pos)
-        this.cursorTextPos.x += this.cursorRect.size.x / 2 - size.x / 2
-        this.cursorTextPos.y += this.cursorRect.size.y / 2 - size.y / 2 - 1
+        this.cursorTextPos.x += this.cursorRect.size.x / 2 - size / 2
+        this.cursorTextPos.y += this.cursorRect.size.y / 2 -5
 
 
     }
@@ -200,8 +200,8 @@ export default class UIAnimationEditor extends Component {
         }
         //cursor
         UI_I.currentDrawBatch.fillBatch.addRect(this.cursorLineRect, this.cursorColor);
-        UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect, this.cursorColor);
-        UI_I.currentDrawBatch.textBatch.addLine(this.cursorTextPos, this.cursorText, 1000, this.cursorTextColor)
+        UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.cursorRect, this.cursorColor,3);
+        UI_I.currentDrawBatch.sdfBatch.addLine(this.cursorTextPos, this.cursorText, 10, this.cursorTextColor)
 
 
 

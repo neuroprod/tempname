@@ -46,7 +46,5 @@ export default class AnimationChannelEditor{
 this.keyData.destroy()
     }
 
-    drawKeyData() {
-        UIKeyFrames(this.id, this.keyData)
-    }
+
 }

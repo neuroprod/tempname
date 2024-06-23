@@ -202,13 +202,6 @@ class AnimationEditor {
         this.root.drawUITree(0)
     }
 
-    drawKeyFrames() {
-        if(this.root){
-            UI.pushID(this.root.label)
-            this.root.drawUIKeyframes()
-            UI.popID();
-        }
-    }
 
     clearAllSelectFrames() {
         this.root?.keyDataMain.clearAllSelectFrames();

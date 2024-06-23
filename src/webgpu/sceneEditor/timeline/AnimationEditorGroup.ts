@@ -10,7 +10,7 @@ import UI_IC from "../../lib/UI/UI_IC.ts";
 import {ButtonBaseSettings} from "../../lib/UI/components/internal/ButtonBase.ts";
 import {HAlign} from "../../lib/UI/UI_Enums.ts";
 import UIKeyFrameData, {UIKeyFrames} from "./UIKeyFrameData.ts";
-import {pushAnimationTree} from "../../UI/AnimationTree.ts";
+import {pushAnimationTree} from "./AnimationTree.ts";
 import SceneEditor from "../SceneEditor.ts";
 
 
@@ -47,29 +47,9 @@ export default class AnimationEditorGroup {
 
     }
 
-    drawUIKeyframes() {
-        //drawThisKeyframes;
-        UIKeyFrames(this.label, this.keyDataMain)
-        // UI_IC.buttonBase(this.label, false, this.buttonSettings);
-        if (this.isOpen) {
-            if (this.channels.length) {
-                //drawThisKeyframes;
-                UIKeyFrames(this.label + "trans", this.keyDataTrans)
-                if (this.transOpen) {
 
-                    for (let c of this.channels) {
-                        //drawChannelsKeyFrames
-                        c.drawKeyData()
-                    }
-                }
-            }
-            for (let c of this.children) {
-                c.drawUIKeyframes();
-            }
-        }
-    }
 
-    drawUITree(depth) {
+    drawUITree(depth:number) {
         if (this.obj) {
 
             let r = pushAnimationTree(this.label, false, depth, this.obj == SceneEditor.currentModel,this.keyDataMain)

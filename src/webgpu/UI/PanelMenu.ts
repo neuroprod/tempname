@@ -1,6 +1,6 @@
 import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import UI_I from "../lib/UI/UI_I.ts";
-import {HAlign} from "../lib/UI/UI_Enums.ts";
+
 
 
 export function pushPanelMenu(label:string){
@@ -14,11 +14,8 @@ export function pushPanelMenu(label:string){
         s.box.size.set(300,34)
         s.box.setMargin(0)
         s.box.marginBottom=5
+        s.box.marginLeft=10
         s.box.setPadding(0);
-
-//s.box.hAlign =HAlign.RIGHT;
-
-
 
         let comp = new PanelMenu(UI_I.getID(label), s);
         UI_I.addComponent(comp);

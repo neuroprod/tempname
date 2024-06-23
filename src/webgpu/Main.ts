@@ -46,7 +46,7 @@ export default class Main {
     private modelLoader!: ModelLoader;
 
     private currentMainState!: MainState
-    private sceneEditor!: SceneEditor;
+
     private sceneLoader!: JsonLoader;
 
 

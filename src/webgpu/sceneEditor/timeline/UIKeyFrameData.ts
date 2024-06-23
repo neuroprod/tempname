@@ -133,22 +133,13 @@ export default class UIKeyFrameData {
 
 }
 
-class KeyFramesCompSetting extends ComponentSettings {
-    constructor() {
-        super();
-        this.box.size.y = 16;
-        this.box.marginBottom = 2;
-        this.hasBackground = true;
-        this.backgroundColor.setHex("#000000", 0.1)
-    }
 
-}
 
 export function UIKeyFrames(id: string, keyData: UIKeyFrameData,offset:number) {
     if (!UI_I.setComponent(id)) {
         let componentSettings =new ComponentSettings();
         componentSettings.box.marginLeft=offset;
-        componentSettings.box.size.y = 16;
+        componentSettings.box.size.y = 20;
         let comp = new KeyFramesComp(UI_I.getID(id),componentSettings, keyData);
         UI_I.addComponent(comp);
     }
