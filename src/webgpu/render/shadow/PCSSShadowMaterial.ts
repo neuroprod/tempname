@@ -32,9 +32,10 @@ export default class PCSSShadowMaterial extends Material {
     getKernel() {
         let numSamples = 16;
         let s = "const kernel = array<vec2f, " + numSamples + ">(";
+        let angle =0
         for (let i = 0; i < numSamples; i++) {
 
-            let angle =i*Math.PI*2/numSamples/9;
+            angle +=0.61803398875*Math.PI*2;
             let r  =i/numSamples;
             let x = Math.sin(angle)*r
             let y = Math.cos(angle)*r
@@ -46,11 +47,12 @@ export default class PCSSShadowMaterial extends Material {
         return s;
     }
     getKernel2() {
-        let numSamples = 16;
+        let numSamples = 8;
         let s = "const kernel2 = array<vec2f, " + numSamples + ">(";
+        let angle =0
         for (let i = 0; i < numSamples; i++) {
 
-            let angle = 3.23*i*Math.PI*2/numSamples;
+            angle +=0.61803398875*Math.PI*2;
             let r  =(i/numSamples);
             let x = Math.sin(angle)*r
             let y = Math.cos(angle)*r
@@ -101,11 +103,14 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        var shadowPosProj = uniforms.shadowViewProjectionMatrix* vec4(world,1.0);
 
        shadowPosProj = shadowPosProj/shadowPosProj.w;
+       
        shadowPosProj.x = shadowPosProj.x*0.5 +0.5;
        shadowPosProj.y =1.0-( shadowPosProj.y*0.5 +0.5);
-       let p  =  textureLoad(noise, uvPos % 3, 0).r;
-       let r = fract(0.5 + p * 0.75487766624669276005);
-       var angle= r*3.1415*2.0;
+       var p  =  textureLoad(noise, uvPos % 3, 0).r;
+  
+      
+       p+=fract(sin(dot(uv0, vec2(12.9898, 4.1414))) * 43758.5453);
+       let angle= p*3.1415*2.0;
        let  s = sin(angle);
        let  c = cos(angle);
        let rotMat   = mat2x2<f32> (c, s, -s, c);
@@ -113,7 +118,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       
        var  avgBlocker =0.0;
        var  blocker =0.0;
-       for(var i=0;i<16;i++)
+       for(var i=0;i<8;i++)
       {
       
         var offset = rotMat *kernel2[i];
@@ -132,15 +137,12 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       
       var size =0.0;
       if(blocker>0.0){
-      avgBlocker =avgBlocker/blocker;
-      size  =(avgBlocker-depth);
-
-      }else 
-      {
-       avgBlocker =0.0;
+        avgBlocker =avgBlocker/blocker;
+        size  =(avgBlocker-depth);
+        size =size *0.02+0.001;
       }
 
-      size =size *0.01+0.001;
+    
       var  shadow = 0.0;
       for(var i=0;i<16;i++)
       {
@@ -157,7 +159,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       
       
     
-     return vec4(  shadow ,0.0,0.0,0.0) ;
+     return vec4( shadow ,0.0,0.0,0.0) ;
 
 }
 ///////////////////////////////////////////////////////////

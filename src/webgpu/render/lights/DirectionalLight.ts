@@ -10,11 +10,11 @@ export default class DirectionalLight{
 
     constructor(renderer:Renderer) {
 
-        this.lightColor =new Vector4(1,0.8,0.6,5)
+        this.lightColor =new Vector4(1,0.8,0.6,6)
         this.lightDir = new Vector3(1,3,2)
         this.lightDir.normalize();
         this.shadowCamera =new Camera(renderer);
-
+        this.shadowCamera.fovy=1;
         //this.shadowCamera.setOrtho(-2,2,2,-2);
         this.shadowCamera.near=1;
         this.shadowCamera.far=10;
@@ -22,7 +22,8 @@ export default class DirectionalLight{
 
         this.shadowCamera.cameraLookAt.from(lookAt)
 
-        this.shadowCamera.cameraWorld.set(1,3,3)
+        this.shadowCamera.cameraWorld.set(1,3,2)
+        //this.shadowCamera.cameraWorld.scale(2.5)
     }
 
 

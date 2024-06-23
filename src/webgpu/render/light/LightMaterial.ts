@@ -151,7 +151,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        let N=normalize(textureLoad(gNormal,  uvPos ,0).xyz*2.0-1.0); 
        let V = normalize(camera.worldPosition.xyz - world);
        let F0 = mix(vec3(0.04), albedo, metallic);
-       var color =albedo*vec3(0.3,0.3,0.3);//*ao;
+       var color =albedo*vec3(0.2,0.2,0.2);//*ao;
        
 
        

@@ -4,6 +4,10 @@ import Rect from "../lib/UI/math/Rect.ts";
 import {MenuBGColor, PanelRadius} from "./Style.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
 import {addMenuColorButton, addMenuColorButtonPopup} from "./MenuColorButton.ts";
+import UI from "../lib/UI/UI.ts";
+import Color from "../lib/UI/math/Color.ts";
+import {ColorPickerSettings} from "../lib/UI/components/internal/ColorPicker.ts";
+import {popPanelMenu, pushPanelMenu} from "./PanelMenu.ts";
 
 
 
@@ -15,10 +19,11 @@ export function setSelectColorPopup(
 
     UI_I.currentComponent = UI_I.popupLayer;
     let settings: PopUpSettings = new PopUpSettings()
-    let width =33+4
-    settings.box.size.set(width,150)
-    settings.box.marginTop =rect.pos.y
-    settings.box.marginLeft =rect.pos.x-2;
+
+    settings.box.size.set(330,320)
+    settings.box.marginTop =rect.pos.y+45
+    settings.box.paddingTop =10
+    settings.box.marginLeft =rect.pos.x-330/2+20;
     let compPopup = new SelectColorPopup(
         UI_I.getID("colorPopup"),
         settings
@@ -30,10 +35,16 @@ export function setSelectColorPopup(
 
 
 export default class SelectColorPopup extends PopUp{
+    private color: Color;
+    private colorPickerSettings: ColorPickerSettings;
 
 
 constructor(id:number, settings:PopUpSettings) {
     super(id,settings);
+    this.color =new Color()
+    this.colorPickerSettings =new ColorPickerSettings()
+    this.colorPickerSettings.box.setMargin(10)
+    this.colorPickerSettings.box.marginTop=40
 }
 prepDraw() {
     //super.prepDraw();
@@ -41,12 +52,17 @@ prepDraw() {
 }
     setSubComponents() {
         super.setSubComponents();
-        UI_IC.pushVerticalLayout("v");
-        addMenuColorButtonPopup("#FF0000")
+       // UI_IC.pushVerticalLayout("v");
+        pushPanelMenu("color")
+
         addMenuColorButtonPopup("#261002")
         addMenuColorButtonPopup("#FFFFFF")
-        addMenuColorButtonPopup("#FF00FF")
-        UI_I.popComponent();
+        addMenuColorButtonPopup("#ff5050")
+        popPanelMenu()
+        //UI_I.popComponent();
+
+        UI_IC.colorPicker( "colorPick",this.color,this.colorPickerSettings)
+
     }
 
 }
