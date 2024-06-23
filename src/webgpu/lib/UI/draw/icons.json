@@ -312,6 +312,20 @@
             "page": 0
         },
         {
+            "id": 119,
+            "index": 23,
+            "char": "w",
+            "width": 28,
+            "height": 17,
+            "xoffset": 7,
+            "yoffset": 16,
+            "xadvance": 42,
+            "chnl": 15,
+            "x": 214,
+            "y": 41,
+            "page": 0
+        },
+        {
             "id": 32,
             "index": 0,
             "char": " ",
@@ -1222,20 +1236,6 @@
             "page": 0
         },
         {
-            "id": 119,
-            "index": 0,
-            "char": "w",
-            "width": 0,
-            "height": 0,
-            "xoffset": -2,
-            "yoffset": 44,
-            "xadvance": 0,
-            "chnl": 15,
-            "x": 46,
-            "y": 36,
-            "page": 0
-        },
-        {
             "id": 120,
             "index": 0,
             "char": "x",
@@ -1245,8 +1245,8 @@
             "yoffset": 44,
             "xadvance": 0,
             "chnl": 15,
-            "x": 45,
-            "y": 37,
+            "x": 46,
+            "y": 36,
             "page": 0
         },
         {
@@ -1260,7 +1260,7 @@
             "xadvance": 0,
             "chnl": 15,
             "x": 45,
-            "y": 38,
+            "y": 37,
             "page": 0
         },
         {
@@ -1273,8 +1273,8 @@
             "yoffset": 44,
             "xadvance": 0,
             "chnl": 15,
-            "x": 46,
-            "y": 37,
+            "x": 45,
+            "y": 38,
             "page": 0
         },
         {
@@ -1288,7 +1288,7 @@
             "xadvance": 0,
             "chnl": 15,
             "x": 46,
-            "y": 38,
+            "y": 37,
             "page": 0
         },
         {
@@ -1301,8 +1301,8 @@
             "yoffset": 44,
             "xadvance": 0,
             "chnl": 15,
-            "x": 508,
-            "y": 0,
+            "x": 46,
+            "y": 38,
             "page": 0
         },
         {
@@ -1315,7 +1315,7 @@
             "yoffset": 44,
             "xadvance": 0,
             "chnl": 15,
-            "x": 509,
+            "x": 508,
             "y": 0,
             "page": 0
         },
@@ -1329,7 +1329,7 @@
             "yoffset": 44,
             "xadvance": 0,
             "chnl": 15,
-            "x": 510,
+            "x": 509,
             "y": 0,
             "page": 0
         }

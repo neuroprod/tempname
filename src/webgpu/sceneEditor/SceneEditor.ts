@@ -175,7 +175,7 @@ export default class SceneEditor {
 
         pushSplitPanel("Top panel",  this.nodeRightTop);
 
-        this.root.onUI()
+        this.root.onUINice(0)
         popSplitPanel()
 
         pushSplitPanel("bottom panel",  this.nodeRightBottom);

@@ -19,4 +19,7 @@ export const Icons  = {
     CLOSE: 'r',
     NEXT: 's',
     DELETE_IMAGE: 't',
+    ADD_ANIME: 'u',
+    REMOVE_ANIME: 'v',
+    DOWN_ARROW: 'w',
 }
