@@ -144,9 +144,12 @@ class KeyFramesCompSetting extends ComponentSettings {
 
 }
 
-export function UIKeyFrames(id: string, keyData: UIKeyFrameData) {
+export function UIKeyFrames(id: string, keyData: UIKeyFrameData,offset:number) {
     if (!UI_I.setComponent(id)) {
-        let comp = new KeyFramesComp(UI_I.getID(id), keyData);
+        let componentSettings =new ComponentSettings();
+        componentSettings.box.marginLeft=offset;
+        componentSettings.box.size.y = 16;
+        let comp = new KeyFramesComp(UI_I.getID(id),componentSettings, keyData);
         UI_I.addComponent(comp);
     }
     UI_I.popComponent();
@@ -162,8 +165,8 @@ class KeyFramesComp extends Component {
     private isDragging: boolean = false;
 
 
-    constructor(id: number, keyData: UIKeyFrameData) {
-        super(id, new KeyFramesCompSetting())
+    constructor(id: number,componentSettings:ComponentSettings, keyData: UIKeyFrameData) {
+        super(id,componentSettings)
         this.keyData = keyData;
     }
 

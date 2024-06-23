@@ -39,7 +39,7 @@ export enum ToolState {
 
 }
 
-export default class SceneEditor {
+class SceneEditor {
 
 
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
@@ -51,7 +51,7 @@ export default class SceneEditor {
     private modelPool: ModelPool;
     private mouseListener: MouseListener;
     private ray: Ray = new Ray();
-    private currentModel: SceneObject3D | null = null;
+    currentModel: SceneObject3D | null = null;
     private outline: Outline;
     private editCursor: EditCursor;
     private editCamera: EditCamera;
@@ -66,8 +66,9 @@ export default class SceneEditor {
     private nodeTop: SplitNode;
     private nodeBottom: SplitNode;
 
-
-    constructor(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
+    constructor() {
+    }
+    init(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
         this.camera = new Camera(renderer);
@@ -418,3 +419,4 @@ export default class SceneEditor {
 
 
 }
+export default new SceneEditor();

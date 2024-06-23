@@ -115,6 +115,7 @@ class AnimationEditor {
     }
 
     onUI() {
+
         if (this.currentAnimation) {
             if (!UI.initialized) return;
 
@@ -198,7 +199,7 @@ class AnimationEditor {
 
     drawUITree() {
         if(this.root)
-        this.root.drawUITree()
+        this.root.drawUITree(0)
     }
 
     drawKeyFrames() {

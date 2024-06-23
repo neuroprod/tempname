@@ -6,6 +6,7 @@ import AnimationEditorGroup from "./timeline/AnimationEditorGroup.ts";
 import AnimationEditor from "./timeline/AnimationEditor.ts";
 import {TreeSettings} from "../lib/UI/components/Tree.ts";
 import {popObjectTree, pushObjectTree} from "../UI/ObjectTree.ts";
+import SceneEditor from "./SceneEditor.ts";
 
 export default class SceneObject3D extends Object3D{
     setCurrentModel!: (value: (SceneObject3D | null)) => void;
@@ -21,9 +22,11 @@ export default class SceneObject3D extends Object3D{
     }
 
     onUINice(depth:number){
-        pushObjectTree(this.label,this.children.length<=1,depth);
+        if(pushObjectTree(this.label,this.children.length<=1,depth,this ==  SceneEditor.currentModel)){
+            SceneEditor.setCurrentModel(this);
+        }
        // if(pushObjectTree(this.label,this.children.length<=1).clicked){
-            //this.setCurrentModel(this);
+
         //}
         depth++;
 

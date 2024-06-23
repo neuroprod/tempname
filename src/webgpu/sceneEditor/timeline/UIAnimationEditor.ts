@@ -186,7 +186,7 @@ export default class UIAnimationEditor extends Component {
         if (this.layoutRect.size.x < 0 || this.layoutRect.size.y < 0) return;
         super.prepDraw();
         UI_I.currentDrawBatch.needsClipping = true;
-       // UI_I.currentDrawBatch.fillBatch.addRect( this.layoutRect, this.keysBackgroundColor);
+
 
 //background
         UI_I.currentDrawBatch.fillBatch.addRect( this.keysBackgroundRect, this.keysBackgroundColor);
@@ -203,53 +203,18 @@ export default class UIAnimationEditor extends Component {
         UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect, this.cursorColor);
         UI_I.currentDrawBatch.textBatch.addLine(this.cursorTextPos, this.cursorText, 1000, this.cursorTextColor)
 
-        /*AnimationEditor.root?.drawUI()
 
-        /*let p =new Vec2(40,40);
-        p.add(this.layoutRect.pos);
-        UI_I.currentDrawBatch.fillBatch.addKeyframe(p, new Color(1,1,1));*/
 
     }
 
     setSubComponents() {
         super.setSubComponents();
-        //  AnimationEditor.root?.drawUI()
 
-/*
-        if (UI_IC.buttonBase("+ Key", true, this.addKeySettings)) AnimationEditor.addKeysSelected()
-        if (UI_IC.buttonBase("+ Key all", true, this.addKeyAllSettings)) AnimationEditor.addKeysAll()
-        if (AnimationEditor.isPlaying) {
-            if (UI_IC.buttonBase("Pause", true, this.playPauseSettings)) {
-                AnimationEditor.pause();
-            }
-        } else {
-            if (UI_IC.buttonBase("Play", true, this.playPauseSettings)) {
-                AnimationEditor.play();
-            }
-        }
-        if (AnimationEditor.isRecording) {
-            if (UI_IC.buttonBase("Stop Rec", true, this.stopRecordSettings)) {
-                AnimationEditor.isRecording = false;
-            }
-        } else {
-            if (UI_IC.buttonBase("Start Rec", true, this.startRecordSettings)) {
-                AnimationEditor.isRecording = true;
-            }
-        }*/
-
-       //UI_IC.pushVerticalLayout("panelVert",this.);
-
-        //UI_IC.pushComponent("threeHolder", this.threeHolderSetting)
         UI_IC.pushVerticalLayout("panelVert",this.panelVertSettings);
         AnimationEditor.drawUITree()
-        UI_I.popComponent();
-      //  UI_I.popComponent();
-       /* UI_IC.pushVerticalLayout("keyframes", this.keyFrameSettings);
-        AnimationEditor.drawKeyFrames()
-        UI_I.popComponent();*/
 
-       // UI_I.popComponent();
-        // UI_IC.buttonBase("test2",true,this.testSettings2);
+        UI_I.popComponent();
+
     }
 
 

@@ -1,6 +1,5 @@
 import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import UI_I from "../lib/UI/UI_I.ts";
-import Vec2 from "../lib/UI/math/Vec2.ts";
 import {MenuBGColor, PanelRadius} from "./Style.ts";
 
 import Rect from "../lib/UI/math/Rect.ts";
@@ -13,14 +12,9 @@ export function pushMainMenu(label:string,size:number,offset:number){
     if (!UI_I.setComponent(label)) {
 
         let s = new ComponentSettings()
-
         s.box.size.set(400,52)
         s.box.setMargin(10)
         s.box.setPadding(9);
-
-
-
-
         let comp = new MainMenu(UI_I.getID(label), s,size,offset);
         UI_I.addComponent(comp);
     }

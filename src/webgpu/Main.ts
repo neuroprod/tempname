@@ -92,7 +92,7 @@ export default class Main {
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
-        this.sceneEditor = new SceneEditor(this.renderer, this.mouseListener, this.modelLoader.data, this.sceneLoader.data)
+        SceneEditor.init(this.renderer, this.mouseListener, this.modelLoader.data, this.sceneLoader.data)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
@@ -121,7 +121,7 @@ export default class Main {
 
     private update() {
         if (this.currentMainState == MainState.editor) {
-            this.sceneEditor.update();
+            SceneEditor.update();
         }
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.update();
@@ -143,13 +143,13 @@ export default class Main {
 
         } else if (this.currentMainState == MainState.editor) {
 
-            this.sceneEditor.onUINice()
+           SceneEditor.onUINice()
         }
 
 return;
         if (this.currentMainState != MainState.game) {
             UI.pushWindow("Main")
-            this.sceneEditor.gameRenderer.onUI()
+            SceneEditor.gameRenderer.onUI()
             //  if (UI.LButton("Editor", "Views", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);
             // if (UI.LButton("ModelMaker", "", this.currentMainState != MainState.modelMaker)) this.setMainState(MainState.modelMaker);
             UI.separator("msep", false)
@@ -158,7 +158,7 @@ return;
 
                 this.modelMaker.onUI()
             } else if (this.currentMainState == MainState.editor) {
-                this.sceneEditor.onUI()
+                SceneEditor.onUI()
                 UI.popWindow()
                 //this.scene.onObjectUI()
               //  AnimationEditor.onUI();
@@ -175,10 +175,10 @@ return;
             this.canvasRenderPass.drawInCanvas = this.modelMaker.drawInCanvas.bind(this.modelMaker);
         }
         if (this.currentMainState == MainState.editor) {
-            this.sceneEditor.draw()
+            SceneEditor.draw()
 
 
-            this.canvasRenderPass.drawInCanvas = this.sceneEditor.drawInCanvas.bind(this.sceneEditor);
+            this.canvasRenderPass.drawInCanvas = SceneEditor.drawInCanvas.bind(SceneEditor);
         }
         this.canvasRenderPass.add();
 

@@ -1,7 +1,5 @@
 import SceneObject3D from "../SceneObject3D.ts";
 
-import UI_I from "../../lib/UI/UI_I.ts";
-
 
 import {AnimationType} from "./animation/Animation.ts";
 import AnimationChannelEditor from "./AnimationChannelEditor.ts";
@@ -10,10 +8,11 @@ import AnimationEditor from "./AnimationEditor.ts";
 import UI from "../../lib/UI/UI.ts";
 import UI_IC from "../../lib/UI/UI_IC.ts";
 import {ButtonBaseSettings} from "../../lib/UI/components/internal/ButtonBase.ts";
-
-import {TreeReturn} from "../../lib/UI/components/Tree.ts";
 import {HAlign} from "../../lib/UI/UI_Enums.ts";
 import UIKeyFrameData, {UIKeyFrames} from "./UIKeyFrameData.ts";
+import {pushAnimationTree} from "../../UI/AnimationTree.ts";
+import SceneEditor from "../SceneEditor.ts";
+
 
 export default class AnimationEditorGroup {
 
@@ -21,15 +20,13 @@ export default class AnimationEditorGroup {
     public parent: AnimationEditorGroup | null = null;
     public children: Array<AnimationEditorGroup> = [];
     label: string;
+    keyDataMain: UIKeyFrameData;
     private obj: SceneObject3D | null;
-    private offset: number = 0;
 
     private channels: Array<AnimationChannelEditor> = [];
-
     private buttonSettings: ButtonBaseSettings;
     private isOpen: boolean = false;
     private transOpen: boolean = false;
-     keyDataMain: UIKeyFrameData;
     private keyDataTrans: UIKeyFrameData;
 
     constructor(label: string, obj: SceneObject3D | null = null) {
@@ -72,27 +69,44 @@ export default class AnimationEditorGroup {
         }
     }
 
-    drawUITree() {
-        let tr: TreeReturn = UI.pushTree(this.label, false)
-        this.isOpen = tr.isOpen
+    drawUITree(depth) {
+        if (this.obj) {
 
-        if (this.isOpen) {
-            UI_I.globalStyle.compIndent += 20
+            let r = pushAnimationTree(this.label, false, depth, this.obj == SceneEditor.currentModel,this.keyDataMain)
+            if(r.isClicked) SceneEditor.setCurrentModel(this.obj)
+        } else {
+            pushAnimationTree(this.label, false, depth, false, this.keyDataMain)
+
+        }
+
+
+        // let tr: TreeReturn = UI.pushTree(this.label, false)
+        //this.isOpen = tr.isOpen
+
+        if (true) {//this.isOpen) {
+            // UI_I.globalStyle.compIndent += 20
             if (this.channels.length) {
-                let trTrans: TreeReturn = UI.pushTree("transforms", false)
-                this.transOpen = trTrans.isOpen;
+
+
+                let r =pushAnimationTree("transforms", false, depth + 2, false, this.keyDataMain)
+
+                // let trTrans: TreeReturn = UI.pushTree("transforms", false)
+                this.transOpen = r;
                 if (this.transOpen) {
                     for (let c of this.channels) {
                         UI_IC.buttonBase(c.label, false, this.buttonSettings);
                     }
                 }
+                // this.drawUIKeyframes()
+                //UIKeyFrames(this.label, this.keyDataMain)
                 UI.popTree()
             }
 
-            UI_I.globalStyle.compIndent -= 20
+            // UI_I.globalStyle.compIndent -= 20
             //UI_I.groupDepth-=20
+            depth += 1
             for (let c of this.children) {
-                c.drawUITree();
+                c.drawUITree(depth);
             }
 
         } else {
@@ -152,7 +166,7 @@ export default class AnimationEditorGroup {
         this.channels = []
         this.parent = null;
         this.obj = null;
-       this.keyDataMain.destroy()
+        this.keyDataMain.destroy()
         this.keyDataTrans.destroy();
     }
 

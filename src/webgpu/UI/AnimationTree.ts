@@ -12,8 +12,9 @@ import Rect from "../lib/UI/math/Rect.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import {addSdfToggleIcon} from "./SDFToggleIcon.ts";
 import {Icons} from "./Icons.ts";
+import UIKeyFrameData, {UIKeyFrames} from "../sceneEditor/timeline/UIKeyFrameData.ts";
 
-export function pushObjectTree(label: string, isLeave: boolean, depth: number, selected) {
+export function pushAnimationTree(label: string, isLeave: boolean, depth: number, selected, keyDataMain: UIKeyFrameData):any {
 
     if (!UI_I.setComponent(label)) {
         let settings = new ComponentSettings()
@@ -21,13 +22,13 @@ export function pushObjectTree(label: string, isLeave: boolean, depth: number, s
         settings.box.size.y = -1;
 
 
-        let comp = new ObjectTree(UI_I.getID(label), label, settings, depth);
+        let comp = new AnimationTree(UI_I.getID(label), label, settings, depth,keyDataMain);
         UI_I.addComponent(comp);
     }
-    (UI_I.currentComponent.parent as ObjectTree).setLeave(isLeave);
-    (UI_I.currentComponent.parent as ObjectTree).setSelected(selected);
+    (UI_I.currentComponent.parent as AnimationTree).setLeave(isLeave);
+    (UI_I.currentComponent.parent as AnimationTree).setSelected(selected);
 
-    return (UI_I.currentComponent.parent as ObjectTree).getReturnValue();
+    return (UI_I.currentComponent.parent as AnimationTree).getReturnValue();
 }
 
 export function popObjectTree(): void {
@@ -35,13 +36,13 @@ export function popObjectTree(): void {
     UI_I.popComponent();
 }
 
-export default class ObjectTree extends Component {
+export default class AnimationTree extends Component {
     private container!: Component;
 
     private label: string;
     private verticalLSettings: VerticalLayoutSettings;
     private open: boolean = true;
-    private isPressed = false;
+
     private isLeave: boolean = false;
 
     private backRect = new Rect()
@@ -50,11 +51,13 @@ export default class ObjectTree extends Component {
     private ret: TreeReturn = {clicked: false, isOpen: this.open};
     private depth: number;
     private selected: boolean = false;
+    private keyFrameOffset: number;
+    private keyDataMain: UIKeyFrameData;
 
-    constructor(id: number, label: string, settings: ComponentSettings, depth: number) {
+    constructor(id: number, label: string, settings: ComponentSettings, depth: number, keyDataMain: UIKeyFrameData) {
         super(id, settings);
         this.drawChildren = true;
-
+        this.keyFrameOffset=250;
         this.label = label;
         this.depth = depth;
         this.verticalLSettings = new VerticalLayoutSettings();
@@ -63,7 +66,7 @@ export default class ObjectTree extends Component {
         this.verticalLSettings.box.marginTop = 20;
         this.verticalLSettings.box.paddingTop = 0;
         this.verticalLSettings.box.paddingBottom = 0;
-
+        this.keyDataMain = keyDataMain;
 
         this.setFromLocal();
     }
@@ -85,7 +88,7 @@ export default class ObjectTree extends Component {
     }
 
     updateCursor(comp: Component) {
-        if (comp instanceof ObjectTree || comp instanceof VerticalLayout) {
+        if (comp instanceof Animation|| comp instanceof VerticalLayout) {
             this.placeCursor.y +=
                 +comp.settings.box.marginTop +
                 comp.size.y +
@@ -99,6 +102,7 @@ export default class ObjectTree extends Component {
         super.layoutAbsolute();
         this.backRect.copy(this.layoutRect)
         this.backRect.size.y = 20;
+        this.backRect.size.x =this.keyFrameOffset;
         this.textPos.copy(this.layoutRect.pos)
         this.textPos.x += this.depth * 10 + 17
         this.textPos.y += 4
@@ -108,17 +112,19 @@ export default class ObjectTree extends Component {
         super.prepDraw();
 
         if (this.selected) {
+
             UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos, this.label, 12, TextColorBright)
             UI_I.currentDrawBatch.fillBatch.addRect(this.backRect, SelectButtonColor)
         } else if (this.isOver) {
             UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos, this.label, 12, TextColorDefault)
             UI_I.currentDrawBatch.fillBatch.addRect(this.backRect, OverButtonColor)
-        } else if (this.isOverChild || this.label == "root") {
+        } else if (this.isOverChild || this.depth==0) {
             UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos, this.label, 12, TextColorDefault)
             UI_I.currentDrawBatch.fillBatch.addRect(this.backRect, ButtonColor)
         }else{
             UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos, this.label, 12, TextColorDefault)
         }
+
     }
 
     needsResize(): boolean {
@@ -137,7 +143,6 @@ export default class ObjectTree extends Component {
 
 
         if (!this.isLeave) {
-
             if (addSdfToggleIcon(
                 "ib",
                 this,
@@ -150,8 +155,8 @@ export default class ObjectTree extends Component {
                 this.ret.isOpen = this.open
                 this.saveToLocal();
                 this.setDirty(true);
-
             }
+            UIKeyFrames(this.label+"k",this.keyDataMain,this.keyFrameOffset)
         }
 
 
@@ -162,7 +167,7 @@ export default class ObjectTree extends Component {
     }
 
     getReturnValue(): any {
-        return this.isClicked
+        return {isClicked:this.isClicked,open:this.open};
 
     }
 
@@ -179,7 +184,7 @@ export default class ObjectTree extends Component {
     setSelected(selected: boolean) {
         if (this.selected != selected) {
             this.selected = selected
-
+console.log("setSelected")
             this.setDirty();
         }
     }
