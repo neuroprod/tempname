@@ -6,8 +6,8 @@ import VerticalLayout, {VerticalLayoutSettings} from "../lib/UI/components/Verti
 import Local from "../lib/UI/local/Local.ts";
 
 import UI_IC from "../lib/UI/UI_IC.ts";
-import Color from "../lib/UI/math/Color.ts";
-import {ButtonColor, TextColorDefault} from "./Style.ts";
+
+import {ButtonColor, OverButtonColor, TextColorDefault} from "./Style.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import {addSdfToggleIcon} from "./SDFToggleIcon.ts";
@@ -107,8 +107,13 @@ export default class ObjectTree extends Component {
     prepDraw() {
     super.prepDraw();
         UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.label,12,TextColorDefault)
-        if(this.isOver || this.isOverChild || this.label=="root")
+
+        if(this.isOver){
+            UI_I.currentDrawBatch.fillBatch.addRect(this.backRect,OverButtonColor)
+        }
+        else if( this.isOverChild || this.label=="root"){
          UI_I.currentDrawBatch.fillBatch.addRect(this.backRect,ButtonColor)
+        }
 }
 
     needsResize(): boolean {

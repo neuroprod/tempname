@@ -260,7 +260,7 @@ export default class SceneEditor {
 
     public onObjectUI() {
         UI.pushWindow("scene")
-        this.root.onUI()
+       // this.root.onUI()
 
         if (this.currentModel) {
             UI.separator(this.currentModel.label.toUpperCase(), true)
