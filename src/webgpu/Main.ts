@@ -11,10 +11,8 @@ import MouseListener from "./lib/MouseListener.ts";
 import ModelLoader from "./ModelLoader.ts";
 import SceneEditor from "./sceneEditor/SceneEditor.ts";
 import JsonLoader from "./JsonLoader.ts";
-import AnimationEditor from "./sceneEditor/timeline/AnimationEditor.ts";
 import SDFFont from "./lib/UI/draw/SDFFont.ts";
 import {popMainMenu, pushMainMenu} from "./UI/MainMenu.ts";
-import {addMainMenuButton} from "./UI/MainMenuButton.ts";
 import AppState, {AppStates} from "./AppState.ts";
 import {Icons} from "./UI/Icons.ts";
 import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
@@ -67,7 +65,7 @@ export default class Main {
     public preload() {
         UI.setWebGPU(this.renderer)
 
-        // let font =new SDFFont();
+
 
         //setup canvas
         this.canvasRenderPass = new CanvasRenderPass(this.renderer)
@@ -75,8 +73,8 @@ export default class Main {
 
         this.preloader = new PreLoader(() => {
         }, this.init.bind(this));
-//Todo handle bitmap preload
-        new TextureLoader(this.renderer,"bezierPoints.png")
+        //Todo handle bitmap preload
+        new TextureLoader(this.renderer, "bezierPoints.png")
 
         this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         this.sceneLoader = new JsonLoader("scene1", this.preloader)
@@ -129,10 +127,10 @@ export default class Main {
 
     private onUI() {
 
-        pushMainMenu("MainMenu",129,0)
+        pushMainMenu("MainMenu", 129, 0)
         if (addMainMenuToggleButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
         if (addMainMenuToggleButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
-        if (addMainMenuToggleButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+        if (addMainMenuToggleButton("Model Maker", Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
 
         popMainMenu()
         if (this.currentMainState == MainState.modelMaker) {
@@ -141,9 +139,8 @@ export default class Main {
 
         } else if (this.currentMainState == MainState.editor) {
 
-           SceneEditor.onUINice()
+            SceneEditor.onUINice()
         }
-
 
 
     }

@@ -12,7 +12,7 @@ export function addTexture(label:string,texture:Texture){
     if (!UI_I.setComponent(label)) {
         let settings =new ComponentSettings()
         settings.box.size.set(-1,-1)
-        settings.hasBackground =true;
+       // settings.hasBackground =true;
 
         let comp = new TextureComp (
             UI_I.getID(label), settings,

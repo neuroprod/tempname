@@ -5,6 +5,7 @@ import ModelRenderer from "../../lib/model/ModelRenderer.ts";
 import Model from "../../lib/model/Model.ts";
 import Timer from "../../lib/Timer.ts";
 import CanvasRenderPass from "../../CanvasRenderPass.ts";
+import PreviewPass from "./PreviewPass.ts";
 
 
 export default class PreviewRenderer{
@@ -13,6 +14,7 @@ export default class PreviewRenderer{
 
     private modelRenderer3D: ModelRenderer;
     private model3D: Model;
+    private previewRenderPass: PreviewPass;
 
     constructor(renderer: Renderer, model3D: Model, camera3D: Camera) {
         this.renderer =new Renderer()
@@ -20,7 +22,7 @@ export default class PreviewRenderer{
 
 
         this.camera3D = camera3D
-        this.camera3D.cameraWorld.set(0, 0, 5)
+        this.camera3D.cameraWorld.set(0, 0, 3)
         this.camera3D.cameraLookAt.set(0, 0, 0);
         this.camera3D.far = 10;
         this.camera3D.near = 0.1;
@@ -29,7 +31,7 @@ export default class PreviewRenderer{
 
         this.modelRenderer3D = new ModelRenderer(this.renderer, "3D", this.camera3D);
         this.modelRenderer3D.addModel(model3D)
-
+        this.previewRenderPass = new PreviewPass(renderer,this.modelRenderer3D)
     }
 
     update() {
@@ -45,13 +47,13 @@ export default class PreviewRenderer{
         }
     }
     public draw(){
-
+        this.previewRenderPass.add()
     }
     drawInCanvas(pass: CanvasRenderPass) {
 
      //   this.modelRenderer3D.draw(pass);
 
-       this.modelRenderer3D.draw(pass);
+      // this.modelRenderer3D.draw(pass);
 
     }
 }

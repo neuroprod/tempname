@@ -42,6 +42,7 @@ export default class DrawBatch {
         drawBatch.fillBatch.clear();
         drawBatch.textBatch.clear();
         drawBatch.sdfBatch.clear();
+        drawBatch.textureBatch.clear()
         drawBatch.parent = null;
     }
 
@@ -59,6 +60,7 @@ export default class DrawBatch {
             this.fillBatch.clear();
             this.textBatch.clear();
             this.sdfBatch.clear()
+            this.textureBatch.clear()
         }
     }
 
@@ -69,7 +71,7 @@ export default class DrawBatch {
 
         if (this.clipRect) {
             if (this.clipRect.size.x == 0) return;
-            if (this.fillBatch.indices.length + this.textBatch.indices.length > 0) {
+            if (this.fillBatch.indices.length + this.textBatch.indices.length+this.sdfBatch.indices.length+this.textureBatch.textureData.length > 0 ) {
                 array.push(this);
             }
             //array.push(this);

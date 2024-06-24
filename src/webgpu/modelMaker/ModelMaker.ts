@@ -40,6 +40,7 @@ import {popSplitPanel, pushSplitPanel, pushSplitPanelFixed} from "../UI/SplitPan
 import UI_I from "../lib/UI/UI_I.ts";
 import {addTexture} from "../UI/TextureComp.ts";
 import DefaultTextures from "../lib/textures/DefaultTextures.ts";
+import {Textures} from "../data/Textures.ts";
 
 
 enum ModelMainState {
@@ -179,6 +180,7 @@ export default class ModelMaker {
 
     draw() {
         this.drawing.draw()
+        this.previewRenderer.draw()
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
@@ -256,7 +258,7 @@ export default class ModelMaker {
 
         popMainMenu()
         pushSplitPanelFixed("test",null)
-        addTexture("preview",DefaultTextures.getNormal(this.renderer))
+        addTexture("preview",this.renderer.getTexture(Textures.PREVIEW_MODEL))
         popSplitPanel()
     }
 

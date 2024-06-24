@@ -58,8 +58,9 @@ export default class TextureBatch {
     }
 
     clear() {
-        console.log("clear TextureBatch")
-        this.textureData = [];
+        //TODO: handle clear, dont want to create uniform group every frame
+     //   console.log("clear TextureBatch")
+        //this.textureData = [];
     }
 
     destroy() {

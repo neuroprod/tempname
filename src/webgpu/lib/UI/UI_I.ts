@@ -511,7 +511,7 @@ export default class UI_I {
     static removeDrawBatch(id: number) {
         let batch = this.drawBatches.get(id);
         if (!batch) return;
-
+//batch.clear();
         if (batch.parent) {
             batch.parent.removeChild(batch);
         }
