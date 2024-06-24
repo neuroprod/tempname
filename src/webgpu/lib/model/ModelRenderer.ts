@@ -64,6 +64,7 @@ export default class ModelRenderer {
                 let uniformGroup:UniformGroup ;
 
                 if(label=="camera"){
+
                     uniformGroup = this.camera;
                 }
                 else if(label=="model"){
@@ -73,7 +74,7 @@ export default class ModelRenderer {
                     // @ts-ignore
                     uniformGroup =material.uniformGroups[i];
                 }
-
+//console.log( uniformGroup)
                 if(uniformGroupsIDS[i]!=uniformGroup.UUID){
                     uniformGroupsIDS[i]=uniformGroup.UUID
                     passEncoder.setBindGroup(i,uniformGroup.bindGroup);

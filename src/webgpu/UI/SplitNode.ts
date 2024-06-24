@@ -76,7 +76,6 @@ export default class SplitNode{
 
         this.panel =panel;
         this.size.copy(this.panel.size)
-        console.log(this.size)
         this.updateRootLayout()
     }
 

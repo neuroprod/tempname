@@ -146,26 +146,7 @@ export default class Main {
            SceneEditor.onUINice()
         }
 
-return;
-        if (this.currentMainState != MainState.game) {
-            UI.pushWindow("Main")
-            SceneEditor.gameRenderer.onUI()
-            //  if (UI.LButton("Editor", "Views", this.currentMainState != MainState.editor)) this.setMainState(MainState.editor);
-            // if (UI.LButton("ModelMaker", "", this.currentMainState != MainState.modelMaker)) this.setMainState(MainState.modelMaker);
-            UI.separator("msep", false)
-            if (this.currentMainState == MainState.modelMaker) {
 
-
-                this.modelMaker.onUI()
-            } else if (this.currentMainState == MainState.editor) {
-                SceneEditor.onUI()
-                UI.popWindow()
-                //this.scene.onObjectUI()
-              //  AnimationEditor.onUI();
-
-
-            }
-        }
 
     }
 

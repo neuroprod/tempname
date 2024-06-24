@@ -39,6 +39,8 @@ export default class Mesh extends ObjectGPU {
 
     setPositions(positions: Float32Array) {
 
+        this.min.set(Number.MAX_VALUE,Number.MAX_VALUE,Number.MAX_VALUE)
+        this.max.set(Number.MIN_VALUE,Number.MIN_VALUE,Number.MIN_VALUE)
 
         this.numVertices = positions.length;
 

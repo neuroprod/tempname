@@ -35,6 +35,7 @@ import {setNewPopup} from "../UI/NewPopup.ts";
 import {setItemsPopup} from "../UI/ItemsPopup.ts";
 import AppState from "../AppState.ts";
 import ShapeLineModel from "./cutting/ShapeLineModel.ts";
+import PreviewRenderer from "./preview/PreviewRenderer.ts";
 
 
 enum ModelMainState {
@@ -85,22 +86,23 @@ export default class ModelMaker {
 
     private currentProject!: Project;
     private textureModel: Model;
-    private drawingPreviewMaterial: DrawingPreviewMaterial;
+
     private modelRoot: Object3D;
     private zoomScale: number = 1;
     private isDragging: boolean = false;
     private prevDragMouse: Vector2 = new Vector2();
     private currentDragMouse: Vector2 = new Vector2();
 
-    private camera3D: Camera;
-    private modelRenderer3D: ModelRenderer;
+
     private currentTool: ToolType = ToolType.Paint;
+    private previewRenderer: PreviewRenderer;
+    private drawingPreviewMaterial: DrawingPreviewMaterial;
+    private camera3D: Camera;
 
     constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
         this.camera2D = new Camera(this.renderer)
-
         this.camera2D.cameraWorld.set(0, 0, 5)
         this.camera2D.cameraLookAt.set(0, 0, 0);
         this.camera2D.far = 10;
@@ -110,11 +112,7 @@ export default class ModelMaker {
         this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
 
-        this.camera3D = new Camera(this.renderer);
-        this.camera3D.cameraWorld.set(0, 0, 5)
-        this.camera3D.cameraLookAt.set(0, 0, 0);
-        this.camera3D.far = 10;
-        this.camera3D.near = -1;
+
 
         this.drawing = new Drawing(renderer);
         this.cutting = new Cutting(renderer, this.camera2D);
@@ -125,6 +123,8 @@ export default class ModelMaker {
 
         this.drawingPreviewMaterial = new DrawingPreviewMaterial(renderer, "materprev");
         this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
+
+
         this.textureModel.material = this.drawingPreviewMaterial;
         this.textureModel.setScaler(0.5)
         this.textureModel.x = 0.5;
@@ -144,10 +144,9 @@ export default class ModelMaker {
         this.modelRenderer2D.addModel(this.cutting.shapeLineModelSelectControl);
         this.modelRoot.addChild(this.cutting.shapeLineModelSelect)
         this.modelRenderer2D.addModel(this.cutting.pathEditor.pointModel);
+        this.camera3D = new Camera(this.renderer)
+        this.previewRenderer =new PreviewRenderer(renderer,this.cutting.model3D, this.camera3D)
 
-
-        this.modelRenderer3D = new ModelRenderer(this.renderer, "3D", this.camera3D);
-        this.modelRenderer3D.addModel(this.cutting.model3D)
 
         this.setProjects(data);
         this.scaleToFit()
@@ -163,10 +162,8 @@ export default class ModelMaker {
     update() {
         //this.camera2D.setOrtho(10, 0, 10, 0)
         this.camera2D.setOrtho(this.renderer.width, 0, this.renderer.height, 0)
-        this.camera3D.ratio = this.renderer.ratio;
-        if (this.cutting.model3D) {
-            this.cutting.model3D.setEuler(Math.sin(Timer.time / 3) * 0.2, Math.sin(Timer.time) * 0.8, 0)
-        }
+        this.previewRenderer.update()
+
 
 
         this.cutting.update()
@@ -177,21 +174,13 @@ export default class ModelMaker {
     }
 
     draw() {
-
-
         this.drawing.draw()
-
-
-        /* if(this.modelFocus ==ModelFocus.drawPanel){
-             this.drawing.draw()
-         }*/
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
 
-
         this.modelRenderer2D.draw(pass);
-        this.modelRenderer3D.draw(pass);
+        this.previewRenderer.drawInCanvas(pass)
 
     }
 
@@ -241,11 +230,13 @@ export default class ModelMaker {
         addMainMenuDivider("tooldDiv3")
         //addMainMenuButton("Trash", Icons.TRASH,false)
         addMainMenuText("CUT MESH")
-        if (addMainMenuButton("Add", Icons.PLUS_CUBE, false)) {
-
+        if (addMainMenuButton("Add", Icons.PLUS_CUBE, true)) {
+            setNewPopup("+ Add new Mesh", "new_mesh", (name: string) => {
+                this.cutting.addMesh(name);
+            })
         }
-        if (addMainMenuButton("Remove", Icons.MIN_CUBE, false)) {
-
+        if (addMainMenuButton("Remove", Icons.MIN_CUBE, true)) {
+            this.cutting.removeCurrentMesh();
         }
         addMainMenuDivider("tooldDiv4")
         if (addMainMenuToggleButton("Select", Icons.SELECT, this.currentTool == ToolType.Select)) (this.setTool( ToolType.Select))
@@ -257,83 +248,13 @@ export default class ModelMaker {
         if (addMainMenuButton("removeLast", Icons.UNDO_POINT, true)) {
             this.cutting.removeLastPoint()
         }
-        //addMainMenuButton("Trash", Icons.TRASH,false)
-        //     if (addMainMenuButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
-        //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
-        //  if (addMainMenuButton("Model Maker",  Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+
 
         popMainMenu()
     }
 
 
-    public onUI() {
 
-        UI.pushLList("Models", 100);
-        let count = 0;
-        for (let p of this.projects) {
-            if (UI.LListItem(p.name, p == this.currentProject)) {
-                this.currentProject = p;
-                this.drawing.setProject(this.currentProject);
-                this.cutting.setProject(this.currentProject)
-
-            }
-            count++;
-        }
-        UI.popList();
-        let newName = UI.LTextInput("Model Name", "")
-        if (UI.LButton("+ Add Model")) {
-
-            let fail = false;
-            if (newName.length == 0) {
-                UI.logEvent("", "Model needs a name", true);
-                fail = true
-            }
-            for (let p of this.projects) {
-                if (p.name == newName) {
-                    UI.logEvent("", "Model needs unique name", true);
-                    fail = true
-                    break;
-                }
-            }
-            if (!fail) {
-                this.currentProject = new Project(this.renderer);
-                this.currentProject.name = newName;
-                this.drawing.setProject(this.currentProject);
-                this.cutting.setProject(this.currentProject)
-
-                this.projects.push(this.currentProject);
-            }
-        }
-        if (this.currentProject) {
-            UI.separator("ProjectSep ", false);
-            UI.separator("Model: " + this.currentProject.name);
-            if (UI.LButton("Save Model")) {
-                let s = this.currentProject.getSaveString();
-
-                sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name, s).then(() => {
-                    UI.logEvent("", "saved!")
-
-                }).catch(() => {
-                    UI.logEvent("", "error saving", true)
-                })
-
-            }
-            UI.separator("Tools")
-            if (this.modelMainState == ModelMainState.draw) {
-                UI.LButton("Draw Texture", "", false)
-                if (UI.LButton("Cut Mesh")) this.modelMainState = ModelMainState.cut;
-                UI.separator("ll", false)
-
-            } else {
-                if (UI.LButton("Draw Texture")) this.modelMainState = ModelMainState.draw;
-                UI.LButton("Cut Mesh", "", false)
-                UI.separator("ll", false)
-                this.cutting.onUI()
-            }
-        }
-
-
-    }
 
     private handleMouse() {
         this.remapMouse(this.mouseListener.mousePos)

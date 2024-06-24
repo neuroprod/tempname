@@ -3,7 +3,7 @@ import Project from "../Project.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import UI from "../../lib/UI/UI.ts";
 import Model from "../../lib/model/Model.ts";
-import ModelPreviewMaterial from "../ModelPreviewMaterial.ts";
+import ModelPreviewMaterial from "../preview/ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
 
 import ProjectMesh from "../ProjectMesh.ts";
@@ -27,21 +27,19 @@ export default class Cutting {
     private readonly mesh: ExtrudeMesh;
     private project!: Project;
     private currentMesh!: ProjectMesh | null;
-    private toolType: ToolType =ToolType.None;
+    private toolType: ToolType = ToolType.None;
     private camera: Camera;
-   // private currentHitPoint!: Vector3 | null;
     private currentMousePoint: Vector2 = new Vector2();
     private prevMousePoint: Vector2 = new Vector2();
-   // private isDraggingPoint: boolean = false;
     private isDraggingMove: boolean = false;
 
     constructor(renderer: Renderer, camera: Camera) {
 
         this.camera = camera
         this.renderer = renderer
-        this.shapeLineModelSelect = new FatShapeLineModel(this.renderer, "linesSelect",false);
-        this.shapeLineModelSelectControl =new ShapeLineModel(this.renderer, "linesControll",false)
-        this.shapeLineModelAll= new FatShapeLineModel(this.renderer, "linesAll",true);
+        this.shapeLineModelSelect = new FatShapeLineModel(this.renderer, "linesSelect", false);
+        this.shapeLineModelSelectControl = new ShapeLineModel(this.renderer, "linesControll", false)
+        this.shapeLineModelAll = new FatShapeLineModel(this.renderer, "linesAll", true);
 
         this.model3D = new Model(renderer, "model3D")
         this.model3D.material = new ModelPreviewMaterial(renderer, "preview")
@@ -68,7 +66,7 @@ export default class Cutting {
         this.updateLine();
     }
 
-    setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean,ctrlDown:boolean) {
+    setMouse(mouseLocal: Vector2, isDownThisFrame: boolean, isUpThisFrame: boolean, ctrlDown: boolean) {
         if (!this.currentMesh) return;
         if (isDownThisFrame && !UI.needsMouse()) {
             if (this.toolType == ToolType.Center) {
@@ -76,12 +74,8 @@ export default class Cutting {
                 this.updateLine()
             }
             if (this.toolType == ToolType.Edit) {
-                this.pathEditor.onMouseDown(new Vector3(mouseLocal.x, mouseLocal.y, 0),ctrlDown)
-               /* this.currentHitPoint = this.pathEditor.getHitPoint(new Vector3(mouseLocal.x, mouseLocal.y, 0))
-                if (this.currentHitPoint) {
-                    this.prevMousePoint.from(mouseLocal)
-                    this.isDraggingPoint = true;
-                }*/
+                this.pathEditor.onMouseDown(new Vector3(mouseLocal.x, mouseLocal.y, 0), ctrlDown)
+
             }
             if (this.toolType == ToolType.Move) {
 
@@ -89,8 +83,8 @@ export default class Cutting {
                 this.prevMousePoint.from(mouseLocal)
                 this.isDraggingMove = true;
 
-            }  if (this.toolType == ToolType.Select) {
-
+            }
+            if (this.toolType == ToolType.Select) {
 
 
                 this.getPathFromMousePoint(mouseLocal);
@@ -98,21 +92,10 @@ export default class Cutting {
             } else {
                 this.addVectorPoint(mouseLocal);
             }
-        }else if(this.toolType == ToolType.Edit){
+        } else if (this.toolType == ToolType.Edit) {
 
-            if(this.pathEditor.onMouseMove(new Vector3(mouseLocal.x, mouseLocal.y, 0),isUpThisFrame))  this.updateLine()
+            if (this.pathEditor.onMouseMove(new Vector3(mouseLocal.x, mouseLocal.y, 0), isUpThisFrame)) this.updateLine()
 
-            /*else if (this.isDraggingPoint && this.currentHitPoint) {
-            this.currentMousePoint.from(mouseLocal);
-            this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
-
-            if (this.currentMousePoint.lengthSquared() > 0) {
-                this.currentHitPoint.add([this.currentMousePoint.x, this.currentMousePoint.y, 0]);
-
-                this.prevMousePoint.from(mouseLocal);
-                this.updateLine()
-            }
-            if (isUpThisFrame) this.isDraggingPoint = false;*/
         } else if (this.isDraggingMove) {
             this.currentMousePoint.from(mouseLocal);
             this.currentMousePoint.subtract(this.prevMousePoint as NumericArray);
@@ -134,91 +117,93 @@ export default class Cutting {
         for (let i = 0; i < positions.length; i += 3) {
             let p = new Vector2(positions[i], positions[i + 1])
             arr.push(p);
-
-
         }
-
-
         return arr;
     }
 
-    onUI() {
+    removeCurrentMesh() {
 
+        if (!this.currentMesh) return;
+        let i = this.project.meshes.indexOf(this.currentMesh)
+        this.project.meshes.splice(i, 1);
+        if (this.project.meshes.length) {
+            this.setCurrentMesh(this.project.meshes[0]);
 
-        if (this.currentMesh) {
-
-          /*  if (UI.LButton("Line", "", this.curveType != CurveType.Line)) {
-                this.curveType = CurveType.Line
-            }
-            if (UI.LButton("Bezier", "", this.curveType != CurveType.Bezier)) {
-                this.curveType = CurveType.Bezier
-            }
-            if (UI.LButton("Set Center", "", this.curveType != CurveType.Center)) {
-                this.curveType = CurveType.Center;
-            }
-            if (this.currentMesh.path.numCurves > 0) {
-
-                if (UI.LButton("Edit", "", this.curveType != CurveType.Edit)) {
-                    this.curveType = CurveType.Edit;
-
-                }
-                if (UI.LButton("Move", "", this.curveType != CurveType.Move)) {
-                    this.curveType = CurveType.Move;
-
-                }
-                if (UI.LButton("Remove Last Line")) {
-
-                    this.currentMesh.path.removeLastCurve()
-                    this.updateLine()
-                }
-            }
-
-*/
-            UI.separator("meshSep", false)
+        } else {
+            this.setCurrentMesh(null);
         }
-        UI.pushLList("Meshes", 100);
+        this.updateLine()
+        this.updateAllLines()
+    }
 
+    addMesh(newName: string) {
+        let fail = false;
+        if (newName.length == 0) {
+            UI.logEvent("", "Mesh needs a name", true);
+            fail = true
+        }
         for (let m of this.project.meshes) {
-            if (UI.LListItem(m.name, m == this.currentMesh)) {
-                this.currentMesh = m;
-                this.updateLine();
-            }
-
-        }
-        UI.popList();
-        let newName = UI.LTextInput("new Mesh", "")
-        if (UI.LButton("+ Add Mesh")) {
-
-            let fail = false;
-            if (newName.length == 0) {
-                UI.logEvent("", "Mesh needs a name", true);
+            if (m.name == newName) {
+                UI.logEvent("", "Mesh needs unique name", true);
                 fail = true
+                break;
             }
-            for (let m of this.project.meshes) {
-                if (m.name == newName) {
-                    UI.logEvent("", "Mesh needs unique name", true);
-                    fail = true
-                    break;
-                }
-            }
-            if (!fail) {
-                this.currentMesh = new ProjectMesh(this.renderer);
-                this.currentMesh.name = newName;
-                this.updateLine()
-                this.project.meshes.push(this.currentMesh)
-            }
+        }
+        if (!fail) {
+            this.currentMesh = new ProjectMesh(this.renderer);
+            this.currentMesh.name = newName;
+            this.updateLine()
+            this.project.meshes.push(this.currentMesh)
         }
 
     }
+
 
     update() {
         this.pathEditor.update()
 
-        this.shapeLineModelAll.material.setUniform("ratio",this.renderer.ratio)
-        this.shapeLineModelAll.material.setUniform("lineSize",3/this.renderer.height)
+        this.shapeLineModelAll.material.setUniform("ratio", this.renderer.ratio)
+        this.shapeLineModelAll.material.setUniform("lineSize", 3 / this.renderer.height)
 
-        this.shapeLineModelSelect.material.setUniform("ratio",this.renderer.ratio)
-        this.shapeLineModelSelect.material.setUniform("lineSize",3/this.renderer.height)
+        this.shapeLineModelSelect.material.setUniform("ratio", this.renderer.ratio)
+        this.shapeLineModelSelect.material.setUniform("lineSize", 3 / this.renderer.height)
+    }
+
+    updateAllLines() {
+        let paths: Array<Path> = [];
+        for (let m of this.project.meshes) {
+            paths.push(m.path)
+
+        }
+        this.shapeLineModelAll.setPaths(paths)
+    }
+
+    setTool(currentTool: ToolType) {
+        this.toolType = currentTool
+        if (this.toolType == ToolType.Select || this.toolType == ToolType.Paint) {
+            this.updateAllLines()
+
+            this.shapeLineModelSelect.visible = (this.toolType == ToolType.Select);
+            this.pathEditor.pointModel.visible = false;
+            this.shapeLineModelSelectControl.visible = false;
+        } else {
+            this.shapeLineModelAll.visible = false
+            this.shapeLineModelSelect.visible = true;
+            this.shapeLineModelSelectControl.visible = true;
+            this.pathEditor.pointModel.visible = true;
+            if (this.toolType == ToolType.Edit || this.toolType == ToolType.Move) {
+
+                this.pathEditor.createEditStruct()
+            }
+
+        }
+    }
+
+    removeLastPoint() {
+        if (this.currentMesh?.path) {
+            this.currentMesh.path.removeLastCurve()
+            this.updateLine()
+        }
     }
 
     private addVectorPoint(point: Vector2) {
@@ -249,78 +234,43 @@ export default class Cutting {
         this.shapeLineModelSelectControl.setPathControlPoints(this.currentMesh.path);
         if (this.currentMesh.path.numCurves > 1) {
             this.model3D.visible = true;
-            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), 0.03, new Vector3())
+            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), 0.03,new Vector3( this.currentMesh.center.x, this.currentMesh.center.y,0));
         }
         this.pathEditor.setPath(this.currentMesh.path, this.currentMesh.center)
 
 
     }
 
-
-
-    setTool(currentTool: ToolType) {
-        this.toolType = currentTool
-        if(this.toolType==ToolType.Select|| this.toolType==ToolType.Paint){
-            let paths:Array<Path>  =[];
-            for (let m of this.project.meshes) {
-                paths.push(m.path)
-
-            }
-            this.shapeLineModelAll.setPaths(paths)
-
-            this.shapeLineModelSelect.visible =(this.toolType==ToolType.Select);
-            this.pathEditor.pointModel.visible =false;
-            this.shapeLineModelSelectControl.visible =false;
-        }else{
-            this.shapeLineModelAll.visible =false
-            this.shapeLineModelSelect.visible =true;
-            this.shapeLineModelSelectControl.visible =true;
-            this.pathEditor.pointModel.visible =true;
-            if(this.toolType==ToolType.Edit || this.toolType==ToolType.Move){
-
-                this.pathEditor.createEditStruct()
-            }
-
-        }
-    }
-
     private getPathFromMousePoint(mouseLocal: Vector2) {
 
         let dist = Number.MAX_VALUE
-        let mouse3D = new Vector3(mouseLocal.x,mouseLocal.y,0);
-        let pm:ProjectMesh|null =null
+        let mouse3D = new Vector3(mouseLocal.x, mouseLocal.y, 0);
+        let pm: ProjectMesh | null = null
 
         for (let m of this.project.meshes) {
             let pDist = m.path.getDistance(mouse3D);
 
-            if(pDist<dist){
-                dist =pDist;
-                pm =m;
+            if (pDist < dist) {
+                dist = pDist;
+                pm = m;
             }
 
 
         }
 
-        this.shapeLineModelAll.visible =true;
-        this.shapeLineModelSelect.visible =true;
+        this.shapeLineModelAll.visible = true;
+        this.shapeLineModelSelect.visible = true;
         this.setCurrentMesh(pm)
 
-        this.pathEditor.pointModel.visible =false;
-        this.shapeLineModelSelectControl.visible =false;
+        this.pathEditor.pointModel.visible = false;
+        this.shapeLineModelSelectControl.visible = false;
 
 
     }
 
-    private setCurrentMesh(pm: ProjectMesh|null) {
-        this.currentMesh =pm;
+    private setCurrentMesh(pm: ProjectMesh | null) {
+        this.currentMesh = pm;
         this.updateLine()
 
-    }
-
-    removeLastPoint() {
-        if(this.currentMesh?.path) {
-            this.currentMesh.path.removeLastCurve()
-            this.updateLine()
-        }
     }
 }
