@@ -13,6 +13,7 @@ export default class Project
     drawLines: Array<DrawLine> = [];
     public baseTexture:Texture;
     private renderer: Renderer;
+    private isDirty: boolean =false;
 
 
     constructor(renderer:Renderer)
@@ -22,7 +23,10 @@ export default class Project
 
 
     }
-
+    public setDirty(){
+        this.isDirty = true;
+        
+    }
 
     getSaveString() {
         let a:any ={}

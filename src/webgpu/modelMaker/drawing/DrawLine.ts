@@ -16,6 +16,7 @@ export default class DrawLine {
     smoothing: number = 0.1;
     lineSize: number = 2;
     private readonly renderer: Renderer;
+    edge: number;
 
     constructor(renderer: Renderer, color: Color) {
         this.renderer = renderer;
@@ -119,7 +120,7 @@ export default class DrawLine {
 
     private updateData() {
         this.numInstances = this.points.length;
-        let data = new Float32Array(this.numInstances * 3);
+        let data = new Float32Array(this.numInstances * 4);
 
         let count = 0;
         let llCount = 0
@@ -127,6 +128,7 @@ export default class DrawLine {
             data[count++] = p.x;
             data[count++] = p.y;
             data[count++] = this.lineSizes[llCount++];
+            data[count++] = this.edge;
         }
         this.createBuffer(data, "instanceBuffer")
     }

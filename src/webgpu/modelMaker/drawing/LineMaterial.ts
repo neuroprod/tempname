@@ -9,9 +9,10 @@ export default class LineMaterial extends Material{
     public setup(){
         this.addAttribute("aPos", ShaderType.vec3);
         this.addAttribute("aUV0", ShaderType.vec2);
-        this.addAttribute("instanceData", ShaderType.vec3, 1, VertexStepMode.Instance);
+        this.addAttribute("instanceData", ShaderType.vec4, 1, VertexStepMode.Instance);
 
-        this.addVertexOutput("uv0",ShaderType.vec2);
+        this.addVertexOutput("uvEdge",ShaderType.vec3);
+
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
@@ -39,7 +40,8 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
     
     output.position =vec4( pos,0.0,1.0);
 
-    output.uv0 =aUV0;
+    output.uvEdge =vec3(aUV0,instanceData.w);
+     
     return output;
 }
 
@@ -48,8 +50,8 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
 
-   let uv =uv0-vec2f(0.5,0.5);
-   let l  =1.0-smoothstep(0.8,1.0,length(uv)*2.0);
+   let uv =uvEdge.xy-vec2f(0.5,0.5);
+   let l  =1.0-smoothstep(1.0-uvEdge.z,1.0,length(uv)*2.0);
    
     let color =    uniforms.color*l;
      

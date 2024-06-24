@@ -3,7 +3,7 @@ import {Vector2} from "@math.gl/core";
 import UI from "../../lib/UI/UI.ts";
 import DrawLine from "./DrawLine.ts";
 import DrawBufferTempPass from "./DrawBufferTempPass.ts";
-import ColorV from "../../lib/ColorV.ts";
+
 import Project from "../Project.ts";
 import Color from "../../lib/UI/math/Color.ts";
 
@@ -13,9 +13,10 @@ export default class Drawing {
     public lineColor = new Color(0.14901960784313725, 0.1357942726389747,  0.12798154555940022, 1)
     private currentLine!: DrawLine;
 
-    private lineSize = 1;
+    private lineSize = 5;
     private smoothing =0.1;
     private pressure =0.5
+    private edge =0.2
     private isDrawing: boolean = false;
 
 
@@ -28,6 +29,7 @@ export default class Drawing {
     private drawBufferTempPass: DrawBufferTempPass;
     private needsRedraw: boolean=false;
     private project!: Project;
+
 
 
     constructor(renderer: Renderer) {
@@ -83,8 +85,9 @@ export default class Drawing {
             this.currentLine = new DrawLine(this.renderer, this.lineColor)
             this.currentLine.lineSize = this.lineSize/1000;
             this.currentLine.smoothing = this.smoothing;
+            this.currentLine.edge= this.edge;
             this.project.drawLines.push(this.currentLine);
-
+            this.project.setDirty();
             this.isDrawing = true;
             this.updateDrawing()
         }
