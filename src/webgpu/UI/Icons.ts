@@ -22,4 +22,6 @@ export const Icons  = {
     ADD_ANIME: 'u',
     REMOVE_ANIME: 'v',
     DOWN_ARROW: 'w',
+    UNDO_STROKE: 'x',
+    UNDO_POINT: 'y',
 }

@@ -203,7 +203,7 @@ export default class ModelMaker {
     }
 
     onUINice() {
-        pushMainMenu("paint", 800, 134);
+        pushMainMenu("paint", 850, 134);
         if (addMainMenuTextButton("Save", true)) {
             this.saveAll();
         }
@@ -229,9 +229,15 @@ export default class ModelMaker {
         addMainMenuDivider("tooldDiv2")
         addMainMenuText("DRAW")
 
+
         if (addMainMenuToggleButton("Brush", Icons.PAINT, this.currentTool == ToolType.Paint)) (this.setTool(ToolType.Paint))
         addMenuBrushButton("menuBrush",this.drawing.lineData)
         addMenuColorButton("Main",this.drawing.lineColor);
+        if (addMainMenuButton("UndoBrush", Icons.UNDO_STROKE, true)) {
+            this.drawing.undoLine()
+        }
+
+
         addMainMenuDivider("tooldDiv3")
         //addMainMenuButton("Trash", Icons.TRASH,false)
         addMainMenuText("CUT MESH")
@@ -248,7 +254,9 @@ export default class ModelMaker {
         if (addMainMenuToggleButton("Bezier", Icons.BEZIER, this.currentTool == ToolType.Bezier)) (this.setTool(ToolType.Bezier))
         if (addMainMenuToggleButton("Move", Icons.MOVE, this.currentTool == ToolType.Move)) (this.setTool(ToolType.Move))
         if (addMainMenuToggleButton("setCenter", Icons.CENTER, this.currentTool == ToolType.Center)) (this.setTool(ToolType.Center))
-
+        if (addMainMenuButton("removeLast", Icons.UNDO_POINT, true)) {
+            this.cutting.removeLastPoint()
+        }
         //addMainMenuButton("Trash", Icons.TRASH,false)
         //     if (addMainMenuButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
         //   if (addMainMenuButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
@@ -315,7 +323,7 @@ export default class ModelMaker {
                 UI.LButton("Draw Texture", "", false)
                 if (UI.LButton("Cut Mesh")) this.modelMainState = ModelMainState.cut;
                 UI.separator("ll", false)
-                this.drawing.onUI()
+
             } else {
                 if (UI.LButton("Draw Texture")) this.modelMainState = ModelMainState.draw;
                 UI.LButton("Cut Mesh", "", false)

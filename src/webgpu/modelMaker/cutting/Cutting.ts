@@ -316,4 +316,11 @@ export default class Cutting {
         this.updateLine()
 
     }
+
+    removeLastPoint() {
+        if(this.currentMesh?.path) {
+            this.currentMesh.path.removeLastCurve()
+            this.updateLine()
+        }
+    }
 }
