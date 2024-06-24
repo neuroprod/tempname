@@ -13,10 +13,14 @@ export default class DrawLine {
     public numInstances: number = 0;
 
     public uniformGroup: UniformGroup;
+
     smoothing: number = 0.1;
     lineSize: number = 2;
+    edge: number =0.5;
+
+
     private readonly renderer: Renderer;
-    edge: number;
+
 
     constructor(renderer: Renderer, color: Color) {
         this.renderer = renderer;

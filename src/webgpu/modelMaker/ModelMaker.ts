@@ -230,7 +230,7 @@ export default class ModelMaker {
         addMainMenuText("DRAW")
 
         if (addMainMenuToggleButton("Brush", Icons.PAINT, this.currentTool == ToolType.Paint)) (this.setTool(ToolType.Paint))
-        addMenuBrushButton(4)
+        addMenuBrushButton("menuBrush",this.drawing.lineData)
         addMenuColorButton("Main",this.drawing.lineColor);
         addMainMenuDivider("tooldDiv3")
         //addMainMenuButton("Trash", Icons.TRASH,false)
