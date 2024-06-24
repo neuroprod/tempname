@@ -3,6 +3,7 @@ import DrawBatch from "../draw/DrawBatch";
 import FillBatchGPU from "./FillBatchGPU";
 import TextBatchGPU from "./TextBatchGPU";
 import SDFBatchGPU from "./SDFBatchGPU.ts";
+import TextureBatch from "../draw/TextureBatch.ts";
 
 export default class DrawBatchGPU {
     public id: number;
@@ -10,11 +11,13 @@ export default class DrawBatchGPU {
     public fillBatchGPU!: FillBatchGPU;
     public textBatchGPU!: TextBatchGPU;
     public sdfBatchGPU!: SDFBatchGPU;
+    public textureBatch!: TextureBatch;
     public clipRect!: Rect | null;
     public needsClipping: boolean = false;
     public useThisUpdate: boolean = true;
 
     private device: GPUDevice;
+
 
 
     constructor(id: number, device: GPUDevice) {
@@ -38,11 +41,11 @@ export default class DrawBatchGPU {
             if (!this.sdfBatchGPU) this.sdfBatchGPU = new SDFBatchGPU(this.device);
             this.sdfBatchGPU.setRenderData(batch.sdfBatch);
         }
-        /* if(batch.textureBatch)
-             {
 
-                 this.textureBatch=batch.textureBatch;
-             }*/
+        if(batch.textureBatch.textureData.length>0){
+            this.textureBatch =batch.textureBatch;
+        }
+
     }
 
     destroy() {
@@ -55,8 +58,9 @@ export default class DrawBatchGPU {
         if (this.sdfBatchGPU) {
             this.sdfBatchGPU.destroy();
         }
-        /* if (this.textBatchGL) {
-                this.textBatchGL.destroy()
-            }*/
+        if(this.textureBatch){
+            this.textureBatch.destroy();
+        }
+
     }
 }

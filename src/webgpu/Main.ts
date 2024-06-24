@@ -57,8 +57,6 @@ export default class Main {
         this.renderer = new Renderer();
         this.renderer.setup(this.canvas).then(() => {
             this.preload()
-        }).catch((e) => {
-            console.warn("no WebGPU ->" + e);
         })
 
         let f = new SDFFont()

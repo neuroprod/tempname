@@ -3,6 +3,7 @@ import Rect from "../math/Rect";
 import TextBatch from "./TextBatch";
 
 import SDFBatch from "./SDFBatch.ts";
+import TextureBatch from "./TextureBatch.ts";
 
 export default class DrawBatch {
     public isDirty: boolean = false;
@@ -11,7 +12,7 @@ export default class DrawBatch {
     public textBatch = new TextBatch();
 
     public sdfBatch = new SDFBatch();
-
+    public textureBatch =new TextureBatch();
 
     public parent: DrawBatch | null = null;
     public children: Array<DrawBatch> = [];

@@ -21,6 +21,7 @@ export default class LineMaterial extends Material{
         this.blendModes=[Blend.preMultAlpha()]
         this.depthCompare = CompareFunction.Always;
         this.depthWrite =false;
+        this.logShader =true;
     }
     getShader(): string {
         return /* wgsl */ `

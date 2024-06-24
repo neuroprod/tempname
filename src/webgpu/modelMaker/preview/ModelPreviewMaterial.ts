@@ -26,7 +26,7 @@ export default class ModelPreviewMaterial extends Material{
         uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer))
         uniforms.addSampler("mySampler")
 
-        this.logShader =true;
+
     }
     getShader(): string {
         return /* wgsl */ `

@@ -8,9 +8,37 @@ import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import SplitNode from "./SplitNode.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
+import DefaultTextures from "../lib/textures/DefaultTextures.ts";
+import Renderer from "../lib/Renderer.ts";
+
+export function pushSplitPanelFixed(name:string,splitNode:SplitNode|null=null,needsScroll=true){
 
 
-export function pushSplitPanel(name:string,splitNode:SplitNode,needsScroll=true){
+    UI_I.currentComponent = UI_I.panelLayer;
+    if (!UI_I.setComponent(name)) {
+
+        let s = new ComponentSettings()
+
+        s.box.size.set(300,300)
+        s.box.marginTop =70
+        s.box.marginLeft =10
+        s.box.setPadding(14);
+        s.box.paddingLeft = 0;
+        s.box.paddingRight = 0;
+        s.box.paddingBottom= 15;
+        if(!needsScroll) {
+            s.box.paddingTop= 15;
+            s.box.paddingBottom= 25;
+        }
+
+
+        let comp = new SplitPanel(UI_I.getID(name), s,null,name,needsScroll);
+        UI_I.addComponent(comp);
+    }
+
+
+}
+export function pushSplitPanel(name:string,splitNode:SplitNode|null=null,needsScroll=true){
 
 
     UI_I.currentComponent = UI_I.panelLayer;
@@ -47,10 +75,10 @@ export class SplitPanel extends Component{
     private contentVLSetting: VerticalLayoutSettings;
 
 
-    constructor(id:number,s:ComponentSettings,splitNode:SplitNode,name:string,needsScroll:boolean) {
+    constructor(id:number,s:ComponentSettings,splitNode:SplitNode|null,name:string,needsScroll:boolean) {
 
         super(id,s);
-        splitNode.setPanel(this);
+        if(splitNode) splitNode.setPanel(this);
 
         this.name =name;
         this.hasOwnDrawBatch =true
@@ -78,6 +106,8 @@ export class SplitPanel extends Component{
         super.prepDraw();
 
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,MenuBGColor,PanelRadius)
+
+        UI_I.currentDrawBatch.textureBatch.addTexture(this.layoutRect,DefaultTextures.getNormal(Renderer.instance))
        // UI_I.currentDrawBatch.sdfBatch.addLine(this.layoutRect.pos,this.name,16,TextColorDefault)
     }
     setSubComponents() {

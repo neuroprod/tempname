@@ -33,17 +33,19 @@ export default class Renderer {
 
     models: Array<Model> = [];
     modelByLabel: { [label: string]: Model } = {};
+    static instance: Renderer;
 
 
 
     constructor() {
+
     }
 
     async setup(canvas: HTMLCanvasElement) {
         this.canvas = canvas;
         this.pixelRatio = window.devicePixelRatio;
         this.textureHandler = new TextureHandler();
-
+        Renderer.instance =this;
 
         const adapter = await navigator.gpu.requestAdapter({powerPreference: "high-performance"});
         if(adapter) {

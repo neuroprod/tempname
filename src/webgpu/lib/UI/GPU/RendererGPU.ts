@@ -10,6 +10,10 @@ import SDFBatchMaterial from "./SDFBatchMaterial.ts";
 import SDFFontTexture from "./SDFFontTexture.ts";
 import {FilterMode, SamplerBindingType} from "../../WebGPUConstants.ts";
 
+import TextureBatchMaterial from "./TextureBatchMaterial.ts";
+import Quad from "../../mesh/geometry/Quad.ts";
+import Mesh from "../../mesh/Mesh.ts";
+
 export default class RendererGPU {
 
     private device!: GPUDevice;
@@ -36,6 +40,10 @@ export default class RendererGPU {
     private sdfFontTexture!: SDFFontTexture;
     private sdfFontBindGroup!: GPUBindGroup;
     private sdfFontBindGroupLayout!: GPUBindGroupLayout;
+    private textureBatchMaterial: TextureBatchMaterial;
+    private textureBindGroupLayout: GPUBindGroupLayout;
+
+    private quadMesh: Mesh;
 
     constructor() {
     }
@@ -79,9 +87,6 @@ export default class RendererGPU {
         });
 
 
-
-
-
         this.fontTexture = this.device.createTexture({
             label: "UI_fontTexture",
             size: [FontTextureData.width, FontTextureData.height, 1],
@@ -116,12 +121,16 @@ export default class RendererGPU {
                 },
             ],
         });
-        let sampler: GPUSampler =device.createSampler({
+        let sampler: GPUSampler = device.createSampler({
             magFilter: FilterMode.Linear,
             minFilter: FilterMode.Linear,
-            mipmapFilter: FilterMode.Linear});
-            this.sdfFontTexture  =new SDFFontTexture(device)
-            this.sdfFontBindGroupLayout = this.device.createBindGroupLayout({
+            mipmapFilter: FilterMode.Linear
+        });
+
+        this.sdfFontTexture = new SDFFontTexture(device)
+
+
+        this.sdfFontBindGroupLayout = this.device.createBindGroupLayout({
             label: "UI_font_BindGroupLayout",
             entries: [
                 {
@@ -138,9 +147,8 @@ export default class RendererGPU {
         });
 
 
-
         this.sdfFontBindGroup = device.createBindGroup({
-            layout:  this.sdfFontBindGroupLayout,
+            layout: this.sdfFontBindGroupLayout,
             entries: [
                 {
                     binding: 0,
@@ -170,6 +178,54 @@ export default class RendererGPU {
             this.mvpBindGroupLayout,
             this.sdfFontBindGroupLayout
         );
+        this.sdfBatchMaterial = new SDFBatchMaterial(
+            device,
+            presentationFormat,
+            this.mvpBindGroupLayout,
+            this.sdfFontBindGroupLayout
+        );
+
+        /*this.textureBindGroupLayout = this.device.createBindGroupLayout({
+            label: "UI_texture_BindGroupLayout",
+            entries: [
+                {
+                    binding: 0,
+                    visibility: GPUShaderStage.FRAGMENT,
+                    texture: {sampleType: "float"},
+                },
+                {
+                    binding: 1,
+                    visibility: GPUShaderStage.FRAGMENT,
+                    sampler: {type: SamplerBindingType.Filtering},
+                },
+            ],
+        });
+
+        this.textureBatchMaterial = new TextureBatchMaterial(
+            device,
+            presentationFormat,
+            this.mvpBindGroupLayout,
+            this.textureBindGroupLayout
+        )*/
+
+        this.quadMesh  =new Mesh(UI_I.renderer)
+        const indices: Uint16Array = new Uint16Array([0, 1, 2, 2, 0, 3]);
+        this.quadMesh.setIndices(indices);
+        const positionData: Float32Array = new Float32Array([
+            0,
+            1, //0
+            0,
+            0, //1
+            1,
+            0, //2
+            1,
+            1, //3
+        ]);
+        this.quadMesh.setUV0(positionData);
+
+
+
+
     }
 
     delete(id: number) {
@@ -194,7 +250,7 @@ export default class RendererGPU {
             let drawBatch;
             if (this.drawBatches.has(id)) {
                 drawBatch = this.drawBatches.get(id);
-                if (batch.isDirty ) {
+                if (batch.isDirty) {
                     // @ts-ignore
                     drawBatch.setBatchData(batch);
                 }
@@ -227,6 +283,11 @@ export default class RendererGPU {
         this.fillBatchMaterial.makePipeline(needsDepth);
         this.textBatchMaterial.makePipeline(needsDepth);
         this.sdfBatchMaterial.makePipeline(needsDepth)
+
+
+
+
+        //this.textureBatchMaterial.makePipeline(needsDepth)
         let vpSize = UI_I.screenSize;
 
         //this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
@@ -234,13 +295,13 @@ export default class RendererGPU {
         for (let batch of this.drawArray) {
             if (batch.needsClipping) {
                 // @ts-ignore
-                if(batch.clipRect){
-                passEncoder.setScissorRect(
-                    batch.clipRect.pos.x * UI_I.pixelRatio,
-                    batch.clipRect.pos.y * UI_I.pixelRatio,
-                    batch.clipRect.size.x * UI_I.pixelRatio,
-                    batch.clipRect.size.y * UI_I.pixelRatio,
-                );
+                if (batch.clipRect) {
+                    passEncoder.setScissorRect(
+                        batch.clipRect.pos.x * UI_I.pixelRatio,
+                        batch.clipRect.pos.y * UI_I.pixelRatio,
+                        batch.clipRect.size.x * UI_I.pixelRatio,
+                        batch.clipRect.size.y * UI_I.pixelRatio,
+                    );
                 }
             } else {
                 passEncoder.setScissorRect(0, 0, this.width * UI_I.pixelRatio, this.height * UI_I.pixelRatio);
@@ -268,6 +329,33 @@ export default class RendererGPU {
                 passEncoder.setVertexBuffer(0, batch.sdfBatchGPU.vertexBuffer);
                 passEncoder.setIndexBuffer(batch.sdfBatchGPU.indexBuffer, "uint16");
                 passEncoder.drawIndexed(batch.sdfBatchGPU.numIndices, 1, 0, 0);
+            }
+            if (batch.textureBatch) {
+
+                if(!this.textureBatchMaterial){
+                    this.textureBatchMaterial = new TextureBatchMaterial(
+                        this.device,
+                        this.presentationFormat,
+                        this.mvpBindGroupLayout,
+                        batch.textureBatch.textureData[0].bindGroupLayout)
+                    this.textureBatchMaterial.makePipeline(needsDepth)
+
+                }
+
+
+                passEncoder.setPipeline(this.textureBatchMaterial.pipeLine);
+                passEncoder.setBindGroup(0, this.mvpBindGroup);
+
+
+                for (let t of batch.textureBatch.textureData) {
+
+                    passEncoder.setBindGroup(1, t.bindGroup);
+                    passEncoder.setVertexBuffer(0, this.quadMesh.getBufferByName("aUV0"));
+                    passEncoder.setIndexBuffer(this.quadMesh.indexBuffer, "uint16");
+                    passEncoder.drawIndexed(this.quadMesh.numIndices, 1, 0, 0);
+                }
+
+
             }
         }
     }

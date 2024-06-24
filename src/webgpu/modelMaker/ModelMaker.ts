@@ -36,6 +36,8 @@ import {setItemsPopup} from "../UI/ItemsPopup.ts";
 import AppState from "../AppState.ts";
 import ShapeLineModel from "./cutting/ShapeLineModel.ts";
 import PreviewRenderer from "./preview/PreviewRenderer.ts";
+import {popSplitPanel, pushSplitPanel, pushSplitPanelFixed} from "../UI/SplitPanel.ts";
+import UI_I from "../lib/UI/UI_I.ts";
 
 
 enum ModelMainState {
@@ -251,6 +253,8 @@ export default class ModelMaker {
 
 
         popMainMenu()
+        pushSplitPanelFixed("test",null)
+        popSplitPanel()
     }
 
 

@@ -53,6 +53,7 @@ export default class UI_I {
     private static keyboardListener: KeyboardListener;
     private static oldDrawBatchIDs: number[] = [];
     static pixelSize =new Vec2();
+    public static renderer: Renderer;
 
     constructor() {
     }
@@ -392,6 +393,7 @@ export default class UI_I {
         renderer: Renderer,
         settings?: any
     ) {
+        this.renderer =renderer;
         UI_I.renderType = "gpu";
         UI_I.rendererGPU = new RendererGPU();
         UI_I.rendererGPU.init(renderer.device, renderer.presentationFormat);
