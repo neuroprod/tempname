@@ -5,14 +5,17 @@ import DrawLine from "./DrawLine.ts";
 import DrawBufferTempPass from "./DrawBufferTempPass.ts";
 import ColorV from "../../lib/ColorV.ts";
 import Project from "../Project.ts";
+import Color from "../../lib/UI/math/Color.ts";
 
 
 export default class Drawing {
-    private lineSize = 1;
-    private lineColor = new ColorV(1, 0, 0, 1)
+
+    public lineColor = new Color(0.14901960784313725, 0.1357942726389747,  0.12798154555940022, 1)
     private currentLine!: DrawLine;
-private smoothing =0.1;
-private pressure =0.5
+
+    private lineSize = 1;
+    private smoothing =0.1;
+    private pressure =0.5
     private isDrawing: boolean = false;
 
 
@@ -21,10 +24,7 @@ private pressure =0.5
 
     private bufferNeedsClearing = true;
 
-    /*private mixPass:DrawingMixPass
-    private bufferTexture: RenderTexture;
-    private drawBufferClearPass: DrawBufferClearPass;
-    private drawBufferStorePass: DrawBufferStorePass;*/
+
     private drawBufferTempPass: DrawBufferTempPass;
     private needsRedraw: boolean=false;
     private project!: Project;
@@ -32,21 +32,7 @@ private pressure =0.5
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
-        //TODO update passes
 
-        /* this.mixPass=new DrawingMixPass(renderer);
-
-         this.bufferTexture = new RenderTexture(renderer, "drawingBufferColor", {
-             format: renderer.presentationFormat,
-             sampleCount: 1,
-             scaleToCanvas: false,
-             width:2024,
-             height:2024,
-             usage: GPUTextureUsage.RENDER_ATTACHMENT|GPUTextureUsage.TEXTURE_BINDING
-         });
-
-         this.drawBufferClearPass = new DrawBufferClearPass(this.renderer,this.bufferTexture)
-         this.drawBufferStorePass = new DrawBufferStorePass(this.renderer,this.bufferTexture)*/
         this.drawBufferTempPass = new DrawBufferTempPass(this.renderer)
     }
     setProject(project: Project) {
@@ -72,7 +58,7 @@ private pressure =0.5
     onUI() {
         if(!this.project)return;
 
-        UI.LText("drawing")
+      /*  UI.LText("drawing")
         UI.LFloatSlider(this, "lineSize", 1, 100);
         UI.LFloatSlider(this, "pressure", 0, 1);
         UI.LFloatSlider(this, "smoothing", 0, 1);
@@ -83,7 +69,7 @@ private pressure =0.5
                 line.destroy();
                 this.updateDrawing();
             }
-        }
+        }*/
     }
 
 
@@ -123,7 +109,6 @@ private pressure =0.5
 
     private updateDrawing() {
         this.needsRedraw =true;
-
         this.drawBufferTempPass.lineRenderer.lines = this.project.drawLines;
     }
 

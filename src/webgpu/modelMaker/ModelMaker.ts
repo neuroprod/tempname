@@ -231,7 +231,7 @@ export default class ModelMaker {
 
         if (addMainMenuToggleButton("Brush", Icons.PAINT, this.currentTool == ToolType.Paint)) (this.setTool(ToolType.Paint))
         addMenuBrushButton(4)
-        addMenuColorButton("#FF0000")
+        addMenuColorButton("Main",this.drawing.lineColor);
         addMainMenuDivider("tooldDiv3")
         //addMainMenuButton("Trash", Icons.TRASH,false)
         addMainMenuText("CUT MESH")

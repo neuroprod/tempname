@@ -139,7 +139,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       if(blocker>0.0){
         avgBlocker =avgBlocker/blocker;
         size  =(avgBlocker-depth);
-        size =size *0.02+0.001;
+        size =size *0.01+0.001;
       }
 
     

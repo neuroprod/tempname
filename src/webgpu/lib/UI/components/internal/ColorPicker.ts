@@ -51,6 +51,12 @@ export default class ColorPicker extends Component {
         this.alphaRect.setSize(20, 256);
     }
 
+    onAdded() {
+        super.onAdded();
+        if (this.color.equal(this.colorStart)) return;
+        this.setDirty();
+    }
+
     updateColor() {
         this.colorHue.setHSV(this.hsl[0], 1, 1);
 

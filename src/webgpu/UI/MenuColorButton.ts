@@ -12,11 +12,12 @@ import Color from "../lib/UI/math/Color.ts";
 import {setSelectColorPopup} from "./SelectColorPopup.ts";
 
 
-export function addMenuColorButtonPopup(hex:string){
+
+export function addMenuColorButtonPopup(id:string){
 
 
 
-    if (!UI_I.setComponent(hex)) {
+    if (!UI_I.setComponent(id)) {
 
         let s = new ComponentSettings()
 
@@ -26,9 +27,9 @@ export function addMenuColorButtonPopup(hex:string){
         s.box.marginRight =2;
         s.box.setPadding(0);
 
+        let col =new Color().setHex(id)
 
-
-        let comp = new MenuColorButton(UI_I.getID(hex), s,hex);
+        let comp = new MenuColorButton(UI_I.getID(id), s,col);
         UI_I.addComponent(comp);
     }
     let r = UI_I.currentComponent as MenuColorButton;
@@ -38,11 +39,11 @@ export function addMenuColorButtonPopup(hex:string){
     return r.getReturnValue();
 }
 
-export function addMenuColorButton(hex:string){
+export function addMenuColorButton(id:string,color:Color){
 
 
 
-    if (!UI_I.setComponent(hex)) {
+    if (!UI_I.setComponent(id)) {
 
         let s = new ComponentSettings()
 
@@ -54,12 +55,12 @@ export function addMenuColorButton(hex:string){
 
 
 
-        let comp = new MenuColorButton(UI_I.getID(hex), s,hex);
+        let comp = new MenuColorButton(UI_I.getID(id), s,color);
         UI_I.addComponent(comp);
     }
     let r = UI_I.currentComponent as MenuColorButton;
     if(r.getReturnValue()){
-        setSelectColorPopup(r.layoutRect)
+        setSelectColorPopup(r)
     }
 
     UI_I.popComponent()
@@ -68,19 +69,19 @@ export function addMenuColorButton(hex:string){
 
 
 
-class MenuColorButton extends Component{
+export class MenuColorButton extends Component{
 
 
     public borderRect:Rect =new Rect();
     public colorRect:Rect =new Rect();
-    public color =new Color()
+    public color :Color
     public borderColor =ButtonBorderColor
-    constructor(id:number,s:ComponentSettings,hex:string) {
+    constructor(id:number,s:ComponentSettings,color:Color) {
 
         super(id,s);
 
 
-       this.color.setHex(hex)
+       this.color=color;
        if( this.color.r+this.color.g+this.color.b<0.5){
            this.borderColor =ColorButtonBorderColor;
 

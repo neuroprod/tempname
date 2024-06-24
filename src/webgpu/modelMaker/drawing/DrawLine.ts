@@ -1,9 +1,8 @@
 import {lerp, Vector2} from "@math.gl/core";
 import Renderer from "../../lib/Renderer.ts";
-import ColorV from "../../lib/ColorV.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import {NumericArray} from "@math.gl/types";
-import {CompareFunction} from "../../lib/WebGPUConstants.ts";
+import Color from "../../lib/UI/math/Color.ts";
 
 
 export default class DrawLine {
@@ -12,18 +11,17 @@ export default class DrawLine {
     public lineSizes: Array<number> = []
     public buffer!: GPUBuffer;
     public numInstances: number = 0;
-    public color = new ColorV()
+
     public uniformGroup: UniformGroup;
-
+    smoothing: number = 0.1;
+    lineSize: number = 2;
     private readonly renderer: Renderer;
-    smoothing: number=0.1;
-    lineSize: number =2;
 
-    constructor(renderer: Renderer, color: ColorV) {
+    constructor(renderer: Renderer, color: Color) {
         this.renderer = renderer;
         this.uniformGroup = new UniformGroup(this.renderer, "uniforms", false);
 
-        this.uniformGroup.addUniform("color", color)
+        this.uniformGroup.addUniform("color", color.getArray())
         this.uniformGroup.update();
 
 
@@ -32,10 +30,9 @@ export default class DrawLine {
     makeSmooth() {
 
 
-
         let p1 = new Vector2()
         let p2 = new Vector2()
-        let smoothFactor = this.smoothing/this.lineSize;
+        let smoothFactor = this.smoothing / this.lineSize;
         let temp: Array<Vector2> = []
         for (let p of this.points) {
             temp.push(p.clone())
@@ -52,24 +49,23 @@ export default class DrawLine {
                 p1.subtract(temp[i] as NumericArray)
                 // p1.scale(0.5)
 
-                this.points[i].add(p1 as NumericArray );
+                this.points[i].add(p1 as NumericArray);
             }
-            for(let i=0;i<this.points.length;i++){
+            for (let i = 0; i < this.points.length; i++) {
                 temp[i].from(this.points[i])
             }
         }
 
 
-
         this.updateData();
     }
 
-    addPoint(p: Vector2,lineSize:number) {
+    addPoint(p: Vector2, lineSize: number) {
         if (this.points.length > 1) {
 
             let lastPoint = this.points[this.points.length - 1];
             let lastLineSize = this.lineSizes[this.points.length - 1];
-            let dist = p.distance(lastPoint);
+            let dist = p.distance(lastPoint as NumericArray);
 
             let numSteps = Math.floor(dist / lineSize * 6);
             if (numSteps == 0) return;
@@ -126,7 +122,7 @@ export default class DrawLine {
         let data = new Float32Array(this.numInstances * 3);
 
         let count = 0;
-let llCount =0
+        let llCount = 0
         for (let p of this.points) {
             data[count++] = p.x;
             data[count++] = p.y;
