@@ -38,6 +38,8 @@ import ShapeLineModel from "./cutting/ShapeLineModel.ts";
 import PreviewRenderer from "./preview/PreviewRenderer.ts";
 import {popSplitPanel, pushSplitPanel, pushSplitPanelFixed} from "../UI/SplitPanel.ts";
 import UI_I from "../lib/UI/UI_I.ts";
+import {addTexture} from "../UI/TextureComp.ts";
+import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 
 
 enum ModelMainState {
@@ -254,6 +256,7 @@ export default class ModelMaker {
 
         popMainMenu()
         pushSplitPanelFixed("test",null)
+        addTexture("preview",DefaultTextures.getNormal(this.renderer))
         popSplitPanel()
     }
 

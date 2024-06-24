@@ -9,18 +9,15 @@ import {Vector4} from "@math.gl/core";
 
 
 export class TextureBatchData extends UniformGroup {
-    public posSize: Array<number> = [];
+
     public uiTexture: Texture;
-    public uvScale: Array<number>;
-    public uvOffset: Array<number>;
+
     public alpha: number;
 
     constructor(renderer: Renderer,
                 rect: Rect,
                 uiTexture: Texture,
-                alpha: number,
-                uvScale: Vec2,
-                uvOffset: Vec2
+
     ) {
         super(renderer, "uniforms", false)
 
@@ -28,11 +25,7 @@ export class TextureBatchData extends UniformGroup {
         this.addSampler("mySampler")
         this.addUniform("rect", new Vector4(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y));
         this.uiTexture = uiTexture;
-        this.uvScale = uvScale.getArray();
-        this.uvOffset = uvOffset.getArray();
 
-
-        this.alpha = alpha;
     }
 }
 
@@ -45,12 +38,21 @@ export default class TextureBatch {
     addTexture(
         rect: Rect,
         uiTexture: Texture,
-        alpha = 1,
-        uvScale: Vec2 = new Vec2(1, 1),
-        uvOffset = new Vec2(0, 0)
+
     ) {
-        console.log("addTexture", this.textureData.length)
-        let t = new TextureBatchData(UI_I.renderer, rect, uiTexture, alpha, uvScale, uvOffset);
+
+
+        for(let t of this.textureData ){
+            if(t.uiTexture.UUID == uiTexture.UUID){
+
+                t.setUniform("rect", new Vector4(rect.pos.x, rect.pos.y, rect.size.x, rect.size.y));
+                t.update()
+                return;
+            }
+
+        }
+
+        let t = new TextureBatchData(UI_I.renderer, rect, uiTexture);
         t.update()
         this.textureData.push(t);
     }
@@ -61,7 +63,10 @@ export default class TextureBatch {
     }
 
     destroy() {
-        console.log("destroy TextureBatch")
+        for(let t of this.textureData ){
+            t.destroy();
+        }
+
         this.textureData = [];
     }
 }

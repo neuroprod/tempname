@@ -7,21 +7,19 @@ import {SplitPanel} from "./SplitPanel.ts";
 import {setSplitDivider, SplitDivider, SplitDividerSettings} from "./SplitDevider.ts";
 import AppState from "../AppState.ts";
 
-export default class SplitNode{
-
-
+export default class SplitNode {
 
 
     public border = 4;
-    public size: Vec2 = new Vec2(500,500);
-    public pos: Vec2 = new Vec2(10,10);
+    public size: Vec2 = new Vec2(500, 500);
+    public pos: Vec2 = new Vec2(10, 10);
     public rect = new Rect();
- //   public panelID = 0;
+    //   public panelID = 0;
     public panel: SplitPanel | null = null;
     public children: Array<SplitNode> = [];
     public parent: SplitNode | null = null;
-   // public id: number =0;
-    public splitType: DockSplit =DockSplit.Center ;
+    // public id: number =0;
+    public splitType: DockSplit = DockSplit.Center;
     private name: string;
 
 
@@ -30,18 +28,18 @@ export default class SplitNode{
     private dividerMin: Vec2 = new Vec2();
     private dividerMax: Vec2 = new Vec2();
 
-    constructor(name:string) {
-        this.name= name;
-        let p =AppState.getState("splitNode"+this.name)
-        if(p){
-            this.size.set(p[0],p[1])
+    constructor(name: string) {
+        this.name = name;
+        let p = AppState.getState("splitNode" + this.name)
+        if (p) {
+            this.size.set(p[0], p[1])
         }
 
     }
 
     setDividers() {
         if (this.children.length) {
-            this.divider = setSplitDivider(this.name,new SplitDividerSettings(this.splitType))
+            this.divider = setSplitDivider(this.name, new SplitDividerSettings(this.splitType))
 
             this.divider.place(
                 this,
@@ -56,9 +54,9 @@ export default class SplitNode{
         }
     }
 
-    public split(splitType:DockSplit,name1:string,name2:string ):[SplitNode,SplitNode]{
+    public split(splitType: DockSplit, name1: string, name2: string): [SplitNode, SplitNode] {
 
-        this.splitType =splitType;
+        this.splitType = splitType;
 
         let child1 = new SplitNode(name1);
         child1.parent = this;
@@ -67,21 +65,21 @@ export default class SplitNode{
         let child2 = new SplitNode(name2);
         child2.parent = this;
         this.children.push(child2);
-        return [child2,child1]
+        return [child2, child1]
 
     }
 
 
-    setPanel(panel:SplitPanel) {
+    setPanel(panel: SplitPanel) {
 
-        this.panel =panel;
+        this.panel = panel;
         this.size.copy(this.panel.size)
         this.updateRootLayout()
     }
 
-    resize(size:Vec2,force=false) {
-        if(size.equal(this.size) && !force)return false;
-        if(size.x==0)return;
+    resize(size: Vec2, force = false) {
+        if (size.equal(this.size) && !force) return false;
+        if (size.x == 0) return;
 
         this.size.copy(size);
 ///console.log(this.size,this.pos);
@@ -132,12 +130,12 @@ export default class SplitNode{
                 }
             }
 
-            this.children[0].resize(size0,force);
-            this.children[1].resize(size1,force);
+            this.children[0].resize(size0, force);
+            this.children[1].resize(size1, force);
 
         }
         //1 panel
-        else{
+        else {
 
             let panelSize: Vec2 = new Vec2();
             let clearSize: Vec2 = new Vec2();
@@ -150,7 +148,7 @@ export default class SplitNode{
             if (this.splitType == DockSplit.Vertical) {
                 panelSize.y = clearSize.y = this.size.y;
                 panelSize.x = panelChild.size.x;
-                if(panelSize.x==0)panelSize.x = this.size.x/2
+                if (panelSize.x == 0) panelSize.x = this.size.x / 2
                 clearSize.x = this.size.x - panelSize.x - this.border;
                 if (clearSize.x < 0) return;
 
@@ -167,7 +165,7 @@ export default class SplitNode{
             else {
                 panelSize.x = clearSize.x = this.size.x;
                 panelSize.y = panelChild.size.y;
-                if(panelSize.y==0)panelSize.y = this.size.y/2
+                if (panelSize.y == 0) panelSize.y = this.size.y / 2
 
                 clearSize.y = this.size.y - panelSize.y - this.border;
 
@@ -183,18 +181,18 @@ export default class SplitNode{
                 }
             }
 
-            panelChild.resize(panelSize,force);
-            clearChild.resize(clearSize,force);
+            panelChild.resize(panelSize, force);
+            clearChild.resize(clearSize, force);
 
         }
         return true;
     }
 
     updateLayout() {
-AppState.setState("splitNode"+this.name,this.size.getArray())
+        AppState.setState("splitNode" + this.name, this.size.getArray())
         if (this.panel) {
 
-           this.panel.posOffset.copy(this.pos);
+            this.panel.posOffset.copy(this.pos);
             this.panel.size.copy(this.size);
             this.panel.setDirty();
         }
@@ -255,16 +253,17 @@ AppState.setState("splitNode"+this.name,this.size.getArray())
 
             topChild.size.y = size.y - this.border / 2;
             bottomChild.size.y = this.size.y - topChild.size.y - this.border;
-           // this.resize(this.size, true);
+            // this.resize(this.size, true);
         }
         this.updateRootLayout();
 
     }
-    private updateRootLayout(){
-        if(this.parent){
+
+    private updateRootLayout() {
+        if (this.parent) {
             this.parent.updateRootLayout()
-        }else{
-            this.resize(this.size,true)
+        } else {
+            this.resize(this.size, true)
             this.updateLayout();
         }
 

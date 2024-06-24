@@ -342,7 +342,6 @@ export default class RendererGPU {
 
                 }
 
-
                 passEncoder.setPipeline(this.textureBatchMaterial.pipeLine);
                 passEncoder.setBindGroup(0, this.mvpBindGroup);
 

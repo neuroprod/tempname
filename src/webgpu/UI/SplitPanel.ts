@@ -94,7 +94,7 @@ export class SplitPanel extends Component{
     layoutRelative() {
         super.layoutRelative();
 
-       // this.posOffset.set(this.screenSize.x/2-this.size.x/2,10)
+
     }
     layoutAbsolute() {
         super.layoutAbsolute();
@@ -107,8 +107,7 @@ export class SplitPanel extends Component{
 
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,MenuBGColor,PanelRadius)
 
-        UI_I.currentDrawBatch.textureBatch.addTexture(this.layoutRect,DefaultTextures.getNormal(Renderer.instance))
-       // UI_I.currentDrawBatch.sdfBatch.addLine(this.layoutRect.pos,this.name,16,TextColorDefault)
+
     }
     setSubComponents() {
 
