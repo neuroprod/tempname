@@ -11,7 +11,6 @@ import SDFFontTexture from "./SDFFontTexture.ts";
 import {FilterMode, SamplerBindingType} from "../../WebGPUConstants.ts";
 
 import TextureBatchMaterial from "./TextureBatchMaterial.ts";
-import Quad from "../../mesh/geometry/Quad.ts";
 import Mesh from "../../mesh/Mesh.ts";
 
 export default class RendererGPU {
@@ -40,10 +39,10 @@ export default class RendererGPU {
     private sdfFontTexture!: SDFFontTexture;
     private sdfFontBindGroup!: GPUBindGroup;
     private sdfFontBindGroupLayout!: GPUBindGroupLayout;
-    private textureBatchMaterial: TextureBatchMaterial;
-    private textureBindGroupLayout: GPUBindGroupLayout;
+    private textureBatchMaterial!: TextureBatchMaterial;
 
-    private quadMesh: Mesh;
+
+    private quadMesh!: Mesh;
 
     constructor() {
     }
@@ -345,12 +344,12 @@ export default class RendererGPU {
                 passEncoder.setPipeline(this.textureBatchMaterial.pipeLine);
                 passEncoder.setBindGroup(0, this.mvpBindGroup);
 
-
+                passEncoder.setVertexBuffer(0, this.quadMesh.getBufferByName("aUV0") as GPUBuffer);
+                passEncoder.setIndexBuffer(this.quadMesh.indexBuffer, "uint16");
                 for (let t of batch.textureBatch.textureData) {
 
                     passEncoder.setBindGroup(1, t.bindGroup);
-                    passEncoder.setVertexBuffer(0, this.quadMesh.getBufferByName("aUV0"));
-                    passEncoder.setIndexBuffer(this.quadMesh.indexBuffer, "uint16");
+
                     passEncoder.drawIndexed(this.quadMesh.numIndices, 1, 0, 0);
                 }
 

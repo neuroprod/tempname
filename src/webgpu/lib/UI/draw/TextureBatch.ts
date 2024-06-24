@@ -12,7 +12,7 @@ export class TextureBatchData extends UniformGroup {
 
     public uiTexture: Texture;
 
-    public alpha: number;
+
 
     constructor(renderer: Renderer,
                 rect: Rect,

@@ -68,7 +68,7 @@ export class MenuBrushButton extends Component {
 
 
     public colorRect: Rect = new Rect();
-    private radius: number;
+
     public lineData: LineData;
 
     constructor(id: number, s: ComponentSettings, lineData: LineData) {
