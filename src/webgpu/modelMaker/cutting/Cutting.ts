@@ -26,7 +26,7 @@ export default class Cutting {
     private readonly renderer: Renderer;
     private readonly mesh: ExtrudeMesh;
     private project!: Project;
-    private currentMesh!: ProjectMesh | null;
+    public currentMesh!: ProjectMesh | null;
     private toolType: ToolType = ToolType.None;
     private camera: Camera;
     private currentMousePoint: Vector2 = new Vector2();

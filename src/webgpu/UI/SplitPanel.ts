@@ -11,7 +11,7 @@ import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 import Renderer from "../lib/Renderer.ts";
 
-export function pushSplitPanelFixed(name:string,splitNode:SplitNode|null=null,needsScroll=true){
+export function pushSplitPanelFixed(name:string,x:number=10,y:number=70,sizeX:number=300,sizeY:number=300,needsScroll=true){
 
 
     UI_I.currentComponent = UI_I.panelLayer;
@@ -19,9 +19,9 @@ export function pushSplitPanelFixed(name:string,splitNode:SplitNode|null=null,ne
 
         let s = new ComponentSettings()
 
-        s.box.size.set(300,300)
-        s.box.marginTop =70
-        s.box.marginLeft =10
+        s.box.size.set(sizeX,sizeY)
+        s.box.marginTop =y
+        s.box.marginLeft =x
         s.box.setPadding(14);
         s.box.paddingLeft = 0;
         s.box.paddingRight = 0;

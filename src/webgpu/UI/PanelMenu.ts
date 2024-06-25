@@ -2,7 +2,22 @@ import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 
 
+export function pushPanelMenuFill(label:string){
 
+
+
+    if (!UI_I.setComponent(label)) {
+
+        let s = new ComponentSettings()
+
+
+
+        let comp = new PanelMenu(UI_I.getID(label), s);
+        UI_I.addComponent(comp);
+    }
+
+
+}
 export function pushPanelMenu(label:string){
 
 

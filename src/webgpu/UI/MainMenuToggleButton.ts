@@ -11,7 +11,31 @@ import {
     TextColorSelect
 } from "./Style.ts";
 
+export function addToggleButton(label:string,icon:string,selected:boolean){
 
+
+
+    if (!UI_I.setComponent(label)) {
+
+        let s = new ComponentSettings()
+
+        s.box.size.set(30,30)
+        s.box.setMargin(0)
+        s.box.marginLeft =0;
+        s.box.marginRight =4;
+        s.box.setPadding(0);
+
+
+
+        let comp = new MainMenuToggleButton(UI_I.getID(label), s,label,icon);
+        UI_I.addComponent(comp);
+    }
+    let r = UI_I.currentComponent as MainMenuToggleButton;
+    r.setSelected(selected);
+
+    UI_I.popComponent()
+    return r.getReturnValue();
+}
 
 export function addMainMenuToggleButton(label:string,icon:string,selected:boolean){
 

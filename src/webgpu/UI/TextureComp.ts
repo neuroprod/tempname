@@ -35,6 +35,13 @@ export default class TextureComp extends Component{
         super(id,settings);
         this.texture =texture;
     }
+    layoutRelative() {
+        super.layoutRelative();
+
+        this.size.y =this.size.x;
+
+    }
+
     prepDraw() {
         super.prepDraw();
 

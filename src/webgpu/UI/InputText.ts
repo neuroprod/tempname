@@ -11,7 +11,25 @@ import {
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import {ActionKey} from "../lib/UI/input/KeyboardListener.ts";
+export function addInputTextFill(id:string,ref:any,refValue:string,autoFocus=false){
+    if (!UI_I.setComponent(id)) {
 
+        let s = new ComponentSettings()
+
+        s.box.size.set(-1,-1)
+
+
+
+        let comp = new InputText(UI_I.getID(id), s,ref,refValue,autoFocus);
+        UI_I.addComponent(comp);
+    }
+    let r = UI_I.currentComponent as InputText;
+
+
+    UI_I.popComponent()
+    return r.getReturnValue();
+
+}
 export function addInputText(id:string,ref:any,refValue:string,autoFocus=false,left:number=0,top:number =0,size:number=200){
     if (!UI_I.setComponent(id)) {
 
@@ -98,10 +116,16 @@ export class InputText extends Component{
 
         }
     }
+    onAdded() {
+        super.onAdded();
+        if( this.ref[ this.refValue] != this.text){
+           this.text = this.ref[ this.refValue];
+           this.setDirty()
+        }
+    }
 
     setTextDirty() {
         this.ref[ this.refValue] = this.text;
-
 
         this._textIsDirty = true;
     }

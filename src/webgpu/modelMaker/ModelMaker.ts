@@ -26,8 +26,8 @@ import {popMainMenu, pushMainMenu} from "../UI/MainMenu.ts";
 import {addMainMenuButton} from "../UI/MainMenuButton.ts";
 import {Icons} from "../UI/Icons.ts";
 import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
-import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
-import {addMainMenuText} from "../UI/MainMenuText.ts";
+import {addMainMenuToggleButton, addToggleButton} from "../UI/MainMenuToggleButton.ts";
+import {addMainMenuText, addTitle} from "../UI/Label.ts";
 import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 import {addMenuColorButton} from "../UI/MenuColorButton.ts";
 import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
@@ -41,6 +41,10 @@ import UI_I from "../lib/UI/UI_I.ts";
 import {addTexture} from "../UI/TextureComp.ts";
 import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 import {Textures} from "../data/Textures.ts";
+import {addInputText, addInputTextFill} from "../UI/InputText.ts";
+import {popPanelMenu, pushPanelMenu, pushPanelMenuFill} from "../UI/PanelMenu.ts";
+import {popLabel, pushLabel} from "../UI/LabelComponent.ts";
+import {addSelector} from "../UI/Selector.ts";
 
 
 enum ModelMainState {
@@ -257,9 +261,44 @@ export default class ModelMaker {
 
 
         popMainMenu()
-        pushSplitPanelFixed("test",null)
+        pushSplitPanelFixed("preview",10,70,300,600)
+        addTitle("Image")
+        if(this.currentProject) {
+
+            UI.pushID(this.currentProject.name)
+            pushLabel("Name")
+            addInputTextFill("currentImage",  this.currentProject, "name")
+            popLabel()
+            pushLabel("Size")
+            addSelector("lSize")
+            popLabel()
+            UI.separator("l",false)
+            if (this.cutting.currentMesh) {
+
+
+                addTitle("Mesh")
+                UI.pushID(this.cutting.currentMesh.name)
+                pushLabel("Name")
+                addInputTextFill("currentMesh", this.cutting.currentMesh, "name")
+                popLabel()
+                pushLabel("Mesh Type")
+                pushPanelMenuFill("meshSettings")
+                addToggleButton("test1",Icons.LINE,true)
+                addToggleButton("test2",Icons.LINE,false)
+                addToggleButton("test3",Icons.LINE,false)
+                popPanelMenu()
+                popLabel()
+
+                UI.popID();
+            }
+            UI.popID()
+        }
+        UI.separator("l2",false)
+        addTitle("Preview")
         addTexture("preview",this.renderer.getTexture(Textures.PREVIEW_MODEL))
         popSplitPanel()
+
+
     }
 
 
