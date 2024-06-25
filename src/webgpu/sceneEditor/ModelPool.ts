@@ -10,6 +10,7 @@ import SelectItem from "../lib/UI/math/SelectItem.ts";
 import Box from "../lib/mesh/geometry/Box.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import Path from "../lib/path/Path.ts";
+import {MeshType} from "../modelMaker/ProjectMesh.ts";
 
 
 export default class ModelPool {
@@ -69,8 +70,8 @@ export default class ModelPool {
 
         let path =new Path()
         path.deSerialize(meshData.path)
-
-        mesh.setExtrusion(path.getPoints(),0.01,new Vector3(meshData.center))
+if(meshData.meshType ==undefined)meshData.meshType=MeshType.EXTRUSION
+        mesh.setExtrusion(path.getPoints(),meshData.meshType,0.01,new Vector3(meshData.center))
         model.mesh  =mesh;
 
         if(newName=="")newName =name;

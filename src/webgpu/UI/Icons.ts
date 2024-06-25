@@ -24,4 +24,10 @@ export const Icons  = {
     DOWN_ARROW: 'w',
     UNDO_STROKE: 'x',
     UNDO_POINT: 'y',
+
+
+    MESH_EXTRUDE: '1',
+    MESH_PLANE: '2',
+    MESH_PLANE_TRANS: '3',
+    MESH_REVOLVE: '4',
 }

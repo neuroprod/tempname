@@ -6,7 +6,7 @@ import Model from "../../lib/model/Model.ts";
 import ModelPreviewMaterial from "../preview/ModelPreviewMaterial.ts";
 import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
 
-import ProjectMesh from "../ProjectMesh.ts";
+import ProjectMesh, {MeshType} from "../ProjectMesh.ts";
 import PathEditor from "./PathEditor.ts";
 import Camera from "../../lib/Camera.ts";
 import {NumericArray} from "@math.gl/types";
@@ -234,7 +234,7 @@ export default class Cutting {
         this.shapeLineModelSelectControl.setPathControlPoints(this.currentMesh.path);
         if (this.currentMesh.path.numCurves > 1) {
             this.model3D.visible = true;
-            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), 0.03,new Vector3( this.currentMesh.center.x, this.currentMesh.center.y,0));
+            this.setMesh()
         }
         this.pathEditor.setPath(this.currentMesh.path, this.currentMesh.center)
 
@@ -271,6 +271,27 @@ export default class Cutting {
     private setCurrentMesh(pm: ProjectMesh | null) {
         this.currentMesh = pm;
         this.updateLine()
+
+    }
+
+    setMeshType(meshType: MeshType) {
+        if(this.currentMesh) {
+            this.currentMesh.meshType = meshType;
+            this.setMesh()
+
+        }
+
+    }
+
+    private setMesh() {
+        if(!this.currentMesh)return;
+        if( this.currentMesh.meshType==MeshType.REVOLVE){
+            this.mesh.setResolve(this.positionsToVec2(this.shapeLineModelSelect.positions), new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0));
+
+        }else{
+            this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), this.currentMesh.meshType, 0.03, new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0));
+
+        }
 
     }
 }

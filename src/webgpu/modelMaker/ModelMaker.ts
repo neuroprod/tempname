@@ -13,8 +13,6 @@ import {sendTextureToServer} from "../lib/SaveUtils.ts";
 import Project from "./Project.ts";
 
 import Cutting from "./cutting/Cutting.ts";
-
-import Timer from "../lib/Timer.ts";
 import Model from "../lib/model/Model.ts";
 import Quad from "../lib/mesh/geometry/Quad.ts";
 
@@ -34,17 +32,15 @@ import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
 import {setNewPopup} from "../UI/NewPopup.ts";
 import {setItemsPopup} from "../UI/ItemsPopup.ts";
 import AppState from "../AppState.ts";
-import ShapeLineModel from "./cutting/ShapeLineModel.ts";
 import PreviewRenderer from "./preview/PreviewRenderer.ts";
-import {popSplitPanel, pushSplitPanel, pushSplitPanelFixed} from "../UI/SplitPanel.ts";
-import UI_I from "../lib/UI/UI_I.ts";
+import {popSplitPanel, pushSplitPanelFixed} from "../UI/SplitPanel.ts";
 import {addTexture} from "../UI/TextureComp.ts";
-import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 import {Textures} from "../data/Textures.ts";
-import {addInputText, addInputTextFill} from "../UI/InputText.ts";
-import {popPanelMenu, pushPanelMenu, pushPanelMenuFill} from "../UI/PanelMenu.ts";
+import {addInputTextFill} from "../UI/InputText.ts";
+import {popPanelMenu, pushPanelMenuFill} from "../UI/PanelMenu.ts";
 import {popLabel, pushLabel} from "../UI/LabelComponent.ts";
 import {addSelector} from "../UI/Selector.ts";
+import {MeshType} from "./ProjectMesh.ts";
 
 
 enum ModelMainState {
@@ -121,8 +117,6 @@ export default class ModelMaker {
         this.modelRenderer2D = new ModelRenderer(this.renderer, "lines", this.camera2D)
 
 
-
-
         this.drawing = new Drawing(renderer);
         this.cutting = new Cutting(renderer, this.camera2D);
 
@@ -154,7 +148,7 @@ export default class ModelMaker {
         this.modelRoot.addChild(this.cutting.shapeLineModelSelect)
         this.modelRenderer2D.addModel(this.cutting.pathEditor.pointModel);
         this.camera3D = new Camera(this.renderer)
-        this.previewRenderer =new PreviewRenderer(renderer,this.cutting.model3D, this.camera3D)
+        this.previewRenderer = new PreviewRenderer(renderer, this.cutting.model3D, this.camera3D)
 
 
         this.setProjects(data);
@@ -172,7 +166,6 @@ export default class ModelMaker {
         //this.camera2D.setOrtho(10, 0, 10, 0)
         this.camera2D.setOrtho(this.renderer.width, 0, this.renderer.height, 0)
         this.previewRenderer.update()
-
 
 
         this.cutting.update()
@@ -230,8 +223,8 @@ export default class ModelMaker {
 
 
         if (addMainMenuToggleButton("Brush", Icons.PAINT, this.currentTool == ToolType.Paint)) (this.setTool(ToolType.Paint))
-        addMenuBrushButton("menuBrush",this.drawing.lineData)
-        addMenuColorButton("Main",this.drawing.lineColor);
+        addMenuBrushButton("menuBrush", this.drawing.lineData)
+        addMenuColorButton("Main", this.drawing.lineColor);
         if (addMainMenuButton("UndoBrush", Icons.UNDO_STROKE, true)) {
             this.drawing.undoLine()
         }
@@ -249,7 +242,7 @@ export default class ModelMaker {
             this.cutting.removeCurrentMesh();
         }
         addMainMenuDivider("tooldDiv4")
-        if (addMainMenuToggleButton("Select", Icons.SELECT, this.currentTool == ToolType.Select)) (this.setTool( ToolType.Select))
+        if (addMainMenuToggleButton("Select", Icons.SELECT, this.currentTool == ToolType.Select)) (this.setTool(ToolType.Select))
         if (addMainMenuToggleButton("Edit", Icons.SELECT_FULL, this.currentTool == ToolType.Edit)) (this.setTool(ToolType.Edit))
         if (addMainMenuToggleButton("Line", Icons.LINE, this.currentTool == ToolType.Line)) (this.setTool(ToolType.Line))
         if (addMainMenuToggleButton("Bezier", Icons.BEZIER, this.currentTool == ToolType.Bezier)) (this.setTool(ToolType.Bezier))
@@ -261,18 +254,18 @@ export default class ModelMaker {
 
 
         popMainMenu()
-        pushSplitPanelFixed("preview",10,70,300,600)
+        pushSplitPanelFixed("preview", 10, 70, 300, 600)
         addTitle("Image")
-        if(this.currentProject) {
+        if (this.currentProject) {
 
             UI.pushID(this.currentProject.name)
             pushLabel("Name")
-            addInputTextFill("currentImage",  this.currentProject, "name")
+            addInputTextFill("currentImage", this.currentProject, "name")
             popLabel()
             pushLabel("Size")
             addSelector("lSize")
             popLabel()
-            UI.separator("l",false)
+            UI.separator("l", false)
             if (this.cutting.currentMesh) {
 
 
@@ -283,9 +276,18 @@ export default class ModelMaker {
                 popLabel()
                 pushLabel("Mesh Type")
                 pushPanelMenuFill("meshSettings")
-                addToggleButton("test1",Icons.LINE,true)
-                addToggleButton("test2",Icons.LINE,false)
-                addToggleButton("test3",Icons.LINE,false)
+                if (addToggleButton("extrude", Icons.MESH_EXTRUDE, this.cutting.currentMesh.meshType == MeshType.EXTRUSION)) {
+                    this.cutting.setMeshType(MeshType.EXTRUSION)
+                }
+                if (addToggleButton("plane", Icons.MESH_PLANE, this.cutting.currentMesh.meshType == MeshType.PLANE)) {
+                    this.cutting.setMeshType(MeshType.PLANE)
+                }
+                if (addToggleButton("trans", Icons.MESH_PLANE_TRANS, this.cutting.currentMesh.meshType == MeshType.TRANS_PLANE)) {
+                    this.cutting.setMeshType(MeshType.TRANS_PLANE)
+                }
+                if (addToggleButton("revolve", Icons.MESH_REVOLVE, this.cutting.currentMesh.meshType == MeshType.REVOLVE)) {
+                    this.cutting.setMeshType(MeshType.REVOLVE)
+                }
                 popPanelMenu()
                 popLabel()
 
@@ -293,15 +295,13 @@ export default class ModelMaker {
             }
             UI.popID()
         }
-        UI.separator("l2",false)
+        UI.separator("l2", false)
         addTitle("Preview")
-        addTexture("preview",this.renderer.getTexture(Textures.PREVIEW_MODEL))
+        addTexture("preview", this.renderer.getTexture(Textures.PREVIEW_MODEL))
         popSplitPanel()
 
 
     }
-
-
 
 
     private handleMouse() {
@@ -369,7 +369,7 @@ export default class ModelMaker {
             this.drawing.setMouse(this.mouseLocal, this.mouseListener.pressure, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame)
         }
         if (this.modelFocus == ModelFocus.cutPanel) {
-            this.cutting.setMouse(this.mouseLocal, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame,this.mouseListener.ctrlKey)
+            this.cutting.setMouse(this.mouseLocal, this.mouseListener.isDownThisFrame, this.mouseListener.isUpThisFrame, this.mouseListener.ctrlKey)
         }
 
     }
@@ -455,13 +455,13 @@ export default class ModelMaker {
     private setTool(toolType: ToolType) {
         this.currentTool = toolType;
 
-        if(toolType==ToolType.Paint){
+        if (toolType == ToolType.Paint) {
             this.modelMainState = ModelMainState.draw;
-        }else{
+        } else {
             this.modelMainState = ModelMainState.cut;
         }
 
-        this.cutting.setTool( this.currentTool)
+        this.cutting.setTool(this.currentTool)
 
     }
 }
