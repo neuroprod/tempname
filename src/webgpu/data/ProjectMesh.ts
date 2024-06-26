@@ -17,7 +17,7 @@ export default class ProjectMesh
     center: Vector2 =new Vector2(0.5,0.5);
     private renderer: Renderer;
     public meshType:MeshType =MeshType.EXTRUSION;
-    private mesh: ExtrudeMesh;
+    private mesh!: ExtrudeMesh;
 
 
     constructor(renderer:Renderer)

@@ -16,10 +16,10 @@ class SceneData {
     public projectsMap: Map<string, Project> = new Map<string, Project>();
     animations: Array<Animation> = [];
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
-    root: SceneObject3D;
+    root!: SceneObject3D;
     usedModels: Array<Model> = [];
-    private renderer: Renderer;
-    private dataScene: any;
+    private renderer!: Renderer;
+    private dataScene!: any;
 
     constructor() {
     }
@@ -53,7 +53,7 @@ class SceneData {
         }
 
 
-        for (let anime: any of this.dataScene.animation) {
+        for (let anime of this.dataScene.animation) {
 
             let animation = new Animation(this.renderer, anime.label, this.modelsByLoadID[anime.rootID])
             animation.frameTime = anime.frameTime;
@@ -129,9 +129,9 @@ class SceneData {
             return null
         }
         let project = this.projectsMap.get(names[0])
-
+        if(!project) return null
         let mesh = project.getMesh(names[1]);
-
+        if(!mesh) return null
         let model = new Model(this.renderer, name);
 
 

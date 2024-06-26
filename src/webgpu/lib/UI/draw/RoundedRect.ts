@@ -23,6 +23,7 @@ class RoundedRect{
 
 
     }
+
     getRect(rect:Rect,radius:number){
 
         for(let i=0;i<this.basePoint.length;i++){
@@ -34,6 +35,9 @@ class RoundedRect{
         }
         let offX =rect.size.x -radius*2;
         let offY =rect.size.y -radius*2;
+
+
+
         for(let i=0;i<=this.numSteps;i++){
             this.tempPoints[i].x+=offX;
             this.tempPoints[i].y+=offY;
@@ -41,7 +45,7 @@ class RoundedRect{
         }
         for(let i=this.numSteps+1;i<=(this.numSteps+1)*2-1;i++){
             this.tempPoints[i].x+=offX;
-            //this.tempPoints[i].y+=offY;
+
 
         }
         for(let i=(this.numSteps+1)*3;i<this.basePoint.length;i++){

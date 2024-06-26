@@ -14,10 +14,10 @@ export default class PreviewPass extends RenderPass {
     public modelRenderer: ModelRenderer;
     public colorTarget: RenderTexture;
     public depthTarget: RenderTexture;
-    public normalTarget: RenderTexture;
+
 
     private colorAttachment: ColorAttachment;
-    private normalAttachment: ColorAttachment;
+
 
 
 

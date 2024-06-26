@@ -4,19 +4,18 @@ import CanvasRenderPass from "../CanvasRenderPass.ts";
 import Camera from "../lib/Camera.ts";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
 
-import ModelPool from "./ModelPool.ts";
+
 import UI from "../lib/UI/UI.ts";
 import Ray from "../lib/Ray.ts";
 import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
 import SceneObject3D from "./SceneObject3D.ts";
-import {saveScene} from "../lib/SaveUtils.ts";
+
 import GameRenderer from "../render/GameRenderer.ts";
-import Animation from "./timeline/animation/Animation.ts";
+
 import AnimationEditor from "./timeline/AnimationEditor.ts";
-import AnimationChannel, {Key} from "./timeline/animation/AnimationChannel.ts";
-import {Quaternion, Vector3} from "@math.gl/core";
+
 import {popSplitPanel, pushSplitPanel} from "../UI/SplitPanel.ts";
 import SplitNode from "../UI/SplitNode.ts";
 import {DockSplit} from "../lib/UI/docking/DockType.ts";
@@ -29,7 +28,6 @@ import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
 import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
 import {addInputText} from "../UI/InputText.ts";
-import {addMeshPopup} from "../UI/AddMeshPopup.ts";
 import SceneData from "../data/SceneData.ts";
 
 

@@ -3,14 +3,11 @@ import Renderer from "./lib/Renderer.ts";
 import CanvasRenderPass from "./CanvasRenderPass.ts";
 
 import PreLoader from "./lib/PreLoader.ts";
-
 import KeyInput from "./game/KeyInput.ts";
 import UI from "./lib/UI/UI.ts";
 import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
-import ModelLoader from "./ModelLoader.ts";
 import SceneEditor from "./sceneEditor/SceneEditor.ts";
-import JsonLoader from "./lib/JsonLoader.ts";
 import SDFFont from "./lib/UI/draw/SDFFont.ts";
 import {popMainMenu, pushMainMenu} from "./UI/MainMenu.ts";
 import AppState, {AppStates} from "./AppState.ts";
@@ -72,7 +69,8 @@ export default class Main {
         this.canvasRenderPass = new CanvasRenderPass(this.renderer)
         this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
 
-        this.preloader = new PreLoader((n) => {console.log(n)
+        this.preloader = new PreLoader((n) => {
+            //onPreload
         }, this.init.bind(this));
         //Todo handle bitmap preload
         new TextureLoader(this.renderer, "bezierPoints.png")

@@ -67,7 +67,7 @@ class AnimationEditor {
 
 
             for (let channel of this.currentAnimation.channels) {
-                console.log(channel)
+
                     let id = channel.sceneObject3D.UUID + "_" + channel.type;
                     let label = "Position";
                     if (channel.type == AnimationType.SCALE) label = "Scale";
@@ -116,7 +116,7 @@ class AnimationEditor {
 
 
     onMouseDown(pos: Vector2) {
-        console.log(pos);
+
         // this.root.onMouseDown(pos)
     }
 
