@@ -36,7 +36,11 @@ class RoundedRect{
         let offX =rect.size.x -radius*2;
         let offY =rect.size.y -radius*2;
 
+        for(let i=0;i<=this.numSteps;i++){
+            //this.tempPoints[i].x+=offX;
+            //this.tempPoints[i].y+=offY;
 
+        }
 
         for(let i=0;i<=this.numSteps;i++){
             this.tempPoints[i].x+=offX;
@@ -58,5 +62,41 @@ class RoundedRect{
     }
 
 
+    getRectLeft(rect: Rect, radius: number) {
+        //TODO optimise, is total crap
+        for(let i=0;i<this.basePoint.length;i++){
+            let t = this.tempPoints[i]
+            t.copy(this.basePoint[i])
+            t.scale(radius).add(rect.pos)
+            t.x +=radius;
+            t.y+=radius;
+        }
+        let offX =rect.size.x -radius*2;
+        let offY =rect.size.y -radius*2;
+
+
+
+        for(let i=0;i<=this.numSteps;i++){
+            this.tempPoints[i].x+=offX;
+            this.tempPoints[i].y+=offY;
+
+        }
+        for(let i=this.numSteps+1;i<=(this.numSteps+1)*2-1;i++){
+            this.tempPoints[i].x+=offX;
+
+
+        }
+        for(let i=(this.numSteps+1)*2;i<=(this.numSteps+1)*3;i++){
+            this.tempPoints[i].x=rect.pos.x;
+
+
+        }
+        for(let i=(this.numSteps+1)*3;i<this.basePoint.length;i++){
+            this.tempPoints[i].x=rect.pos.x;
+            this.tempPoints[i].y=rect.pos.y+rect.size.y
+        }
+        return this.tempPoints;
+
+    }
 }
 export default new RoundedRect()

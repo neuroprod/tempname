@@ -10,7 +10,7 @@ export const OverButtonColor =new Color().setHex("#2b2c31");
 export const DownButtonColor =new Color().setHex("#343844");
 export const ButtonColor =new Color().setHex("#26272a");
 
-
+export const SelectorButtonColor =new Color().setHex("#3e404d");
 
 export const OverButtonColorBright =new Color().setHex("#1474f3");
 export const DownButtonColorBright =new Color().setHex("#3488f5");

@@ -4,8 +4,8 @@ import {
     ButtonBorderColor,
     ButtonColor, ButtonColorBright,
 
-    InputTextRadius,
-    TextColorBright,
+    InputTextRadius, SelectButtonColor,
+    TextColorBright, TextColorDefault,
 
 } from "./Style.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
@@ -155,12 +155,19 @@ export class InputText extends Component{
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonColorBright,InputTextRadius);
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
             UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect,TextColorBright)
+            UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.text,14,TextColorBright);
         }else{
-            UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect,ButtonBorderColor,InputTextRadius);
+            if (this.isOver) {
+                UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect, SelectButtonColor, InputTextRadius);
+            } else {
+                UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect, ButtonBorderColor, InputTextRadius);
+            }
+
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
+            UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.text,14,TextColorDefault);
         }
 
-        UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.text,14,TextColorBright);
+
     }
 
 

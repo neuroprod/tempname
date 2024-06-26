@@ -34,6 +34,34 @@ export default class FillBatch {
         );
         this.indicesPos += 3;
     }
+
+    addRoundedRectLeft(rect: Rect, color: Color, radius: number) {
+        let points =RoundedRect.getRectLeft(rect,radius)
+
+        for (let p of points){
+            this.vertices = this.vertices.concat(
+                p.getArray(),
+                color.getArray())
+        }
+        let posStart = this.indicesPos;
+        let posTemp = this.indicesPos;
+        for(let i=0;i<points.length-2;i++){
+            this.indices.push(
+                posStart,
+                posTemp + 1,
+                posTemp + 2
+            );
+            posTemp+=1;
+            // this.indicesPos+=1;
+        }
+        posTemp-=1;
+        this.indices.push(
+            posStart,
+            posTemp + 1,
+            posTemp + 2
+        );
+        this.indicesPos+=points.length;
+    }
     addRoundedRect(rect: Rect, color: Color,radius=10) {
         //let points =[rect.pos.x+]
         let points =RoundedRect.getRect(rect,radius)
