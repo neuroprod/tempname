@@ -10,6 +10,9 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
 import Project from "../data/Project.ts";
+import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import {addMainMenuTextButton, addTextButton} from "./MainMenuTextButton.ts";
+import UI from "../lib/UI/UI.ts";
 
 
 
@@ -17,7 +20,7 @@ import Project from "../data/Project.ts";
 
 
 
-export function addMeshPopup(title: string,  callBack: (item:any) => void) {
+export function addMeshPopup(title: string,  callBack: (item:SceneObject3D) => void) {
     let old = UI_I.currentComponent;
 
     UI_I.currentComponent = UI_I.popupLayer;
@@ -43,10 +46,10 @@ export  class AddMeshPopup extends PopUp{
     private title: string;
 
     private textPos=new Vec2();
-    private callBack:(item:Project) => void;
+    private callBack: (item:SceneObject3D) => void
     private vlSettings: VerticalLayoutSettings;
 
-    constructor(id:number, settings:PopUpSettings,title:string, callBack: (item:Project) => void) {
+    constructor(id:number, settings:PopUpSettings,title:string, callBack: (item:SceneObject3D) => void) {
         super(id,settings);
         this.title =title;
 
@@ -55,9 +58,8 @@ export  class AddMeshPopup extends PopUp{
         //  this.vlSettings.box.marginTop =45
         //this.vlSettings.box.marginBottom =30
         ///this.vlSettings.box.size.y =150;
-        this.vlSettings.hasBackground =true;
-        this.vlSettings.backgroundColor.copy(ButtonColor)
-        this.vlSettings.needScrollBar = true;
+
+        this.vlSettings.needScrollBar =false
 
 
         this.callBack =callBack;
@@ -77,6 +79,14 @@ export  class AddMeshPopup extends PopUp{
     setSubComponents() {
         super.setSubComponents();
         UI_IC.pushVerticalLayout("vl", this.vlSettings);
+        addTextButton("add Empty")
+
+       UI.separator("s1",false)
+
+        addTextButton("add Mesh")
+
+        UI.separator("s2",false)
+        addTextButton("add Text")
       /*  for(let item of this.items){
 
             if(   addListButton(item.name)){

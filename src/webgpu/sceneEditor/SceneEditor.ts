@@ -29,6 +29,7 @@ import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
 import {addInputText} from "../UI/InputText.ts";
 import SceneData from "../data/SceneData.ts";
+import {addMeshPopup} from "../UI/AddMeshPopup.ts";
 
 
 export enum ToolState {
@@ -152,7 +153,7 @@ class SceneEditor {
         }
         addMainMenuDivider("tooldDiv1")
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
-            //addMeshPopup("Add +",this.addMesh())
+            addMeshPopup("Add +",this.addModel)
         }
         if (addMainMenuButton("Remove", Icons.MIN_CUBE,true)){
 
@@ -279,6 +280,8 @@ class SceneEditor {
     }
 
     public addModel(m: SceneObject3D) {
+        if(!this.currentModel)return;
+        this.currentModel.addChild(m)
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
             this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)

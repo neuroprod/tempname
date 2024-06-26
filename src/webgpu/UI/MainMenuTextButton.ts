@@ -14,6 +14,30 @@ import {
 import Rect from "../lib/UI/math/Rect.ts";
 
 
+export function addTextButton(label:string,enabled:boolean=true){
+
+
+
+    if (!UI_I.setComponent(label)) {
+
+        let s = new ComponentSettings()
+
+        s.box.size.set(-1,33)
+        s.box.setMargin(0)
+
+        s.box.setPadding(0);
+
+
+
+        let comp = new MainMenuTextButton(UI_I.getID(label), s,label,false);
+        UI_I.addComponent(comp);
+    }
+    let r = UI_I.currentComponent as MainMenuTextButton;
+    r.setEnabled(enabled);
+
+    UI_I.popComponent()
+    return r.getReturnValue();
+}
 
 export function addMainMenuTextButton(label:string,enabled:boolean=true){
 
@@ -51,16 +75,18 @@ class MainMenuTextButton extends Component{
     public enabled =false;
     public borderRect:Rect =new Rect();
     private fontSize =14;
-    constructor(id:number,s:ComponentSettings,label:string) {
+    private autoSize: boolean;
+    constructor(id:number,s:ComponentSettings,label:string,autoSize =true) {
 
         super(id,s);
 
-
+        this.autoSize =autoSize;
         this.label =label;
     }
 
     layoutRelative() {
         super.layoutRelative();
+        if(this.autoSize)
         this.size.x =    UI_I.currentDrawBatch.sdfBatch.getLineSize(this.label,this.fontSize)+26;
     }
     layoutAbsolute() {
@@ -68,7 +94,7 @@ class MainMenuTextButton extends Component{
 
         this.labelPos.copy(this.layoutRect.pos)
         this.labelPos.y+=this.layoutRect.size.y/2 -(this.fontSize/2);
-        this.labelPos.x+=13;
+        this.labelPos.x+=this.layoutRect.size.x/2 -UI_I.currentDrawBatch.sdfBatch.getLineSize(this.label,this.fontSize)/2;
         this.borderRect.copy(this.layoutRect);
         this.borderRect.size.x-=2;
         this.borderRect.size.y-=2;
