@@ -83,22 +83,7 @@ export default class Drawing {
         this.updateDrawing();
     }
 
-    onUI() {
-        if (!this.project) return;
 
-        /*  UI.LText("drawing")
-          UI.LFloatSlider(this, "lineSize", 1, 100);
-          UI.LFloatSlider(this, "pressure", 0, 1);
-          UI.LFloatSlider(this, "smoothing", 0, 1);
-          UI.LColor("LineColor", this.lineColor)
-          if (this.project.drawLines.length) {
-              if (UI.LButton("Undo Line")) {
-                  let line = this.project.drawLines.pop() as DrawLine
-                  line.destroy();
-                  this.updateDrawing();
-              }
-          }*/
-    }
 
 
     setMouse(mouseLocal: Vector2, pressureIn: number, mouseDown: boolean, mouseUp: boolean) {
@@ -136,6 +121,7 @@ export default class Drawing {
     }
 
     private updateDrawing() {
+        this.project.textureDirty =true;
         this.needsRedraw = true;
         this.drawBufferTempPass.lineRenderer.lines = this.project.drawLines;
     }

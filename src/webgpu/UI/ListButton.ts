@@ -1,10 +1,27 @@
 import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import UI_I from "../lib/UI/UI_I.ts";
-import {ButtonColor, DownButtonColorBright, OverButtonColor, TextColorBright, TextColorDefault} from "./Style.ts";
-import {LListItemSettings} from "../lib/UI/components/LListItem.ts";
+import { DownButtonColorBright, OverButtonColor, TextColorBright, TextColorDefault} from "./Style.ts";
 
 
+export function addSelectorListButton(label:string){
+    if (!UI_I.setComponent(label)) {
+        let settings =new ComponentSettings()
+        settings.box.size.set(-1,33)
+
+
+        let comp = new ListButton(
+            UI_I.getID(label), settings,
+            label,10,false
+
+        );
+        UI_I.addComponent(comp);
+    }
+
+    let result = UI_I.currentComponent.getReturnValue();
+    UI_I.popComponent();
+    return result;
+}
 export function addListButton(label:string){
     if (!UI_I.setComponent(label)) {
         let settings =new ComponentSettings()
@@ -31,17 +48,21 @@ export  class ListButton extends Component {
 
     private ro =-1;
     private needBack: boolean =false;
+    private textOffset: number=25;
+    private needBackSwitch: boolean;
 
-    constructor(id: number,  settings: ComponentSettings,label: string,) {
+    constructor(id: number,  settings: ComponentSettings,label: string,textOffset=25,needBackSwitch=true) {
         super(id, settings);
 
         this.size.copy(settings.box.size);
         this.label = label;
+        this.textOffset = textOffset;
+        this.needBackSwitch = needBackSwitch;
     }
     onAdded() {
         super.onAdded();
+        if(!this.needBackSwitch)return;
         if (this.ro == this.renderOrder) return;
-
         this.ro = this.renderOrder;
         if (this.renderOrder % 2 == 0) {
             this.needBack =true
@@ -55,7 +76,7 @@ export  class ListButton extends Component {
 
         this.textPos = this.layoutRect.pos.clone();
         this.textPos.copy(this.layoutRect.pos);
-        this.textPos.x+=25;
+        this.textPos.x+=this.textOffset;
         this.textPos.y+=this.layoutRect.size.y/2-7
     }
 

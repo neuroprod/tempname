@@ -42,6 +42,7 @@ import {popLabel, pushLabel} from "../UI/LabelComponent.ts";
 import {addSelector} from "../UI/Selector.ts";
 import {MeshType} from "../data/ProjectMesh.ts";
 import SceneData from "../data/SceneData.ts";
+import SelectItem from "../lib/UI/math/SelectItem.ts";
 
 
 enum ModelMainState {
@@ -105,11 +106,14 @@ export default class ModelMaker {
     private drawingPreviewMaterial: DrawingPreviewMaterial;
     private camera3D: Camera;
 
+
+    private sizeSelectItems: Array<SelectItem> = [new SelectItem("16x16", 16), new SelectItem("256x256", 256), new SelectItem("512x512", 512), new SelectItem("1024x1024", 1024), new SelectItem("2048x2048", 2048)]
+
     constructor(renderer: Renderer, mouseListener: MouseListener) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
 
-        this.projects  =SceneData.projects
+        this.projects = SceneData.projects
 
 
         this.camera2D = new Camera(this.renderer)
@@ -268,7 +272,7 @@ export default class ModelMaker {
             addInputTextFill("currentImage", this.currentProject, "name")
             popLabel()
             pushLabel("Size")
-            addSelector("lSize")
+            addSelector("lSize",this.sizeSelectItems,1)
             popLabel()
             UI.separator("l", false)
             if (this.cutting.currentMesh) {
@@ -388,7 +392,7 @@ export default class ModelMaker {
 
             for (let p of this.projects) {
                 if (p.name == newName) {
-                    console.log(p,newName)
+                    console.log(p, newName)
                     this.openProject(p)
                     return;
                 }

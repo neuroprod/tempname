@@ -14,7 +14,8 @@ export default class Project
     public baseTexture:Texture;
     private renderer: Renderer;
     private isDirty: boolean =false;
-
+    textureDirty: boolean =false;
+    textureSize:number =1024;
 
     constructor(renderer:Renderer)
     {
