@@ -21,13 +21,14 @@ class AnimationEditor {
     isDrawDirty: boolean = true
     public currentAnimation: Animation | null = null;
     root: AnimationEditorGroup | null = null;
-    private channelEditors: Array<AnimationChannelEditor> = [];
     isRecording = true;
-    isPlaying =false;
+    isPlaying = false;
+    private channelEditors: Array<AnimationChannelEditor> = [];
     private currentModel!: SceneObject3D | null;
-    private playTime: number =0;
+    private playTime: number = 0;
 
-    private totalTime: number=0;
+    private totalTime: number = 0;
+
     constructor() {
 
 
@@ -43,7 +44,7 @@ class AnimationEditor {
         if (this.currentAnimation) {
             this.isDrawDirty = true;
             this._currentFrame = Math.max(Math.min(value, this.currentAnimation.numFrames), 0);
-            this.currentAnimation.setTime(this._currentFrame )
+            this.currentAnimation.setTime(this._currentFrame)
         }
 
 
@@ -51,13 +52,13 @@ class AnimationEditor {
 
     setAnimation(anime: Animation | null) {
         this.models = []
-        this.channelEditors=[]
-        this.isPlaying =false
-        this.isDrawDirty =true
-        this.isRecording =false;
-        if (this.root){
+        this.channelEditors = []
+        this.isPlaying = false
+        this.isDrawDirty = true
+        this.isRecording = false;
+        if (this.root) {
             this.root.destroy()
-            this.root =null;
+            this.root = null;
         }
 
         this.currentAnimation = anime;
@@ -65,14 +66,15 @@ class AnimationEditor {
             this.currentModel = this.currentAnimation.root
 
 
-            for(let channel of this.currentAnimation.channels){
+            for (let channel of this.currentAnimation.channels) {
+                console.log(channel)
+                    let id = channel.sceneObject3D.UUID + "_" + channel.type;
+                    let label = "Position";
+                    if (channel.type == AnimationType.SCALE) label = "Scale";
+                    if (channel.type == AnimationType.ROTATE) label = "Rotation";
+                    let channelEditor = new AnimationChannelEditor(label, channel, id);
+                    this.channelEditors.push(channelEditor);
 
-                let id =channel.sceneObject3D.UUID + "_" + channel.type;
-                let label = "Position";
-                if (channel.type == AnimationType.SCALE) label = "Scale";
-                if (channel.type  == AnimationType.ROTATE) label = "Rotation";
-                let channelEditor = new AnimationChannelEditor(label, channel, id);
-                this.channelEditors.push(channelEditor);
             }
 
 
@@ -83,35 +85,39 @@ class AnimationEditor {
 
 
         }
-        this.currentFrame =0;
+        this.currentFrame = 0;
     }
+
     play() {
-        if(!this.currentAnimation)return;
-        this.isPlaying =true;
+        if (!this.currentAnimation) return;
+        this.isPlaying = true;
         this.playTime = this.currentFrame;
         this.totalTime = this.currentAnimation.numFrames;
     }
 
     pause() {
-        this.isPlaying =false;
+        this.isPlaying = false;
     }
-    public update(){
-        if(!this.currentAnimation)  {
-              return
-        }
-        if(this.isPlaying){
-            this.playTime+=Timer.delta/this.currentAnimation.frameTime;
 
-            if(this.playTime>this.totalTime){this.playTime-=this.totalTime}
+    public update() {
+        if (!this.currentAnimation) {
+            return
+        }
+        if (this.isPlaying) {
+            this.playTime += Timer.delta / this.currentAnimation.frameTime;
+
+            if (this.playTime > this.totalTime) {
+                this.playTime -= this.totalTime
+            }
             this.currentAnimation.setTime(this.playTime)
-            this.currentFrame =Math.floor( this.playTime)
+            this.currentFrame = Math.floor(this.playTime)
         }
     }
 
 
     onMouseDown(pos: Vector2) {
         console.log(pos);
-       // this.root.onMouseDown(pos)
+        // this.root.onMouseDown(pos)
     }
 
     onUI() {
@@ -152,7 +158,7 @@ class AnimationEditor {
 
     addKeyData(model: SceneObject3D, type: AnimationType, force: boolean = false) {
         if (!this.currentAnimation) return;
-        if(this.isPlaying)return;
+        if (this.isPlaying) return;
         if (!this.isRecording && !force) return;
 
         let channelEditor = this.getChannelEditor(model, type, false)
@@ -198,8 +204,8 @@ class AnimationEditor {
 
 
     drawUITree() {
-        if(this.root)
-        this.root.drawUITree(0)
+        if (this.root)
+            this.root.drawUITree(0)
     }
 
 

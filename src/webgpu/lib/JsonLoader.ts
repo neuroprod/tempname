@@ -1,4 +1,4 @@
-import PreLoader from "./lib/PreLoader.ts";
+import PreLoader from "./PreLoader.ts";
 
 export default class JsonLoader{
     public data: any;

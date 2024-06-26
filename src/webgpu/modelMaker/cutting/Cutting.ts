@@ -1,12 +1,12 @@
 import Renderer from "../../lib/Renderer.ts";
-import Project from "../Project.ts";
+import Project from "../../data/Project.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import UI from "../../lib/UI/UI.ts";
 import Model from "../../lib/model/Model.ts";
 import ModelPreviewMaterial from "../preview/ModelPreviewMaterial.ts";
-import ExtrudeMesh from "../../lib/mesh/ExtrudeMesh.ts";
+import ExtrudeMesh from "../ExtrudeMesh.ts";
 
-import ProjectMesh, {MeshType} from "../ProjectMesh.ts";
+import ProjectMesh, {MeshType} from "../../data/ProjectMesh.ts";
 import PathEditor from "./PathEditor.ts";
 import Camera from "../../lib/Camera.ts";
 import {NumericArray} from "@math.gl/types";

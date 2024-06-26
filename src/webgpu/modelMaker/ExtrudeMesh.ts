@@ -1,9 +1,9 @@
-import Mesh from "./Mesh.ts";
+import Mesh from "../lib/mesh/Mesh.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import earcut from "earcut";
 import {NumericArray} from "@math.gl/types";
-import {MeshType} from "../../modelMaker/ProjectMesh.ts";
-import {c} from "vite/dist/node/types.d-aGj9QkWt";
+import {MeshType} from "../data/ProjectMesh.ts";
+
 
 export default class ExtrudeMesh extends Mesh {
     private uv_temp: Array<number> = [];
@@ -19,9 +19,9 @@ export default class ExtrudeMesh extends Mesh {
 
 
     setResolve(points: Array<Vector2> ,center = new Vector3()){
-        let edgeSum = 0
 
-console.log(center)
+
+
         for (let i = 0; i < points.length ; i++) {
 
              points[i].x = points[i].x -center.x;
@@ -30,7 +30,7 @@ console.log(center)
         }
 
 
-   
+
 
         //stolen from Threejs
 

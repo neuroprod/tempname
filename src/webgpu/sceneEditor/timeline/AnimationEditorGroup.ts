@@ -50,21 +50,23 @@ export default class AnimationEditorGroup {
 
 
     drawUITree(depth:number) {
+        let r:any;
         if (this.obj) {
 
-            let r = pushAnimationTree(this.label, false, depth, this.obj == SceneEditor.currentModel,this.keyDataMain)
+            r = pushAnimationTree(this.label, false, depth, this.obj == SceneEditor.currentModel,this.keyDataMain)
             if(r.isClicked) SceneEditor.setCurrentModel(this.obj)
+
         } else {
-            pushAnimationTree(this.label, false, depth, false, this.keyDataMain)
+             r =pushAnimationTree(this.label, false, depth, false, this.keyDataMain)
 
         }
-
+        r.open
 
         // let tr: TreeReturn = UI.pushTree(this.label, false)
         //this.isOpen = tr.isOpen
 
-        if (true) {//this.isOpen) {
-            // UI_I.globalStyle.compIndent += 20
+        if (  r.open) {
+
             if (this.channels.length) {
 
 
@@ -77,13 +79,11 @@ export default class AnimationEditorGroup {
                         UI_IC.buttonBase(c.label, false, this.buttonSettings);
                     }
                 }
-                // this.drawUIKeyframes()
-                //UIKeyFrames(this.label, this.keyDataMain)
+
                 UI.popTree()
             }
 
-            // UI_I.globalStyle.compIndent -= 20
-            //UI_I.groupDepth-=20
+
             depth += 1
             for (let c of this.children) {
                 c.drawUITree(depth);

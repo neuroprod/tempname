@@ -1,6 +1,7 @@
 import Renderer from "../lib/Renderer.ts";
-import {Vector2} from "@math.gl/core";
+import {Vector2, Vector3} from "@math.gl/core";
 import Path from "../lib/path/Path.ts";
+import ExtrudeMesh from "../modelMaker/ExtrudeMesh.ts";
 
 export enum MeshType{
     EXTRUSION,
@@ -16,6 +17,7 @@ export default class ProjectMesh
     center: Vector2 =new Vector2(0.5,0.5);
     private renderer: Renderer;
     public meshType:MeshType =MeshType.EXTRUSION;
+    private mesh: ExtrudeMesh;
 
 
     constructor(renderer:Renderer)
@@ -50,5 +52,17 @@ export default class ProjectMesh
     setCenter(mouseLocal: Vector2) {
         this.center.from(mouseLocal);
 
+    }
+
+    getMesh() {
+        if(!this.mesh){
+            this.mesh =new ExtrudeMesh(this.renderer,this.name);
+            if(this.meshType == MeshType.REVOLVE){
+                this.mesh.setResolve(this.path.getPoints(),new Vector3(this.center.x,this.center.y,0))
+            }else{
+                this.mesh.setExtrusion(this.path.getPoints(),this.meshType,0.01,new Vector3(this.center.x,this.center.y,0))
+            }
+        }
+        return this.mesh;
     }
 }

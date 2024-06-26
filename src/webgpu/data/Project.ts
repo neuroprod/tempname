@@ -2,7 +2,7 @@ import Renderer from "../lib/Renderer.ts";
 import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 import Texture from "../lib/textures/Texture.ts";
 import ProjectMesh from "./ProjectMesh.ts";
-import DrawLine from "./drawing/DrawLine.ts";
+import DrawLine from "../modelMaker/drawing/DrawLine.ts";
 
 export default class Project
 {
@@ -25,7 +25,7 @@ export default class Project
     }
     public setDirty(){
         this.isDirty = true;
-        
+
     }
 
     getSaveString() {
@@ -43,12 +43,22 @@ export default class Project
     setData(projData: any) {
 
         this.name =projData.name;
-        this.baseTexture=projData.texture;
+
         for (let m of projData.meshes){
             let pm= new ProjectMesh(this.renderer)
             pm.setData(m);
             this.meshes.push(pm)
         }
 
+    }
+
+    getMesh(name: string) {
+        for (let m of this.meshes){
+            if(m.name ==name ){
+                return m.getMesh()
+
+            }
+
+        }
     }
 }

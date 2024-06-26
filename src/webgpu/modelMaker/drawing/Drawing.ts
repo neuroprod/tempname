@@ -4,7 +4,7 @@ import UI from "../../lib/UI/UI.ts";
 import DrawLine from "./DrawLine.ts";
 import DrawBufferTempPass from "./DrawBufferTempPass.ts";
 
-import Project from "../Project.ts";
+import Project from "../../data/Project.ts";
 import Color from "../../lib/UI/math/Color.ts";
 
 export class LineData {

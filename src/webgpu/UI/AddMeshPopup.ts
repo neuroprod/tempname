@@ -1,3 +1,6 @@
+
+
+
 import PopUp, {PopUpSettings} from "../lib/UI/components/internal/popUps/PopUp.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 
@@ -7,14 +10,14 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
 import Project from "../data/Project.ts";
-import {addListButton} from "./ListButton.ts";
 
 
 
 
 
 
-export function setItemsPopup(title: string, items:Array<Project>, callBack: (item:any) => void) {
+
+export function addMeshPopup(title: string,  callBack: (item:any) => void) {
     let old = UI_I.currentComponent;
 
     UI_I.currentComponent = UI_I.popupLayer;
@@ -26,9 +29,9 @@ export function setItemsPopup(title: string, items:Array<Project>, callBack: (it
     settings.box.marginTop =UI_I.pixelSize.y/2-height/2;
     settings.box.paddingBottom =25;
     settings.box.paddingTop =40;
-    let compPopup = new ItemsPopup(
+    let compPopup = new AddMeshPopup(
         UI_I.getID("colorPopup"),
-        settings,title,items,callBack
+        settings,title,callBack
     );
     UI_I.addComponent(compPopup);
 
@@ -36,26 +39,26 @@ export function setItemsPopup(title: string, items:Array<Project>, callBack: (it
 }
 
 
-export  class ItemsPopup extends PopUp{
+export  class AddMeshPopup extends PopUp{
     private title: string;
 
     private textPos=new Vec2();
     private callBack:(item:Project) => void;
     private vlSettings: VerticalLayoutSettings;
-    private items: Array<Project>;
-    constructor(id:number, settings:PopUpSettings,title:string,items:Array<Project>, callBack: (item:Project) => void) {
+
+    constructor(id:number, settings:PopUpSettings,title:string, callBack: (item:Project) => void) {
         super(id,settings);
         this.title =title;
 
         this.vlSettings = new VerticalLayoutSettings();
 
-      //  this.vlSettings.box.marginTop =45
+        //  this.vlSettings.box.marginTop =45
         //this.vlSettings.box.marginBottom =30
         ///this.vlSettings.box.size.y =150;
-     this.vlSettings.hasBackground =true;
+        this.vlSettings.hasBackground =true;
         this.vlSettings.backgroundColor.copy(ButtonColor)
         this.vlSettings.needScrollBar = true;
-        this.items = items;
+
 
         this.callBack =callBack;
     }
@@ -74,14 +77,14 @@ export  class ItemsPopup extends PopUp{
     setSubComponents() {
         super.setSubComponents();
         UI_IC.pushVerticalLayout("vl", this.vlSettings);
-        for(let item of this.items){
+      /*  for(let item of this.items){
 
-                 if(   addListButton(item.name)){
-                     this.callBack(item);
-                     UI_I.removePopup(this);
-                 }
+            if(   addListButton(item.name)){
+                this.callBack(item);
+                UI_I.removePopup(this);
+            }
 
-        }
+        }*/
 
 
         UI_I.popComponent();

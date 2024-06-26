@@ -29,6 +29,8 @@ import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
 import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
 import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
 import {addInputText} from "../UI/InputText.ts";
+import {addMeshPopup} from "../UI/AddMeshPopup.ts";
+import SceneData from "../data/SceneData.ts";
 
 
 export enum ToolState {
@@ -48,7 +50,7 @@ class SceneEditor {
     private camera!: Camera;
     private modelRenderer!: ModelRenderer;
     private root!: SceneObject3D
-    private modelPool!: ModelPool;
+
     private mouseListener!: MouseListener;
     private ray: Ray = new Ray();
     currentModel: SceneObject3D | null = null;
@@ -56,8 +58,8 @@ class SceneEditor {
     private editCursor!: EditCursor;
     private editCamera!: EditCamera;
     private currentToolState: ToolState = ToolState.translate;
-    private currentAnimation!: Animation;
-    private animations: Array<Animation> = [];
+
+
     private rootSplit!:SplitNode
     private nodeCenter!: SplitNode;
     private nodeRight!: SplitNode;
@@ -68,7 +70,7 @@ class SceneEditor {
 
     constructor() {
     }
-    init(renderer: Renderer, mouseListener: MouseListener, modelData: any, sceneData: any) {
+    init(renderer: Renderer, mouseListener: MouseListener) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
         this.camera = new Camera(renderer);
@@ -80,15 +82,23 @@ class SceneEditor {
 
         this.gameRenderer = new GameRenderer(this.renderer, this.camera)
 
-        this.modelPool = new ModelPool(renderer, modelData);
+
+        this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
+        this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
+
+
         this.modelRenderer = new ModelRenderer(renderer, "mainModels", this.camera)
+        this.modelRenderer.setModels(SceneData.usedModels);
+
 
         this.outline = new Outline(renderer, this.camera)
         this.editCursor = new EditCursor(renderer, this.camera, mouseListener, this.ray)
         this.editCamera = new EditCamera(renderer, this.camera, mouseListener, this.ray)
-        this.root = new SceneObject3D(this.renderer, "root")
-        this.root.setCurrentModel = this.setCurrentModel.bind(this);
-        this.makeScene(sceneData);
+        this.root = SceneData.root;
+
+
+        AnimationEditor.setAnimation(SceneData.animations[0])
+
         this.setCurrentToolState(ToolState.translate)
 
         this.rootSplit =new SplitNode("root")
@@ -143,10 +153,10 @@ class SceneEditor {
             this.saveAll();
         }
         addMainMenuDivider("tooldDiv1")
-        if (addMainMenuButton("Add", Icons.PLUS_CUBE,false)){
-
+        if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
+            //addMeshPopup("Add +",this.addMesh())
         }
-        if (addMainMenuButton("Remove", Icons.MIN_CUBE,false)){
+        if (addMainMenuButton("Remove", Icons.MIN_CUBE,true)){
 
         }
 
@@ -161,9 +171,15 @@ class SceneEditor {
 
         pushSplitPanel("horizontal panel",  this.nodeBottom,false);
         pushPanelMenu("animationMenu")
-        addMainMenuButton("AddAnime", "u",false)
-        addMainMenuButton("RemoveAnime", "v",false)
-        addMainMenuButton("open", Icons.FOLDER,false)
+        if(addMainMenuButton("AddAnime", "u",true)){
+
+        }
+        if(addMainMenuButton("RemoveAnime", "v",true)){
+
+        }
+        if(addMainMenuButton("open", Icons.FOLDER,true)){
+
+        }
         if(AnimationEditor.currentAnimation){
         addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
         }
@@ -198,7 +214,7 @@ class SceneEditor {
     }
 
     public saveAll(){
-        let sceneData: Array<any> = []
+       /* let sceneData: Array<any> = []
         this.root.getSceneData(sceneData);
 
         let animationData: Array<any> = []
@@ -208,88 +224,11 @@ class SceneEditor {
         let data: any = {}
         data.scene = sceneData;
         data.animation = animationData;
-        saveScene("scene1", JSON.stringify(data)).then()
+        saveScene("scene1", JSON.stringify(data)).then()*/
     }
 
-    public onUI() {
-       /* if (UI.LButton("Save Scene")) {
-
-            this.saveAll();
-           let sceneData: Array<any> = []
-            this.root.getSceneData(sceneData);
-
-            let animationData: Array<any> = []
-            for (let a of this.animations) {
-                a.getAnimationData(animationData);
-            }
-            let data: any = {}
-            data.scene = sceneData;
-            data.animation = animationData;
-            saveScene("scene1", JSON.stringify(data)).then()
-        }
-*/
-
-        UI.separator("Tools")
 
 
-        this.editCursor.localSpace = UI.LBool("Translate local", false);
-      //  if (UI.LButton("Translate", "", this.currentToolState != ToolState.translate)) this.setCurrentToolState(ToolState.translate);
-        //if (UI.LButton("Rotate", "", this.currentToolState != ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
-        //if (UI.LButton("Scale", "", this.currentToolState != ToolState.scale)) this.setCurrentToolState(ToolState.scale);
-        UI.separator("Animation")
-        if (this.currentModel) {
-            if (UI.LButton("New Animation For Model")) {
-                this.currentAnimation = new Animation(this.renderer, "new_animation_" + this.animations.length, this.currentModel)
-                this.animations.push(this.currentAnimation)
-                AnimationEditor.setAnimation(this.currentAnimation)
-            }
-
-        }
-        UI.pushLList("animations", 100)
-        for (let a of this.animations) {
-            if (UI.LListItem(a.label, a == this.currentAnimation)) {
-                this.currentAnimation = a;
-                AnimationEditor.setAnimation(a);
-            }
-        }
-        UI.popList()
-
-    }
-
-    public onObjectUI() {
-      /*  UI.pushWindow("scene")
-       // this.root.onUI()
-
-        if (this.currentModel) {
-            UI.separator(this.currentModel.label.toUpperCase(), true)
-            if (UI.LButton("Delete")) {
-                this.removeModel(this.currentModel)
-            }
-
-            let selectedModel = UI.LSelect("models", this.modelPool.modelSelect)
-            if (UI.LButton("Add +")) {
-                let m = this.modelPool.getModelByName(selectedModel);
-
-                m.setCurrentModel = this.setCurrentModel.bind(this);
-                this.currentModel.addChild(m)
-                this.setCurrentModel(m);
-                this.addModel(m)
-            }
-            if (UI.LButton("Add Empty +")) {
-                let m = new SceneObject3D(this.renderer,"newEmpty");
-
-                m.setCurrentModel = this.setCurrentModel.bind(this);
-                this.currentModel.addChild(m)
-                this.setCurrentModel(m);
-                this.addModel(m)
-            }
-            this.currentModel.onDataUI()
-
-        }
-
-
-        UI.popWindow()*/
-    }
 
     setCurrentModel(value: SceneObject3D | null) {
         if (value) {
@@ -348,66 +287,7 @@ class SceneEditor {
         }
     }
 
-    private makeScene(data: any) {
 
-        let sceneData = data.scene;
-        for (let d of sceneData) {
-
-
-            if (d.label == "root") {
-                this.modelsByLoadID[d.id] = this.root;
-                continue;
-            }
-
-            let m = this.modelPool.getModelByName(d.model, d.label);
-            m.setPosition(d.position[0], d.position[1], d.position[2])
-            m.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
-            this.modelsByLoadID[d.id] = m;
-            this.modelsByLoadID[d.parentID].addChild(m)
-            m.setCurrentModel = this.setCurrentModel.bind(this);
-            if (m.model) {
-                if (d.scale) {
-                    m.model.setScale(d.scale[0], d.scale[1], d.scale[2])
-                }
-                this.addModel(m)
-            }
-            // if(m.model)
-        }
-        for (let anime of data.animation) {
-
-            let animation = new Animation(this.renderer, anime.label, this.modelsByLoadID[anime.rootID])
-            animation.frameTime = anime.frameTime;
-            animation.numFrames = anime.numFrames;
-
-            for (let channelData of anime.channels) {
-                let channel = new AnimationChannel(this.modelsByLoadID[channelData.id], channelData.type)
-
-                for (let i = 0; i < channelData.frames.length; i++) {
-                    let key = new Key()
-                    key.frame = channelData.frames[i]
-                    let keyData =channelData.values[i]
-                    if(keyData.length==3){
-                        key.data =new Vector3( channelData.values[i]   )
-                    } if(keyData.length==4){
-                        key.data =new Quaternion( channelData.values[i]   )
-                    }
-
-
-                    channel.keys.push(key);
-                }
-                channel.lastKeyIndex = channel.keys.length-1;
-                animation.channels.push(channel)
-
-            }
-
-            this.animations.push(animation)
-            AnimationEditor.setAnimation(this.animations[0]);
-
-        }
-
-
-
-    }
 
     private setCurrentToolState(toolState: ToolState) {
         this.currentToolState = toolState;
@@ -415,5 +295,8 @@ class SceneEditor {
     }
 
 
+    private addMesh(p:any) {
+
+    }
 }
 export default new SceneEditor();

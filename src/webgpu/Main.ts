@@ -10,13 +10,14 @@ import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
 import ModelLoader from "./ModelLoader.ts";
 import SceneEditor from "./sceneEditor/SceneEditor.ts";
-import JsonLoader from "./JsonLoader.ts";
+import JsonLoader from "./lib/JsonLoader.ts";
 import SDFFont from "./lib/UI/draw/SDFFont.ts";
 import {popMainMenu, pushMainMenu} from "./UI/MainMenu.ts";
 import AppState, {AppStates} from "./AppState.ts";
 import {Icons} from "./UI/Icons.ts";
 import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
 import TextureLoader from "./lib/textures/TextureLoader.ts";
+import SceneData from "./data/SceneData.ts";
 
 
 enum MainState {
@@ -41,11 +42,11 @@ export default class Main {
     private keyInput!: KeyInput;
     private modelMaker!: ModelMaker;
     private mouseListener!: MouseListener;
-    private modelLoader!: ModelLoader;
+
 
     private currentMainState!: MainState
 
-    private sceneLoader!: JsonLoader;
+
 
 
     constructor() {
@@ -71,25 +72,28 @@ export default class Main {
         this.canvasRenderPass = new CanvasRenderPass(this.renderer)
         this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
 
-        this.preloader = new PreLoader(() => {
+        this.preloader = new PreLoader((n) => {console.log(n)
         }, this.init.bind(this));
         //Todo handle bitmap preload
         new TextureLoader(this.renderer, "bezierPoints.png")
 
-        this.modelLoader = new ModelLoader(this.renderer, this.preloader)
-        this.sceneLoader = new JsonLoader("scene1", this.preloader)
-
+       // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
+       // this.sceneLoader = new JsonLoader("scene1", this.preloader)
+       SceneData.init(this.renderer,this.preloader)
 
     }
 
 
     private init() {
 
+        SceneData.parseSceneData() ;
+
+
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
-        SceneEditor.init(this.renderer, this.mouseListener, this.modelLoader.data, this.sceneLoader.data)
-        this.modelMaker = new ModelMaker(this.renderer, this.mouseListener, this.modelLoader.data);
+        SceneEditor.init(this.renderer, this.mouseListener)
+        this.modelMaker = new ModelMaker(this.renderer, this.mouseListener);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
         if (state != undefined) {

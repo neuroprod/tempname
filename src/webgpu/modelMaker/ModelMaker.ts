@@ -10,7 +10,7 @@ import Camera from "../lib/Camera.ts";
 import Drawing from "./drawing/Drawing.ts";
 
 import {sendTextureToServer} from "../lib/SaveUtils.ts";
-import Project from "./Project.ts";
+import Project from "../data/Project.ts";
 
 import Cutting from "./cutting/Cutting.ts";
 import Model from "../lib/model/Model.ts";
@@ -40,7 +40,8 @@ import {addInputTextFill} from "../UI/InputText.ts";
 import {popPanelMenu, pushPanelMenuFill} from "../UI/PanelMenu.ts";
 import {popLabel, pushLabel} from "../UI/LabelComponent.ts";
 import {addSelector} from "../UI/Selector.ts";
-import {MeshType} from "./ProjectMesh.ts";
+import {MeshType} from "../data/ProjectMesh.ts";
+import SceneData from "../data/SceneData.ts";
 
 
 enum ModelMainState {
@@ -104,9 +105,13 @@ export default class ModelMaker {
     private drawingPreviewMaterial: DrawingPreviewMaterial;
     private camera3D: Camera;
 
-    constructor(renderer: Renderer, mouseListener: MouseListener, data: any) {
+    constructor(renderer: Renderer, mouseListener: MouseListener) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
+
+        this.projects  =SceneData.projects
+
+
         this.camera2D = new Camera(this.renderer)
         this.camera2D.cameraWorld.set(0, 0, 5)
         this.camera2D.cameraLookAt.set(0, 0, 0);
@@ -151,7 +156,7 @@ export default class ModelMaker {
         this.previewRenderer = new PreviewRenderer(renderer, this.cutting.model3D, this.camera3D)
 
 
-        this.setProjects(data);
+        this.setProjects()
         this.scaleToFit()
         setTimeout(this.scaleToFit.bind(this), 10)
     }
@@ -375,18 +380,15 @@ export default class ModelMaker {
     }
 
 
-    private setProjects(data: any) {
-        for (let projData of data) {
-            let p = new Project(this.renderer)
-            p.setData(projData);
-            this.projects.push(p)
+    private setProjects() {
 
-        }
         if (this.projects.length) {
 
             let newName = AppState.getState("currentImage");
+
             for (let p of this.projects) {
                 if (p.name == newName) {
+                    console.log(p,newName)
                     this.openProject(p)
                     return;
                 }
