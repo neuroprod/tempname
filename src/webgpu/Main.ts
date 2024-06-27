@@ -105,6 +105,9 @@ export default class Main {
 
     private setMainState(state: MainState) {
         AppState.setState(AppStates.MAIN_STATE, state);
+        if( this.currentMainState ==MainState.modelMaker){
+            this.modelMaker.saveTemp()
+        }
         this.currentMainState = state;
     }
 

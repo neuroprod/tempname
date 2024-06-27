@@ -73,6 +73,12 @@ export default class Renderer {
         }
 
     }
+    public startCommandEncoder(setCommands: () => void){
+        this.commandEncoder = this.device.createCommandEncoder();
+        setCommands();
+        this.device.queue.submit([this.commandEncoder.finish()]);
+    }
+
     public update(setCommands: () => void) {
 
         Timer.update();

@@ -1,5 +1,6 @@
 import RenderTexture from "./RenderTexture";
 import {LoadOp, StoreOp} from "../WebGPUConstants";
+import Texture from "./Texture.ts";
 
 
 export type ColorAttachmentOptions = {
@@ -18,11 +19,11 @@ export const ColorAttachmentOptionsDefault: ColorAttachmentOptions = {
 }
 export default class ColorAttachment {
     public options: ColorAttachmentOptions
-    public renderTexture: RenderTexture;
+    public renderTexture: Texture;
     private target: GPUTextureView|null = null;
     private dirty: boolean =true;
 
-    constructor(renderTexture: RenderTexture, options: Partial<ColorAttachmentOptions> = ColorAttachmentOptionsDefault) {
+    constructor(renderTexture: Texture, options: Partial<ColorAttachmentOptions> = ColorAttachmentOptionsDefault) {
         this.renderTexture = renderTexture;
         this.options = {...ColorAttachmentOptionsDefault, ...options};
     }

@@ -5,7 +5,7 @@ import Quad from "../mesh/geometry/Quad.ts";
 import RenderPass from "../RenderPass.ts";
 
 export default class Blit {
-    private material: Material;
+    material: Material;
     private mesh: Quad;
     private renderer: Renderer;
 

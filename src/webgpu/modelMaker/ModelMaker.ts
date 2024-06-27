@@ -392,7 +392,7 @@ export default class ModelMaker {
 
             for (let p of this.projects) {
                 if (p.name == newName) {
-                    console.log(p, newName)
+
                     this.openProject(p)
                     return;
                 }
@@ -469,5 +469,9 @@ export default class ModelMaker {
 
         this.cutting.setTool(this.currentTool)
 
+    }
+
+    saveTemp() {
+        this.drawing.saveCurrentProject()
     }
 }

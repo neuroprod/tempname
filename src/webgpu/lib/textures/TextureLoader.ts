@@ -24,7 +24,12 @@ export default class TextureLoader extends Texture {
 
 
     }
+    reload(url:string){
+        this.loadURL(url).then(() => {
 
+            this.onComplete();
+        });
+    }
     async loadURL(url: string) {
         const response = await fetch(url);
 

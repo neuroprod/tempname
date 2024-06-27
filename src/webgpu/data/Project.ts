@@ -4,6 +4,7 @@ import Texture from "../lib/textures/Texture.ts";
 import ProjectMesh from "./ProjectMesh.ts";
 import DrawLine from "../modelMaker/drawing/DrawLine.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
+import TextureLoader from "../lib/textures/TextureLoader.ts";
 
 export default class Project
 {
@@ -12,12 +13,15 @@ export default class Project
     public meshes:Array<ProjectMesh>=[];
 
     drawLines: Array<DrawLine> = [];
-    public baseTexture:Texture;
+
     private renderer: Renderer;
     private isDirty: boolean =false;
     textureDirty: boolean =false;
     textureSize:number =1024;
     selectItems: Array<SelectItem> = [];
+
+    baseTexture:Texture;
+    fullTexture: TextureLoader;
 
     constructor(renderer:Renderer)
     {

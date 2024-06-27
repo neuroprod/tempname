@@ -7,10 +7,11 @@ import LineRenderer from "./LineRenderer.ts";
 import Material from "../../lib/material/Material.ts";
 import BaseBlitMaterial from "../../lib/blit/BaseBlitMaterial.ts";
 import Blit from "../../lib/blit/Blit.ts";
+import {Textures} from "../../data/Textures.ts";
 
 export default class DrawBufferTempPass extends RenderPass{
     private readonly colorAttachment: ColorAttachment;
-    private readonly colorTarget: RenderTexture;
+    colorTarget: RenderTexture;
     public lineRenderer: LineRenderer;
     public blitMat: BaseBlitMaterial;
     private blit: Blit;
@@ -20,7 +21,7 @@ export default class DrawBufferTempPass extends RenderPass{
 
         super(renderer, "DrawBufferTempPass");
 
-        this.colorTarget = new RenderTexture(renderer, "drawingBufferTemp", {
+        this.colorTarget = new RenderTexture(renderer, Textures.DRAWING_BUFFER_TEMP, {
             format: renderer.presentationFormat,
             sampleCount: this.sampleCount,
             scaleToCanvas: false,

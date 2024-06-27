@@ -22,11 +22,13 @@ export default class RenderPass extends ObjectGPU {
         this.isDirty = true;
     }
 
-    add() {
+    add(log=false) {
         this.updateDescriptor()
+
         this.passEncoder = this.renderer.commandEncoder.beginRenderPass(
             this.renderPassDescriptor
         );
+        if(log)console.log(this)
         this.draw()
 
         this.passEncoder.end();

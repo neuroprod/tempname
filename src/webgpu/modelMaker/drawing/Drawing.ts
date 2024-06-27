@@ -6,6 +6,9 @@ import DrawBufferTempPass from "./DrawBufferTempPass.ts";
 
 import Project from "../../data/Project.ts";
 import Color from "../../lib/UI/math/Color.ts";
+import TextureLoader from "../../lib/textures/TextureLoader.ts";
+import CopyTexturePass from "../../lib/blit/CopyTexturePass.ts";
+
 
 export class LineData {
 
@@ -48,18 +51,64 @@ export default class Drawing {
     private drawBufferTempPass: DrawBufferTempPass;
     private needsRedraw: boolean = false;
     private project!: Project;
+    private copy1: CopyTexturePass;
+    private copy2: CopyTexturePass;
 
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
 
         this.drawBufferTempPass = new DrawBufferTempPass(this.renderer)
+
+        this.copy1 = new CopyTexturePass(renderer)
+        this.copy2 = new CopyTexturePass(renderer)
+    }
+
+    public saveCurrentProject() {
+
+        if (this.project) {
+            this.project.baseTexture.make()
+            this.copy1.setTextures(this.project.baseTexture, this.drawBufferTempPass.colorTarget);
+            if (this.project.fullTexture) {
+                this.copy2.setTextures(this.project.fullTexture, this.drawBufferTempPass.colorTarget);
+            }
+            this.renderer.startCommandEncoder(this.setTempToBaseTexture.bind(this))
+
+
+        }
+    }
+
+    setTempToBaseTexture() {
+        this.copy1.add();
+        if (this.project.fullTexture) {
+            this.copy2.add();
+        }
+
     }
 
     setProject(project: Project) {
+       // this.saveCurrentProject()
+
         this.project = project;
-        this.drawBufferTempPass.blitMat.setTexture("colorTexture", project.baseTexture)
-        this.updateDrawing()
+
+
+        this.project = project;
+        if (!this.project.fullTexture) {
+            this.project.fullTexture = new TextureLoader(this.renderer, "./data/" + project.name + "/texture.png")
+        } else {
+            this.project.fullTexture.reload("./data/" + project.name + "/texture.png")
+        }
+
+        this.project.fullTexture.onComplete = () => {
+
+            this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.fullTexture)
+            this.updateDrawing()
+
+        }
+        //get the png texture;
+        //this.drawBufferTempPass.blitMat.setTexture("colorTexture", thePngTexture)
+        //
+
     }
 
     draw() {
@@ -82,8 +131,6 @@ export default class Drawing {
         line.destroy();
         this.updateDrawing();
     }
-
-
 
 
     setMouse(mouseLocal: Vector2, pressureIn: number, mouseDown: boolean, mouseUp: boolean) {
@@ -121,7 +168,7 @@ export default class Drawing {
     }
 
     private updateDrawing() {
-        this.project.textureDirty =true;
+        this.project.textureDirty = true;
         this.needsRedraw = true;
         this.drawBufferTempPass.lineRenderer.lines = this.project.drawLines;
     }

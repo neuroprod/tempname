@@ -15,6 +15,7 @@ export const Textures = {
     DEPTH_DIFF: "Depth_Diff",
     GTAO_DENOISE: "GTAO_DENOISE",
     SHADOW: "shadow",
-    PREVIEW_MODEL: "previewModel"
+    PREVIEW_MODEL: "previewModel",
+    DRAWING_BUFFER_TEMP: "drawingBufferTemp"
 
 }
