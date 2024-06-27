@@ -2,14 +2,14 @@ import Component, {ComponentSettings} from "../lib/UI/components/Component.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 
 
-export function pushPanelMenuFill(label:string){
+export function pushPanelMenuFill(label:string,height:number =-1){
 
 
 
     if (!UI_I.setComponent(label)) {
 
         let s = new ComponentSettings()
-
+        s.box.size.y =height;
 
 
         let comp = new PanelMenu(UI_I.getID(label), s);

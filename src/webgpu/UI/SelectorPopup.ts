@@ -1,7 +1,6 @@
 import PopUp, {PopUpSettings} from "../lib/UI/components/internal/popUps/PopUp.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {ButtonBaseSettings} from "../lib/UI/components/internal/ButtonBase.ts";
-import {SelectButtonSettings} from "../lib/UI/components/internal/SelectButton.ts";
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import UI_I from "../lib/UI/UI_I.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
@@ -9,7 +8,7 @@ import {ButtonBorderColor, ButtonColor, InputTextRadius, TextColorBright, TextCo
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 import {Icons} from "./Icons.ts";
 import Rect from "../lib/UI/math/Rect.ts";
-import {addListButton, addSelectorListButton} from "./ListButton.ts";
+import {addSelectorListButton} from "./ListButton.ts";
 
 export function addSelectorPopup(
     callBack: (item: SelectItem) => void,
@@ -48,6 +47,7 @@ export default class SelectorPopUp extends PopUp {
     private textPos = new Vec2()
     private iconPos = new Vec2()
     private textRect = new Rect();
+
     constructor(
         id: number,
         callBack: (item: SelectItem) => void,
@@ -61,7 +61,7 @@ export default class SelectorPopUp extends PopUp {
         this.itemSize = 33;
         this.posOffset = pos;
         let maxSize = UI_I.screenSize.y - pos.y - 10;
-        this.size.set(targetWidth, Math.min(this.itemSize * items.length+InputTextRadius, maxSize));
+        this.size.set(targetWidth, Math.min(this.itemSize * items.length + InputTextRadius, maxSize));
         this.settings.box.size.copy(this.size);
         this.items = items;
         this.btnSettings = new ButtonBaseSettings();
@@ -72,12 +72,12 @@ export default class SelectorPopUp extends PopUp {
         this.callBack = callBack;
         this.index = index;
 
-       this.vsettings =new VerticalLayoutSettings()
-        this.vsettings.box.marginTop =this.itemSize;
-        this.vsettings.box.marginBottom =InputTextRadius;
+        this.vsettings = new VerticalLayoutSettings()
+        this.vsettings.box.marginTop = this.itemSize;
+        this.vsettings.box.marginBottom = InputTextRadius;
 
 
-        this.label =this.items[index].label
+        this.label = this.items[index].label
     }
 
     setSubComponents() {
@@ -85,20 +85,20 @@ export default class SelectorPopUp extends PopUp {
         if (this.isClicked) {
             UI_I.removePopup(this);
         }
-        UI_IC.pushVerticalLayout("v",this.vsettings);
-
+        UI_IC.pushVerticalLayout("v", this.vsettings);
 
 
         for (let i = 0; i < this.items.length; i++) {
             if (i == this.index) continue;
 
-            if (addSelectorListButton(this.items[i].label)){
+            if (addSelectorListButton(this.items[i].label)) {
                 this.callBack(this.items[i]);
                 UI_I.removePopup(this);
             }
         }
         UI_I.popComponent();
     }
+
     layoutAbsolute() {
 
         this.textPos.x = this.layoutRect.pos.x + 10;
@@ -111,13 +111,14 @@ export default class SelectorPopUp extends PopUp {
         this.textRect.pos.y += 1;
 
         this.iconPos.copy(this.layoutRect.pos)
-        this.iconPos.x += this.layoutRect.size.x -this.itemSize/2;
-        this.iconPos.y += this.itemSize/2;
+        this.iconPos.x += this.layoutRect.size.x - this.itemSize / 2;
+        this.iconPos.y += this.itemSize / 2;
     }
+
     prepDraw() {
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect, ButtonBorderColor, InputTextRadius);
         UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect, ButtonColor, InputTextRadius - 1);
-       // super.prepDraw();
+        // super.prepDraw();
         UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos, this.label, 14, TextColorDefault);
         UI_I.currentDrawBatch.sdfBatch.addIcon(this.iconPos, Icons.DOWN_ARROW, 14, TextColorBright);
     }

@@ -11,6 +11,27 @@ import {
 import Vec2 from "../lib/UI/math/Vec2.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import {ActionKey} from "../lib/UI/input/KeyboardListener.ts";
+import Box from "../lib/UI/math/Box.ts";
+
+export function addInputTextBox(id:string,ref:any,refValue:string,autoFocus=false,box =new Box()){
+    if (!UI_I.setComponent(id)) {
+
+        let s = new ComponentSettings()
+
+        s.box =box;
+
+
+
+        let comp = new InputText(UI_I.getID(id), s,ref,refValue,autoFocus);
+        UI_I.addComponent(comp);
+    }
+    let r = UI_I.currentComponent as InputText;
+
+
+    UI_I.popComponent()
+    return r.getReturnValue();
+
+}
 export function addInputTextFill(id:string,ref:any,refValue:string,autoFocus=false){
     if (!UI_I.setComponent(id)) {
 

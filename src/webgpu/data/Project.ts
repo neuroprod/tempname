@@ -3,6 +3,7 @@ import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 import Texture from "../lib/textures/Texture.ts";
 import ProjectMesh from "./ProjectMesh.ts";
 import DrawLine from "../modelMaker/drawing/DrawLine.ts";
+import SelectItem from "../lib/UI/math/SelectItem.ts";
 
 export default class Project
 {
@@ -16,6 +17,7 @@ export default class Project
     private isDirty: boolean =false;
     textureDirty: boolean =false;
     textureSize:number =1024;
+    selectItems: Array<SelectItem> = [];
 
     constructor(renderer:Renderer)
     {
@@ -48,8 +50,12 @@ export default class Project
         for (let m of projData.meshes){
             let pm= new ProjectMesh(this.renderer)
             pm.setData(m);
+            this.selectItems.push(new SelectItem(pm.name,pm));
             this.meshes.push(pm)
         }
+
+
+
 
     }
 
@@ -60,6 +66,13 @@ export default class Project
 
             }
 
+        }
+    }
+
+    makeSelectItems() {
+        this.selectItems=[]
+        for (let m of this.meshes){
+            this.selectItems.push(new SelectItem(m.name,m))
         }
     }
 }

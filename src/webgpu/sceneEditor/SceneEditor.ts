@@ -153,10 +153,18 @@ class SceneEditor {
         }
         addMainMenuDivider("tooldDiv1")
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
-            addMeshPopup("Add +",this.addModel)
+
+            let name ="root"
+            if(this.currentModel){
+                name = this.currentModel.label
+            }
+
+            addMeshPopup("Add Object to "+name,this.addModel.bind(this))
         }
         if (addMainMenuButton("Remove", Icons.MIN_CUBE,true)){
-
+            if(this.currentModel){
+                this.removeModel(this.currentModel)
+            }
         }
 
         addMainMenuDivider("tooldDiv2")
@@ -232,6 +240,7 @@ class SceneEditor {
     setCurrentModel(value: SceneObject3D | null) {
         if (value) {
             this.currentModel = value;
+
             this.outline.setCurrentModel(value.model)
             this.editCursor.setCurrentModel(this.currentModel);
             AnimationEditor.setCurrentModel(this.currentModel);
@@ -280,12 +289,14 @@ class SceneEditor {
     }
 
     public addModel(m: SceneObject3D) {
-        if(!this.currentModel)return;
+        if(!this.currentModel)this.currentModel =SceneData.root
         this.currentModel.addChild(m)
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
             this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)
         }
+
+        this.setCurrentModel(m)
     }
 
 
@@ -296,8 +307,6 @@ class SceneEditor {
     }
 
 
-    private addMesh(p:any) {
 
-    }
 }
 export default new SceneEditor();

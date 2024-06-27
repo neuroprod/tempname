@@ -10,6 +10,9 @@ import {Quaternion, Vector3} from "@math.gl/core";
 import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import Model from "../lib/model/Model.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
+import SelectItem from "../lib/UI/math/SelectItem.ts";
+import Texture from "../lib/textures/Texture.ts";
+import Mesh from "../lib/mesh/Mesh.ts";
 
 class SceneData {
     projects: Array<Project> = [];
@@ -20,6 +23,7 @@ class SceneData {
     usedModels: Array<Model> = [];
     private renderer!: Renderer;
     private dataScene!: any;
+    projectSelectItems:  Array<SelectItem> = [];
 
     constructor() {
     }
@@ -117,6 +121,8 @@ class SceneData {
         let projData = JSON.parse(text);
         let p = new Project(this.renderer)
         p.setData(projData);
+
+
         p.baseTexture = texture;
         this.addProject(p);
     }
@@ -130,28 +136,34 @@ class SceneData {
         }
         let project = this.projectsMap.get(names[0])
         if(!project) return null
+
         let mesh = project.getMesh(names[1]);
+
+
+
         if(!mesh) return null
-        let model = new Model(this.renderer, name);
+        if (newName == "") newName = name;
+
+        return this.makeSceneObjectWithMesh(mesh,newName,project.baseTexture);
 
 
+
+
+    }
+    makeSceneObjectWithMesh(mesh:Mesh,newName:string,texture:Texture){
+
+
+        let model = new Model(this.renderer, "model"+newName);
         model.mesh = mesh
-
-
 //TODO reuse material
         model.material = new GBufferMaterial(this.renderer, "gMat");
-        model.material.setTexture("colorTexture", project.baseTexture);
+        model.material.setTexture("colorTexture", texture);
 
-
-        if (newName == "") newName = name;
         let obj3D = new SceneObject3D(this.renderer, newName)
         obj3D.addChild(model)
         obj3D.model = model;
         return obj3D;
-
-
     }
-
     private loadProjects(preloader: PreLoader) {
         for (let p of projectsArr) {
             preloader.startLoad()
@@ -164,6 +176,20 @@ class SceneData {
     private addProject(p: Project) {
         this.projects.push(p)
         this.projectsMap.set(p.name, p);
+
+    }
+
+    makeSelectItems() {
+        this.projectSelectItems =[]
+        for(let p of this.projects){
+            if(p.meshes.length>0){
+                this.projectSelectItems.push(new SelectItem(p.name,p))
+                p.makeSelectItems();
+            }
+
+        }
+
+
     }
 }
 

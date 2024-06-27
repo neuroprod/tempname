@@ -13,12 +13,26 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import Rect from "../lib/UI/math/Rect.ts";
 import {Icons} from "./Icons.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
-import UI_IC from "../lib/UI/UI_IC.ts";
+
 import Utils from "../lib/UI/math/Utils.ts";
-import DirtyButton from "../lib/UI/components/internal/DirtyButton.ts";
+
 import {addSelectorPopup} from "./SelectorPopup.ts";
+import Box from "../lib/UI/math/Box.ts";
 
+export function addSelectorBox( label:string, items: Array<SelectItem>,currentIndex: number,box =new Box()) {
 
+    if (!UI_I.setComponent(label)) {
+
+        let s = new ComponentSettings()
+        s.box =box
+        let comp = new Selector(UI_I.getID(label), s, items,currentIndex);
+
+        UI_I.addComponent(comp);
+    }
+    let r = UI_I.currentComponent.getReturnValue()
+    UI_I.popComponent()
+    return r;
+}
 export function addSelector( label:string, items: Array<SelectItem>,currentIndex: number) {
 
     if (!UI_I.setComponent(label)) {
@@ -31,7 +45,9 @@ export function addSelector( label:string, items: Array<SelectItem>,currentIndex
     }
 
 
+    let r = UI_I.currentComponent.getReturnValue()
     UI_I.popComponent()
+    return r;
 }
 
 export class Selector extends Component {
