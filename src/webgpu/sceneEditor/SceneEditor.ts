@@ -290,6 +290,8 @@ class SceneEditor {
 
     public addModel(m: SceneObject3D) {
         if(!this.currentModel)this.currentModel =SceneData.root
+        m.setUniqueName(this.root.getUniqueName(m.label))
+
         this.currentModel.addChild(m)
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)

@@ -98,4 +98,35 @@ export default class SceneObject3D extends Object3D{
     }
 
 
+    setUniqueName(uniqueName: string) {
+        this.label = uniqueName
+        if(this.model){
+            this.model.label ="model_"+uniqueName;
+        }
+    }
+
+    getUniqueName(name: string) {
+        let n =name;
+        let count =2;
+        while(this.checkName(n)){
+            n=name+"_"+count;
+            count++
+        }
+        return n;
+
+    }
+    checkName(name:string){
+        if(this.label==name){
+            return true;
+        }
+        for(let c of this.children){
+            let f =c as SceneObject3D;
+            if(f.isSceneObject3D) {
+                if (f.label == name) return true;
+                if (f.checkName(name)) return true;
+            }
+        }
+        return false;
+
+    }
 }
