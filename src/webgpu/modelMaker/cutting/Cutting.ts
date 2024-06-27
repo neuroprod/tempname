@@ -23,10 +23,10 @@ export default class Cutting {
     shapeLineModelSelectControl: ShapeLineModel;
     shapeLineModelAll: FatShapeLineModel;
     pathEditor: PathEditor;
+    public currentMesh!: ProjectMesh | null;
     private readonly renderer: Renderer;
     private readonly mesh: ExtrudeMesh;
     private project!: Project;
-    public currentMesh!: ProjectMesh | null;
     private toolType: ToolType = ToolType.None;
     private camera: Camera;
     private currentMousePoint: Vector2 = new Vector2();
@@ -206,6 +206,15 @@ export default class Cutting {
         }
     }
 
+    setMeshType(meshType: MeshType) {
+        if (this.currentMesh) {
+            this.currentMesh.meshType = meshType;
+            this.setMesh()
+
+        }
+
+    }
+
     private addVectorPoint(point: Vector2) {
         if (this.currentMesh) {
 
@@ -274,21 +283,12 @@ export default class Cutting {
 
     }
 
-    setMeshType(meshType: MeshType) {
-        if(this.currentMesh) {
-            this.currentMesh.meshType = meshType;
-            this.setMesh()
-
-        }
-
-    }
-
     private setMesh() {
-        if(!this.currentMesh)return;
-        if( this.currentMesh.meshType==MeshType.REVOLVE){
+        if (!this.currentMesh) return;
+        if (this.currentMesh.meshType == MeshType.REVOLVE) {
             this.mesh.setResolve(this.positionsToVec2(this.shapeLineModelSelect.positions), new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0));
 
-        }else{
+        } else {
             this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), this.currentMesh.meshType, 0.03, new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0));
 
         }

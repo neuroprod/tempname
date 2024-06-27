@@ -45,6 +45,8 @@ export default class ModelRenderer {
 
         for (let model of this.models) {
             if (!model.visible) continue
+            if (!model.mesh)continue;
+            if (!model.mesh.positions)continue;
 
             if(!this.singleMaterial){
                 material =  model.material
@@ -95,7 +97,8 @@ export default class ModelRenderer {
                     )
                 } else {
 
-                    console.log("buffer not found", attribute.name)
+                    //console.log("buffer not found", attribute.name)
+                    continue;
                 }
             }
 
