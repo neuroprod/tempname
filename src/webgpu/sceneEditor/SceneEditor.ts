@@ -144,7 +144,7 @@ class SceneEditor {
         }
 
         this.editCursor.update()
-      //  AnimationEditor.update();
+       AnimationEditor.update();
     }
     onUINice() {
         pushMainMenu("tools",400,134);
@@ -188,8 +188,35 @@ class SceneEditor {
 
         }
         if(AnimationEditor.currentAnimation){
-        addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
+            addMainMenuDivider("mydiv")
+            if(addMainMenuButton("keyAll", Icons.KEYFRAME_MULT,true)){
+                AnimationEditor.addKeysAll()
+            }
+            if(addMainMenuButton("key", Icons.KEYFRAME,true)){
+                AnimationEditor.addAllKeysToModel(this.currentModel)
+            }
+            addMainMenuDivider("mydiv2")
+            if(addMainMenuButton("record", Icons.RECORD,true)){
+                if(!AnimationEditor.isRecording){
+                    AnimationEditor.isRecording=true
+                }else{
+                    AnimationEditor.isRecording=false
+                }
+            }
+            if(addMainMenuButton("play", Icons.PLAY,true)){
+                if(AnimationEditor.isPlaying){
+                    AnimationEditor.pause()
+                }else{
+                    AnimationEditor.play()
+                }
+
+            }
+            addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
+
+
         }
+
+
         popPanelMenu()
         AnimationEditor.onUI();
         popSplitPanel()

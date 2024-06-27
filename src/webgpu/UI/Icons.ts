@@ -30,4 +30,12 @@ export const Icons  = {
     MESH_PLANE: '2',
     MESH_PLANE_TRANS: '3',
     MESH_REVOLVE: '4',
+
+    PLAY: '5',
+    PAUZE: '6',
+
+    RECORD: '7',
+    KEYFRAME: '8',
+    KEYFRAME_MULT: '9',
+
 }

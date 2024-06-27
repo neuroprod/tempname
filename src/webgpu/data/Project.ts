@@ -21,7 +21,7 @@ export default class Project
     selectItems: Array<SelectItem> = [];
 
     baseTexture:Texture;
-    fullTexture: TextureLoader;
+    fullTexture!: TextureLoader;
 
     constructor(renderer:Renderer)
     {
