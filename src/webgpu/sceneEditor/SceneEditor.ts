@@ -193,6 +193,7 @@ class SceneEditor {
                 AnimationEditor.addKeysAll()
             }
             if(addMainMenuButton("key", Icons.KEYFRAME,true)){
+                if(this.currentModel)
                 AnimationEditor.addAllKeysToModel(this.currentModel)
             }
             addMainMenuDivider("mydiv2")

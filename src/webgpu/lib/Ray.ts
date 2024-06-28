@@ -4,6 +4,7 @@ import Renderer from "./Renderer";
 import {Matrix4, Vector2, Vector3, Vector4} from "@math.gl/core";
 import {NumericArray} from "@math.gl/types";
 import Model from "./model/Model.ts";
+import Mesh from "./mesh/Mesh.ts";
 
 
 export class RayIntersection{
@@ -75,6 +76,12 @@ private _temp: Vector3 = new Vector3();
         this.transform(model.worldMatrixInv)
         if(this.intersectsBox(model.mesh.min,model.mesh.max)){
 
+
+            this.intersectMesh(model.mesh);
+
+
+
+
             let intersection =new RayIntersection()
             intersection.model =model;
             intersection.distance = this.intersectionDistance;
@@ -126,8 +133,8 @@ private _temp: Vector3 = new Vector3();
     intersectPlane(point: Vector3, normal: Vector3, invModel:Matrix4|null=null) {
 
 
-        this._rayStart.from(this.rayStart);
-        this._rayDir.from(this.rayDir);
+        this._rayStart.from(this.rayStart as NumericArray);
+        this._rayDir.from(this.rayDir as NumericArray);
         if( invModel) {
             this._rayDir.add(this._rayStart as NumericArray);
             this._rayDir.transform(invModel as NumericArray);
@@ -137,17 +144,17 @@ private _temp: Vector3 = new Vector3();
 
 
 
-        const d  = -normal.dot( this._rayDir )
+        const d  = -normal.dot( this._rayDir as NumericArray )
 
         if ( d < 0.0001 && d > -0.0001) {
             return null;
         }
-        const c =-point.dot(normal);
-        const t = - ( this._rayStart.dot( normal ) + c ) / d;
+        const c =-point.dot(normal as NumericArray);
+        const t = - ( this._rayStart.dot( normal as NumericArray ) + c ) / d;
 
         let p = this.rayDir.clone()
         p.scale(t)
-        p.add(this.rayStart);
+        p.add(this.rayStart as NumericArray);
         return p
     }
 
@@ -168,9 +175,9 @@ private _temp: Vector3 = new Vector3();
 
         this._temp.from(this._rayStart)
 
-        this._temp.subtract(position);
-        const b = this._temp.dot( this._rayDir);
-        const c = this._temp.dot(this._temp) - radius * radius;
+        this._temp.subtract(position as NumericArray);
+        const b = this._temp.dot( this._rayDir as NumericArray);
+        const c = this._temp.dot(this._temp as NumericArray) - radius * radius;
         const h = b * b - c;
         if (h < 0.0) {
             return null;
@@ -183,7 +190,95 @@ private _temp: Vector3 = new Vector3();
 
         let p = this.rayDir.clone()
         p.scale(t)
-        p.add(this.rayStart);
+        p.add(this.rayStart as NumericArray);
         return p
+    }
+
+    p1 =new Vector3()
+    p2 =new Vector3()
+    p3 =new Vector3()
+    edge1 =new Vector3()
+    edge2 =new Vector3()
+    normal =new Vector3()
+    diff =new Vector3()
+    private intersectMesh(mesh: Mesh) {
+        this.intersectionDistance  = Number.MAX_VALUE;
+        const a =this.p1;
+        const b =this.p2;
+        const c =this.p3;
+        const edge1 =this.edge1;
+        const edge2 =this.edge2;
+        const normal =this.normal;
+        const diff =this.diff;
+        for(let i=0;i<mesh.numIndices;i+=3){
+
+            let i1 = mesh.indices[i]*3;
+            let i2 = mesh.indices[i+1]*3;
+            let i3 = mesh.indices[i+2]*3;
+            a.set(mesh.positions[i1],mesh.positions[i1+1],mesh.positions[i1+2]);
+            b.set(mesh.positions[i2],mesh.positions[i2+1],mesh.positions[i2+2]);
+            c.set(mesh.positions[i3],mesh.positions[i3+1],mesh.positions[i3+2]);
+
+            edge1.subVectors( b as NumericArray, a as NumericArray );
+            edge2.subVectors( c as NumericArray, a as NumericArray );
+            normal.from(edge1 as NumericArray)
+            normal.cross(edge2 as NumericArray)
+
+
+            let DdN =  this._rayDir.dot( normal as NumericArray );
+            let sign =-1;
+
+            if ( DdN >= 0 ) {
+               continue;
+            }
+
+            DdN = - DdN;
+
+            diff.subVectors( this._rayStart as NumericArray, a as NumericArray);
+            a.from(diff)
+            const DdQxE2 = sign * this._rayDir.dot(a.cross(  edge2 as NumericArray )as NumericArray );
+
+            // b1 < 0, no intersection
+            if ( DdQxE2 < 0 ) {
+
+                continue;
+
+            }
+
+            const DdE1xQ = sign * this._rayDir.dot( edge1.cross( diff as NumericArray ) as NumericArray );
+
+            // b2 < 0, no intersection
+            if ( DdE1xQ < 0 ) {
+
+                continue;
+
+            }
+
+            // b1+b2 > 1, no intersection
+            if ( DdQxE2 + DdE1xQ > DdN ) {
+
+                continue;
+
+            }
+
+            // Line intersects triangle, check if ray does.
+            const QdN = - sign * diff.dot( normal as NumericArray );
+
+            // t < 0, no intersection
+            if ( QdN < 0 ) {
+
+                continue;
+
+            }
+
+
+            this.intersectionDistance  = Math.min( this.intersectionDistance ,QdN / DdN)
+            // Ray intersects triangle.
+           // return this.at( QdN / DdN, target );
+
+
+        }
+
+
     }
 }
