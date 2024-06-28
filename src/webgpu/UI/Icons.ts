@@ -36,6 +36,7 @@ export const Icons  = {
 
     RECORD: '7',
     KEYFRAME: '8',
+    DELETE_KEYFRAME: 'z',
     KEYFRAME_MULT: '9',
 
 }

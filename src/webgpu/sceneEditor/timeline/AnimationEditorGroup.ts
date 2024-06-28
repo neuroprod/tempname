@@ -75,8 +75,11 @@ export default class AnimationEditorGroup {
                 // let trTrans: TreeReturn = UI.pushTree("transforms", false)
                 this.transOpen = r;
                 if (this.transOpen) {
+                    let count =0;
                     for (let c of this.channels) {
-                        UI_IC.buttonBase(c.label, false, this.buttonSettings);
+                         pushAnimationTree(c.label, true, depth + 4, false,this.keyDataTrans.children[count])
+                        count++
+                        UI.popTree()
                     }
                 }
 

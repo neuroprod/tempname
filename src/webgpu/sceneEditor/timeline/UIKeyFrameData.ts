@@ -35,6 +35,29 @@ export default class UIKeyFrameData {
         }
     }
 
+    deleteSelectFrames() {
+
+
+        if (this.channel && this.selectedFrame != -1) {
+            let k = this.frames.indexOf(this.selectedFrame)
+            this.channel.removeFrame(this.selectedFrame);
+            console.log(this.selectedFrame)
+            this.frames.splice(k, 1)
+            if (k >= 0) {
+                this.frames.splice(k, 1)
+            }
+            if (this.parent) {
+                this.parent.checkIfChildHasKey(this.selectedFrame);
+            }
+
+        }
+        for (let child of this.children) {
+            child.deleteSelectFrames()
+        }
+        this.isDrawDirty = true;
+        this.selectedFrame =-1
+    }
+
     addChild(child: UIKeyFrameData) {
         this.children.push(child)
         child.parent = this;
@@ -58,10 +81,6 @@ export default class UIKeyFrameData {
         }
 
 
-        //if (!this.frames.includes(add)) {
-        //      this.frames.push(frame)
-        //      if(this.parent)this.parent.addKey(frame)
-        //  }
     }
 
     setMoveFrame(frame: number, first: boolean = true) {
@@ -120,7 +139,7 @@ export default class UIKeyFrameData {
                 return;
             }
         }
-        console.log(remove)
+
         let k = this.frames.indexOf(remove)
         if (k >= 0) {
             this.frames.splice(k, 1)
@@ -134,13 +153,12 @@ export default class UIKeyFrameData {
 }
 
 
-
-export function UIKeyFrames(id: string, keyData: UIKeyFrameData,offset:number) {
+export function UIKeyFrames(id: string, keyData: UIKeyFrameData, offset: number) {
     if (!UI_I.setComponent(id)) {
-        let componentSettings =new ComponentSettings();
-        componentSettings.box.marginLeft=offset;
+        let componentSettings = new ComponentSettings();
+        componentSettings.box.marginLeft = offset;
         componentSettings.box.size.y = 20;
-        let comp = new KeyFramesComp(UI_I.getID(id),componentSettings, keyData);
+        let comp = new KeyFramesComp(UI_I.getID(id), componentSettings, keyData);
         UI_I.addComponent(comp);
     }
     UI_I.popComponent();
@@ -156,8 +174,8 @@ class KeyFramesComp extends Component {
     private isDragging: boolean = false;
 
 
-    constructor(id: number,componentSettings:ComponentSettings, keyData: UIKeyFrameData) {
-        super(id,componentSettings)
+    constructor(id: number, componentSettings: ComponentSettings, keyData: UIKeyFrameData) {
+        super(id, componentSettings)
         this.keyData = keyData;
     }
 

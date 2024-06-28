@@ -26,7 +26,7 @@ export function pushPanelMenu(label:string){
 
         let s = new ComponentSettings()
 
-        s.box.size.set(300,34)
+        s.box.size.set(-1,34)
         s.box.setMargin(0)
         s.box.marginBottom=5
         s.box.marginLeft=10

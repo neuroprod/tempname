@@ -167,4 +167,14 @@ export default class AnimationChannel {
         this.sortKeys()
     }
 
+    removeFrame(selectedFrame: number) {
+        for (let i = 0; i < this.keys.length; i++) {
+            if (this.keys[i].frame == selectedFrame) {
+                this.keys.splice(i, 1);
+                break
+            }
+        }
+        this.sortKeys()
+        this.lastKeyIndex = this.keys.length - 1;
+    }
 }

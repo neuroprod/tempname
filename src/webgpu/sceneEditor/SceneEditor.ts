@@ -30,6 +30,7 @@ import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
 import {addInputText} from "../UI/InputText.ts";
 import SceneData from "../data/SceneData.ts";
 import {addMeshPopup} from "../UI/AddMeshPopup.ts";
+import {addPlayButton, addRecButton} from "../UI/PlayPauzeRecButton.ts";
 
 
 export enum ToolState {
@@ -188,6 +189,9 @@ class SceneEditor {
 
         }
         if(AnimationEditor.currentAnimation){
+            addMainMenuDivider("mydiv3")
+            addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
+
             addMainMenuDivider("mydiv")
             if(addMainMenuButton("keyAll", Icons.KEYFRAME_MULT,true)){
                 AnimationEditor.addKeysAll()
@@ -196,15 +200,19 @@ class SceneEditor {
                 if(this.currentModel)
                 AnimationEditor.addAllKeysToModel(this.currentModel)
             }
-            addMainMenuDivider("mydiv2")
-            if(addMainMenuButton("record", Icons.RECORD,true)){
-                if(!AnimationEditor.isRecording){
-                    AnimationEditor.isRecording=true
-                }else{
-                    AnimationEditor.isRecording=false
-                }
+            if(addMainMenuButton("deletekey", Icons.DELETE_KEYFRAME,true)){
+                AnimationEditor.deleteSelectedKeys()
             }
-            if(addMainMenuButton("play", Icons.PLAY,true)){
+            addMainMenuDivider("mydiv2")
+            if(addRecButton("record",AnimationEditor.isRecording)){
+
+
+                    AnimationEditor.isRecording=  !AnimationEditor.isRecording
+
+            }
+            if(addPlayButton("play", AnimationEditor.isPlaying)){
+
+
                 if(AnimationEditor.isPlaying){
                     AnimationEditor.pause()
                 }else{
@@ -212,7 +220,6 @@ class SceneEditor {
                 }
 
             }
-            addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
 
 
         }

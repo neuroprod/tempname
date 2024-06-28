@@ -156,9 +156,9 @@ export default class AnimationTree extends Component {
                 this.saveToLocal();
                 this.setDirty(true);
             }
-            UIKeyFrames(this.label+"k",this.keyDataMain,this.keyFrameOffset)
-        }
 
+        }
+        UIKeyFrames(this.label+"k",this.keyDataMain,this.keyFrameOffset)
 
         UI_IC.pushVerticalLayout("l" + this.id, this.verticalLSettings);
         this.container = UI_I.currentComponent;

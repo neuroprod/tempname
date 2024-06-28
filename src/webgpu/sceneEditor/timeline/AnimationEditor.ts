@@ -212,6 +212,10 @@ class AnimationEditor {
     clearAllSelectFrames() {
         this.root?.keyDataMain.clearAllSelectFrames();
     }
+
+    deleteSelectedKeys() {
+        this.root?.keyDataMain.deleteSelectFrames();
+    }
 }
 
 export default new AnimationEditor()
