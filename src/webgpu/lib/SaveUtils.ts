@@ -57,7 +57,7 @@ export async function  saveScene(fileName:string,data:string ="") {
         method: "post",
         body: formData,
     });
-
+console.log(response)
 
 }
 

@@ -32,7 +32,7 @@ class SceneData {
 
 
         let sceneData = this.dataScene.scene;
-
+console.log(sceneData)
 
         this.root = new SceneObject3D(this.renderer, "root")
         for (let d of sceneData) {
@@ -41,11 +41,16 @@ class SceneData {
                 this.modelsByLoadID[d.id] = this.root;
                 continue;
             }
-            let m = this.getModel(d.model, d.label);
+
+            if(d.meshName==undefined)d.meshName =d.model;
+            let m = this.getModel(d.meshName, d.label);
+
             if (m) {
                 m.setPosition(d.position[0], d.position[1], d.position[2])
                 m.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
+
                 this.modelsByLoadID[d.id] = m;
+
                 this.modelsByLoadID[d.parentID].addChild(m)
                 if (m.model) {
                     if (d.scale) {
@@ -129,12 +134,15 @@ class SceneData {
 
     private getModel(name: string, newName: string): SceneObject3D | null {
 
+
         let names = name.split("_")
         if (names.length != 2) {
 
             return null
         }
+
         let project = this.projectsMap.get(names[0])
+
         if(!project) return null
 
         let mesh = project.getMesh(names[1]);
@@ -144,17 +152,18 @@ class SceneData {
         if(!mesh) return null
         if (newName == "") newName = name;
 
-        return this.makeSceneObjectWithMesh(mesh,newName,project.baseTexture);
+        return this.makeSceneObjectWithMesh(mesh,newName,project.name,project.baseTexture);
 
 
 
 
     }
-    makeSceneObjectWithMesh(mesh:Mesh,newName:string,texture:Texture){
+    makeSceneObjectWithMesh(mesh:Mesh,newName:string,projectName:string,texture:Texture){
 
 
-        let model = new Model(this.renderer, "model"+newName);
+        let model = new Model(this.renderer, newName);
         model.mesh = mesh
+   
 //TODO reuse material
         model.material = new GBufferMaterial(this.renderer, "gMat");
         model.material.setTexture("colorTexture", texture);
@@ -162,6 +171,7 @@ class SceneData {
         let obj3D = new SceneObject3D(this.renderer, newName)
         obj3D.addChild(model)
         obj3D.model = model;
+        obj3D.meshName = projectName+"_"+mesh.label
         return obj3D;
     }
     private loadProjects(preloader: PreLoader) {

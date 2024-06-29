@@ -1,6 +1,6 @@
 import Color from "../lib/UI/math/Color.ts";
 
-
+export const MainMenuOffset =212;
 export const InputTextBG =new Color().setHex("#aa00ff");
 export const InputTextRadius =8;
 

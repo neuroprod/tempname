@@ -15,6 +15,9 @@ import {Icons} from "./UI/Icons.ts";
 import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
 import TextureLoader from "./lib/textures/TextureLoader.ts";
 import SceneData from "./data/SceneData.ts";
+import {addMainMenuTextButton} from "./UI/MainMenuTextButton.ts";
+import UI_I from "./lib/UI/UI_I.ts";
+import {addMainMenuDivider} from "./UI/MainMenuDivider.ts";
 
 
 enum MainState {
@@ -44,8 +47,6 @@ export default class Main {
     private currentMainState!: MainState
 
 
-
-
     constructor() {
         AppState.init()
         this.canvas = document.getElementById("webGPUCanvas") as HTMLCanvasElement;
@@ -64,7 +65,6 @@ export default class Main {
         UI.setWebGPU(this.renderer)
 
 
-
         //setup canvas
         this.canvasRenderPass = new CanvasRenderPass(this.renderer)
         this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
@@ -75,16 +75,16 @@ export default class Main {
         //Todo handle bitmap preload
         new TextureLoader(this.renderer, "bezierPoints.png")
 
-       // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
-       // this.sceneLoader = new JsonLoader("scene1", this.preloader)
-       SceneData.init(this.renderer,this.preloader)
+        // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
+        // this.sceneLoader = new JsonLoader("scene1", this.preloader)
+        SceneData.init(this.renderer, this.preloader)
 
     }
 
 
     private init() {
 
-        SceneData.parseSceneData() ;
+        SceneData.parseSceneData();
 
 
         this.keyInput = new KeyInput();
@@ -105,7 +105,7 @@ export default class Main {
 
     private setMainState(state: MainState) {
         AppState.setState(AppStates.MAIN_STATE, state);
-        if( this.currentMainState ==MainState.modelMaker){
+        if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.saveTemp()
         }
         this.currentMainState = state;
@@ -131,13 +131,24 @@ export default class Main {
     }
 
     private onUI() {
-
-        pushMainMenu("MainMenu", 129, 0)
-        if (addMainMenuToggleButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
-        if (addMainMenuToggleButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
-        if (addMainMenuToggleButton("Model Maker", Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
-
-        popMainMenu()
+        if (this.currentMainState == MainState.game) {
+           // pushMainMenu("editMenu", 74, 0)
+            UI_I.currentComponent = UI_I.panelLayer;
+            if (addMainMenuTextButton("Edit", true)) {
+                this.setMainState(MainState.editor)
+            }
+           // popMainMenu()
+        } else {
+            pushMainMenu("MainMenu", 207, 0)
+            if (addMainMenuToggleButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
+            if (addMainMenuToggleButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
+            if (addMainMenuToggleButton("Model Maker", Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
+            addMainMenuDivider("div")
+            if (addMainMenuTextButton("Save", true)) {
+                this.saveAll();
+            }
+            popMainMenu()
+        }
         if (this.currentMainState == MainState.modelMaker) {
 
             this.modelMaker.onUINice()
@@ -166,4 +177,8 @@ export default class Main {
     }
 
 
+    private saveAll() {
+        SceneEditor.saveAll()
+        //this.modelMaker.saveAll();
+    }
 }

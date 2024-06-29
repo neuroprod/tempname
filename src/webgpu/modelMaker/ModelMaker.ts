@@ -43,6 +43,7 @@ import {addSelector} from "../UI/Selector.ts";
 import {MeshType} from "../data/ProjectMesh.ts";
 import SceneData from "../data/SceneData.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
+import {MainMenuOffset} from "../UI/Style.ts";
 
 
 enum ModelMainState {
@@ -204,11 +205,9 @@ export default class ModelMaker {
     }
 
     onUINice() {
-        pushMainMenu("paint", 850, 134);
-        if (addMainMenuTextButton("Save", true)) {
-            this.saveAll();
-        }
-        addMainMenuDivider("tooldDiv1")
+        pushMainMenu("paint", 850, MainMenuOffset);
+
+
         if (addMainMenuButton("NewImage", Icons.NEW_IMAGE, true)) {
             setNewPopup("+ Add new Image", "new_image", (name: string) => {
                 this.makeNewProject(name);
@@ -446,7 +445,7 @@ export default class ModelMaker {
 
     }
 
-    private saveAll() {
+    saveAll() {
         let s = this.currentProject.getSaveString();
 
         sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name, s).then(() => {

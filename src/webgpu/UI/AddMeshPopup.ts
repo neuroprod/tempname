@@ -118,7 +118,7 @@ export class AddMeshPopup extends PopUp {
         let a = [new SelectItem("ffffff", "v"), new SelectItem("aaaaaa", "vf")]
         let m:ProjectMesh|null =null
 
-            let p = addSelectorBox("test", SceneData.projectSelectItems, 0, this.selector1Box) as Project;
+        let p = addSelectorBox("test", SceneData.projectSelectItems, 0, this.selector1Box) as Project;
 
         if (p.selectItems.length > 0) {
             m = addSelectorBox(p.name + "randumS", p.selectItems, 0, this.selector2Box)
@@ -128,7 +128,7 @@ export class AddMeshPopup extends PopUp {
         if(addTextButton("add Mesh")){
             if(m){
 
-                let a  =SceneData.makeSceneObjectWithMesh(m.getMesh(),this.newName,p.baseTexture)
+                let a  =SceneData.makeSceneObjectWithMesh(m.getMesh(),p.name,this.newName,p.baseTexture)
                 this.callBack(a);
                 UI_I.removePopup(this)
             }

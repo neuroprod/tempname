@@ -31,6 +31,8 @@ import {addInputText} from "../UI/InputText.ts";
 import SceneData from "../data/SceneData.ts";
 import {addMeshPopup} from "../UI/AddMeshPopup.ts";
 import {addPlayButton, addRecButton} from "../UI/PlayPauzeRecButton.ts";
+import {MainMenuOffset} from "../UI/Style.ts";
+import {saveScene} from "../lib/SaveUtils.ts";
 
 
 export enum ToolState {
@@ -148,11 +150,9 @@ class SceneEditor {
        AnimationEditor.update();
     }
     onUINice() {
-        pushMainMenu("tools",400,134);
-        if (addMainMenuTextButton("Save",false)){
-            this.saveAll();
-        }
-        addMainMenuDivider("tooldDiv1")
+        pushMainMenu("tools",300,MainMenuOffset);
+
+
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
 
             let name ="root"
@@ -256,17 +256,22 @@ class SceneEditor {
     }
 
     public saveAll(){
-       /* let sceneData: Array<any> = []
-        this.root.getSceneData(sceneData);
+       let sceneData: Array<any> = []
+        SceneData.root.getSceneData(sceneData);
 
         let animationData: Array<any> = []
-        for (let a of this.animations) {
+        for (let a of SceneData.animations) {
             a.getAnimationData(animationData);
         }
         let data: any = {}
         data.scene = sceneData;
         data.animation = animationData;
-        saveScene("scene1", JSON.stringify(data)).then()*/
+        saveScene("scene1", JSON.stringify(data)).then(()=>{
+            console.log("saved Scene")
+        })
+
+
+
     }
 
 
