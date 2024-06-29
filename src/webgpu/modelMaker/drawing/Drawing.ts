@@ -127,9 +127,11 @@ export default class Drawing {
     }
 
     public undoLine() {
-        let line = this.project.drawLines.pop() as DrawLine
-        line.destroy();
-        this.updateDrawing();
+        if(this.project.drawLines.length){
+            let line = this.project.drawLines.pop() as DrawLine
+            line.destroy();
+            this.updateDrawing();
+        }
     }
 
 
