@@ -140,7 +140,7 @@ export default class Main {
            // popMainMenu()
         } else {
             pushMainMenu("MainMenu", 207, 0)
-            if (addMainMenuToggleButton("Game", Icons.GAME, this.currentMainState == MainState.game)) this.setMainState(MainState.game);
+            if (addMainMenuToggleButton("Game", Icons.GAME, false)) this.setMainState(MainState.game);
             if (addMainMenuToggleButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
             if (addMainMenuToggleButton("Model Maker", Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
             addMainMenuDivider("div")
@@ -179,6 +179,6 @@ export default class Main {
 
     private saveAll() {
         SceneEditor.saveAll()
-        //this.modelMaker.saveAll();
+        this.modelMaker.saveAll();
     }
 }

@@ -57,7 +57,7 @@ export async function  saveScene(fileName:string,data:string ="") {
         method: "post",
         body: formData,
     });
-console.log(response)
+
 
 }
 
@@ -107,14 +107,16 @@ export async function getImageBlob (texture:Texture){
     const dataTemp = new Uint8Array(copyArrayBuffer.slice(0))//blue red green alpha?
     stagingBuffer.unmap();
     stagingBuffer.destroy()
-    const data  =new Uint8Array(texture.options.width*texture.options.height*4)
+
+   const data  =new Uint8Array(texture.options.width*texture.options.height*4)
     let targetPos =0;
    for(let i=0;i<texture.options.height;i++){
        let srcPos = i*bytesPerRowAligned;
        for(let j=0;j<texture.options.width;j++) {
-           data[targetPos++] = dataTemp[srcPos+2];
-           data[targetPos++] = dataTemp[srcPos+1];
            data[targetPos++] = dataTemp[srcPos];
+           data[targetPos++] = dataTemp[srcPos+1];
+           data[targetPos++] = dataTemp[srcPos+2];
+
            data[targetPos++] = dataTemp[srcPos+3];
            srcPos+=4;
 
@@ -126,11 +128,14 @@ export async function getImageBlob (texture:Texture){
     canvas.width = texture.options.width;
     canvas.height = texture.options.height;
     let ctx = canvas.getContext("2d");
+
     if(ctx) {
         let imData = ctx.createImageData(texture.options.width, texture.options.height)
         imData.data.set(data)
         ctx.putImageData(imData,0,0)
+
     }
+
     return await new Promise(resolve => canvas.toBlob(resolve));
 
 }

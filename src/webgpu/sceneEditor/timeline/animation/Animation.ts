@@ -32,7 +32,7 @@ export default class Animation{
     getAnimationData(animationData: Array<any>) {
         let data:any ={}
         data.rootID =this.root.UUID;
-        console.log("SaveAnimationRoot",this.root.UUID,this.root.label)
+
         data.label =this.label;
         data.numFrames =this.numFrames;
         data.frameTime =this.frameTime;

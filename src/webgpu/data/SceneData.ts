@@ -163,7 +163,7 @@ console.log(sceneData)
 
         let model = new Model(this.renderer, newName);
         model.mesh = mesh
-   
+
 //TODO reuse material
         model.material = new GBufferMaterial(this.renderer, "gMat");
         model.material.setTexture("colorTexture", texture);

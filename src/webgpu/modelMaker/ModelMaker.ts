@@ -26,7 +26,7 @@ import {Icons} from "../UI/Icons.ts";
 import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
 import {addMainMenuToggleButton, addToggleButton} from "../UI/MainMenuToggleButton.ts";
 import {addMainMenuText, addTitle} from "../UI/Label.ts";
-import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
+
 import {addMenuColorButton} from "../UI/MenuColorButton.ts";
 import {addMenuBrushButton} from "../UI/MenuBrushButton.ts";
 import {setNewPopup} from "../UI/NewPopup.ts";
@@ -446,14 +446,36 @@ export default class ModelMaker {
     }
 
     saveAll() {
-        let s = this.currentProject.getSaveString();
 
-        sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name, s).then(() => {
+        this.drawing.saveCurrentProject();
+
+        for(let p of this.projects){
+           if( p.fullTexture){
+
+
+               let s = this.currentProject.getSaveString();
+              // console.log(s)
+
+               sendTextureToServer(p.fullTexture, "texture", this.currentProject.name, s).then(() => {
+                 console.log("savedTexture!")
+
+               }).catch(() => {
+                   console.log("error saving")
+               })
+
+
+           }
+
+
+        }
+       // let s = this.currentProject.getSaveString();
+
+        /*sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name, s).then(() => {
             UI.logEvent("", "saved!")
 
         }).catch(() => {
             UI.logEvent("", "error saving", true)
-        })
+        })*/
     }
 
 

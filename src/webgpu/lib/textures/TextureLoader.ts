@@ -9,7 +9,7 @@ export default class TextureLoader extends Texture {
     constructor(renderer: Renderer, url: string = "", options: Partial<TextureOptions>={}) {
         super(renderer, url, options)
 
-        this.options.usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT;
+        this.options.usage = GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST|GPUTextureUsage.COPY_SRC | GPUTextureUsage.RENDER_ATTACHMENT;
      //  if(url.includes("_Op."))
       // this.options.format = TextureFormat.R8Unorm
 
