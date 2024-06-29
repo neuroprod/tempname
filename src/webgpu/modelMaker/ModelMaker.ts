@@ -447,8 +447,9 @@ export default class ModelMaker {
 
     saveAll() {
 
-        this.drawing.saveCurrentProject();
-
+        if(this.currentProject && this.currentProject.fullTexture) {
+          //  this.drawing.saveCurrentProject();
+        }
         for(let p of this.projects){
            if( p.fullTexture){
 

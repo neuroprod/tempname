@@ -2,7 +2,7 @@ import RenderPass from "../../lib/RenderPass.ts";
 import Renderer from "../../lib/Renderer.ts";
 import RenderTexture from "../../lib/textures/RenderTexture.ts";
 import ColorAttachment from "../../lib/textures/ColorAttachment.ts";
-import {LoadOp, StoreOp} from "../../lib/WebGPUConstants.ts";
+import {LoadOp, StoreOp, TextureFormat} from "../../lib/WebGPUConstants.ts";
 import LineRenderer from "./LineRenderer.ts";
 import Material from "../../lib/material/Material.ts";
 import BaseBlitMaterial from "../../lib/blit/BaseBlitMaterial.ts";
@@ -22,7 +22,7 @@ export default class DrawBufferTempPass extends RenderPass{
         super(renderer, "DrawBufferTempPass");
 
         this.colorTarget = new RenderTexture(renderer, Textures.DRAWING_BUFFER_TEMP, {
-            format: renderer.presentationFormat,
+            format: TextureFormat.RGBA8Unorm,
             sampleCount: this.sampleCount,
             scaleToCanvas: false,
             width:2024,

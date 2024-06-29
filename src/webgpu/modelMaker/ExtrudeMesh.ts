@@ -126,8 +126,8 @@ export default class ExtrudeMesh extends Mesh {
 
                 // uv
 
-                uv.x = points[ j ].x;
-                uv.y = points[ j ].y;
+                uv.x =1- points[ j ].x;
+                uv.y =1- points[ j ].y;
 
                 uvs.push( uv.x, uv.y );
 
