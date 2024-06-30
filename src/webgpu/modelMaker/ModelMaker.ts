@@ -161,7 +161,7 @@ export default class ModelMaker {
         this.previewRenderer = new PreviewRenderer(renderer, this.cutting.model3D, this.camera3D)
 
 
-        this.setProjects()
+
         this.scaleToFit()
         setTimeout(this.scaleToFit.bind(this), 10)
     }
@@ -383,7 +383,7 @@ export default class ModelMaker {
     }
 
 
-    private setProjects() {
+    setProject() {
 
         if (this.projects.length) {
 
@@ -425,6 +425,11 @@ export default class ModelMaker {
     }
 
     private openProject(project: Project) {
+        if(this.currentProject){
+            this.saveTemp();
+
+        }
+
         this.currentProject = project;
         this.drawing.setProject(this.currentProject);
         this.cutting.setProject(this.currentProject);

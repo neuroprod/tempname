@@ -108,6 +108,9 @@ export default class Main {
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.saveTemp()
         }
+        if(state== MainState.modelMaker){
+            this.modelMaker.setProject()
+        }
         this.currentMainState = state;
     }
 
