@@ -2,6 +2,7 @@ import Renderer from "../lib/Renderer.ts";
 import {Vector2, Vector3} from "@math.gl/core";
 import Path from "../lib/path/Path.ts";
 import ExtrudeMesh from "../modelMaker/ExtrudeMesh.ts";
+import MathUtils from "../lib/MathUtils.ts";
 
 export enum MeshType{
     EXTRUSION,
@@ -18,16 +19,18 @@ export default class ProjectMesh
     private renderer: Renderer;
     public meshType:MeshType =MeshType.EXTRUSION;
     private mesh!: ExtrudeMesh;
+    id: string;
 
 
     constructor(renderer:Renderer)
     {
         this.renderer =renderer;
-
+        this.id = MathUtils.generateUUID();
     }
     getMeshData():any{
         let b:any ={}
         b.name = this.name;
+        b.id =this.id;
         b.center =this.center;
         b.path =this.path.serialize()
         b.meshType =this.meshType
@@ -43,6 +46,10 @@ export default class ProjectMesh
         this.path.deSerialize(m.path)
         if(m.meshType) {
             this.meshType =m.meshType
+
+        }
+        if(m.id) {
+            this.id=m.id
 
         }
 

@@ -15,6 +15,7 @@ export default class DefaultTextures {
 
     private static depth: Texture;
     private static magicNoise: Texture;
+    private static transparent: Texture;
 
 
     static getMRE(render: Renderer) {
@@ -64,7 +65,22 @@ export default class DefaultTextures {
 
         return this.white;
     }
+    static getTransparent(renderer: Renderer) {
+        if (this.transparent) return this.transparent;
 
+        this.transparent= new Texture(renderer, "defaultTransparent", {
+            format: TextureFormat.RGBA8Unorm,
+            usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST| GPUTextureUsage.RENDER_ATTACHMENT,
+        })
+        this.transparent.make()
+
+        let f = new Uint8ClampedArray(4);
+        f.fill(0);
+
+        this.transparent.writeTexture(f, 1, 1, 4);
+
+        return  this.transparent;
+    }
     static getCube(render: Renderer) {
         if (this.cube) return this.cube;
 
@@ -239,6 +255,7 @@ export default class DefaultTextures {
 
         return magicSquare;
     }
+
 
 
 }

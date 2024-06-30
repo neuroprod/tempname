@@ -128,7 +128,7 @@ export class AddMeshPopup extends PopUp {
         if(addTextButton("add Mesh")){
             if(m){
 
-                let a  =SceneData.makeSceneObjectWithMesh(m.getMesh(),p.name,this.newName,p.baseTexture)
+                let a  =SceneData.makeSceneObjectWithMesh(p,m,this.newName,"")
                 this.callBack(a);
                 UI_I.removePopup(this)
             }

@@ -175,8 +175,8 @@ export default class ModelMaker {
     update() {
         //this.camera2D.setOrtho(10, 0, 10, 0)
         this.camera2D.setOrtho(this.renderer.width, 0, this.renderer.height, 0)
-        this.previewRenderer.update()
 
+        this.previewRenderer.update()
 
         this.cutting.update()
 
@@ -390,7 +390,7 @@ export default class ModelMaker {
             let newName = AppState.getState("currentImage");
 
             for (let p of this.projects) {
-                if (p.name == newName) {
+                if (p.id == newName) {
 
                     this.openProject(p)
                     return;
@@ -428,7 +428,7 @@ export default class ModelMaker {
         this.currentProject = project;
         this.drawing.setProject(this.currentProject);
         this.cutting.setProject(this.currentProject);
-        AppState.setState("currentImage", this.currentProject.name)
+        AppState.setState("currentImage", this.currentProject.id)
         this.setTool(ToolType.Paint);
     }
 
@@ -447,8 +447,8 @@ export default class ModelMaker {
 
     saveAll() {
 
-        if(this.currentProject && this.currentProject.fullTexture) {
-          //  this.drawing.saveCurrentProject();
+        if(this.currentProject ) {
+          this.drawing.saveCurrentProject();
         }
         for(let p of this.projects){
            if( p.fullTexture){
@@ -457,7 +457,7 @@ export default class ModelMaker {
                let s = this.currentProject.getSaveString();
               // console.log(s)
 
-               sendTextureToServer(p.fullTexture, "texture", this.currentProject.name, s).then(() => {
+               sendTextureToServer(p.fullTexture, "texture", this.currentProject.id, s).then(() => {
                  console.log("savedTexture!")
 
                }).catch(() => {

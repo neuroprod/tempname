@@ -4,6 +4,7 @@ import DefaultUniformGroups from "../../lib/material/DefaultUniformGroups.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
 import {CompareFunction, CullMode} from "../../lib/WebGPUConstants.ts";
+import Blend from "../../lib/material/Blend.ts";
 
 
 export default class DrawingPreviewMaterial extends Material{
@@ -29,6 +30,7 @@ export default class DrawingPreviewMaterial extends Material{
         this.cullMode =CullMode.None;
         this.depthCompare = CompareFunction.Always;
         this.depthWrite =false;
+        this.blendModes=[Blend.preMultAlpha()]
         //this.logShader =true;
     }
     getShader(): string {

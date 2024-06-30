@@ -8,6 +8,8 @@ import Project from "../../data/Project.ts";
 import Color from "../../lib/UI/math/Color.ts";
 import TextureLoader from "../../lib/textures/TextureLoader.ts";
 import CopyTexturePass from "../../lib/blit/CopyTexturePass.ts";
+import Texture from "../../lib/textures/Texture.ts";
+import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
 
 
 export class LineData {
@@ -69,9 +71,13 @@ export default class Drawing {
         if (this.project) {
             this.project.baseTexture.make()
             this.copy1.setTextures(this.project.baseTexture, this.drawBufferTempPass.colorTarget);
-            if (this.project.fullTexture) {
-                this.copy2.setTextures(this.project.fullTexture, this.drawBufferTempPass.colorTarget);
+            if (!this.project.fullTexture) {
+
+                this.project.fullTexture =new Texture(this.renderer,"fullTexture",{width:2018,height:2048,usage:GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST|GPUTextureUsage.COPY_SRC | GPUTextureUsage.RENDER_ATTACHMENT});
+                this.project.fullTexture.make();
+
             }
+            this.copy2.setTextures(this.project.fullTexture, this.drawBufferTempPass.colorTarget);
             this.renderer.startCommandEncoder(this.setTempToBaseTexture.bind(this))
 
 
@@ -93,18 +99,33 @@ export default class Drawing {
 
 
         this.project = project;
-        if (!this.project.fullTexture) {
-            this.project.fullTexture = new TextureLoader(this.renderer, "./data/" + project.name + "/texture.png")
-        } else {
-            this.project.fullTexture.reload("./data/" + project.name + "/texture.png")
-        }
+        if (!this.project.loadTexture) {
 
-        this.project.fullTexture.onComplete = () => {
+            if(this.project.isNew){
+                this.project.loadTexture =DefaultTextures.getTransparent(this.renderer) as TextureLoader
+                this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
+                this.updateDrawing()
+            }else{
 
-            this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.fullTexture)
+                this.project.loadTexture = new TextureLoader(this.renderer, "./data/" + project.id + "/texture.png")
+
+                this.project.loadTexture.onComplete = () => {
+
+                    this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
+                    this.updateDrawing()
+
+                }
+
+
+
+            }
+
+        } else{
+            this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
             this.updateDrawing()
-
         }
+
+
         //get the png texture;
         //this.drawBufferTempPass.blitMat.setTexture("colorTexture", thePngTexture)
         //

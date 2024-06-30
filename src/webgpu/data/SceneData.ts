@@ -13,6 +13,7 @@ import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import Texture from "../lib/textures/Texture.ts";
 import Mesh from "../lib/mesh/Mesh.ts";
+import ProjectMesh from "./ProjectMesh.ts";
 
 class SceneData {
     projects: Array<Project> = [];
@@ -32,7 +33,7 @@ class SceneData {
 
 
         let sceneData = this.dataScene.scene;
-console.log(sceneData)
+
 
         this.root = new SceneObject3D(this.renderer, "root")
         for (let d of sceneData) {
@@ -42,8 +43,14 @@ console.log(sceneData)
                 continue;
             }
 
-            if(d.meshName==undefined)d.meshName =d.model;
-            let m = this.getModel(d.meshName, d.label);
+
+            console.log(d)
+            let m:SceneObject3D|null =null;
+            if(d.meshId.length>0 && d.projectId.length>0 ){
+               m = this.getModel( d.label,d.projectId,d.meshId,d.id);
+               console.log(d.label)
+            }
+
 
             if (m) {
                 m.setPosition(d.position[0], d.position[1], d.position[2])
@@ -125,6 +132,7 @@ console.log(sceneData)
         let text = await response.text();
         let projData = JSON.parse(text);
         let p = new Project(this.renderer)
+
         p.setData(projData);
 
 
@@ -132,46 +140,34 @@ console.log(sceneData)
         this.addProject(p);
     }
 
-    private getModel(name: string, newName: string): SceneObject3D | null {
+    private getModel( label:string ,projectId :string,meshId:string,id:string): SceneObject3D | null {
 
 
-        let names = name.split("_")
-        if (names.length != 2) {
-
-            return null
-        }
-
-        let project = this.projectsMap.get(names[0])
-
+        let project = this.projectsMap.get(projectId)
         if(!project) return null
+        let projMesh = project.getProjectMeshByID(meshId);
 
-        let mesh = project.getMesh(names[1]);
-
-
-
-        if(!mesh) return null
-        if (newName == "") newName = name;
-
-        return this.makeSceneObjectWithMesh(mesh,newName,project.name,project.baseTexture);
-
-
+        if(! projMesh) return null
+        let m  =this.makeSceneObjectWithMesh(project, projMesh,label,id);
+        return m;
 
 
     }
-    makeSceneObjectWithMesh(mesh:Mesh,newName:string,projectName:string,texture:Texture){
+    makeSceneObjectWithMesh(p:Project,m:ProjectMesh,name:string,id:string){
 
 
-        let model = new Model(this.renderer, newName);
-        model.mesh = mesh
+        let model = new Model(this.renderer, m.id);
+        model.mesh = m.getMesh();
 
-//TODO reuse material
         model.material = new GBufferMaterial(this.renderer, "gMat");
-        model.material.setTexture("colorTexture", texture);
+        model.material.setTexture("colorTexture", p.baseTexture);
 
-        let obj3D = new SceneObject3D(this.renderer, newName)
+        let obj3D = new SceneObject3D(this.renderer, name)
         obj3D.addChild(model)
         obj3D.model = model;
-        obj3D.meshName = projectName+"_"+mesh.label
+        obj3D.meshId =m.id;
+        obj3D.projectId =p.id;
+        if(id.length>1) {obj3D.UUID =id;}
         return obj3D;
     }
     private loadProjects(preloader: PreLoader) {
@@ -185,7 +181,7 @@ console.log(sceneData)
 
     private addProject(p: Project) {
         this.projects.push(p)
-        this.projectsMap.set(p.name, p);
+        this.projectsMap.set(p.id, p);
 
     }
 

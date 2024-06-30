@@ -33,10 +33,10 @@ export default class DrawBufferTempPass extends RenderPass{
 
         this.colorAttachment = new ColorAttachment( this.colorTarget, {
             clearValue: {
-                r: 1,
-                g: 1,
-                b: 1,
-                a: 1
+                r: 0,
+                g: 0,
+                b: 0,
+                a: 0
             },
             loadOp:LoadOp.Clear,
             storeOp:StoreOp.Store

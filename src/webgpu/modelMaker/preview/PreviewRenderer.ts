@@ -38,6 +38,7 @@ export default class PreviewRenderer{
         this.camera3D.ratio = this.renderer.ratio;
 
         if (this.model3D) {
+
             let scale = 1/this.model3D.mesh.radius;
             this.model3D.setScaler(scale)
             let c = this.model3D.mesh.center.clone().negate()

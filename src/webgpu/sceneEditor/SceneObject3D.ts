@@ -13,7 +13,8 @@ export default class SceneObject3D extends Object3D{
     public  isSceneObject3D =true
     model:Model|null =null;
     private static emptyTreeSettings: TreeSettings;
-    meshName: string="";
+    projectId: string="";
+    meshId: string="";
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
         if(!SceneObject3D.emptyTreeSettings) {
@@ -61,8 +62,8 @@ export default class SceneObject3D extends Object3D{
        let obj:any ={}
         obj.id =this.UUID;
         obj.label =this.label;
-        obj.meshName =this.meshName;
-
+        obj.meshId =this.meshId;
+        obj.projectId = this.projectId;
         obj.position =this.getPosition()
         obj.rotation=this.getRotation()
         if(this.model) {

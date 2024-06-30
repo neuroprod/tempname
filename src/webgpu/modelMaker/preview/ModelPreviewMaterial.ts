@@ -22,7 +22,7 @@ export default class ModelPreviewMaterial extends Material{
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-
+        uniforms.addUniform("transparent",1);
         uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer))
         uniforms.addSampler("mySampler")
 
@@ -50,8 +50,12 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 @fragment
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
-
-    let dif  =textureSample(colorTexture, mySampler,  uv).xyz * (dot(normalize(normal),normalize(vec3(0,1,1)))*0.5 +0.5);
+    var color = textureSample(colorTexture, mySampler,  uv);
+    if(uniforms.transparent>0.5 && color.a<0.5  ){discard;}
+    
+    color =color+ vec4(1.0,1.0,1.0,1.0)*(1.0-color.a);
+    
+    let dif  =color.xyz * (dot(normalize(normal),normalize(vec3(0,1,1)))*0.5 +0.5);
 
     return vec4f(dif,1.0);
 }

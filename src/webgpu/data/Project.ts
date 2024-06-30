@@ -5,6 +5,8 @@ import ProjectMesh from "./ProjectMesh.ts";
 import DrawLine from "../modelMaker/drawing/DrawLine.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import TextureLoader from "../lib/textures/TextureLoader.ts";
+import Utils from "../lib/UI/math/Utils.ts";
+import MathUtils from "../lib/MathUtils.ts";
 
 export default class Project
 {
@@ -21,14 +23,17 @@ export default class Project
     selectItems: Array<SelectItem> = [];
 
     baseTexture:Texture;
-    fullTexture!: TextureLoader;
+    fullTexture!: Texture;
+    loadTexture!: TextureLoader;
 
+    public isNew =true;
+    id: string;
     constructor(renderer:Renderer)
     {
         this.renderer =renderer;
-        this.baseTexture= DefaultTextures.getWhite(renderer)
+        this.baseTexture= DefaultTextures.getTransparent(renderer)
 
-
+        this.id = MathUtils.generateUUID();
     }
     public setDirty(){
         this.isDirty = true;
@@ -39,6 +44,7 @@ export default class Project
         let a:any ={}
         a.version = "0.1";
         a.name = this.name;
+        a.id =this.id;
         a.meshes =[]
         for(let d of this.meshes)
         {
@@ -50,6 +56,10 @@ export default class Project
     setData(projData: any) {
 
         this.name =projData.name;
+        if(projData.id){
+            this.id =projData.id;
+        }
+        this.isNew =false;
 
         for (let m of projData.meshes){
             let pm= new ProjectMesh(this.renderer)
@@ -63,14 +73,16 @@ export default class Project
 
     }
 
-    getMesh(name: string) {
+
+    getProjectMeshByID(id: string) {
         for (let m of this.meshes){
-            if(m.name ==name ){
-                return m.getMesh()
+            if(m.id ==id ){
+                return m
 
             }
 
         }
+        return null;
     }
 
     makeSelectItems() {
