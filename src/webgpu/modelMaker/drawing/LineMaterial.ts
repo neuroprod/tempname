@@ -54,8 +54,8 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
    let uv =uvEdge.xy-vec2f(0.5,0.5);
    let l  =1.0-smoothstep(1.0-uvEdge.z,1.0,length(uv)*2.0);
    
-    let color =    uniforms.color*l;
-     
+    var color =    uniforms.color*l ;
+ 
 
     return color;
 }

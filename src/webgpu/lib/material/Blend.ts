@@ -18,7 +18,21 @@ export default class Blend {
             }
         }
     }
+    static alpha():GPUBlendState {
+        return  {
 
+            color: {
+                srcFactor: BlendFactor.SrcAlpha,
+                dstFactor: BlendFactor.OneMinusSrcAlpha,
+                operation: BlendOperation.Add,
+            },
+            alpha: {
+                srcFactor: BlendFactor.One,
+                dstFactor: BlendFactor.OneMinusSrcAlpha,
+                operation: BlendOperation.Add,
+            }
+        }
+    }
     static add():GPUBlendState {
         return  {
 

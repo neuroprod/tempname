@@ -51,9 +51,18 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
     var color = textureSample(colorTexture, mySampler,  uv);
-    if(uniforms.transparent>0.5 && color.a<0.5  ){discard;}
+    if(uniforms.transparent>0.5 && color.a<0.5  )
+    {
+        discard;
+    }else if(uniforms.transparent>0.5){
+    color= vec4(color.xyz.xyz*vec3f(1.0/color.a),1.0);
+
+    }
+    else{
+       color =color+ vec4(1.0,1.0,1.0,1.0)*(1.0-color.a);
+    }
     
-    color =color+ vec4(1.0,1.0,1.0,1.0)*(1.0-color.a);
+   
     
     let dif  =color.xyz * (dot(normalize(normal),normalize(vec3(0,1,1)))*0.5 +0.5);
 
