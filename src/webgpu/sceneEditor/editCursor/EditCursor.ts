@@ -17,57 +17,52 @@ import {ToolState} from "../SceneEditor.ts";
 import SceneObject3D from "../SceneObject3D.ts";
 import AnimationEditor from "../timeline/AnimationEditor.ts";
 import {AnimationType} from "../timeline/animation/Animation.ts";
+import {NumericArray} from "@math.gl/types";
 
 
 export default class EditCursor {
+    public localSpace: boolean = false;
     private renderer: Renderer;
     private currentModel: SceneObject3D | null = null;
     private root: Object3D;
     private arrowMesh: Mesh
-
-    private mouseStart=new Vector2();
-    private objectScreen=new Vector2();
-    private startQuat: Quaternion =new Quaternion();
-    private rotQuat: Quaternion =new Quaternion();
-
+    private mouseStart = new Vector2();
+    private objectScreen = new Vector2();
+    private startQuat: Quaternion = new Quaternion();
+    private rotQuat: Quaternion = new Quaternion();
     private modelRenderer: ModelRenderer;
     private arrowX: Model;
     private arrowY: Model;
     private arrowZ: Model;
-
     private scaleX: Model;
     private scaleY: Model;
     private scaleZ: Model;
-
     private camera: Camera;
     private mouseListener: MouseListener;
     private ray: Ray;
     private intersectionPlanePos: Vector3 = new Vector3();
     private intersectionPlaneDir: Vector3 = new Vector3();
-    private startDragPos: Vector3= new Vector3();
+    private startDragPos: Vector3 = new Vector3();
     private isDragging: boolean = false;
     private move!: string;
-
     private circleMesh: CircleMesh;
     private circleX: Model;
     private circleY: Model;
     private circleZ: Model;
-
     private red: ColorV = new ColorV();
     private green: ColorV = new ColorV();
     private blue: ColorV = new ColorV();
     private currentToolState!: ToolState;
     private scaleMesh: RevolveMesh;
-    private cursorSize: number=0.2;
-    private scaleStart: Vector3 =new Vector3();
-    public localSpace: boolean =false;
-    private planePos: Vector3=new Vector3();
-    private movePos: Vector3 =new Vector3();
-    private rootScale: number =1;
-    private rootRot: Quaternion =new Quaternion();
-    private rotDir: number =1;
-    private matrixTemp =new Matrix4()
-    private moveDir: Vector3 =new Vector3();
+    private cursorSize: number = 0.2;
+    private scaleStart: Vector3 = new Vector3();
+    private planePos: Vector3 = new Vector3();
+    private movePos: Vector3 = new Vector3();
+    private rootScale: number = 1;
+    private rootRot: Quaternion = new Quaternion();
+    private rotDir: number = 1;
+    private matrixTemp = new Matrix4()
+    private moveDir: Vector3 = new Vector3();
 
     constructor(renderer: Renderer, camera: Camera, mouseListener: MouseListener, ray: Ray) {
 
@@ -143,6 +138,7 @@ export default class EditCursor {
         this.circleX.setEuler(0, Math.PI / 2, 0);
         this.circleX.material = new CircleLineMaterial(this.renderer, "CircleLineMaterial")
         this.circleX.material.setUniform("color", this.red);
+
         this.root.addChild(this.circleX)
 
 
@@ -176,9 +172,9 @@ export default class EditCursor {
     checkMouse() {
         if (!this.currentModel) return false;
 
-        if(this.currentToolState==ToolState.translate)this.checkMouseTranslate();
-        if(this.currentToolState==ToolState.scale)this.checkMouseScale();
-        if(this.currentToolState==ToolState.rotate) this.checkMouseRotate();
+        if (this.currentToolState == ToolState.translate) this.checkMouseTranslate();
+        if (this.currentToolState == ToolState.scale) this.checkMouseScale();
+        if (this.currentToolState == ToolState.rotate) this.checkMouseRotate();
         return this.isDragging;
     }
 
@@ -186,47 +182,48 @@ export default class EditCursor {
 
         if (!this.currentModel) return;
 
-        let camDistance = this.currentModel.getWorldPos().distance(this.camera.cameraWorld)
+        let p = this.currentModel.getWorldPos();
 
-        if(this.currentToolState==ToolState.rotate) {
+        if (this.currentToolState == ToolState.rotate) {
+            let camDistance =p.distance(this.camera.cameraWorld as NumericArray)
+            let thickness = 3 * this.renderer.pixelRatio / this.renderer.height;
 
-            this.circleX.material.setUniform("ratio", 1/this.renderer.ratio)
+            this.circleX.material.setUniform("ratio", 1 / this.renderer.ratio)
             this.circleX.material.setUniform("maxDist", camDistance)
-            this.circleX.material.setUniform("thickness", 3*this.renderer.pixelRatio / this.renderer.height)
+            this.circleX.material.setUniform("thickness", thickness)
 
-            this.circleY.material.setUniform("ratio", 1/this.renderer.ratio)
+            this.circleY.material.setUniform("ratio", 1 / this.renderer.ratio)
             this.circleY.material.setUniform("maxDist", camDistance)
-            this.circleY.material.setUniform("thickness", 3*this.renderer.pixelRatio / this.renderer.height)
+            this.circleY.material.setUniform("thickness", thickness)
 
-            this.circleZ.material.setUniform("ratio", 1/this.renderer.ratio)
+            this.circleZ.material.setUniform("ratio", 1 / this.renderer.ratio)
             this.circleZ.material.setUniform("maxDist", camDistance)
-            this.circleZ.material.setUniform("thickness", 3*this.renderer.pixelRatio / this.renderer.height)
+            this.circleZ.material.setUniform("thickness", thickness)
         }
 
-        let p = this.currentModel.getWorldPos();
+
 
         this.root.setPositionV(p)
 
-        if(!this.localSpace && this.currentToolState ==ToolState.translate) {
+        if (!this.localSpace && this.currentToolState == ToolState.translate) {
 
-            this.root.setRotation(0,0,0,1)
-        }
-       else {
+            this.root.setRotation(0, 0, 0, 1)
+        } else {
 
-            let m =new Matrix3()
+            let m = new Matrix3()
             this.currentModel.worldMatrix.getRotationMatrix3(m)
-            this.rootRot.fromMatrix3(m)
+            this.rootRot.fromMatrix3(m as NumericArray)
             this.root.setRotationQ(this.rootRot)
         }
 
 
-       //calculate screen size of tool
-        let pUp = p.clone().add(this.camera.cameraUp)
-        p.transformAsPoint(this.camera.viewProjection)
-        pUp.transformAsPoint(this.camera.viewProjection)
-        let scale = 1 / p.distance(pUp);
+        //calculate screen size of tool
+        let pUp = p.clone().add(this.camera.cameraUp as NumericArray)
+        p.transformAsPoint(this.camera.viewProjection as NumericArray)
+        pUp.transformAsPoint(this.camera.viewProjection as NumericArray)
+        let scale = 1 / p.distance(pUp as NumericArray);
 
-       this.rootScale = scale * this.cursorSize;
+        this.rootScale = scale * this.cursorSize;
         this.root.setScaler(this.rootScale)
 
 
@@ -245,9 +242,7 @@ export default class EditCursor {
 
     }
 
-    draw() {
 
-    }
 
     setToolState(currentToolState: ToolState) {
         this.currentToolState = currentToolState;
@@ -278,9 +273,18 @@ export default class EditCursor {
 
     }
 
+    public isFront(vec: Vector3) {
+        if (!this.currentModel) return 1
+        let z1 = this.currentModel.getWorldPos().transform(this.camera.view).z
+        let z2 = this.currentModel.getWorldPos(vec).transform(this.camera.view).z
+
+        if (z1 > z2) return -1;
+        return 1
+    }
+
     private checkMouseTranslate() {
 
-        if(!this.currentModel)return;
+        if (!this.currentModel) return;
         if (this.mouseListener.isDownThisFrame) {
 
 
@@ -290,14 +294,13 @@ export default class EditCursor {
             if (intersections.length == 0) return false;
 
 
+            if (this.localSpace) {
 
-            if(this.localSpace){
-
-                this.startDragPos.from( this.currentModel.getPosition())
+                this.startDragPos.from(this.currentModel.getPosition())
                 //we are going to transform the ray to the cursor local space
-                this.intersectionPlanePos.set(0,0,0)
-            }else{
-                this.startDragPos.from( this.currentModel.getWorldPos())
+                this.intersectionPlanePos.set(0, 0, 0)
+            } else {
+                this.startDragPos.from(this.currentModel.getWorldPos())
                 //we are going to check in world
                 this.intersectionPlanePos.from(this.root.getPosition())
             }
@@ -315,12 +318,12 @@ export default class EditCursor {
                 this.intersectionPlaneDir.set(1, 0, 0);
                 this.move = "z"
             }
-            let pos:Vector3|null
-            if(this.localSpace){
+            let pos: Vector3 | null
+            if (this.localSpace) {
                 //we are going to transform the ray to the cursor local space
                 this.matrixTemp.from(this.root.worldMatrixInv)
-                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.matrixTemp)
-            }else{
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir, this.matrixTemp)
+            } else {
                 //we are going to check in world
                 pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
             }
@@ -334,35 +337,35 @@ export default class EditCursor {
 
         //move/rotate/scale
         if (this.isDragging) {
-            let pos:Vector3|null
-            if(this.localSpace){
+            let pos: Vector3 | null
+            if (this.localSpace) {
                 //we are going to transform the ray to the cursor local space
-                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir,this.matrixTemp)
-            }else{
+                pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir, this.matrixTemp)
+            } else {
                 //we are going to check in world
                 pos = this.ray.intersectPlane(this.intersectionPlanePos, this.intersectionPlaneDir)
             }
             if (pos) {
-                if(this.localSpace ) {
+                if (this.localSpace) {
 
-                   // transformByQuaternion(this.currentModel.getRotation()
+                    // transformByQuaternion(this.currentModel.getRotation()
                     if (this.move == "x") {
                         let dist = this.planePos.x - pos.x;
-                        this.moveDir.set(dist, 0,0);
+                        this.moveDir.set(dist, 0, 0);
                     }
                     if (this.move == "y") {
                         let dist = this.planePos.y - pos.y;
-                        this.moveDir.set(0,   dist, 0);
+                        this.moveDir.set(0, dist, 0);
                     }
                     if (this.move == "z") {
                         let dist = this.planePos.z - pos.z;
-                        this.moveDir.set(0, 0,  dist);
+                        this.moveDir.set(0, 0, dist);
                     }
                     this.moveDir.transformByQuaternion(this.currentModel.getRotation());
                     this.movePos.from(this.startDragPos);
                     this.movePos.add(this.moveDir)
 
-                }else{
+                } else {
                     if (this.move == "x") {
                         let dist = this.planePos.x - pos.x;
                         this.movePos.set(this.startDragPos.x + dist, this.startDragPos.y, this.startDragPos.z);
@@ -379,11 +382,11 @@ export default class EditCursor {
 
                 }
 
-                if(this.localSpace ){
+                if (this.localSpace) {
                     this.currentModel.setPositionV(this.movePos)
-                }else{
+                } else {
                     let lp = this.currentModel.parent?.getLocalPos(this.movePos);
-                    if(lp) this.currentModel.setPositionV(lp)
+                    if (lp) this.currentModel.setPositionV(lp)
 
                 }
             }
@@ -392,91 +395,82 @@ export default class EditCursor {
 
         if (this.mouseListener.isUpThisFrame && this.isDragging) {
 
-            AnimationEditor.addKeyData(this.currentModel,AnimationType.TRANSLATE)
+            AnimationEditor.addKeyData(this.currentModel, AnimationType.TRANSLATE)
             this.isDragging = false
         }
     }
-public isFront(vec:Vector3){
-        if(!this.currentModel)return 1
-    let z1 =this.currentModel.getWorldPos().transform(this.camera.view).z
-    let z2 =this.currentModel.getWorldPos(vec).transform(this.camera.view).z
 
-    if(z1>z2)return -1;
-    return 1
-}
     //alwaysLocal
     private checkMouseRotate() {
-        if(!this.currentModel)return;
+        if (!this.currentModel) return;
         if (this.mouseListener.isDownThisFrame) {
             let objWorld = this.root.getWorldPos();
 
 
-            let pos =this.ray.intersectSphere(objWorld, this.rootScale)
+            let pos = this.ray.intersectSphere(objWorld, this.rootScale)
 
 
-            if(pos){
-                pos.subtract(objWorld)
+            if (pos) {
+                pos.subtract(objWorld as NumericArray)
                 pos.normalize();
 
-                pos.transformByQuaternion(   this.rootRot.invert())
+                pos.transformByQuaternion(this.rootRot.invert() as NumericArray)
 
 
-
-
-                let poss=new Vector3()
-                poss.x =Math.abs(pos.x);
-                poss.y =Math.abs(pos.y);
-                poss.z =Math.abs(pos.z);
-                if(poss.x<poss.y && poss.x<poss.z){
+                let poss = new Vector3()
+                poss.x = Math.abs(pos.x);
+                poss.y = Math.abs(pos.y);
+                poss.z = Math.abs(pos.z);
+                if (poss.x < poss.y && poss.x < poss.z) {
                     this.move = "x"
-                    this.rotDir = this.isFront(new Vector3(1,0,0));
-                }else  if(poss.y<poss.x && poss.y<poss.z){
+                    this.rotDir = this.isFront(new Vector3(1, 0, 0));
+                } else if (poss.y < poss.x && poss.y < poss.z) {
                     this.move = "y"
-                    this.rotDir = this.isFront(new Vector3(0,1,0));
-                }else  if(poss.z<poss.y && poss.z<poss.x){
+                    this.rotDir = this.isFront(new Vector3(0, 1, 0));
+                } else if (poss.z < poss.y && poss.z < poss.x) {
                     this.move = "z"
-                    this.rotDir = this.isFront(new Vector3(0,0,1));
+                    this.rotDir = this.isFront(new Vector3(0, 0, 1));
                 }
 
 
                 this.mouseStart.from(this.mouseListener.mousePos)
-                let world=new Vector4(objWorld.x,objWorld.y,objWorld.z,1.0);
-                world.transform(  this.camera.viewProjection)
+                let world = new Vector4(objWorld.x, objWorld.y, objWorld.z, 1.0);
+                world.transform(this.camera.viewProjection)
 
-                this.objectScreen.set(world.x+1.0,2.0-(world.y+1.0))
-                this.objectScreen.scale([this.renderer.width/2,this.renderer.height/2])
+                this.objectScreen.set(world.x + 1.0, 2.0 - (world.y + 1.0))
+                this.objectScreen.scale([this.renderer.width / 2, this.renderer.height / 2])
                 this.startQuat.from(this.currentModel.getRotation())
                 this.isDragging = true;
             }
 
 
         }
-        if(this.isDragging){
+        if (this.isDragging) {
 
-            let v1 =new Vector2(this.mouseListener.mousePos).subtract(this.objectScreen)
-            let v2 =new Vector2( this.mouseStart).subtract(this.objectScreen)
+            let v1 = new Vector2(this.mouseListener.mousePos).subtract(this.objectScreen)
+            let v2 = new Vector2(this.mouseStart).subtract(this.objectScreen)
 
 
-            let angle =v2.horizontalAngle()-v1.horizontalAngle()
-            angle*=this.rotDir
+            let angle = v2.horizontalAngle() - v1.horizontalAngle()
+            angle *= this.rotDir
             this.rotQuat.identity()
-           // console.log("scale",this.move)
-            if(this.move=="x"){
+            // console.log("scale",this.move)
+            if (this.move == "x") {
                 this.rotQuat.rotateX(angle)
 
-        }
-            if(this.move=="y"){
+            }
+            if (this.move == "y") {
                 this.rotQuat.rotateY(angle)
 
             }
-            if(this.move=="z"){
+            if (this.move == "z") {
                 this.rotQuat.rotateZ(angle)
 
             }
 
             this.rotQuat.multiplyLeft(this.startQuat)
             this.currentModel.setRotationQ(this.rotQuat)
-            AnimationEditor.addKeyData(this.currentModel,AnimationType.ROTATE)
+            AnimationEditor.addKeyData(this.currentModel, AnimationType.ROTATE)
 
 
         }
@@ -486,9 +480,10 @@ public isFront(vec:Vector3){
         }
 
     }
+
     private checkMouseScale() {
-        if(!this.currentModel)return;
-        if(!this.currentModel.model)return;
+        if (!this.currentModel) return;
+        if (!this.currentModel.model) return;
         if (this.mouseListener.isDownThisFrame) {
 
             let intersections = this.ray.intersectModels([this.scaleX, this.scaleY, this.scaleZ])
@@ -509,34 +504,34 @@ public isFront(vec:Vector3){
             }
             let objWorld = this.currentModel.getWorldPos();
             this.mouseStart.from(this.mouseListener.mousePos);
-            let world=new Vector4(objWorld.x,objWorld.y,objWorld.z,1.0);
-            world.transform(  this.camera.viewProjection)
-            this.objectScreen.set(world.x+1.0,2.0-(world.y+1.0))
-            this.objectScreen.scale([this.renderer.width/2,this.renderer.height/2])
-              //  this.startDragPos = pos;
+            let world = new Vector4(objWorld.x, objWorld.y, objWorld.z, 1.0);
+            world.transform(this.camera.viewProjection)
+            this.objectScreen.set(world.x + 1.0, 2.0 - (world.y + 1.0))
+            this.objectScreen.scale([this.renderer.width / 2, this.renderer.height / 2])
+            //  this.startDragPos = pos;
             this.isDragging = true;
 
         }
-        if(this.isDragging){
+        if (this.isDragging) {
 
 
-            let dis =this.mouseListener.mousePos.distance(this.objectScreen)
+            let dis = this.mouseListener.mousePos.distance(this.objectScreen)
             let disStart = this.mouseStart.distance(this.objectScreen)
-            let scale = dis/disStart;
+            let scale = dis / disStart;
 
-                if (this.move == "x") {
-                    this.currentModel.model.setScale(this.scaleStart.x * scale, this.scaleStart.y, this.scaleStart.z);
-                } else if (this.move == "y") {
-                    this.currentModel.model.setScale(this.scaleStart.x, this.scaleStart.y * scale, this.scaleStart.z);
-                } else if (this.move == "z") {
-                    this.currentModel.model.setScale(this.scaleStart.x, this.scaleStart.y, this.scaleStart.z * scale);
-                }
+            if (this.move == "x") {
+                this.currentModel.model.setScale(this.scaleStart.x * scale, this.scaleStart.y, this.scaleStart.z);
+            } else if (this.move == "y") {
+                this.currentModel.model.setScale(this.scaleStart.x, this.scaleStart.y * scale, this.scaleStart.z);
+            } else if (this.move == "z") {
+                this.currentModel.model.setScale(this.scaleStart.x, this.scaleStart.y, this.scaleStart.z * scale);
+            }
 
         }
 
         if (this.mouseListener.isUpThisFrame) {
             this.isDragging = false;
-            AnimationEditor.addKeyData(this.currentModel,AnimationType.SCALE)
+            AnimationEditor.addKeyData(this.currentModel, AnimationType.SCALE)
         }
 
     }

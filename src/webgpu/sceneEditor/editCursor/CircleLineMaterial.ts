@@ -14,7 +14,7 @@ export default class CircleLineMaterial extends Material
         this.addAttribute("aPosNext", ShaderType.vec3);
         this.addAttribute("aDir", ShaderType.vec2);
 
-this.addVertexOutput("world",ShaderType.vec3)
+        this.addVertexOutput("world",ShaderType.vec3)
         this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer), true);
         this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer), true);
 

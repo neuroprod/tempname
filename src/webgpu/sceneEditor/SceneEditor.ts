@@ -295,7 +295,7 @@ class SceneEditor {
 
     draw() {
         this.outline.draw()
-        this.editCursor.draw();
+
         this.gameRenderer.draw();
     }
 
