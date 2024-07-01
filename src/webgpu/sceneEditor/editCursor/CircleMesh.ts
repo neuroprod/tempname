@@ -49,7 +49,7 @@ export default class CircleMesh{
 
        this.mesh =new Mesh(renderer,"circleMesh")
         this.mesh.setAttribute("aDir",new Float32Array(dir));
-        this.mesh.setAttribute("aPos",new Float32Array(vertices));
+        this.mesh.setPositions(new Float32Array(vertices));
         this.mesh.setAttribute("aPosPrev",new Float32Array(verticesPrev));
         this.mesh.setAttribute("aPosNext",new Float32Array(verticesNext));
         this.mesh.setIndices(new Uint16Array(indices))
