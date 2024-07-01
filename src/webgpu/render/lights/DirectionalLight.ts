@@ -1,6 +1,7 @@
 import Renderer from "../../lib/Renderer.ts";
 import Camera from "../../lib/Camera.ts";
 import {Vector3, Vector4} from "@math.gl/core";
+import {NumericArray} from "@math.gl/types";
 
 export default class DirectionalLight{
     public shadowCamera: Camera;
@@ -10,7 +11,7 @@ export default class DirectionalLight{
 
     constructor(renderer:Renderer) {
 
-        this.lightColor =new Vector4(1,0.8,0.6,8)
+        this.lightColor =new Vector4(1,0.7,0.4,8)
         this.lightDir = new Vector3(1,3,2)
         this.lightDir.normalize();
         this.shadowCamera =new Camera(renderer);

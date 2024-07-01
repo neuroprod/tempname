@@ -53,7 +53,7 @@ export default class Renderer {
            /* for (let a of adapter.features.keys()) {
                 console.log(a)
             }*/
-            const requiredFeatures: Array<GPUFeatureName> = [];
+            const requiredFeatures: Array<GPUFeatureName> = [ "rg11b10ufloat-renderable", "float32-filterable"];
 
 
             this.device = await adapter.requestDevice({requiredFeatures: requiredFeatures});

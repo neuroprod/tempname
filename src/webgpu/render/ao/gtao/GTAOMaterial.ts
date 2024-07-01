@@ -24,7 +24,7 @@ export default class GTAOMaterial extends Material
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
         uniforms.addTexture("noise", DefaultTextures.getMagicNoise(this.renderer));
-        uniforms.addTexture("preprocessed_depth", this.renderer.getTexture(Textures.DEPTH_BLUR))
+        uniforms.addTexture("preprocessed_depth", this.renderer.getTexture(Textures.DEPTH_BLUR_MIP0))
         uniforms.addTexture("normals", this.renderer.getTexture(Textures.GNORMAL))
         uniforms.addSampler("point_clamp_sampler",GPUShaderStage.FRAGMENT,FilterMode.Linear)
 
@@ -149,8 +149,8 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
 {
    var output : AOOutput;
    
-    let slice_count = 2.0;
-    let samples_per_slice_side =2.0;
+    let slice_count = 1.0;
+    let samples_per_slice_side =1.0;
      let effect_radius = 0.3 * 1.457;
     let falloff_range = 0.615 * effect_radius*0.4;
     let falloff_from = effect_radius * (1.0 - 0.615)*0.4;
@@ -206,22 +206,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
 
             // * view.viewport.zw gets us from [0, 1] to [0, viewport_size], which is needed for this to get the correct mip levels
             let sample_mip_level =0.0;//round(clamp(log2(length(sample * textureSize)) - 3.3, 0.0,5.0)); // https://github.com/GameTechDev/XeGTAO#memory-bandwidth-bottleneck
-            var mis = 1.0;
-            if(sample_mip_level ==0.0){
-            mis = 1.0;
-            }
-            else if(sample_mip_level ==1.0){
-            mis=0.5;
-            }
-            else if(sample_mip_level ==2.0){
-            mis=0.25;
-            }
-            else if(sample_mip_level ==3.0){
-            mis=0.125;
-            }
-            else if(sample_mip_level ==4.0){
-            mis=0.125*0.5;
-            }
+       
             let sample_position_1 = load_and_reconstruct_view_space_position((uv+ sample)*mis, uv+ sample, sample_mip_level);
             let sample_position_2 = load_and_reconstruct_view_space_position((uv - sample)*mis,uv - sample, sample_mip_level);
 
@@ -254,7 +239,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     visibility /= slice_count;
     visibility = clamp(visibility, 0.03, 1.0);
 
-    output.ao = vec4(visibility*visibility,0,0,0);
+    output.ao = vec4( visibility*visibility,0,0,0);
     
     
     
