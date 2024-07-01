@@ -13,77 +13,90 @@ export default class ModelRenderer {
     private renderer: Renderer;
     private label: string;
     private camera!: Camera;
-    private singleMaterial =false;
+    private singleMaterial = false;
     private material!: Material;
+    private materialType!: string;
 
 
-    constructor(renderer: Renderer, label = "",camera:Camera) {
+    constructor(renderer: Renderer, label = "", camera: Camera) {
         this.label = label;
         this.renderer = renderer;
-        this.camera =camera;
+        this.camera = camera;
 
     }
-    setMaterial(material:Material){
-        this.singleMaterial =true;
-        this.material =material;
+
+    setMaterialType(name: string) {
+        this.materialType = name;
     }
+
+    setMaterial(material: Material) {
+        this.singleMaterial = true;
+        this.material = material;
+    }
+
     draw(pass: RenderPass) {
 
         const passEncoder = pass.passEncoder;
 
-        let currentMaterialID =""
-        let uniformGroupsIDS:Array<string>=["","","",""];
-        let material:Material
+        let currentMaterialID = ""
+        let uniformGroupsIDS: Array<string> = ["", "", "", ""];
+        let material: Material
 
-        if(this.singleMaterial){
-            material =this.material;
+        if (this.singleMaterial) {
+            material = this.material;
             material.makePipeLine(pass);
             passEncoder.setPipeline(material.pipeLine);
         }
 
-       // passEncoder.setBindGroup(0, this.renderer.camera.bindGroup);
+        // passEncoder.setBindGroup(0, this.renderer.camera.bindGroup);
 
         for (let model of this.models) {
             if (!model.visible) continue
-            if (!model.mesh)continue;
-            if (!model.mesh.positions)continue;
+            if (!model.mesh) continue;
+            if (!model.mesh.positions) continue;
 
-            if(!this.singleMaterial){
-                material =  model.material
-                if(material.UUID!=currentMaterialID){
+            if (!this.singleMaterial) {
+
+                if (this.materialType) {
+                    material = model.getMaterial(this.materialType);
+                } else {
+                    material = model.material;
+                }
+
+                if (!material) {
+                    continue;
+                }
+
+                if (material.UUID != currentMaterialID) {
                     material.makePipeLine(pass);
                     passEncoder.setPipeline(material.pipeLine);
-                    currentMaterialID =material.UUID;
+                    currentMaterialID = material.UUID;
                 }
             }
-
 
 
             // @ts-ignore
-            for(let i=0;i< material.uniformGroups.length;i++){
+            for (let i = 0; i < material.uniformGroups.length; i++) {
                 // @ts-ignore
-                let label =material.uniformGroups[i].label;
-                let uniformGroup:UniformGroup ;
+                let label = material.uniformGroups[i].label;
+                let uniformGroup: UniformGroup;
 
-                if(label=="camera"){
+                if (label == "camera") {
 
                     uniformGroup = this.camera;
-                }
-                else if(label=="model"){
+                } else if (label == "model") {
                     uniformGroup = model.modelTransform;
-                }
-                else{
+                } else {
                     // @ts-ignore
-                    uniformGroup =material.uniformGroups[i];
+                    uniformGroup = material.uniformGroups[i];
                 }
 //console.log( uniformGroup)
-                if(uniformGroupsIDS[i]!=uniformGroup.UUID){
-                    uniformGroupsIDS[i]=uniformGroup.UUID
-                    passEncoder.setBindGroup(i,uniformGroup.bindGroup);
+                if (uniformGroupsIDS[i] != uniformGroup.UUID) {
+                    uniformGroupsIDS[i] = uniformGroup.UUID
+                    passEncoder.setBindGroup(i, uniformGroup.bindGroup);
                 }
 
             }
-
 
 
             // @ts-ignore
@@ -122,10 +135,12 @@ export default class ModelRenderer {
 
         }
     }
+
     public setModels(models: Array<Model>) {
 
-        this.models =models;
+        this.models = models;
     }
+
     public addModel(model: Model) {
 
         this.models.push(model);

@@ -319,8 +319,8 @@ class SceneEditor {
         }
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.removeModel(m.model)
-            this.gameRenderer.shadowMapPass.modelRenderer.removeModel(m.model)
-
+           // this.gameRenderer.shadowMapPass.modelRenderer.removeModel(m.model)
+            this.gameRenderer.shadowMapPass.removeSceneObject(m);
             m.removeChild(m.model)
             m.model = null
         }
@@ -335,8 +335,12 @@ class SceneEditor {
         this.currentModel.addChild(m)
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
+            this.gameRenderer.shadowMapPass.addSceneObject(m);
+            //this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)
+            //shadowPassclip
 
-            this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)
+            //transparentPass
+
         }
 
         this.setCurrentModel(m)

@@ -13,6 +13,8 @@ import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import ProjectMesh, {MeshType} from "./ProjectMesh.ts";
 import GBufferClipMaterial from "../render/GBuffer/GBufferClipMaterial.ts";
+import ShadowDepthMaterial from "../render/shadow/ShadowDepthMaterial.ts";
+import ShadowClipDepthMaterial from "../render/shadow/ShadowClipDepthMaterial.ts";
 
 class SceneData {
     projects: Array<Project> = [];
@@ -24,8 +26,12 @@ class SceneData {
     private renderer!: Renderer;
     private dataScene!: any;
     projectSelectItems:  Array<SelectItem> = [];
+    private defaultShadowMaterial: ShadowDepthMaterial;
 
     constructor() {
+
+
+
     }
 
     parseSceneData() {
@@ -43,11 +49,11 @@ class SceneData {
             }
 
 
-            console.log(d)
+
             let m:SceneObject3D|null =null;
             if(d.meshId.length>0 && d.projectId.length>0 ){
                m = this.getModel( d.label,d.projectId,d.meshId,d.id);
-               console.log(d.label)
+
             }
 
 
@@ -108,6 +114,10 @@ class SceneData {
 
     public init(renderer: Renderer, preLoader: PreLoader) {
         this.renderer = renderer;
+
+        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer,"shadowDepth");
+
+
         this.loadBase(preLoader).then(() => {
         })
         this.loadProjects(preLoader)
@@ -161,9 +171,16 @@ class SceneData {
             model.material = new GBufferClipMaterial(this.renderer, "gMat");
             model.material.setTexture("colorTexture", p.baseTexture);
 
+
+            let shadowClipMaterial = new ShadowClipDepthMaterial(this.renderer,"shadowDepthClip")
+            shadowClipMaterial.setTexture("colorTexture", p.baseTexture);
+            model.setMaterial("shadow", shadowClipMaterial)
+
+
         }else{
             model.material = new GBufferMaterial(this.renderer, "gMat");
             model.material.setTexture("colorTexture", p.baseTexture);
+            model.setMaterial("shadow",this.defaultShadowMaterial)
         }
 
 
@@ -172,6 +189,9 @@ class SceneData {
         obj3D.model = model;
         obj3D.meshId =m.id;
         obj3D.projectId =p.id;
+        if(m.meshType ==MeshType.TRANS_PLANE){
+            obj3D.transparent =true;
+        }
         if(id.length>1) {obj3D.UUID =id;}
         return obj3D;
     }

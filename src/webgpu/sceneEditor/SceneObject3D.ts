@@ -15,6 +15,9 @@ export default class SceneObject3D extends Object3D{
     private static emptyTreeSettings: TreeSettings;
     projectId: string="";
     meshId: string="";
+    isDecal =false; //only transparent pass?
+    transparent:boolean =false;
+
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
         if(!SceneObject3D.emptyTreeSettings) {

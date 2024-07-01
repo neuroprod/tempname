@@ -19,11 +19,20 @@ export default class Model extends Object3D {
     private bufferMap: Map<string, GPUBuffer> = new Map<string, GPUBuffer>();
     numInstances: number = 1;
 
-
+    private materialMap: Map<string, Material> = new Map<string, Material>();
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         this.modelTransform = new ModelTransform(renderer)
         this.renderer.addModel(this);
+    }
+
+    setMaterial(name:string,mat:Material){
+
+        this.materialMap.set(name,mat)
+    }
+    getMaterial(name:string){
+        return this.materialMap.get(name);
+
     }
 
     public update() {

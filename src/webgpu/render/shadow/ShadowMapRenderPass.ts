@@ -9,6 +9,7 @@ import Camera from "../../lib/Camera.ts";
 import {Textures} from "../../data/Textures.ts";
 import ShadowDepthMaterial from "./ShadowDepthMaterial.ts";
 import DirectionalLight from "../lights/DirectionalLight.ts";
+import SceneObject3D from "../../sceneEditor/SceneObject3D.ts";
 
 
 export default class ShadowMapRenderPass extends RenderPass {
@@ -22,7 +23,7 @@ export default class ShadowMapRenderPass extends RenderPass {
 
     private width =1024
     private height =1024
-    private material: ShadowDepthMaterial;
+
 
 
     constructor(renderer: Renderer,dirLight:DirectionalLight) {
@@ -56,8 +57,13 @@ export default class ShadowMapRenderPass extends RenderPass {
 
         //
         this.modelRenderer = new ModelRenderer(renderer,"modelRendererShadow",dirLight.shadowCamera)
-        this.material = new ShadowDepthMaterial(renderer,"varianceDepth");
-        this.modelRenderer.setMaterial(this.material)
+        this.modelRenderer.setMaterialType("shadow")
+
+
+        // this.modelRendererClip = new ModelRenderer(renderer,"modelRendererShadowClip",dirLight.shadowCamera)
+        //this.materialClip  = new ShadowDepthClipMaterial(renderer,"shadowClipDepth");
+       // this.modelRendererClip .setMaterial(this.materialClip )
+
     }
 
     draw() {
@@ -67,4 +73,16 @@ export default class ShadowMapRenderPass extends RenderPass {
 
     }
 
+    addSceneObject(m: SceneObject3D) {
+        if(!m.model)return;
+
+            this.modelRenderer.addModel(m.model)
+
+    }
+
+    removeSceneObject(m: SceneObject3D) {
+        if(!m.model)return;
+        this.modelRenderer.removeModel(m.model)
+
+    }
 }

@@ -67,7 +67,6 @@ export function addRecButton(label:string,enabled:boolean=true){
 
 
         let comp = new PlayPauzeRecButton(UI_I.getID(label), s);
-        console.log(comp)
         comp.iconSelect =Icons.RECORD;
         comp.iconNonSelect =Icons.RECORD;
         comp.icon = comp.iconNonSelect;
