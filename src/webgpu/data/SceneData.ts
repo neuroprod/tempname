@@ -26,7 +26,7 @@ class SceneData {
     private renderer!: Renderer;
     private dataScene!: any;
     projectSelectItems:  Array<SelectItem> = [];
-    private defaultShadowMaterial: ShadowDepthMaterial;
+    private defaultShadowMaterial!: ShadowDepthMaterial;
 
     constructor() {
 

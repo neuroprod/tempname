@@ -40,7 +40,7 @@ export default class ModelRenderer {
 
         let currentMaterialID = ""
         let uniformGroupsIDS: Array<string> = ["", "", "", ""];
-        let material: Material
+        let material: Material|undefined
 
         if (this.singleMaterial) {
             material = this.material;
