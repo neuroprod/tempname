@@ -60,10 +60,12 @@ export default class ModelRenderer {
                 if (this.materialType) {
                     material = model.getMaterial(this.materialType);
                 } else {
+
                     material = model.material;
                 }
 
                 if (!material) {
+
                     continue;
                 }
 

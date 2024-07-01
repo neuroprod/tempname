@@ -186,17 +186,17 @@ export default class EditCursor {
 
         if (this.currentToolState == ToolState.rotate) {
             let camDistance =p.distance(this.camera.cameraWorld as NumericArray)
-            let thickness = 3 * this.renderer.pixelRatio / this.renderer.height;
-
-            this.circleX.material.setUniform("ratio", 1 / this.renderer.ratio)
+            let thickness =3 * this.renderer.pixelRatio / this.renderer.height;
+            let ratio = 1 / this.renderer.ratio;
+            this.circleX.material.setUniform("ratio", ratio)
             this.circleX.material.setUniform("maxDist", camDistance)
             this.circleX.material.setUniform("thickness", thickness)
 
-            this.circleY.material.setUniform("ratio", 1 / this.renderer.ratio)
+            this.circleY.material.setUniform("ratio", ratio)
             this.circleY.material.setUniform("maxDist", camDistance)
             this.circleY.material.setUniform("thickness", thickness)
 
-            this.circleZ.material.setUniform("ratio", 1 / this.renderer.ratio)
+            this.circleZ.material.setUniform("ratio", ratio)
             this.circleZ.material.setUniform("maxDist", camDistance)
             this.circleZ.material.setUniform("thickness", thickness)
         }
@@ -247,7 +247,7 @@ export default class EditCursor {
     setToolState(currentToolState: ToolState) {
         this.currentToolState = currentToolState;
 
-        this.arrowX.visible = false;
+        this.arrowX.visible = true;
         this.arrowY.visible = false;
         this.arrowZ.visible = false;
         this.circleX.visible = false;
@@ -275,8 +275,8 @@ export default class EditCursor {
 
     public isFront(vec: Vector3) {
         if (!this.currentModel) return 1
-        let z1 = this.currentModel.getWorldPos().transform(this.camera.view).z
-        let z2 = this.currentModel.getWorldPos(vec).transform(this.camera.view).z
+        let z1 = this.currentModel.getWorldPos().transform(this.camera.view as NumericArray).z
+        let z2 = this.currentModel.getWorldPos(vec).transform(this.camera.view  as NumericArray).z
 
         if (z1 > z2) return -1;
         return 1
@@ -361,7 +361,7 @@ export default class EditCursor {
                         let dist = this.planePos.z - pos.z;
                         this.moveDir.set(0, 0, dist);
                     }
-                    this.moveDir.transformByQuaternion(this.currentModel.getRotation());
+                    this.moveDir.transformByQuaternion(this.currentModel.getRotation()  as NumericArray);
                     this.movePos.from(this.startDragPos);
                     this.movePos.add(this.moveDir)
 
@@ -433,9 +433,9 @@ export default class EditCursor {
                 }
 
 
-                this.mouseStart.from(this.mouseListener.mousePos)
+                this.mouseStart.from(this.mouseListener.mousePos as NumericArray)
                 let world = new Vector4(objWorld.x, objWorld.y, objWorld.z, 1.0);
-                world.transform(this.camera.viewProjection)
+                world.transform(this.camera.viewProjection as NumericArray)
 
                 this.objectScreen.set(world.x + 1.0, 2.0 - (world.y + 1.0))
                 this.objectScreen.scale([this.renderer.width / 2, this.renderer.height / 2])
@@ -447,8 +447,8 @@ export default class EditCursor {
         }
         if (this.isDragging) {
 
-            let v1 = new Vector2(this.mouseListener.mousePos).subtract(this.objectScreen)
-            let v2 = new Vector2(this.mouseStart).subtract(this.objectScreen)
+            let v1 = new Vector2(this.mouseListener.mousePos as NumericArray).subtract(this.objectScreen as NumericArray)
+            let v2 = new Vector2(this.mouseStart as NumericArray).subtract(this.objectScreen as NumericArray)
 
 
             let angle = v2.horizontalAngle() - v1.horizontalAngle()
@@ -468,8 +468,8 @@ export default class EditCursor {
 
             }
 
-            this.rotQuat.multiplyLeft(this.startQuat)
-            this.currentModel.setRotationQ(this.rotQuat)
+            this.rotQuat.multiplyLeft(this.startQuat as NumericArray)
+            this.currentModel.setRotationQ(this.rotQuat )
             AnimationEditor.addKeyData(this.currentModel, AnimationType.ROTATE)
 
 
