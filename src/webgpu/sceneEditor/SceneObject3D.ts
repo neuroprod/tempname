@@ -15,9 +15,9 @@ export default class SceneObject3D extends Object3D{
     private static emptyTreeSettings: TreeSettings;
     projectId: string="";
     meshId: string="";
-    isDecal =false; //only transparent pass?
-    transparent:boolean =false;
 
+    isText: boolean =false;
+    text:string =""
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
         if(!SceneObject3D.emptyTreeSettings) {
@@ -75,6 +75,8 @@ export default class SceneObject3D extends Object3D{
         obj.label =this.label;
         obj.meshId =this.meshId;
         obj.projectId = this.projectId;
+        obj.isText =this.isText;
+        obj.text  =this.text;
         obj.position =this.getPosition()
         obj.rotation=this.getRotation()
         if(this.model) {

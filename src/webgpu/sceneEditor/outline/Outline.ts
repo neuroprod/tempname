@@ -9,6 +9,7 @@ import BaseBlitMaterial from "../../lib/blit/BaseBlitMaterial.ts";
 import Blend from "../../lib/material/Blend.ts";
 import SolidMaterial from "../../lib/material/materials/SolidMaterial.ts";
 import OutlinePass from "./OutlinePass.ts";
+import {CullMode} from "../../lib/WebGPUConstants.ts";
 
 export default class Outline{
 
@@ -23,6 +24,7 @@ export default class Outline{
         this.outlinePrePass = new OutlinePrePass(renderer,camera)
         this.outlinePass = new OutlinePass(renderer)
         let solidMaterial = new SolidMaterial(this.renderer,"solidOutlineMaterial")
+        solidMaterial.cullMode =CullMode.None
         this.outlinePrePass.modelRenderer.setMaterial( solidMaterial);
 
         let blitMaterial =new BaseBlitMaterial(this.renderer,"baseBlit");

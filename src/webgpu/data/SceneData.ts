@@ -15,6 +15,10 @@ import ProjectMesh, {MeshType} from "./ProjectMesh.ts";
 import GBufferClipMaterial from "../render/GBuffer/GBufferClipMaterial.ts";
 import ShadowDepthMaterial from "../render/shadow/ShadowDepthMaterial.ts";
 import ShadowClipDepthMaterial from "../render/shadow/ShadowClipDepthMaterial.ts";
+import Font from "./Font.ts";
+import FontMesh from "../modelMaker/FontMesh.ts";
+import GBufferFontMaterial from "../render/GBuffer/GBufferFontMaterial.ts";
+import ShadowFontDepthMaterial from "../render/shadow/ShadowFontDepthMaterial.ts";
 
 class SceneData {
     projects: Array<Project> = [];
@@ -23,13 +27,16 @@ class SceneData {
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
     root!: SceneObject3D;
     usedModels: Array<Model> = [];
+    projectSelectItems: Array<SelectItem> = [];
     private renderer!: Renderer;
     private dataScene!: any;
-    projectSelectItems:  Array<SelectItem> = [];
     private defaultShadowMaterial!: ShadowDepthMaterial;
+    private font!: Font;
+
+    private defaultFontMaterial!: GBufferFontMaterial;
+    private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
 
     constructor() {
-
 
 
     }
@@ -49,15 +56,14 @@ class SceneData {
             }
 
 
-
-            let sceneObj:SceneObject3D|null =null;
-            if(d.meshId.length>0 && d.projectId.length>0 ){
-                sceneObj = this.getModel( d.label,d.projectId,d.meshId,d.id);
-
-            }else{
-
-                sceneObj = new SceneObject3D(this.renderer,d.label)
-                sceneObj.UUID =d.id;
+            let sceneObj: SceneObject3D | null = null;
+            if (d.meshId.length > 0 && d.projectId.length > 0) {
+                sceneObj = this.getModel(d.label, d.projectId, d.meshId, d.id);
+            } else if (d.isText) {
+                sceneObj = this.makeSceneObjectWithText(d.label, d.text)
+            } else {
+                sceneObj = new SceneObject3D(this.renderer, d.label)
+                sceneObj.UUID = d.id;
 
             }
 
@@ -120,8 +126,10 @@ class SceneData {
     public init(renderer: Renderer, preLoader: PreLoader) {
         this.renderer = renderer;
 
-        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer,"shadowDepth");
-
+        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
+        this.defaultFontMaterial = new GBufferFontMaterial(renderer, "fontMaterial");
+        this.defaultFontShadowMaterial = new ShadowFontDepthMaterial(renderer, "fontDepthMaterial");
+        this.font = new Font()
 
         this.loadBase(preLoader).then(() => {
         })
@@ -154,52 +162,87 @@ class SceneData {
         this.addProject(p);
     }
 
-    private getModel( label:string ,projectId :string,meshId:string,id:string): SceneObject3D | null {
-
-
-        let project = this.projectsMap.get(projectId)
-        if(!project) return null
-        let projMesh = project.getProjectMeshByID(meshId);
-
-        if(! projMesh) return null
-        let m  =this.makeSceneObjectWithMesh(project, projMesh,label,id);
-        return m;
-
-
-    }
-    makeSceneObjectWithMesh(p:Project,m:ProjectMesh,name:string,id:string){
+    makeSceneObjectWithMesh(p: Project, m: ProjectMesh, name: string, id: string) {
 
 
         let model = new Model(this.renderer, m.id);
         model.mesh = m.getMesh();
-        if(m.meshType ==MeshType.TRANS_PLANE){
+        if (m.meshType == MeshType.TRANS_PLANE) {
             model.material = new GBufferClipMaterial(this.renderer, "gMat");
             model.material.setTexture("colorTexture", p.baseTexture);
 
 
-            let shadowClipMaterial = new ShadowClipDepthMaterial(this.renderer,"shadowDepthClip")
+            let shadowClipMaterial = new ShadowClipDepthMaterial(this.renderer, "shadowDepthClip")
             shadowClipMaterial.setTexture("colorTexture", p.baseTexture);
             model.setMaterial("shadow", shadowClipMaterial)
 
 
-        }else{
+        } else {
             model.material = new GBufferMaterial(this.renderer, "gMat");
             model.material.setTexture("colorTexture", p.baseTexture);
-            model.setMaterial("shadow",this.defaultShadowMaterial)
+            model.setMaterial("shadow", this.defaultShadowMaterial)
         }
 
 
         let obj3D = new SceneObject3D(this.renderer, name)
         obj3D.addChild(model)
         obj3D.model = model;
-        obj3D.meshId =m.id;
-        obj3D.projectId =p.id;
-        if(m.meshType ==MeshType.TRANS_PLANE){
-            obj3D.transparent =true;
+        obj3D.meshId = m.id;
+        obj3D.projectId = p.id;
+        if (m.meshType == MeshType.TRANS_PLANE) {
+            // obj3D.transparent =true;
         }
-        if(id.length>1) {obj3D.UUID =id;}
+        if (id.length > 1) {
+            obj3D.UUID = id;
+        }
         return obj3D;
     }
+
+    makeSelectItems() {
+        this.projectSelectItems = []
+        for (let p of this.projects) {
+            if (p.meshes.length > 0) {
+                this.projectSelectItems.push(new SelectItem(p.name, p))
+                p.makeSelectItems();
+            }
+
+        }
+
+
+    }
+
+    makeSceneObjectWithText(name: string, text: string) {
+
+        let model = new Model(this.renderer, "textModel")
+        let mesh = new FontMesh(this.renderer, 'fontMesh');
+        mesh.setText(text, this.font);
+        model.mesh = mesh
+
+        model.material = this.defaultFontMaterial;
+model.setMaterial("shadow",this.defaultFontShadowMaterial)
+
+        let obj3D = new SceneObject3D(this.renderer, name)
+        obj3D.addChild(model)
+        obj3D.isText = true;
+        obj3D.text = text;
+        obj3D.model = model;
+        return obj3D;
+    }
+
+    private getModel(label: string, projectId: string, meshId: string, id: string): SceneObject3D | null {
+
+
+        let project = this.projectsMap.get(projectId)
+        if (!project) return null
+        let projMesh = project.getProjectMeshByID(meshId);
+
+        if (!projMesh) return null
+        let m = this.makeSceneObjectWithMesh(project, projMesh, label, id);
+        return m;
+
+
+    }
+
     private loadProjects(preloader: PreLoader) {
         for (let p of projectsArr) {
             preloader.startLoad()
@@ -212,19 +255,6 @@ class SceneData {
     private addProject(p: Project) {
         this.projects.push(p)
         this.projectsMap.set(p.id, p);
-
-    }
-
-    makeSelectItems() {
-        this.projectSelectItems =[]
-        for(let p of this.projects){
-            if(p.meshes.length>0){
-                this.projectSelectItems.push(new SelectItem(p.name,p))
-                p.makeSelectItems();
-            }
-
-        }
-
 
     }
 }

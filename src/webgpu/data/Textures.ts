@@ -16,6 +16,6 @@ export const Textures = {
     GTAO_DENOISE: "GTAO_DENOISE",
     SHADOW: "shadow",
     PREVIEW_MODEL: "previewModel",
-    DRAWING_BUFFER_TEMP: "drawingBufferTemp"
-
+    DRAWING_BUFFER_TEMP: "drawingBufferTemp",
+    MAINFONT: "bold.png"
 }

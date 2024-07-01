@@ -2,7 +2,7 @@ import Material from "../../lib/material/Material.ts";
 import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
-import {CompareFunction} from "../../lib/WebGPUConstants.ts";
+import {CompareFunction, CullMode} from "../../lib/WebGPUConstants.ts";
 
 
 export default class OutlineMaterial extends Material

@@ -18,6 +18,7 @@ import SceneData from "./data/SceneData.ts";
 import {addMainMenuTextButton} from "./UI/MainMenuTextButton.ts";
 import UI_I from "./lib/UI/UI_I.ts";
 import {addMainMenuDivider} from "./UI/MainMenuDivider.ts";
+import {Textures} from "./data/Textures.ts";
 
 
 enum MainState {
@@ -74,7 +75,7 @@ export default class Main {
         }, this.init.bind(this));
         //Todo handle bitmap preload
         new TextureLoader(this.renderer, "bezierPoints.png")
-
+        new TextureLoader(this.renderer, Textures.MAINFONT)
         // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         // this.sceneLoader = new JsonLoader("scene1", this.preloader)
         SceneData.init(this.renderer, this.preloader)

@@ -138,7 +138,13 @@ export class AddMeshPopup extends PopUp {
 
         UI.separator("s2", false)
         addInputTextBox("myTextInput", this, "text", false, this.inputTextBox);
-        addTextButton("add Text")
+        if(addTextButton("add Text")){
+
+            let a  =SceneData.makeSceneObjectWithText(this.newName,this.text)
+            this.callBack(a);
+            UI_I.removePopup(this)
+
+        }
         /*  for(let item of this.items){
 
               if(   addListButton(item.name)){
