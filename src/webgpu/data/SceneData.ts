@@ -11,9 +11,8 @@ import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import Model from "../lib/model/Model.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
-import Texture from "../lib/textures/Texture.ts";
-import Mesh from "../lib/mesh/Mesh.ts";
-import ProjectMesh from "./ProjectMesh.ts";
+import ProjectMesh, {MeshType} from "./ProjectMesh.ts";
+import GBufferClipMaterial from "../render/GBuffer/GBufferClipMaterial.ts";
 
 class SceneData {
     projects: Array<Project> = [];
@@ -158,9 +157,15 @@ class SceneData {
 
         let model = new Model(this.renderer, m.id);
         model.mesh = m.getMesh();
+        if(m.meshType ==MeshType.TRANS_PLANE){
+            model.material = new GBufferClipMaterial(this.renderer, "gMat");
+            model.material.setTexture("colorTexture", p.baseTexture);
 
-        model.material = new GBufferMaterial(this.renderer, "gMat");
-        model.material.setTexture("colorTexture", p.baseTexture);
+        }else{
+            model.material = new GBufferMaterial(this.renderer, "gMat");
+            model.material.setTexture("colorTexture", p.baseTexture);
+        }
+
 
         let obj3D = new SceneObject3D(this.renderer, name)
         obj3D.addChild(model)

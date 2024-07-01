@@ -335,6 +335,7 @@ class SceneEditor {
         this.currentModel.addChild(m)
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
+
             this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)
         }
 
