@@ -50,25 +50,30 @@ class SceneData {
 
 
 
-            let m:SceneObject3D|null =null;
+            let sceneObj:SceneObject3D|null =null;
             if(d.meshId.length>0 && d.projectId.length>0 ){
-               m = this.getModel( d.label,d.projectId,d.meshId,d.id);
+                sceneObj = this.getModel( d.label,d.projectId,d.meshId,d.id);
+
+            }else{
+
+                sceneObj = new SceneObject3D(this.renderer,d.label)
+                sceneObj.UUID =d.id;
 
             }
 
 
-            if (m) {
-                m.setPosition(d.position[0], d.position[1], d.position[2])
-                m.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
+            if (sceneObj) {
+                sceneObj.setPosition(d.position[0], d.position[1], d.position[2])
+                sceneObj.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
 
-                this.modelsByLoadID[d.id] = m;
+                this.modelsByLoadID[d.id] = sceneObj;
 
-                this.modelsByLoadID[d.parentID].addChild(m)
-                if (m.model) {
+                this.modelsByLoadID[d.parentID].addChild(sceneObj)
+                if (sceneObj.model) {
                     if (d.scale) {
-                        m.model.setScale(d.scale[0], d.scale[1], d.scale[2])
+                        sceneObj.model.setScale(d.scale[0], d.scale[1], d.scale[2])
                     }
-                    this.usedModels.push(m.model);
+                    this.usedModels.push(sceneObj.model);
                 }// if(m.model)
             }
         }

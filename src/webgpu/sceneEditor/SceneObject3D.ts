@@ -27,7 +27,15 @@ export default class SceneObject3D extends Object3D{
     }
 
     onUINice(depth:number){
-        if(pushObjectTree(this.label,this.children.length<=1,depth,this ==  SceneEditor.currentModel)){
+        let leave =false;
+        if(this.children.length<=1){
+            leave =true;
+            if(this.children.length==1 && (this.children[0] as SceneObject3D).isSceneObject3D ){
+                leave =false;
+            }
+        }
+
+        if(pushObjectTree(this.label,leave,depth,this ==  SceneEditor.currentModel)){
             SceneEditor.setCurrentModel(this);
         }
        // if(pushObjectTree(this.label,this.children.length<=1).clicked){
