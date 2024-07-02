@@ -10,6 +10,7 @@ import TextureLoader from "../../lib/textures/TextureLoader.ts";
 import CopyTexturePass from "../../lib/blit/CopyTexturePass.ts";
 import Texture from "../../lib/textures/Texture.ts";
 import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
+import {ToolType} from "../ModelMaker.ts";
 
 
 export class LineData {
@@ -55,6 +56,7 @@ export default class Drawing {
     private project!: Project;
     private copy1: CopyTexturePass;
     private copy2: CopyTexturePass;
+    private tool!: ToolType;
 
 
     constructor(renderer: Renderer) {
@@ -166,6 +168,14 @@ export default class Drawing {
             this.currentLine.lineSize = this.lineData.lineSize / 1000;
             this.currentLine.smoothing = this.lineData.smoothing;
             this.currentLine.edge = this.lineData.edge;
+
+            if(this.tool==ToolType.Eraser){
+                this.currentLine.isEraser =true;
+                console.log("erasoRR?")
+                this.currentLine.uniformGroup.setUniform("color", [1,1,1,1])
+                this.currentLine.uniformGroup.update();
+            }
+
             this.project.drawLines.push(this.currentLine);
             this.project.setDirty();
             this.isDrawing = true;
@@ -197,4 +207,7 @@ export default class Drawing {
     }
 
 
+    setTool(currentTool: ToolType) {
+        this.tool = currentTool;
+    }
 }

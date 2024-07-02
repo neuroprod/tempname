@@ -54,7 +54,9 @@ fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 fn mainFragment(${this.getFragmentInput()}) ->  GBufferOutput
 {
     var output : GBufferOutput;
-    output.color =textureSample(colorTexture, mySampler,  uv);
+    var color =textureSample(colorTexture, mySampler,  uv);
+     color =color+ vec4(1.0,1.0,1.0,1.0)*(1.0-color.a);
+     output.color =color;
     output.normal =vec4(normalize(normal)*vec3f(0.5) +vec3f(0.5),0.0);
 
     return output;

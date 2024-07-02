@@ -69,6 +69,7 @@ export enum ToolType {
     Center,
     Edit,
     Move,
+    Eraser,
 
 
 }
@@ -247,6 +248,7 @@ export default class ModelMaker {
 
 
         if (addMainMenuToggleButton("Brush", Icons.PAINT, this.currentTool == ToolType.Paint)) (this.setTool(ToolType.Paint))
+        if (addMainMenuToggleButton("Eraser", Icons.ERASER, this.currentTool == ToolType.Eraser)) (this.setTool(ToolType.Eraser))
         addMenuBrushButton("menuBrush", this.drawing.lineData)
         addMenuColorButton("Main", this.drawing.lineColor);
         if (addMainMenuButton("UndoBrush", Icons.UNDO_STROKE, true)) {
@@ -278,7 +280,7 @@ export default class ModelMaker {
 
 
         popMainMenu()
-        pushSplitPanelFixed("preview", 10, 70, 300, 600)
+        pushSplitPanelFixed("preview", 10, 70, 300, 620)
         addTitle("Image")
         if (this.currentProject) {
 
@@ -504,12 +506,12 @@ export default class ModelMaker {
     private setTool(toolType: ToolType) {
         this.currentTool = toolType;
 
-        if (toolType == ToolType.Paint) {
+        if (toolType == ToolType.Paint || toolType == ToolType.Eraser) {
             this.modelMainState = ModelMainState.draw;
         } else {
             this.modelMainState = ModelMainState.cut;
         }
-
+this.drawing.setTool(this.currentTool);
         this.cutting.setTool(this.currentTool)
 
     }

@@ -48,4 +48,20 @@ export default class Blend {
             }
         }
     }
+
+    static getErase() :GPUBlendState {
+        return  {
+
+            color: {
+                srcFactor: BlendFactor.One,
+                dstFactor: BlendFactor.OneMinusSrcAlpha,
+                operation: BlendOperation.ReverseSubtract,
+            },
+            alpha: {
+                srcFactor: BlendFactor.One,
+                dstFactor: BlendFactor.OneMinusSrcAlpha,
+                operation: BlendOperation.ReverseSubtract,
+            }
+        }
+    }
 }

@@ -25,7 +25,7 @@ export const Icons  = {
     UNDO_STROKE: 'x',
     UNDO_POINT: 'y',
 
-
+    ERASER: '0',
     MESH_EXTRUDE: '1',
     MESH_PLANE: '2',
     MESH_PLANE_TRANS: '3',

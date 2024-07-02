@@ -38,9 +38,9 @@ export default class PreviewPass extends RenderPass {
         });
         this.colorAttachment = new ColorAttachment(this.colorTarget,{
             clearValue: {
-                r: 1,
-                g: 1,
-                b: 1,
+                r: 0.2,
+                g: 0.2,
+                b: 0.2,
                 a: 1
             }
         });

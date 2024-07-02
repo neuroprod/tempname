@@ -180,7 +180,7 @@ export default class Cutting {
 
     setTool(currentTool: ToolType) {
         this.toolType = currentTool
-        if (this.toolType == ToolType.Select || this.toolType == ToolType.Paint) {
+        if (this.toolType == ToolType.Select || this.toolType == ToolType.Paint || this.toolType == ToolType.Eraser) {
             this.updateAllLines()
 
             this.shapeLineModelSelect.visible = (this.toolType == ToolType.Select);

@@ -17,7 +17,7 @@ export default class DrawLine {
     smoothing: number = 0.1;
     lineSize: number = 2;
     edge: number =0.5;
-
+    isEraser =false;
 
     private readonly renderer: Renderer;
 

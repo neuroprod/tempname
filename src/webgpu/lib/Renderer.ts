@@ -45,7 +45,7 @@ export default class Renderer {
             for (let a of adapter.features.keys()) {
                 console.log(a)
             }
-            const requiredFeatures: Array<GPUFeatureName> = ["rg11b10ufloat-renderable", "float32-filterable"];
+            const requiredFeatures: Array<GPUFeatureName> = [ "float32-filterable"];
             if (this.useTimeStampQuery) {
                 requiredFeatures.push("timestamp-query");
             }
