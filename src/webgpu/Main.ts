@@ -51,7 +51,7 @@ export default class Main {
     private currentMainState!: MainState
     private camera!: Camera;
     private gameRenderer!: GameRenderer;
-    private game: Game;
+    private game!: Game;
 
 
     constructor() {
