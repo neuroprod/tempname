@@ -35,7 +35,7 @@ export default class GTAORenderPass extends RenderPass {
             format: TextureFormat.R16Float,
             sampleCount: this.sampleCount,
             scaleToCanvas: true,
-
+            sizeMultiplier:1,
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this.aoAttachment = new ColorAttachment( this.aoTarget );
@@ -44,7 +44,7 @@ export default class GTAORenderPass extends RenderPass {
             format: TextureFormat.R32Uint,
             sampleCount: this.sampleCount,
             scaleToCanvas: true,
-
+            sizeMultiplier:1,
             usage: GPUTextureUsage.RENDER_ATTACHMENT | GPUTextureUsage.TEXTURE_BINDING
         });
         this.depthDiffAttachment = new ColorAttachment(this.depthDiffTarget);

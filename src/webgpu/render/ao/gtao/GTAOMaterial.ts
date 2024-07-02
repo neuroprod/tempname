@@ -152,7 +152,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     let slice_count = 1.0;
     let samples_per_slice_side =1.0;
      let effect_radius = 0.3 * 1.457;
-    let falloff_range = 0.615 * effect_radius*0.4;
+    let falloff_range = 0.615 * effect_radius;
     let falloff_from = effect_radius * (1.0 - 0.615)*0.4;
     let falloff_mul = -1.0 / falloff_range;
     let falloff_add = falloff_from / falloff_range+ 1.0;

@@ -5,6 +5,7 @@ import UniformGroup from "./material/UniformGroup.ts";
 import Model from "./model/Model.ts";
 import UI from "./UI/UI.ts";
 import {Vector2} from "@math.gl/core";
+import TimeStampQuery from "./TimeStampQuery.ts";
 
 
 export default class Renderer {
@@ -34,6 +35,8 @@ export default class Renderer {
     models: Array<Model> = [];
     modelByLabel: { [label: string]: Model } = {};
     static instance: Renderer;
+    useTimeStampQuery: boolean=false
+  timeStamps: TimeStampQuery;
 
 
 
@@ -50,11 +53,13 @@ export default class Renderer {
         const adapter = await navigator.gpu.requestAdapter({powerPreference: "high-performance"});
         if(adapter) {
 
-           /* for (let a of adapter.features.keys()) {
+            for (let a of adapter.features.keys()) {
                 console.log(a)
-            }*/
+            }
             const requiredFeatures: Array<GPUFeatureName> = [ "rg11b10ufloat-renderable", "float32-filterable"];
-
+if(this.useTimeStampQuery){
+    requiredFeatures.push("timestamp-query");
+}
 
             this.device = await adapter.requestDevice({requiredFeatures: requiredFeatures});
           //  console.log(this.device)
@@ -71,6 +76,7 @@ export default class Renderer {
 
 
         }
+        this.timeStamps =new TimeStampQuery(this,4)
 
     }
     public startCommandEncoder(setCommands: () => void){
@@ -86,7 +92,7 @@ export default class Renderer {
         this.updateSize();
         this.updateModels();
         this.updateUniformGroups()
-
+        this.timeStamps.readback()
         //
     this.device.queue.onSubmittedWorkDone().then(()=> {
     this.canvasTextureView = this.context.getCurrentTexture();
@@ -95,7 +101,11 @@ export default class Renderer {
 
     this.commandEncoder = this.device.createCommandEncoder();
     setCommands();
-    this.device.queue.submit([this.commandEncoder.finish()]);
+        this.timeStamps.getData()
+        this.device.queue.submit([this.commandEncoder.finish()]);
+
+
+       // this.timeStamps.readback()
 });
 
     }

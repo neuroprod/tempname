@@ -76,6 +76,7 @@ export default class Main {
         //Todo handle bitmap preload
         new TextureLoader(this.renderer, "bezierPoints.png")
         new TextureLoader(this.renderer, Textures.MAINFONT)
+        new TextureLoader(this.renderer, Textures.BLUE_NOISE)
         // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         // this.sceneLoader = new JsonLoader("scene1", this.preloader)
         SceneData.init(this.renderer, this.preloader)
@@ -121,6 +122,8 @@ export default class Main {
         UI.updateGPU();
 
         this.renderer.update(this.draw.bind(this));
+
+
         this.mouseListener.reset();
     }
 

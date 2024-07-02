@@ -30,11 +30,11 @@ result: RenderTexture
 constructor(renderer:Renderer){
 
     this.renderer =renderer;
-
+let scale=1;
     this.result = new RenderTexture(renderer, Textures.DEPTH_BLUR,
         {
             scaleToCanvas: true,
-            sizeMultiplier: 1,
+            sizeMultiplier: 1*scale,
             format: TextureFormat.R16Float,
             mipLevelCount: 5,
             usage: GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT  | GPUTextureUsage.COPY_DST
@@ -43,7 +43,7 @@ constructor(renderer:Renderer){
     this.mip0 = new RenderTexture(renderer, Textures.DEPTH_BLUR_MIP0,
         {
             scaleToCanvas: true,
-            sizeMultiplier: 1,
+            sizeMultiplier: 1*scale,
             format: TextureFormat.R16Float,
             mipLevelCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT  | GPUTextureUsage.COPY_SRC
@@ -54,7 +54,7 @@ constructor(renderer:Renderer){
     this.mip1= new RenderTexture(renderer, Textures.DEPTH_BLUR_MIP1,
         {
             scaleToCanvas: true,
-            sizeMultiplier: 0.5,
+            sizeMultiplier: 0.5*scale,
             format: TextureFormat.R16Float,
             mipLevelCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT  | GPUTextureUsage.COPY_SRC
@@ -65,7 +65,7 @@ constructor(renderer:Renderer){
     this.mip2= new RenderTexture(renderer, Textures.DEPTH_BLUR_MIP2,
         {
             scaleToCanvas: true,
-            sizeMultiplier: 0.25,
+            sizeMultiplier: 0.25*scale,
             format: TextureFormat.R16Float,
             mipLevelCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT  | GPUTextureUsage.COPY_SRC
@@ -76,7 +76,7 @@ constructor(renderer:Renderer){
     this.mip3= new RenderTexture(renderer, Textures.DEPTH_BLUR_MIP3,
         {
             scaleToCanvas: true,
-            sizeMultiplier: 0.125,
+            sizeMultiplier: 0.125*scale,
             format: TextureFormat.R16Float,
             mipLevelCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT  | GPUTextureUsage.COPY_SRC
@@ -86,7 +86,7 @@ constructor(renderer:Renderer){
     this.mip4= new RenderTexture(renderer, Textures.DEPTH_BLUR_MIP4,
         {
             scaleToCanvas: true,
-            sizeMultiplier: 0.0625,
+            sizeMultiplier: 0.0625*scale,
             format: TextureFormat.R16Float,
             mipLevelCount: 1,
             usage: GPUTextureUsage.TEXTURE_BINDING|GPUTextureUsage.RENDER_ATTACHMENT  | GPUTextureUsage.COPY_SRC

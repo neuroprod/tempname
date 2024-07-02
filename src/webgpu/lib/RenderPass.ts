@@ -22,13 +22,13 @@ export default class RenderPass extends ObjectGPU {
         this.isDirty = true;
     }
 
-    add(log=false) {
-        this.updateDescriptor()
+    add(timestamp:GPURenderPassTimestampWrites|null =null) {
+        this.updateDescriptor(timestamp)
 
         this.passEncoder = this.renderer.commandEncoder.beginRenderPass(
             this.renderPassDescriptor
         );
-        if(log)console.log(this)
+
         this.draw()
 
         this.passEncoder.end();
@@ -40,15 +40,20 @@ export default class RenderPass extends ObjectGPU {
     }
 
 
-    private updateDescriptor() {
+    private updateDescriptor(timeStamp:GPURenderPassTimestampWrites|null ) {
         let dirty = this.isDirty;
+
         //TODO: check if textures are updated when this pass wasn't in use
         if (this.depthStencilAttachment && this.depthStencilAttachment.isDirty()) {
             dirty = true;
 
+
         }
         for (let c of this.colorAttachments) {
-            if (c.isDirty()) dirty = true;
+            if (c.isDirty()) {
+                dirty = true;
+
+            }
 
         }
         if (!dirty) return;
@@ -61,7 +66,13 @@ export default class RenderPass extends ObjectGPU {
         this.renderPassDescriptor = {
             label: this.label,
             colorAttachments: attachments,
+
         };
+        if(timeStamp){
+            this.renderPassDescriptor.timestampWrites =timeStamp;
+            console.log(this.renderPassDescriptor)
+        }
+
         if (this.depthStencilAttachment)
             this.renderPassDescriptor.depthStencilAttachment = this.depthStencilAttachment.getAttachment()
 

@@ -26,7 +26,7 @@ export default class PCSSShadowMaterial extends Material {
         uniforms.addTexture("gDepth",this.renderer.getTexture(Textures.GDEPTH), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("shadowMap",this.renderer.getTexture(Textures.SHADOW_DEPTH), {sampleType:TextureSampleType.Float})
         uniforms.addSampler("mySampler");
-        uniforms.addTexture("noise", DefaultTextures.getMagicNoise(this.renderer));
+        uniforms.addTexture("noise", this.renderer.getTexture(Textures.BLUE_NOISE));
 
     }
     getKernel() {
@@ -106,10 +106,10 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        
        shadowPosProj.x = shadowPosProj.x*0.5 +0.5;
        shadowPosProj.y =1.0-( shadowPosProj.y*0.5 +0.5);
-       var p  =  textureLoad(noise, uvPos % 3, 0).r;
+     var p  =  textureLoad(noise, uvPos % 64, 0).r;
   
       
-       p+=fract(sin(dot(uv0, vec2(12.9898, 4.1414))) * 43758.5453);
+ 
        let angle= p*3.1415*2.0;
        let  s = sin(angle);
        let  c = cos(angle);

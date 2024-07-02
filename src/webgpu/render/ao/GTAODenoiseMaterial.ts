@@ -3,6 +3,7 @@ import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import {CompareFunction, FilterMode, TextureSampleType} from "../../lib/WebGPUConstants.ts";
 import {Textures} from "../../data/Textures.ts";
+import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
 
 
 export default class GTAODenoiseMaterial extends Material
@@ -15,8 +16,8 @@ export default class GTAODenoiseMaterial extends Material
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addTexture("ambient_occlusion_noisy",this.renderer.getTexture(Textures.SHADOW),{sampleType:TextureSampleType.Float });
-        uniforms.addTexture("depth_differences",this.renderer.getTexture(Textures.DEPTH_DIFF),{sampleType:TextureSampleType.Uint });
+        uniforms.addTexture("noisy",DefaultTextures.getWhite(this.renderer),{sampleType:TextureSampleType.Float });
+        uniforms.addTexture("depth_differences",this.renderer.getTexture("GTAODepth"),{sampleType:TextureSampleType.Uint });
         uniforms.addSampler("point_clamp_sampler",GPUShaderStage.FRAGMENT,FilterMode.Nearest)
         this.depthWrite = false
         this.depthCompare = CompareFunction.Always
@@ -44,11 +45,11 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 {
       let edges0 = textureGather(0, depth_differences, point_clamp_sampler, uv);
     let edges1 = textureGather(0, depth_differences, point_clamp_sampler, uv, vec2<i32>(2i, 0i));
-    let edges2 = textureGather(0, depth_differences, point_clamp_sampler, uv, vec2<i32>(1i, 2i));
-    let visibility0 = textureGather(0, ambient_occlusion_noisy, point_clamp_sampler, uv);
-    let visibility1 = textureGather(0, ambient_occlusion_noisy, point_clamp_sampler, uv, vec2<i32>(2i, 0i));
-    let visibility2 = textureGather(0, ambient_occlusion_noisy, point_clamp_sampler, uv, vec2<i32>(0i, 2i));
-    let visibility3 = textureGather(0, ambient_occlusion_noisy, point_clamp_sampler, uv, vec2<i32>(2i, 2i));
+    let edges2 = textureGather(0, depth_differences, point_clamp_sampler, uv, vec2<i32>(-1i, 0i));
+    let visibility0 = textureGather(0, noisy, point_clamp_sampler, uv);
+    let visibility1 = textureGather(0, noisy, point_clamp_sampler, uv, vec2<i32>(0i, -2i));
+    let visibility2 = textureGather(0, noisy, point_clamp_sampler, uv, vec2<i32>(-2i, 0i));
+    let visibility3 = textureGather(0, noisy, point_clamp_sampler, uv, vec2<i32>(2i, 2i));
 
     let left_edges = unpack4x8unorm(edges0.x);
     let right_edges = unpack4x8unorm(edges1.x);

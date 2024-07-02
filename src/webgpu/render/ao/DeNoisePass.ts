@@ -11,7 +11,7 @@ import Camera from "../../lib/Camera.ts";
 import GTAODenoiseMaterial from "./GTAODenoiseMaterial.ts";
 
 
-export default class GTAODenoisePass extends RenderPass {
+export default class DeNoisePass extends RenderPass {
 
 
 
@@ -26,14 +26,14 @@ export default class GTAODenoisePass extends RenderPass {
 
 
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: Renderer,target:string,source:string) {
 
-        super(renderer, "GTAODenoisePass");
+        super(renderer, "DeNoisePass");
         //"ambient_occlusion", this.texture, TextureFormat.R32Float);
         //this.uniformGroup.addStorageTexture("depth_differences
 
-        this.aoDenoiseTarget = new RenderTexture(renderer, Textures.GTAO_DENOISE, {
-            format: TextureFormat.R16Float,
+        this.aoDenoiseTarget = new RenderTexture(renderer, target, {
+            format: TextureFormat.R8Unorm,
             sampleCount: this.sampleCount,
             scaleToCanvas: true,
 
@@ -44,9 +44,9 @@ export default class GTAODenoisePass extends RenderPass {
 
         this.colorAttachments = [  this.aoAttachment, ];
 
-        let mat = new GTAODenoiseMaterial(this.renderer,"gtaoDenoise");
-
-        this.blit = new Blit(this.renderer,"aoDenoiseBlit",mat)
+        let mat = new GTAODenoiseMaterial(this.renderer,"denoise");
+        mat.setTexture("noisy",this.renderer.getTexture(source));
+        this.blit = new Blit(this.renderer,"denoiseBlit",mat)
 
 
     }
