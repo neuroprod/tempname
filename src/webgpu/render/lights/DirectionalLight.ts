@@ -19,11 +19,12 @@ export default class DirectionalLight{
         //this.shadowCamera.setOrtho(-2,2,2,-2);
         this.shadowCamera.near=1;
         this.shadowCamera.far=10;
-        let lookAt =new Vector3()
+        let lookAt =new Vector3(0,0,-1)
 
         this.shadowCamera.cameraLookAt.from(lookAt)
 
         this.shadowCamera.cameraWorld.set(1,3,2)
+        this.shadowCamera.cameraWorld.subtract(lookAt as NumericArray)
         //this.shadowCamera.cameraWorld.scale(2.5)
     }
 

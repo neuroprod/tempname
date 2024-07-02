@@ -1,6 +1,7 @@
 import Renderer from "../../../lib/Renderer.ts";
 import AnimationChannel from "./AnimationChannel.ts";
 import SceneObject3D from "../../SceneObject3D.ts";
+import Timer from "../../../lib/Timer.ts";
 export enum AnimationType{
     TRANSLATE,
     ROTATE,
@@ -15,6 +16,7 @@ export default class Animation{
     channels: Array<AnimationChannel>=[];
     root: SceneObject3D;
     label: string ="";
+    private playTime: number=0;
     constructor(renderer:Renderer, label:string,root:SceneObject3D) {
         this.root =root;
         this.label =label;
@@ -43,5 +45,14 @@ export default class Animation{
 
         animationData.push(data)
 
+    }
+
+    autoPlay(delta: number) {
+        this.playTime += Timer.delta / this.frameTime;
+
+        if (this.playTime > this.numFrames) {
+            this.playTime -= this.numFrames
+        }
+        this.setTime(this.playTime)
     }
 }

@@ -72,21 +72,15 @@ class SceneEditor {
 
     constructor() {
     }
-    init(renderer: Renderer, mouseListener: MouseListener) {
+    init(renderer: Renderer, mouseListener: MouseListener, camera:Camera,gameRenderer:GameRenderer) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
-        this.camera = new Camera(renderer);
-        this.camera.cameraWorld.set(0.5, 0.3, 2)
-        this.camera.cameraLookAt.set(0, 0.2, 0)
-        this.camera.near = 0.5
-        this.camera.far =100
-        this.camera.fovy = 0.8
+        this.camera = camera
 
-        this.gameRenderer = new GameRenderer(this.renderer, this.camera)
+        this.gameRenderer = gameRenderer;
 
 
-        this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
-        this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
+
 
 
         this.modelRenderer = new ModelRenderer(renderer, "mainModels", this.camera)
@@ -354,6 +348,8 @@ class SceneEditor {
     }
 
 
-
+    setActive() {
+        this.editCamera.setCamera()
+    }
 }
 export default new SceneEditor();

@@ -19,6 +19,9 @@ import {addMainMenuTextButton} from "./UI/MainMenuTextButton.ts";
 import UI_I from "./lib/UI/UI_I.ts";
 import {addMainMenuDivider} from "./UI/MainMenuDivider.ts";
 import {Textures} from "./data/Textures.ts";
+import Camera from "./lib/Camera.ts";
+import GameRenderer from "./render/GameRenderer.ts";
+import Game from "./Website/Game.ts";
 
 
 enum MainState {
@@ -46,6 +49,9 @@ export default class Main {
 
 
     private currentMainState!: MainState
+    private camera!: Camera;
+    private gameRenderer!: GameRenderer;
+    private game: Game;
 
 
     constructor() {
@@ -89,11 +95,24 @@ export default class Main {
 
         SceneData.parseSceneData();
 
+        this.camera = new Camera(this.renderer);
+        this.camera.cameraWorld.set(0.5, 0.3, 2)
+        this.camera.cameraLookAt.set(0, 0.2, 0)
+        this.camera.near = 0.5
+        this.camera.far = 100
+        this.camera.fovy = 0.8
+
+        this.gameRenderer = new GameRenderer(this.renderer, this.camera)
+        this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
+        this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
+
 
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
-        SceneEditor.init(this.renderer, this.mouseListener)
+
+        this.game = new Game(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
+        SceneEditor.init(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
@@ -111,8 +130,11 @@ export default class Main {
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.saveTemp()
         }
-        if(state== MainState.modelMaker){
+        if (state == MainState.modelMaker) {
             this.modelMaker.setProject()
+        }
+        if (state == MainState.editor) {
+           SceneEditor.setActive()
         }
         this.currentMainState = state;
     }
@@ -131,21 +153,22 @@ export default class Main {
     private update() {
         if (this.currentMainState == MainState.editor) {
             SceneEditor.update();
-        }
-        if (this.currentMainState == MainState.modelMaker) {
+        } else if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.update();
+        } else if (this.currentMainState == MainState.game) {
+            this.game.update();
         }
         this.onUI()
     }
 
     private onUI() {
         if (this.currentMainState == MainState.game) {
-           // pushMainMenu("editMenu", 74, 0)
+            // pushMainMenu("editMenu", 74, 0)
             UI_I.currentComponent = UI_I.panelLayer;
             if (addMainMenuTextButton("Edit", true)) {
                 this.setMainState(MainState.editor)
             }
-           // popMainMenu()
+            // popMainMenu()
         } else {
             pushMainMenu("MainMenu", 207, 0)
             if (addMainMenuToggleButton("Game", Icons.GAME, false)) this.setMainState(MainState.game);
@@ -173,12 +196,12 @@ export default class Main {
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.draw()
             this.canvasRenderPass.drawInCanvas = this.modelMaker.drawInCanvas.bind(this.modelMaker);
-        }
-        if (this.currentMainState == MainState.editor) {
+        } else if (this.currentMainState == MainState.editor) {
             SceneEditor.draw()
-
-
             this.canvasRenderPass.drawInCanvas = SceneEditor.drawInCanvas.bind(SceneEditor);
+        } else if (this.currentMainState == MainState.game) {
+            this.game.draw()
+            this.canvasRenderPass.drawInCanvas = this.game.drawInCanvas.bind(this.game);
         }
         this.canvasRenderPass.add();
 
