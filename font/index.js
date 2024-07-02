@@ -11,7 +11,7 @@ function go() {
     makeFont('fonts/icons.ttf',"icons")
    // makeFont('testfont.ttf',"icons")
     makeFont('Roboto-Regular.ttf',"regular")
-    makeFont('Roboto-Bold.ttf',"bold")
+    makeFont('Roboto-Black.ttf',"bold")
 
 }
 

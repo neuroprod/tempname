@@ -8,13 +8,13 @@ import {Textures} from "../../data/Textures.ts";
 
 export default class AOPreprocessDepth {
     private renderer: Renderer;
-    private passEncoder: GPUComputePassEncoder;
-    private computePipeline: GPUComputePipeline;
+    private passEncoder!: GPUComputePassEncoder;
+    private computePipeline!: GPUComputePipeline;
 
 
     private uniformGroup: UniformGroup;
     private texture: Texture;
-    private pipeLineLayout: GPUPipelineLayout;
+    private pipeLineLayout!: GPUPipelineLayout;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;

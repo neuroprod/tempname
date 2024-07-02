@@ -109,6 +109,8 @@ export default class ModelMaker {
 
 
     private sizeSelectItems: Array<SelectItem> = [new SelectItem("16x16", 16), new SelectItem("256x256", 256), new SelectItem("512x512", 512), new SelectItem("1024x1024", 1024), new SelectItem("2048x2048", 2048)]
+    private backgroundModel: Model;
+    private backgroundMaterial: DrawingPreviewMaterial;
 
     constructor(renderer: Renderer, mouseListener: MouseListener) {
         this.renderer = renderer;
@@ -131,19 +133,32 @@ export default class ModelMaker {
         this.cutting = new Cutting(renderer, this.camera2D);
 
 
+        this.backgroundModel = new Model(renderer, "textureModel");
+        this.backgroundModel.mesh = new Quad(renderer)
+        this.backgroundMaterial = new DrawingPreviewMaterial(renderer, "materprev");
+        this.backgroundMaterial.setTexture("colorTexture", this.renderer.getTexture( Textures.DRAWING_BACKGROUND));
+        this.backgroundModel.material =   this.backgroundMaterial;
+        this.backgroundModel.setScaler(0.525)
+        this.backgroundModel.x = 0.5;
+        this.backgroundModel.y = 0.5;
+
+
+
+
+
+
+
         this.textureModel = new Model(renderer, "textureModel");
         this.textureModel.mesh = new Quad(renderer)
-
         this.drawingPreviewMaterial = new DrawingPreviewMaterial(renderer, "materprev");
         this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
-
-
         this.textureModel.material = this.drawingPreviewMaterial;
         this.textureModel.setScaler(0.5)
         this.textureModel.x = 0.5;
         this.textureModel.y = 0.5;
 
         this.modelRoot = new Object3D(renderer, "drawingModelRoot");
+        this.modelRoot.addChild(this.backgroundModel)
         this.modelRoot.addChild(this.textureModel)
         this.modelRoot.addChild(this.cutting.shapeLineModelAll)
         this.modelRoot.addChild(this.cutting.shapeLineModelSelect)
@@ -151,6 +166,7 @@ export default class ModelMaker {
 
         this.modelRoot.addChild(this.cutting.pathEditor.pointModel)
         this.modelRoot.setScaler(100)
+        this.modelRenderer2D.addModel(this.backgroundModel)
         this.modelRenderer2D.addModel(this.textureModel)
         this.modelRenderer2D.addModel(this.cutting.shapeLineModelAll);
         this.modelRenderer2D.addModel(this.cutting.shapeLineModelSelect);

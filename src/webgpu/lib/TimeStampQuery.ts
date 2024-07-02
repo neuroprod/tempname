@@ -4,18 +4,18 @@ export default class TimeStampQuery {
     public totalTime: number = 0;
     public timeArray: Array<number>;
     public names: Array<string> = []
-    //  private querySet: GPUQuerySet;
-    private queryBuffer: GPUBuffer;
+
+
     private capacity: number = 2;
     private device: GPUDevice;
 
     private renderer: Renderer;
     private useTimeStampQuery: boolean;
-    private stampIndex = 0;
-    private querySet: GPUQuerySet;
-    private resolveBuffer: GPUBuffer;
-    private resultBuffer: GPUBuffer;
-    private bufferSize: number;
+
+    private querySet!: GPUQuerySet;
+    private resolveBuffer!: GPUBuffer;
+    private resultBuffer!: GPUBuffer;
+    private bufferSize!: number;
     private done: boolean = true;
 
 

@@ -19,5 +19,6 @@ export const Textures = {
     DRAWING_BUFFER_TEMP: "drawingBufferTemp",
     MAINFONT: "bold.png",
     SHADOW_DENOISE: "shadowDenoise",
-    BLUE_NOISE: "blueNoise.png"
+    BLUE_NOISE: "blueNoise.png",
+    DRAWING_BACKGROUND: "drawBackground.png"
 }

@@ -107,7 +107,7 @@ export default class GameRenderer{
         }
     }
     //doPasses
-    draw(camera){
+    draw(){
 
         this.shadowMapPass.add( );
 

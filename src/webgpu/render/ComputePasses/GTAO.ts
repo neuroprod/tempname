@@ -4,29 +4,27 @@ import Texture from "../../lib/textures/Texture.ts";
 import RenderTexture from "../../lib/textures/RenderTexture.ts";
 import {FilterMode, TextureDimension, TextureFormat} from "../../lib/WebGPUConstants.ts";
 import {Vector4} from "@math.gl/core";
-import {MathArray} from "@math.gl/core/dist/classes/base/math-array";
-import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
+
+
 import Camera from "../../lib/Camera.ts";
 import {Textures} from "../../data/Textures.ts";
 
 
 export default class GTAO {
-    private renderer: Renderer;
-    private passEncoder: GPUComputePassEncoder;
-    private computePipeline: GPUComputePipeline;
-
-
     public uniformGroup: UniformGroup;
+    private renderer: Renderer;
+    private passEncoder!: GPUComputePassEncoder;
+    private computePipeline!: GPUComputePipeline;
     private texture: Texture;
-    private pipeLineLayout: GPUPipelineLayout;
+    private pipeLineLayout!: GPUPipelineLayout;
     private textureDepth: RenderTexture;
     private camera: Camera;
 
-    constructor(renderer: Renderer,camera:Camera) {
+    constructor(renderer: Renderer, camera: Camera) {
         this.renderer = renderer;
         this.uniformGroup = new UniformGroup(this.renderer, "uniforms")
 
-this.camera =camera;
+        this.camera = camera;
         this.texture = new RenderTexture(renderer, Textures.GTAO, {
             usage: GPUTextureUsage.COPY_DST |
                 GPUTextureUsage.STORAGE_BINDING |
@@ -47,11 +45,23 @@ this.camera =camera;
             format: TextureFormat.R32Uint,
         })
 
-        this.uniformGroup.addUniform("aoSettings", new Vector4(3, 2, 0.1, 0) as MathArray);
-        this.uniformGroup.addTexture("noise", this.renderer.getTexture(Textures.BLUE_NOISE),   {sampleType:"float",dimension: TextureDimension.TwoD, usage:GPUShaderStage.COMPUTE})
+        this.uniformGroup.addUniform("aoSettings", new Vector4(3, 2, 0.1, 0) );
+        this.uniformGroup.addTexture("noise", this.renderer.getTexture(Textures.BLUE_NOISE), {
+            sampleType: "float",
+            dimension: TextureDimension.TwoD,
+            usage: GPUShaderStage.COMPUTE
+        })
         //  this.uniformGroup.addTexture("noise",renderer.texturesByLabel["BlueNoise.png"],"float", TextureDimension.TwoD, GPUShaderStage.COMPUTE)
-        this.uniformGroup.addTexture("preprocessed_depth", this.renderer.getTexture(Textures.DEPTH_BLUR),   {sampleType:"float",dimension: TextureDimension.TwoD, usage:GPUShaderStage.COMPUTE})
-        this.uniformGroup.addTexture("normals", this.renderer.getTexture("GNormal"),   {sampleType:"float",dimension: TextureDimension.TwoD, usage:GPUShaderStage.COMPUTE})
+        this.uniformGroup.addTexture("preprocessed_depth", this.renderer.getTexture(Textures.DEPTH_BLUR), {
+            sampleType: "float",
+            dimension: TextureDimension.TwoD,
+            usage: GPUShaderStage.COMPUTE
+        })
+        this.uniformGroup.addTexture("normals", this.renderer.getTexture("GNormal"), {
+            sampleType: "float",
+            dimension: TextureDimension.TwoD,
+            usage: GPUShaderStage.COMPUTE
+        })
         this.uniformGroup.addStorageTexture("ambient_occlusion", this.texture, TextureFormat.R32Float);
         this.uniformGroup.addStorageTexture("depth_differences", this.textureDepth, TextureFormat.R32Uint);
         this.uniformGroup.addSampler("point_clamp_sampler", GPUShaderStage.COMPUTE, FilterMode.Nearest)

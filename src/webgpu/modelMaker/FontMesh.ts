@@ -79,7 +79,7 @@ export default class FontMesh extends Mesh{
         );
         this.indicesPos += 4;
 
-        this.startX+=char.xadvance*fontSize
+        this.startX+=char.xadvance*fontSize -3*fontSize
     }
 
 
