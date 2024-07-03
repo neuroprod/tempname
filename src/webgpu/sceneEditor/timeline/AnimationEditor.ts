@@ -10,6 +10,7 @@ import AnimationChannelEditor from "./AnimationChannelEditor.ts";
 import AnimationEditorGroup from "./AnimationEditorGroup.ts";
 
 import Timer from "../../lib/Timer.ts";
+import Renderer from "../../lib/Renderer.ts";
 
 
 class AnimationEditor {
@@ -215,6 +216,12 @@ class AnimationEditor {
 
     deleteSelectedKeys() {
         this.root?.keyDataMain.deleteSelectFrames();
+    }
+
+
+
+    removeCurrentAnimation() {
+
     }
 }
 

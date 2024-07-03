@@ -33,7 +33,9 @@ import {addMeshPopup} from "../UI/AddMeshPopup.ts";
 import {addPlayButton, addRecButton} from "../UI/PlayPauzeRecButton.ts";
 import {MainMenuOffset} from "../UI/Style.ts";
 import {saveScene} from "../lib/SaveUtils.ts";
-
+import {setNewPopup} from "../UI/NewPopup.ts";
+import Animation from "./timeline/animation/Animation.ts";
+import {setAnimePopup} from "../UI/AnimePopup.ts";
 
 export enum ToolState {
 
@@ -173,14 +175,30 @@ class SceneEditor {
 
         pushSplitPanel("horizontal panel",  this.nodeBottom,false);
         pushPanelMenu("animationMenu")
-        if(addMainMenuButton("AddAnime", "u",true)){
+        if(addMainMenuButton("AddAnime", Icons.ADD_ANIME,true)){
+
+            if(!this.currentModel)return;
+
+            setNewPopup("+ Add new Anime to "+this.currentModel.label, "new_anime", (name: string) => {
+                    if(!this.currentModel)return;
+                    let anime = new Animation(this.renderer, name, this.currentModel)
+                    SceneData.animations.push(anime)
+                    AnimationEditor.setAnimation(anime)
+            })
 
         }
-        if(addMainMenuButton("RemoveAnime", "v",true)){
+        if(addMainMenuButton("RemoveAnime",  Icons.REMOVE_ANIME,true)){
+            if(AnimationEditor.currentAnimation){
+                SceneData.removeAnimation(AnimationEditor.currentAnimation)
+                AnimationEditor.setAnimation(null);
 
+            }
         }
         if(addMainMenuButton("open", Icons.FOLDER,true)){
+            setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
+                AnimationEditor.setAnimation(anime);
 
+            })
         }
         if(AnimationEditor.currentAnimation){
             addMainMenuDivider("mydiv3")

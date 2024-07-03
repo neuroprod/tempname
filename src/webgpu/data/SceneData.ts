@@ -257,6 +257,13 @@ model.setMaterial("shadow",this.defaultFontShadowMaterial)
         this.projectsMap.set(p.id, p);
 
     }
+
+    removeAnimation(currentAnimation: Animation) {
+       let i = this.animations.indexOf(currentAnimation)
+        if(i>=0) {
+            this.animations.splice(i, 1);
+        }
+    }
 }
 
 

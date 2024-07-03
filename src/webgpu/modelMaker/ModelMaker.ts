@@ -137,16 +137,11 @@ export default class ModelMaker {
         this.backgroundModel = new Model(renderer, "textureModel");
         this.backgroundModel.mesh = new Quad(renderer)
         this.backgroundMaterial = new DrawingPreviewMaterial(renderer, "materprev");
-        this.backgroundMaterial.setTexture("colorTexture", this.renderer.getTexture( Textures.DRAWING_BACKGROUND));
-        this.backgroundModel.material =   this.backgroundMaterial;
+        this.backgroundMaterial.setTexture("colorTexture", this.renderer.getTexture(Textures.DRAWING_BACKGROUND));
+        this.backgroundModel.material = this.backgroundMaterial;
         this.backgroundModel.setScaler(0.525)
         this.backgroundModel.x = 0.5;
         this.backgroundModel.y = 0.5;
-
-
-
-
-
 
 
         this.textureModel = new Model(renderer, "textureModel");
@@ -176,7 +171,6 @@ export default class ModelMaker {
         this.modelRenderer2D.addModel(this.cutting.pathEditor.pointModel);
         this.camera3D = new Camera(this.renderer)
         this.previewRenderer = new PreviewRenderer(renderer, this.cutting.model3D, this.camera3D)
-
 
 
         this.scaleToFit()
@@ -289,7 +283,7 @@ export default class ModelMaker {
             addInputTextFill("currentImage", this.currentProject, "name")
             popLabel()
             pushLabel("Size")
-            addSelector("lSize",this.sizeSelectItems,1)
+            addSelector("lSize", this.sizeSelectItems, 1)
             popLabel()
             UI.separator("l", false)
             if (this.cutting.currentMesh) {
@@ -329,6 +323,47 @@ export default class ModelMaker {
 
     }
 
+    setProject() {
+
+        if (this.projects.length) {
+
+            let newName = AppState.getState("currentImage");
+
+            for (let p of this.projects) {
+                if (p.id == newName) {
+
+                    this.openProject(p)
+                    return;
+                }
+            }
+            this.openProject(this.projects[0])
+
+
+        }
+    }
+
+    saveAll() {
+
+        if (this.currentProject) {
+            this.drawing.saveCurrentProject();
+        }
+        for (let p of this.projects) {
+            if (p.fullTexture) {
+
+                let s = p.getSaveString();
+                sendTextureToServer(p.fullTexture, "texture", p.id, s).then(() => {
+                    console.log("savedTexture!", p.fullTexture)
+
+                }).catch(() => {
+                    console.log("error saving Texture")
+                })
+            }
+        }
+    }
+
+    saveTemp() {
+        this.drawing.saveCurrentProject()
+    }
 
     private handleMouse() {
         this.remapMouse(this.mouseListener.mousePos)
@@ -400,26 +435,6 @@ export default class ModelMaker {
 
     }
 
-
-    setProject() {
-
-        if (this.projects.length) {
-
-            let newName = AppState.getState("currentImage");
-
-            for (let p of this.projects) {
-                if (p.id == newName) {
-
-                    this.openProject(p)
-                    return;
-                }
-            }
-            this.openProject(this.projects[0])
-
-
-        }
-    }
-
     private makeNewProject(newName: string) {
         let fail = false;
         if (newName.length == 0) {
@@ -443,7 +458,7 @@ export default class ModelMaker {
     }
 
     private openProject(project: Project) {
-        if(this.currentProject){
+        if (this.currentProject) {
             this.saveTemp();
 
         }
@@ -468,41 +483,6 @@ export default class ModelMaker {
 
     }
 
-    saveAll() {
-
-        if(this.currentProject ) {
-          this.drawing.saveCurrentProject();
-        }
-        for(let p of this.projects){
-           if( p.fullTexture){
-
-
-               let s = this.currentProject.getSaveString();
-              // console.log(s)
-
-               sendTextureToServer(p.fullTexture, "texture", this.currentProject.id, s).then(() => {
-                 console.log("savedTexture!")
-
-               }).catch(() => {
-                   console.log("error saving")
-               })
-
-
-           }
-
-
-        }
-       // let s = this.currentProject.getSaveString();
-
-        /*sendTextureToServer(this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"], "texture", this.currentProject.name, s).then(() => {
-            UI.logEvent("", "saved!")
-
-        }).catch(() => {
-            UI.logEvent("", "error saving", true)
-        })*/
-    }
-
-
     private setTool(toolType: ToolType) {
         this.currentTool = toolType;
 
@@ -511,12 +491,8 @@ export default class ModelMaker {
         } else {
             this.modelMainState = ModelMainState.cut;
         }
-this.drawing.setTool(this.currentTool);
+        this.drawing.setTool(this.currentTool);
         this.cutting.setTool(this.currentTool)
 
-    }
-
-    saveTemp() {
-        this.drawing.saveCurrentProject()
     }
 }
