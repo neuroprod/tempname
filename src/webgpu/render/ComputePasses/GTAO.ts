@@ -45,7 +45,7 @@ export default class GTAO {
             format: TextureFormat.R32Uint,
         })
 
-        this.uniformGroup.addUniform("aoSettings", new Vector4(3, 2, 0.1, 0) );
+        this.uniformGroup.addUniform("aoSettings", new Vector4(3, 2, 0.2, 0) );
         this.uniformGroup.addTexture("noise", this.renderer.getTexture(Textures.BLUE_NOISE), {
             sampleType: "float",
             dimension: TextureDimension.TwoD,
@@ -240,7 +240,7 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
     let slice_count = uniforms.aoSettings.x;
     let samples_per_slice_side =uniforms.aoSettings.y;
     let effect_radius = uniforms.aoSettings.z * 1.457;
-    let falloff_range = 0.615 * effect_radius*2.0;
+    let falloff_range = 0.615 * effect_radius*1.0;
     let falloff_from = effect_radius * (1.0 - 0.615);
     let falloff_mul = -1.0 / falloff_range;
     let falloff_add = falloff_from / falloff_range + 1.0;
