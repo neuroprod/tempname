@@ -78,7 +78,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  GBufferOutput
     }
     
     
-    output.color =vec4(0.0,0.0,0.0,1.0);
+    output.color =vec4(0.2,0.1,0.0,1.0);
     output.normal =vec4(normalize(normal)*vec3f(0.5) +vec3f(0.5),0.0);
 
     return output;
