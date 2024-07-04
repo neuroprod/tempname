@@ -31,7 +31,7 @@ export default class Game{
     draw() {
         this.gameRenderer.draw();
 
-        SceneData.animations[0].autoPlay(Timer.delta)
+        //SceneData.animations[0].autoPlay(Timer.delta)
     }
 
     drawInCanvas(pass: CanvasRenderPass) {

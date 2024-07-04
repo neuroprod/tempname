@@ -2,7 +2,7 @@ import Material from "../material/Material.ts";
 import {ShaderType} from "../material/ShaderTypes.ts";
 import UniformGroup from "../material/UniformGroup.ts";
 import DefaultTextures from "../textures/DefaultTextures.ts";
-import {CompareFunction} from "../WebGPUConstants.ts";
+import {CompareFunction, FilterMode} from "../WebGPUConstants.ts";
 
 export default class BaseBlitMaterial extends Material
 {
@@ -15,7 +15,7 @@ export default class BaseBlitMaterial extends Material
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
         uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer));
-        uniforms.addSampler("mySampler")
+        uniforms.addSampler("mySampler",GPUShaderStage.FRAGMENT,FilterMode.Nearest)
 
         this.depthWrite = false
         this.depthCompare = CompareFunction.Always

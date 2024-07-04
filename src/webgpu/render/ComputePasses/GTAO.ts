@@ -250,7 +250,7 @@ fn main(@builtin(global_invocation_id) global_id: vec3<u32>) {
     let uv = (vec2<f32>(pixel_coordinates) + 0.5) /textureSize;
 
     var pixel_depth = calculate_neighboring_depth_differences(pixel_coordinates,textureSize);
-    pixel_depth -= 0.0005; // Avoid depth precision issues
+    pixel_depth -= 0.0015; // Avoid depth precision issues
 
     let pixel_position = reconstruct_view_space_position(pixel_depth, uv);
     

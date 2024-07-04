@@ -123,12 +123,14 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       
         var offset = rotMat *kernel2[i];
         offset*=0.01;
-        let  shadowDepth = textureSample(shadowMap, mySampler,   shadowPosProj.xy+offset).x;
+        offset +=shadowPosProj.xy;
+        let  shadowDepth = textureSample(shadowMap, mySampler,   offset).x;
    
         if(depth-shadowDepth+0.02<0.0) {
+
             avgBlocker += shadowDepth;
             blocker+=1.0;  
-           
+          
         }  
       
       
@@ -149,10 +151,16 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       
         var offset = rotMat *kernel[i];
         offset*=size;
-        let  shadowDepth = textureSample(shadowMap, mySampler,   shadowPosProj.xy+offset).x;
-   
-        if(depth-shadowDepth+0.015>0) {shadow +=1.0;}  
-      
+        offset+=shadowPosProj.xy;
+        let  shadowDepth = textureSample(shadowMap, mySampler,   offset).x;
+        //make this faster
+        if(offset.x>0.0 && offset.x<1.0 && offset.y>0.0 && offset.y<1.0) 
+        {
+          if(depth-shadowDepth+0.015>0) {
+                shadow +=1.0;
+          }  
+        }
+        else {shadow +=1.0;}  
       
       }
       shadow/=16.0;

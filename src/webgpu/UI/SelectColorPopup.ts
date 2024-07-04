@@ -35,7 +35,14 @@ export default class SelectColorPopup extends PopUp {
     private color: Color;
     private colorPickerSettings: ColorPickerSettings;
     private btn: MenuColorButton;
-    private colors =["#261002","#ffffff","#ff7b7b","#eeeeee","#dddddd","#cccccc","#bbbbbb"]
+    private colors =[
+        "#2d1205",
+        "#ffffff",
+        "#ff7b7b",
+        "#eeeeee",
+        "#dddddd",
+        "#cccccc",
+        "#bbbbbb"]
 
     constructor(id: number, settings: PopUpSettings,colorBtn:MenuColorButton) {
         super(id, settings);

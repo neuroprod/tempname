@@ -136,6 +136,6 @@ export async function getImageBlob (texture:Texture){
 
     }
 
-    return await new Promise(resolve => canvas.toBlob(resolve));
+    return await new Promise(resolve => canvas.toBlob(resolve,"image/png",1));
 
 }
