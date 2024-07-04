@@ -17,6 +17,10 @@ export default class Animation{
     root: SceneObject3D;
     label: string ="";
     private playTime: number=0;
+
+    public play:boolean =false;
+
+
     constructor(renderer:Renderer, label:string,root:SceneObject3D) {
         this.root =root;
         this.label =label;
@@ -54,5 +58,20 @@ export default class Animation{
             this.playTime -= this.numFrames
         }
         this.setTime(this.playTime)
+    }
+    setFrame(frame:number){
+        this.playTime =frame;
+        this.setTime(this.playTime)
+
+    }
+    update(delta: number) {
+
+        if(this.play){
+            this.playTime += delta / this.frameTime;
+
+            if (this.playTime > this.numFrames) {this.playTime == this.numFrames;  this.play =false;}
+            this.setTime(this.playTime)
+
+        }
     }
 }

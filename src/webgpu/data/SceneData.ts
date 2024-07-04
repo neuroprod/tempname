@@ -35,7 +35,8 @@ class SceneData {
 
     private defaultFontMaterial!: GBufferFontMaterial;
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
-
+    public sceneModelsByName: { [id: string]: SceneObject3D } = {};
+    public animationsByName: { [id: string]: Animation } = {};
     constructor() {
 
 
@@ -115,7 +116,7 @@ class SceneData {
                     animation.channels.push(channel)
                 }
             }
-
+            this.animationsByName[anime.label] =animation
             this.animations.push(animation)
             //AnimationEditor.setAnimation(this.animations[0]);
         }
@@ -195,6 +196,8 @@ class SceneData {
         if (id.length > 1) {
             obj3D.UUID = id;
         }
+        this.sceneModelsByName[name] =obj3D
+
         return obj3D;
     }
 
@@ -219,7 +222,7 @@ class SceneData {
         model.mesh = mesh
 
         model.material = this.defaultFontMaterial;
-model.setMaterial("shadow",this.defaultFontShadowMaterial)
+        model.setMaterial("shadow", this.defaultFontShadowMaterial)
 
         let obj3D = new SceneObject3D(this.renderer, name)
         obj3D.addChild(model)
@@ -227,6 +230,13 @@ model.setMaterial("shadow",this.defaultFontShadowMaterial)
         obj3D.text = text;
         obj3D.model = model;
         return obj3D;
+    }
+
+    removeAnimation(currentAnimation: Animation) {
+        let i = this.animations.indexOf(currentAnimation)
+        if (i >= 0) {
+            this.animations.splice(i, 1);
+        }
     }
 
     private getModel(label: string, projectId: string, meshId: string, id: string): SceneObject3D | null {
@@ -256,13 +266,6 @@ model.setMaterial("shadow",this.defaultFontShadowMaterial)
         this.projects.push(p)
         this.projectsMap.set(p.id, p);
 
-    }
-
-    removeAnimation(currentAnimation: Animation) {
-       let i = this.animations.indexOf(currentAnimation)
-        if(i>=0) {
-            this.animations.splice(i, 1);
-        }
     }
 }
 
