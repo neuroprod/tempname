@@ -247,7 +247,7 @@ export default class EditCursor {
     setToolState(currentToolState: ToolState) {
         this.currentToolState = currentToolState;
 
-        this.arrowX.visible = true;
+        this.arrowX.visible = false;
         this.arrowY.visible = false;
         this.arrowZ.visible = false;
         this.circleX.visible = false;

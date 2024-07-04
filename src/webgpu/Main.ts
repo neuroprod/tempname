@@ -136,6 +136,9 @@ export default class Main {
         if (state == MainState.editor) {
            SceneEditor.setActive()
         }
+        if (state == MainState.game) {
+           this.game.setActive()
+        }
         this.currentMainState = state;
     }
 

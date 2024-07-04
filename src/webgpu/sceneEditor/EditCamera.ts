@@ -131,6 +131,7 @@ export default class EditCamera
             this.isRotating =false;
             this.isDragging =false;
             this.isPanning =false;
+            console.log(this.camera.cameraWorld,this.camera.cameraLookAt)
         }
 
         return this.isDragging;
