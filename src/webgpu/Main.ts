@@ -167,10 +167,10 @@ export default class Main {
     private onUI() {
         if (this.currentMainState == MainState.game) {
             // pushMainMenu("editMenu", 74, 0)
-            UI_I.currentComponent = UI_I.panelLayer;
+           /* UI_I.currentComponent = UI_I.panelLayer;
             if (addMainMenuTextButton("Edit", true)) {
                 this.setMainState(MainState.editor)
-            }
+            }*/
             // popMainMenu()
         } else {
             pushMainMenu("MainMenu", 207, 0)
