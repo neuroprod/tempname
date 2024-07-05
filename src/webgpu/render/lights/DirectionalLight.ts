@@ -11,7 +11,7 @@ export default class DirectionalLight{
 
     constructor(renderer:Renderer) {
 
-        this.lightColor =new Vector4(1,0.8,0.5,10)
+        this.lightColor =new Vector4(1,0.8,0.5,6)
         this.lightDir = new Vector3(1,3,2)
         this.lightDir.normalize();
         this.shadowCamera =new Camera(renderer);

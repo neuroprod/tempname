@@ -146,20 +146,23 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        
        let albedo=pow(textureLoad(gColor,  uvPos ,0).xyz,vec3(2.2)); 
       let ao=textureLoad(aoTexture,  uvPos ,0).x; 
-    
+    let aoM = max(ao*ao*ao,0.5);
        let roughness = 0.7;
        let metallic = 0.0;
        let N=normalize(textureLoad(gNormal,  uvPos ,0).xyz*2.0-1.0); 
        let V = normalize(camera.worldPosition.xyz - world);
        let F0 = mix(vec3(0.04), albedo, metallic);
-     var color =albedo*vec3(0.6,0.6,0.7)*ao*ao*ao*ao;
+     var color =albedo*vec3(0.6,0.6,0.7)*1.1*aoM;
        
 
        
             let shadow=textureLoad(shadow,  uvPos ,0).x;
-       color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness)*shadow*ao*ao*ao*ao;
+       color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness)*shadow*aoM;
 
-    
+      let dist = distance( uv0, vec2(0.5, 0.5));
+      let fall =0.3;
+    color =color* smoothstep(0.8, fall * 0.799, dist * (0.6+ fall));
+  
       
      return vec4(acestonemap(color),1.0) ;
 }
