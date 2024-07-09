@@ -139,7 +139,10 @@ export default class UniformGroup extends ObjectGPU {
             baseMipLevel: baseMipLevel
         })
     }
+    addExternalTexture(name:string){
 
+
+    }
     addTexture(name: string, value: Texture, options: Partial< TextureUniformOptions> ={}) {
 
         let opt:TextureUniformOptions = { ...TextureUniformOptionsDefault,...options} ;
@@ -214,7 +217,7 @@ export default class UniformGroup extends ObjectGPU {
         }
 
     }
-
+setVideotexture(name:string,video:VideoFrame|HTMLVideoElement){}
     update() {
 
         this.updateData();
@@ -286,7 +289,6 @@ ${this.getUniformStruct()}
 `;
         }
 
-
         let textureText = ""
         if (this.textureUniforms.length) {
             for (let s of this.textureUniforms) {
@@ -316,7 +318,7 @@ ${this.getUniformStruct()}
                     //texture_depth_cube
                     //texture_1d<f32>
                     //texture_depth_2d
-
+                   // texture_external
                 }
 
                 textureText += `@group(${id}) @binding(${bindingCount})  var ` + s.name + `:` + textureType + `;` + "\n";

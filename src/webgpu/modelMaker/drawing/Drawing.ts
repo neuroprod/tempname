@@ -112,7 +112,7 @@ export default class Drawing {
                 this.project.loadTexture = new TextureLoader(this.renderer, "./data/" + project.id + "/texture.png")
 
                 this.project.loadTexture.onComplete = () => {
-
+                    this.project.loadTexture.isDirty =true;
                     this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
                     this.updateDrawing()
 

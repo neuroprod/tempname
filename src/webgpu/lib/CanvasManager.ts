@@ -9,7 +9,7 @@ export default class CanvasManager {
         this.canvas = canvas;
         this.pixelRatio = window.devicePixelRatio;
         this.resize();
-        window.onresize = this.delayedResize.bind(this);
+        window.onresize = this.resize.bind(this);
 
     }
 
@@ -20,7 +20,7 @@ export default class CanvasManager {
         this.canvas.height = Math.floor(window.innerHeight * this.pixelRatio);
         UI.setSize(this.canvas.width, this.canvas.height)
     }
-
+//TODO: check no usage anymore for a delayed resize?
     delayedResize() {
         clearTimeout(this.resizeTimeOut);
 
