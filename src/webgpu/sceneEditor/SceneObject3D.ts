@@ -18,6 +18,7 @@ export default class SceneObject3D extends Object3D{
 
     isText: boolean =false;
     text:string =""
+    needsHitTest =false;
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
         if(!SceneObject3D.emptyTreeSettings) {
@@ -52,6 +53,10 @@ export default class SceneObject3D extends Object3D{
     onDataUI() {
         UI.pushID(this.UUID)
         UI.LTextInput("name",this,"label")
+        if(this.model) {
+            this.needsHitTest = UI.LBool(this, "needsHitTest");
+        }
+
         UI.LFloat(this,"x","Position X")
         UI.LFloat(this,"y","Y")
         UI.LFloat(this,"z","Z")
@@ -72,6 +77,7 @@ export default class SceneObject3D extends Object3D{
     getSceneData(dataArr:Array<any>) {
        let obj:any ={}
         obj.id =this.UUID;
+       obj.needsHitTest =this.needsHitTest;
         obj.label =this.label;
         obj.meshId =this.meshId;
         obj.projectId = this.projectId;

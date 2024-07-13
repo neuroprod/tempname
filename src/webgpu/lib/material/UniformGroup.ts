@@ -1,4 +1,3 @@
-
 import {getSizeForShaderType, ShaderType} from "./ShaderTypes";
 
 import Texture from "../textures/Texture.ts";
@@ -7,11 +6,12 @@ import {
     AddressMode,
     FilterMode,
     SamplerBindingType,
-    TextureDimension, TextureFormat, TextureSampleType,
+    TextureDimension,
+    TextureFormat,
+    TextureSampleType,
     TextureViewDimension
 } from "../WebGPUConstants.ts";
 import Renderer from "../Renderer.ts";
-import {BaseRenderTextureOptions, BaseRenderTextureOptionsDefault} from "../textures/RenderTexture.ts";
 
 type Uniform = {
     isSet: boolean,
@@ -38,10 +38,6 @@ export const TextureUniformOptionsDefault: TextureUniformOptions = {
 }
 
 
-
-
-
-
 type TextureUniform = {
     name: string,
     texture: Texture;
@@ -66,37 +62,42 @@ type SamplerUniform = {
     compare: boolean
 
 }
+type ExternalTexture = {
+    name: string,
+    video: HTMLVideoElement | null,
+}
+
 export default class UniformGroup extends ObjectGPU {
-   // public static instance: UniformGroup
+    // public static instance: UniformGroup
     public bindGroupLayout!: GPUBindGroupLayout;
     public bindGroup!: GPUBindGroup;
-    private isBufferDirty: boolean = true;
     public isBindGroupDirty: boolean = true;
     public uniforms: Array<Uniform> = [];
     public textureUniforms: Array<TextureUniform> = [];
     public storageTextureUniforms: Array<StorageTextureUniform> = [];
     public samplerUniforms: Array<SamplerUniform> = [];
-
     public buffer!: GPUBuffer;
     public visibility: GPUShaderStageFlags = GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT | GPUShaderStage.COMPUTE;
+    private isBufferDirty: boolean = true;
     private bufferData!: Float32Array;
     private readonly nameInShader: string;
     private readonly typeInShader: string;
 
     private hasUniformBuffer: boolean = true;
-    private markDelete: boolean =false;
-    private autoUpdate: boolean=true
+    private markDelete: boolean = false;
+    private autoUpdate: boolean = true
+    private externalTextures: Array<ExternalTexture> = [];
 
-    constructor(renderer: Renderer,  nameInShader: string,autoUpdate =true) {
+    constructor(renderer: Renderer, nameInShader: string, autoUpdate = true) {
         super(renderer, nameInShader);
         this.nameInShader = nameInShader;
         this.typeInShader = this.nameInShader.charAt(0).toUpperCase() + this.nameInShader.slice(1);
-        this.autoUpdate =autoUpdate;
-        if(autoUpdate)this.renderer.addUniformGroup(this);
+        this.autoUpdate = autoUpdate;
+        if (autoUpdate) this.renderer.addUniformGroup(this);
 
     }
 
-    addUniform(name: string, value:Array<number> | number | Float32Array, usage: GPUShaderStageFlags = GPUShaderStage.FRAGMENT, format = ShaderType.auto, arraySize = 1) {
+    addUniform(name: string, value: Array<number> | number | Float32Array, usage: GPUShaderStageFlags = GPUShaderStage.FRAGMENT, format = ShaderType.auto, arraySize = 1) {
         const found = this.uniforms.find((element) => element.name == name);
         if (found) {
             console.log("uniform already exist " + this.label + " " + name)
@@ -139,13 +140,19 @@ export default class UniformGroup extends ObjectGPU {
             baseMipLevel: baseMipLevel
         })
     }
-    addExternalTexture(name:string){
 
+    addExternalTexture(name: string) {
+
+        this.externalTextures.push({
+            name: name,
+            video: null
+        });
 
     }
-    addTexture(name: string, value: Texture, options: Partial< TextureUniformOptions> ={}) {
 
-        let opt:TextureUniformOptions = { ...TextureUniformOptionsDefault,...options} ;
+    addTexture(name: string, value: Texture, options: Partial<TextureUniformOptions> = {}) {
+
+        let opt: TextureUniformOptions = {...TextureUniformOptionsDefault, ...options};
         this.textureUniforms.push({
             name: name,
             sampleType: opt.sampleType,
@@ -157,7 +164,7 @@ export default class UniformGroup extends ObjectGPU {
 
     }
 
-    addSamplerComparison(name:string) {
+    addSamplerComparison(name: string) {
         let sampler = this.renderer.device.createSampler({compare: 'less',})
         this.samplerUniforms.push({name: name, sampler: sampler, usage: GPUShaderStage.FRAGMENT, compare: true})
 
@@ -217,7 +224,14 @@ export default class UniformGroup extends ObjectGPU {
         }
 
     }
-setVideotexture(name:string,video:VideoFrame|HTMLVideoElement){}
+
+    setVideoTexture(name: string, video:  HTMLVideoElement) {
+        const found = this.externalTextures.find((element) => element.name == name);
+        if(found){
+            found.video =video;
+        }
+    }
+
     update() {
 
         this.updateData();
@@ -228,7 +242,7 @@ setVideotexture(name:string,video:VideoFrame|HTMLVideoElement){}
             }
             if (t.texture.isDirty) this.isBindGroupDirty = true;
         }
-
+        if(this.externalTextures.length) this.isBindGroupDirty = true;
 
         if (this.bindGroup) {
             if (this.isBindGroupDirty) {
@@ -318,12 +332,20 @@ ${this.getUniformStruct()}
                     //texture_depth_cube
                     //texture_1d<f32>
                     //texture_depth_2d
-                   // texture_external
+                    // texture_external
                 }
 
                 textureText += `@group(${id}) @binding(${bindingCount})  var ` + s.name + `:` + textureType + `;` + "\n";
                 bindingCount++;
             }
+        }
+        if (this.externalTextures.length) {
+            for (let s of this.externalTextures) {
+
+                textureText += `@group(${id}) @binding(${bindingCount})  var ` + s.name + `:texture_external;` + "\n";
+                bindingCount++;
+            }
+
         }
         if (this.samplerUniforms.length) {
             for (let s of this.samplerUniforms) {
@@ -369,6 +391,14 @@ ${this.getUniformStruct()}
             })
             bindingCount++;
         }
+        for (let t of this.externalTextures) {
+            entriesLayout.push({
+                binding: bindingCount,
+                visibility: GPUShaderStage.FRAGMENT,
+                externalTexture: {}
+            })
+            bindingCount++;
+        }
         for (let t of this.storageTextureUniforms) {
             entriesLayout.push({
                 binding: bindingCount,
@@ -406,6 +436,16 @@ ${this.getUniformStruct()}
 
     }
 
+    destroy() {
+        if (this.hasUniformBuffer) {
+            this.buffer.destroy();
+        }
+        this.markDelete = true;
+        if (this.autoUpdate) {
+            console.log("fix uniform destroy in renderer")
+        }
+    }
+
     protected updateData() {
 
     }
@@ -431,7 +471,7 @@ ${this.getUniformStruct()}
             if (u.size == 1) {
                 this.bufferData[u.offset] = u.data as number;
             } else {
-                this.bufferData.set(u.data as ArrayLike<number> , u.offset);
+                this.bufferData.set(u.data as ArrayLike<number>, u.offset);
 
             }
         }
@@ -480,6 +520,19 @@ ${this.getUniformStruct()}
 
             bindingCount++;
         }
+        for (let t of this.externalTextures) {
+            entries.push(
+                {
+                    binding: bindingCount,
+                    resource: this.device.importExternalTexture({
+                        source: t.video as HTMLVideoElement,
+                    }),
+
+                }
+            )
+
+            bindingCount++;
+        }
         for (let t of this.storageTextureUniforms) {
             entries.push(
                 {
@@ -518,7 +571,7 @@ ${this.getUniformStruct()}
     private getUniformStruct() {
         let uniformText = "";
         for (let uniform of this.uniforms) {
-            uniformText +="   "+ uniform.name + " : ";
+            uniformText += "   " + uniform.name + " : ";
             if (uniform.size == 1) uniformText += "f32,";
             else if (uniform.size == 2) uniformText += "vec2 <f32>,"
             else if (uniform.size == 3) uniformText += "vec3 <f32>,"
@@ -528,16 +581,5 @@ ${this.getUniformStruct()}
             uniformText += "\n";
         }
         return uniformText
-    }
-
-
-    destroy() {
-            if(this.hasUniformBuffer){
-                this.buffer.destroy();
-            }
-            this.markDelete =true;
-            if(this.autoUpdate){
-                console.log("fix uniform destroy in renderer")
-            }
     }
 }

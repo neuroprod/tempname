@@ -37,6 +37,7 @@ class SceneData {
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
     public sceneModelsByName: { [id: string]: SceneObject3D } = {};
     public animationsByName: { [id: string]: Animation } = {};
+   public hitTestModels: Array<Model> = [];
     constructor() {
 
 
@@ -70,6 +71,9 @@ class SceneData {
 
 
             if (sceneObj) {
+
+                this.sceneModelsByName[sceneObj.label] =sceneObj
+
                 sceneObj.setPosition(d.position[0], d.position[1], d.position[2])
                 sceneObj.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
 
@@ -80,7 +84,11 @@ class SceneData {
                     if (d.scale) {
                         sceneObj.model.setScale(d.scale[0], d.scale[1], d.scale[2])
                     }
+                    sceneObj.needsHitTest = d.needsHitTest
                     this.usedModels.push(sceneObj.model);
+                    if(sceneObj.needsHitTest) {
+                        this.hitTestModels.push(sceneObj.model);
+                    }
                 }// if(m.model)
             }
         }
@@ -190,13 +198,15 @@ class SceneData {
         obj3D.model = model;
         obj3D.meshId = m.id;
         obj3D.projectId = p.id;
+
         if (m.meshType == MeshType.TRANS_PLANE) {
             // obj3D.transparent =true;
         }
         if (id.length > 1) {
             obj3D.UUID = id;
         }
-        this.sceneModelsByName[name] =obj3D
+
+
 
         return obj3D;
     }

@@ -70,7 +70,7 @@ export default class Object3D extends ObjectGPU {
     }
 
     public set x(value: number) {
-        if (this._position.x != value) {
+        if (this._position.x !== value) {
             this._position.x = value;
             this.setDirty();
         }
@@ -114,16 +114,18 @@ export default class Object3D extends ObjectGPU {
             this.setDirty();
         }
     }
-
+    setRY(value:number){
+        this.ry =value;
+    }
+    getRY(){
+        return this.ry;
+    }
     public get ry() {
-        // @ts-ignore
-        return this.euler.y
+        return this.euler[1]
     }
 
     public set ry(value: number) {
-
-        // @ts-ignore
-        if (this.euler.y != value) {
+        if (this.euler[1] != value) {
             this.setEuler( this._euler.x,value,this._euler.z)
             this.setDirty();
         }
