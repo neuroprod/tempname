@@ -25,6 +25,7 @@ export default class SDFBatch {
             size+=char.xadvance*fontSize
 
         }
+
         return size;
     }
     getLineSize(text: string, fontSize: number,bold:boolean =false){

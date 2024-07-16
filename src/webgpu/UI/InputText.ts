@@ -114,8 +114,9 @@ export class InputText extends Component{
         if (actionKey == ActionKey.BackSpace) {
 
                 this.text = this.text.slice(0, this.cursorPos - 1) + this.text.slice(this.cursorPos);
+                console.log(  this.cursorPos )
                 this.cursorPos = this.limitMouseCursor(this.cursorPos - 1);
-
+            console.log(  this.cursorPos )
                 this.setTextDirty();
                 this.setDirty();
             }
@@ -162,7 +163,7 @@ export class InputText extends Component{
         this.textRect.pos.y+=1;
 
         this.cursorRect.pos.copy(this.textPos);
-        if(this.text.length>1)
+        if(this.text.length>0)
         this.cursorRect.pos.x +=UI_I.currentDrawBatch.sdfBatch.getCharPos(this.cursorPos,this.text,14)
 
     }

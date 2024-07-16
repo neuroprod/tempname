@@ -10,6 +10,8 @@ export default class KeyInput{
     private rightDownTime!: DOMHighResTimeStamp;
     private leftDownTime!: DOMHighResTimeStamp;
     private space: boolean =false;
+    private spaceTimeStamp!: DOMHighResTimeStamp;
+    private spaceTime: number =0;
     constructor() {
 
         document.addEventListener('keydown', (event)=> {
@@ -39,6 +41,8 @@ export default class KeyInput{
                    }
                case " " :
                    this.space =true;
+                   this.spaceTimeStamp =event.timeStamp
+
                    break;
                case "ArrowDown" :
                    if(event.shiftKey){
@@ -58,14 +62,20 @@ export default class KeyInput{
                 case "ArrowRight":
                    this.rightDown=false
                     break;
+                case " ":
+                case "ArrowUp":
 
+                    this.spaceTime =event.timeStamp - this.spaceTimeStamp;
+
+                    this.space =false
+                    break;
             }
         });
     }
     getJump()
     {
         if(this.space){
-            this.space =false;
+           // this.space =false;
             return true;
         }
         return false;

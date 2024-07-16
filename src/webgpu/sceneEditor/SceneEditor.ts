@@ -72,6 +72,9 @@ class SceneEditor {
     private nodeTop!: SplitNode;
     private nodeBottom!: SplitNode;
 
+
+    private numFrames ="60"
+
     constructor() {
     }
     init(renderer: Renderer, mouseListener: MouseListener, camera:Camera,gameRenderer:GameRenderer) {
@@ -232,8 +235,13 @@ class SceneEditor {
                 }
 
             }
+           // this.numFrames  =AnimationEditor.currentAnimation.numFrames+"";
+            addInputText("numFrames",this,"numFrames",false,2,0,70)
+            if(this.numFrames!= AnimationEditor.currentAnimation.numFrames+""){
+                AnimationEditor.currentAnimation.numFrames =Number.parseFloat(this.numFrames);
 
 
+            }
         }
 
 

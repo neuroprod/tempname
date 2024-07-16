@@ -14,13 +14,15 @@ export default class CharacterController {
     private positionAdjustment: Vector3 = new Vector3()
     private targetPos: Vector3 = new Vector3()
 
-private gravity =20;
+    private gravity =40;
     private maxVelX = 2;
     private moveForceX = 6;
     private jumpForceX = 3;
     private isGrounded = true;
     private jumpPulse: number =6;
     private downRay: Ray;
+    private startWithJump: boolean =false;
+    private jumpDown: boolean =false;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
@@ -32,7 +34,7 @@ private gravity =20;
 
 
     update(delta: number, hInput: number, jump: boolean) {
-
+        this.jumpDown =jump;
         if (this.isGrounded) {
             this.velocity.x += hInput * delta *this.moveForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
@@ -42,7 +44,9 @@ private gravity =20;
             }
             if(jump)  {
                 this.velocity.y =this.jumpPulse;
-                this.isGrounded =false;
+               this.setGrounded(false)
+                this.startWithJump =true;
+
             }
         }else{
 
@@ -52,7 +56,15 @@ private gravity =20;
             if (hInput == 0) {
                 this.velocity.x *= 0.5;
             }
-            this.velocity.y -=this.gravity*delta;
+            if(this.startWithJump && this.jumpDown &&    this.velocity.y>0){
+
+                this.velocity.y -=this.gravity*0.3*delta;
+            }else{
+                this.velocity.y -=this.gravity*delta;
+                this.startWithJump =false;
+            }
+
+
 
         }
 
@@ -63,9 +75,6 @@ private gravity =20;
         this.targetPos.add( this.positionAdjustment);
 
 
-
-
-
         this.downRay.rayDir.set(0,-1,0);
         this.downRay.rayStart.copy(this.charRoot.getPosition());
         this.downRay.rayStart.y+=0.1
@@ -73,20 +82,17 @@ private gravity =20;
 
         let int = this.downRay.intersectModels(SceneData.hitTestModels);
         if(int.length==0){
-         this.isGrounded =false;
+            this.setGrounded(false)
 
         }else{
             let yFloor = int[0].point.y;
 
-            if(yFloor>this.targetPos.y-0.001){
+            if(yFloor>this.targetPos.y-0.05){
                 this.velocity.y =0;
-                this.isGrounded =true;
+                this.setGrounded(true)
                 this.targetPos.y =yFloor;
-
             }else{
-                this.isGrounded =false;
-
-               /// this.velocity.y =0;
+                this.setGrounded(false)
             }
 
         }
@@ -102,7 +108,19 @@ private gravity =20;
         this.setCharacterDir(hInput);
 
     }
+    private setGrounded(value: boolean) {
+        if(this.isGrounded ==value)return;
 
+        if(this.isGrounded && !value){
+            console.log("leaveGround")
+
+
+
+        } else{
+            console.log("hitGround")
+        }
+        this.isGrounded =value;
+    }
     private setCharacterDir(horizontalDir: number) {
         if (horizontalDir > 0 && !this.facingRight) {
             this.facingRight = true;
@@ -120,4 +138,6 @@ private gravity =20;
         }
 
     }
+
+
 }
