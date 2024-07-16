@@ -9,6 +9,7 @@ import Timer from "../lib/Timer.ts";
 import KeyInput from "./KeyInput.ts";
 import CharacterController from "./CharacterController.ts";
 import GameCamera from "./GameCamera.ts";
+import DebugDraw from "./DebugDraw.ts";
 export default class Game{
     private renderer: Renderer;
     private mouseListener: MouseListener;
@@ -30,7 +31,7 @@ export default class Game{
         this.characterController = new CharacterController(renderer)
         this.gameCamera = new GameCamera(renderer,camera);
         this.keyInput =new KeyInput()
-
+        DebugDraw.init(this.renderer,camera);
         this.setActive();
 
     }
@@ -38,17 +39,13 @@ export default class Game{
     update() {
         this.gameCamera.update()
 
-
-
         let delta  =Timer.delta;
-
         let jump =this.keyInput.getJump()
         let hInput = this.keyInput.getHdir()
-
         this.characterController.update(delta,hInput,jump)
 
-
-
+//last
+        DebugDraw.update();
     }
     setActive() {
 
@@ -63,7 +60,7 @@ export default class Game{
     drawInCanvas(pass: CanvasRenderPass) {
 
         this.gameRenderer.drawFinal(pass);
-
+        DebugDraw.draw(pass);
     }
 
 

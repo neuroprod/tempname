@@ -4,6 +4,7 @@ import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import gsap from "gsap";
 import {Vector3} from "@math.gl/core";
 import Ray from "../lib/Ray.ts";
+import DebugDraw from "./DebugDraw.ts";
 
 export default class CharacterController {
     private charRoot: SceneObject3D;
@@ -97,8 +98,10 @@ export default class CharacterController {
 
         }
 
-
-
+        if(int.length>0){
+        DebugDraw.path.moveTo(this.downRay.rayStart)
+        DebugDraw.path.lineTo(int[0].point)
+        }
        //
         //console.log(SceneData.hitTestModels)
 

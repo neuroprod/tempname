@@ -71,6 +71,9 @@ export default class Path {
         }
 
     }
+    public clear(){
+        this.curves=[]
+    }
     public setMeshData(indices: Array<Number>, positions: Array<Number>) {
         let numCurves = this.curves.length
         for (let i = 0; i < numCurves; i++) {

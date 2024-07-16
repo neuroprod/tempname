@@ -38,7 +38,7 @@ export default class Cutting {
         this.camera = camera
         this.renderer = renderer
         this.shapeLineModelSelect = new FatShapeLineModel(this.renderer, "linesSelect", false);
-        this.shapeLineModelSelectControl = new ShapeLineModel(this.renderer, "linesControll", false)
+        this.shapeLineModelSelectControl = new ShapeLineModel(this.renderer, "linesControll")
         this.shapeLineModelAll = new FatShapeLineModel(this.renderer, "linesAll", true);
 
         this.model3D = new Model(renderer, "model3D")

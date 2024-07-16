@@ -13,16 +13,14 @@ export default class ShapeLineModel extends Model {
 
     private indices: Array<number> = [];
 
-
-    constructor(renderer: Renderer, label: string, all: boolean) {
+//#0066ff
+    constructor(renderer: Renderer, label: string, colorString="#ffae00") {
         super(renderer, label);
         this.mesh = new Mesh(this.renderer, label + "m")
         this.material = new ShapeLineMaterial(this.renderer, "ShapeLineMaterial")
-        if (all) {
-            this.material.setUniform("color", new ColorV().setHex("#ffae00"))
-        } else {
-            this.material.setUniform("color", new ColorV().setHex("#0066ff"))
-        }
+
+            this.material.setUniform("color", new ColorV().setHex(colorString))
+
 
 
         this.material.depthWrite = false;
