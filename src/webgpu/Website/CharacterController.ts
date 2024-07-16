@@ -5,6 +5,7 @@ import gsap from "gsap";
 import {Vector3} from "@math.gl/core";
 import Ray from "../lib/Ray.ts";
 import DebugDraw from "./DebugDraw.ts";
+import CloudParticles from "./CloudParticles.ts";
 
 export default class CharacterController {
     private charRoot: SceneObject3D;
@@ -24,11 +25,12 @@ export default class CharacterController {
     private downRay: Ray;
     private startWithJump: boolean =false;
     private jumpDown: boolean =false;
+    private cloudParticles: CloudParticles;
 
-    constructor(renderer: Renderer) {
+    constructor(renderer: Renderer, cloudParticles: CloudParticles) {
         this.renderer = renderer;
         this.charRoot = SceneData.sceneModelsByName["charRoot"];
-
+this.cloudParticles  =cloudParticles;
         this.downRay = new Ray()
 
     }
@@ -39,6 +41,7 @@ export default class CharacterController {
         if (this.isGrounded) {
             this.velocity.x += hInput * delta *this.moveForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
+            this.cloudParticles.addParticleWalk(this.targetPos,this.velocity.x)
 
             if (hInput == 0) {
                 this.velocity.x *= 0.5;
@@ -88,7 +91,7 @@ export default class CharacterController {
         }else{
             let yFloor = int[0].point.y;
 
-            if(yFloor>this.targetPos.y-0.05){
+            if(yFloor>this.targetPos.y-0.001){
                 this.velocity.y =0;
                 this.setGrounded(true)
                 this.targetPos.y =yFloor;
@@ -121,6 +124,7 @@ export default class CharacterController {
 
         } else{
             console.log("hitGround")
+            this.cloudParticles.addParticlesHitFloor(this.targetPos)
         }
         this.isGrounded =value;
     }

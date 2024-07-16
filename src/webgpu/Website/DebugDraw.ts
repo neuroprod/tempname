@@ -22,12 +22,8 @@ class DebugDraw {
 
     }
     update(){
-
-
         this.shapeLine.setPath(this.path)
-this.path.clear()
-
-
+        this.path.clear()
     }
 
     draw(pass: RenderPass){

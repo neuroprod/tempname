@@ -20,6 +20,7 @@ export default class Model extends Object3D {
     numInstances: number = 1;
 
     private materialMap: Map<string, Material> = new Map<string, Material>();
+    needCulling: boolean =true;
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         this.modelTransform = new ModelTransform(renderer)
@@ -43,6 +44,7 @@ export default class Model extends Object3D {
 
     }
     createBuffer(data: Float32Array, name: string) {
+
         let bufferOld = this.getBufferByName(name);
         if (bufferOld) {
             let i = this.buffers.indexOf(bufferOld)

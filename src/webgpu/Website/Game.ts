@@ -10,6 +10,9 @@ import KeyInput from "./KeyInput.ts";
 import CharacterController from "./CharacterController.ts";
 import GameCamera from "./GameCamera.ts";
 import DebugDraw from "./DebugDraw.ts";
+import CloudParticles from "./CloudParticles.ts";
+
+
 export default class Game{
     private renderer: Renderer;
     private mouseListener: MouseListener;
@@ -18,6 +21,7 @@ export default class Game{
     private keyInput: KeyInput;
     private characterController: CharacterController;
     private gameCamera: GameCamera;
+    private cloudParticles: CloudParticles;
 
 
 
@@ -28,7 +32,9 @@ export default class Game{
 
         this.gameRenderer = gameRenderer;
 
-        this.characterController = new CharacterController(renderer)
+        this.cloudParticles =new CloudParticles(renderer)
+        this.characterController = new CharacterController(renderer,this.cloudParticles)
+
         this.gameCamera = new GameCamera(renderer,camera);
         this.keyInput =new KeyInput()
         DebugDraw.init(this.renderer,camera);
@@ -44,6 +50,7 @@ export default class Game{
         let hInput = this.keyInput.getHdir()
         this.characterController.update(delta,hInput,jump)
 
+        this.cloudParticles.update();
 //last
         DebugDraw.update();
     }

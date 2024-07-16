@@ -23,6 +23,7 @@ import ShadowFontDepthMaterial from "../render/shadow/ShadowFontDepthMaterial.ts
 class SceneData {
     projects: Array<Project> = [];
     public projectsMap: Map<string, Project> = new Map<string, Project>();
+    public projectsNameMap: Map<string, Project> = new Map<string, Project>();
     animations: Array<Animation> = [];
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
     root!: SceneObject3D;
@@ -274,6 +275,7 @@ class SceneData {
 
     private addProject(p: Project) {
         this.projects.push(p)
+        this.projectsNameMap.set(p.name, p);
         this.projectsMap.set(p.id, p);
 
     }

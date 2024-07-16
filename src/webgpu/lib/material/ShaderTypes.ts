@@ -6,7 +6,9 @@ export const ShaderType = {
     vec3: 'vec3f',
     vec4: 'vec4f',
     vec4i: 'vec4i',
-    mat4: 'mat4x4',
+    mat4: 'mat4x4f',
+
+
 }
 
 
@@ -60,6 +62,9 @@ export function getFormatForShaderType(type: string) {
             break;
         case ShaderType.vec4i:
             format = "sint32x4";
+            break;
+        case ShaderType.mat4:
+            format = "float32x4";
             break;
         default:
             console.warn("no default value")

@@ -112,7 +112,7 @@ export default class ModelRenderer {
                     )
                 } else {
 
-                    //console.log("buffer not found", attribute.name)
+                    console.log("buffer not found", attribute.name)
                     continue;
                 }
             }
