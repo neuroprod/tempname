@@ -102,7 +102,7 @@ export default class CloudParticles{
     addParticleWalk(position:Vector3,vel:number){
 
         if(this.walkRelease>0) return;
-        if(Math.abs(vel)<0.5) return;
+        if(Math.abs(vel)<1) return;
         this.walkRelease =0.2+Math.random()*0.2;
                 let p = this.getParticle()
                 p.walk(position,vel)
