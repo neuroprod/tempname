@@ -5,6 +5,7 @@ import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import {NumericArray} from "@math.gl/types";
 import {Vector3} from "@math.gl/core";
 import Timer from "../lib/Timer.ts";
+import {lerpValueDelta} from "../lib/MathUtils.ts";
 
 export default class GameCamera{
     private camera: Camera;
@@ -34,7 +35,7 @@ export default class GameCamera{
         this.camPos.y+=1;
 
         this.camera.cameraLookAt.copy(this.camTarget as NumericArray);
-        this.camera.cameraWorld.lerp( this.camPos,1 - Math.pow(0.001 ,delta))
+        this.camera.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.001 ,delta))
 
 
 

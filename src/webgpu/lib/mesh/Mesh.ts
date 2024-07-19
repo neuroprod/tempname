@@ -52,7 +52,9 @@ export default class Mesh extends ObjectGPU {
         this.center.copy(this.min as NumericArray);
         this.center.add(this.max as NumericArray);
         this.center.scale(0.5);
-        this.radius = this.center.distance(this.max as NumericArray);
+
+            this.radius = this.center.distance(this.max as NumericArray);
+
         this.positions = positions;
         this.createBuffer(positions, "aPos");
     }

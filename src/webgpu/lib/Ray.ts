@@ -80,7 +80,7 @@ private _temp: Vector3 = new Vector3();
             this.intersectMesh(model.mesh);
 
 
-
+            if(this.intersectionDistance>1000) return null
 
             let intersection =new RayIntersection()
             intersection.model =model;
@@ -88,6 +88,8 @@ private _temp: Vector3 = new Vector3();
             intersection.point.from(this.rayDir);
             intersection.point.scale(this.intersectionDistance);
             intersection.point.add(this.rayStart as NumericArray);
+
+
             return intersection;
         }
         return null

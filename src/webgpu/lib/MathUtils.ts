@@ -19,3 +19,12 @@ export default class MathUtils
     }
 
 }
+
+export  function smoothstep (min:number, max:number, value:number) {
+    let x = Math.max(0, Math.min(1, (value - min) / (max - min)));
+    return x * x * (3 - 2 * x);
+}
+export function lerpValueDelta(lerpVal:number,delta:number)
+{
+    return 1 - Math.pow(lerpVal ,delta)
+}

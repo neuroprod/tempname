@@ -2,10 +2,12 @@ import Renderer from "../lib/Renderer.ts";
 import SceneData from "../data/SceneData.ts";
 import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import gsap from "gsap";
-import {Vector3} from "@math.gl/core";
+import {lerp, Vector3} from "@math.gl/core";
 import Ray from "../lib/Ray.ts";
 import DebugDraw from "./DebugDraw.ts";
 import CloudParticles from "./CloudParticles.ts";
+import {lerpValueDelta, smoothstep} from "../lib/MathUtils.ts";
+import {NumericArray} from "@math.gl/types";
 
 export default class CharacterController {
     private charRoot: SceneObject3D;
@@ -26,12 +28,25 @@ export default class CharacterController {
     private startWithJump: boolean =false;
     private jumpDown: boolean =false;
     private cloudParticles: CloudParticles;
+    private charBody: SceneObject3D;
+    private bodyBasePos: Vector3;
+    private charHat: SceneObject3D;
+    private hatBasePos: Vector3;
+    private sideRay: Ray;
 
     constructor(renderer: Renderer, cloudParticles: CloudParticles) {
         this.renderer = renderer;
         this.charRoot = SceneData.sceneModelsByName["charRoot"];
-this.cloudParticles  =cloudParticles;
+        this.charBody = SceneData.sceneModelsByName["body"];
+        this.bodyBasePos = this.charBody.getPosition().clone()
+
+
+        this.charHat = SceneData.sceneModelsByName["hat"];
+        this.hatBasePos = this.charHat.getPosition().clone()
+
+        this.cloudParticles  =cloudParticles;
         this.downRay = new Ray()
+        this.sideRay = new Ray()
 
     }
 
@@ -72,39 +87,44 @@ this.cloudParticles  =cloudParticles;
 
         }
 
-        this.positionAdjustment.copy(this.velocity)
+        this.positionAdjustment.copy(this.velocity as NumericArray)
         this.positionAdjustment.scale(delta);
 
-        this.targetPos.copy(this.charRoot.getPosition())
-        this.targetPos.add( this.positionAdjustment);
+        this.targetPos.copy(this.charRoot.getPosition()as NumericArray)
+        this.targetPos.add( this.positionAdjustment as NumericArray);
 
-
+//checkDown
         this.downRay.rayDir.set(0,-1,0);
-        this.downRay.rayStart.copy(this.charRoot.getPosition());
+        this.downRay.rayStart.copy(this.charRoot.getPosition() as NumericArray);
         this.downRay.rayStart.y+=0.1
 
+        let distDown  = this.checkRay(this.downRay)
+        let yFloor =  this.downRay.rayStart.y-distDown;
 
-        let int = this.downRay.intersectModels(SceneData.hitTestModels);
-        if(int.length==0){
-            this.setGrounded(false)
-
-        }else{
-            let yFloor = int[0].point.y;
-
-            if(yFloor>this.targetPos.y-0.001){
-                this.velocity.y =0;
+        if(yFloor>this.targetPos.y-0.001){
                 this.setGrounded(true)
+                this.velocity.y =0;
                 this.targetPos.y =yFloor;
-            }else{
+        }else{
                 this.setGrounded(false)
-            }
+        }
+
+
+
+
+
+
+        this.sideRay.rayDir.set(Math.sign(this.velocity.x),0,0);
+        this.sideRay.rayStart.copy(this.charRoot.getPosition() as NumericArray);
+        this.sideRay.rayStart.y+=0.1
+        let sideDist = this.checkRay(this.sideRay);
+        if(sideDist <0.22){
+            let adj  =(sideDist -0.22)*Math.sign(this.velocity.x);
+            this.targetPos.x+=adj;
+            this.velocity.x =0;
 
         }
 
-        if(int.length>0){
-        DebugDraw.path.moveTo(this.downRay.rayStart)
-        DebugDraw.path.lineTo(int[0].point)
-        }
        //
         //console.log(SceneData.hitTestModels)
 
@@ -113,6 +133,10 @@ this.cloudParticles  =cloudParticles;
 
         this.setCharacterDir(hInput);
 
+
+        this.charBody.y  =lerp(    this.charBody.y ,this.bodyBasePos.y,lerpValueDelta(0.002,delta))
+        this.charHat.y  =lerp(    this.charHat.y ,this.hatBasePos.y,lerpValueDelta(0.002,delta))
+        this.charBody.sy  =lerp(    this.charBody.sy ,1,lerpValueDelta(0.001,delta))
     }
     private setGrounded(value: boolean) {
         if(this.isGrounded ==value)return;
@@ -123,8 +147,15 @@ this.cloudParticles  =cloudParticles;
 
 
         } else{
-            console.log("hitGround")
-            this.cloudParticles.addParticlesHitFloor(this.targetPos)
+//hit ground animation
+            if(this.velocity.y<-5){
+                let vEf  =Math.abs(this.velocity.y)-5;
+                this.charBody.y = this.bodyBasePos.y-0.07
+                this.charBody.sy =1-smoothstep(1,9,vEf)*0.4;
+                this.cloudParticles.addParticlesHitFloor(this.targetPos)
+            }
+
+
         }
         this.isGrounded =value;
     }
@@ -145,6 +176,14 @@ this.cloudParticles  =cloudParticles;
         }
 
     }
+    private checkRay(ray:Ray){
+        let intSide =  ray.intersectModels(SceneData.hitTestModels);
+        if(intSide.length>0){
+            DebugDraw.path.moveTo(this.sideRay.rayStart)
+            DebugDraw.path.lineTo(intSide[0].point)
+            return intSide[0].distance;
 
-
+        }
+        return 1000;
+    }
 }
