@@ -11,6 +11,7 @@ import CharacterController from "./CharacterController.ts";
 import GameCamera from "./GameCamera.ts";
 import DebugDraw from "./DebugDraw.ts";
 import CloudParticles from "./CloudParticles.ts";
+import GamePadInput from "./GamePadInput.ts";
 
 
 export default class Game{
@@ -22,6 +23,7 @@ export default class Game{
     private characterController: CharacterController;
     private gameCamera: GameCamera;
     private cloudParticles: CloudParticles;
+    private gamepadInput: GamePadInput;
 
 
 
@@ -37,17 +39,29 @@ export default class Game{
 
         this.gameCamera = new GameCamera(renderer,camera);
         this.keyInput =new KeyInput()
+        this.gamepadInput = new GamePadInput()
         DebugDraw.init(this.renderer,camera);
         this.setActive();
 
     }
 
     update() {
+
+        this.gamepadInput.update();
+
         this.gameCamera.update()
 
         let delta  =Timer.delta;
+
         let jump =this.keyInput.getJump()
         let hInput = this.keyInput.getHdir()
+        if(this.gamepadInput.connected){
+
+            hInput = this.gamepadInput.getHdir()
+            jump =this.gamepadInput.getJump()
+        }
+
+
         this.characterController.update(delta,hInput,jump)
 
         this.cloudParticles.update();

@@ -28,14 +28,14 @@ export default class GameCamera{
 
         this.charPos = this.charRoot.getWorldPos()
         this.charPos.y+=0.5
-        this.camTarget.lerp( this.charPos,1 - Math.pow(0.002 ,delta))
+        this.camTarget.lerp( this.charPos,1 - Math.pow(0.01 ,delta))
 
         this.camPos.copy(this.camTarget);
         this.camPos.z+=5;
         this.camPos.y+=1;
 
         this.camera.cameraLookAt.copy(this.camTarget as NumericArray);
-        this.camera.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.001 ,delta))
+        this.camera.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.01 ,delta))
 
 
 
