@@ -1,11 +1,11 @@
 export default class GamePadInput{
-    private gamepad: Gamepad;
+    private gamepad: Gamepad|null;
     public connected: boolean =false;
     private hDir: number =0;
     private jump: boolean;
     constructor() {
        let pads =  navigator.getGamepads()
-console.log(pads)
+
         window.addEventListener(
             "gamepadconnected",
             (e) => {
@@ -36,9 +36,12 @@ console.log(pads)
     update() {
         if(this.connected){
             const gamepads = navigator.getGamepads();
+
             this.gamepad = gamepads[0];
-            this.hDir  = this.gamepad.axes[0];
-            this.jump = this.gamepad.buttons[0].pressed
+            if(this.gamepad) {
+                this.hDir = this.gamepad.axes[0];
+                this.jump = this.gamepad.buttons[0].pressed
+            }
 
         }
     }

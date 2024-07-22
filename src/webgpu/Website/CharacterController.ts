@@ -33,11 +33,28 @@ export default class CharacterController {
     private charHat: SceneObject3D;
     private hatBasePos: Vector3;
     private sideRay: Ray;
+    private canJump: boolean =true;
+
+    private cross1 =new Vector3()
+    private cross2 =new Vector3()
+    private cross3 =new Vector3()
+    private cross4 =new Vector3()
+
+
+
+    private stepLength =0.25;
+    private feetStep = 0
+    private feetPos2 =new Vector3()
+    private feetPos1 =new Vector3()
+    private leftLeg: SceneObject3D;
+    private rightLeg: SceneObject3D;
 
     constructor(renderer: Renderer, cloudParticles: CloudParticles) {
         this.renderer = renderer;
         this.charRoot = SceneData.sceneModelsByName["charRoot"];
         this.charBody = SceneData.sceneModelsByName["body"];
+        this.leftLeg = SceneData.sceneModelsByName["legLeft"];
+        this.rightLeg = SceneData.sceneModelsByName["legRight"];
         this.bodyBasePos = this.charBody.getPosition().clone()
 
 
@@ -52,17 +69,24 @@ export default class CharacterController {
 
 
     update(delta: number, hInput: number, jump: boolean) {
-        this.jumpDown =jump;
+        if(!jump) this.canJump =true; //release button for a second jump
+
+
+       this.jumpDown =jump;
         if (this.isGrounded) {
             this.velocity.x += hInput * delta *this.moveForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
             this.cloudParticles.addParticleWalk(this.targetPos,this.velocity.x)
 
+
+
+
             if (hInput == 0) {
                 this.velocity.x *= 0.5;
             }
-            if(jump)  {
+            if(jump && this.canJump)  {
                 this.velocity.y =this.jumpPulse;
+                this.canJump =false;
                this.setGrounded(false)
                 this.startWithJump =true;
 
@@ -130,7 +154,7 @@ export default class CharacterController {
 
 
         this.charRoot.setPositionV(this.targetPos)
-
+        this.setFeet(delta)
         this.setCharacterDir(hInput);
 
 
@@ -185,5 +209,55 @@ export default class CharacterController {
 
         }
         return 1000;
+    }
+
+    drawCross(position:Vector3){
+let size =0.1;
+        this.cross1.copy(position as NumericArray)
+        this.cross1.x-=size
+        this.cross1.y-=size
+        this.cross2.copy(position as NumericArray)
+        this.cross2.x+=size
+        this.cross2.y+=size
+
+
+        this.cross3.copy(position as NumericArray)
+        this.cross3.x-=size
+        this.cross3.y+=size
+        this.cross4.copy(position as NumericArray)
+        this.cross4.x+=size
+        this.cross4.y-=size
+        DebugDraw.path.moveTo(this.cross1)
+        DebugDraw.path.lineTo(this.cross2)
+
+        DebugDraw.path.moveTo(this.cross3)
+        DebugDraw.path.lineTo(this.cross4)
+    }
+
+    private setFeet(delta:number) {
+        this.feetStep += Math.abs(this.velocity.x)*delta;
+        this.feetStep%=this.stepLength*2;
+
+        let feetStepLocal =this.feetStep/this.stepLength //0-2
+
+        let x  =Math.sin(feetStepLocal*Math.PI)*this.stepLength/2
+        let y  =Math.cos(feetStepLocal*Math.PI)*this.stepLength/4;
+
+        this.feetPos1.x= x-0.02;
+        this.feetPos1.y= Math.max( y,0)+0.17;
+
+        let x2  =Math.sin(feetStepLocal*Math.PI -Math.PI)*this.stepLength/2
+        let y2  =Math.cos(feetStepLocal*Math.PI-Math.PI)*this.stepLength/4;
+
+        this.feetPos2.x= x2-0.02;
+        this.feetPos2.y=Math.max( y2,0)+0.17;
+
+
+        this.charBody.y =Math.max(y,y2)/4 +0.2
+
+
+        this.leftLeg.setPositionV(this.feetPos1)
+        this.rightLeg.setPositionV(this.feetPos2)
+
     }
 }
