@@ -235,29 +235,49 @@ let size =0.1;
     }
 
     private setFeet(delta:number) {
-        this.feetStep += Math.abs(this.velocity.x)*delta;
-        this.feetStep%=this.stepLength*2;
-
-        let feetStepLocal =this.feetStep/this.stepLength //0-2
-
-        let x  =Math.sin(feetStepLocal*Math.PI)*this.stepLength/2
-        let y  =Math.cos(feetStepLocal*Math.PI)*this.stepLength/4;
-
-        this.feetPos1.x= x-0.02;
-        this.feetPos1.y= Math.max( y,0)+0.17;
-
-        let x2  =Math.sin(feetStepLocal*Math.PI -Math.PI)*this.stepLength/2
-        let y2  =Math.cos(feetStepLocal*Math.PI-Math.PI)*this.stepLength/4;
-
-        this.feetPos2.x= x2-0.02;
-        this.feetPos2.y=Math.max( y2,0)+0.17;
 
 
-        this.charBody.y =Math.max(y,y2)/4 +0.2
+        if(Math.abs(this.velocity.x )<0.01 || !this.isGrounded){
+            let lerpVal =lerpValueDelta(0.002,delta)
+            let tScale =Math.sign(this.leftLeg.x-this.rightLeg.x)
+            this.feetPos1.x = lerp(    this.feetPos1.x ,tScale*(this.stepLength/2)- 0.02,lerpVal);
+            this.feetPos1.y =lerp(this.feetPos1.y, 0.17,lerpVal)
+
+            this.feetPos2.x = lerp(    this.feetPos2.x ,tScale* (-this.stepLength/2)- 0.02,lerpVal);
+            this.feetPos2.y =lerp(this.feetPos2.y, 0.17,lerpVal)
+
+            this.leftLeg.setPositionV(this.feetPos1)
+            this.rightLeg.setPositionV(this.feetPos2)
+            this.feetStep =0;
+        }else {
 
 
-        this.leftLeg.setPositionV(this.feetPos1)
-        this.rightLeg.setPositionV(this.feetPos2)
+            this.feetStep += Math.abs(this.velocity.x) * delta;
+            this.feetStep %= this.stepLength * 2;
 
+            let feetStepLocal = this.feetStep / this.stepLength //0-2
+
+           // this.leftLeg.rz = smoothstep(0,0.1,feetStepLocal)*1.0;
+
+
+            let x = Math.sin(feetStepLocal * Math.PI +Math.PI/2) * this.stepLength / 2
+            let y = Math.cos(feetStepLocal * Math.PI+Math.PI/2) * this.stepLength / 4;
+
+            this.feetPos1.x = x - 0.02;
+            this.feetPos1.y = Math.max(y, 0) + 0.17;
+
+            let x2 = Math.sin(feetStepLocal * Math.PI - Math.PI+Math.PI/2) * this.stepLength / 2
+            let y2 = Math.cos(feetStepLocal * Math.PI - Math.PI+Math.PI/2) * this.stepLength / 4;
+
+            this.feetPos2.x = x2 - 0.02;
+            this.feetPos2.y = Math.max(y2, 0) + 0.17;
+
+
+            this.charBody.y = Math.max(y, y2) / 4 + 0.2
+
+
+            this.leftLeg.setPositionV(this.feetPos1)
+            this.rightLeg.setPositionV(this.feetPos2)
+        }
     }
 }
