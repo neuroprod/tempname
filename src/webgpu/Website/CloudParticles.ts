@@ -7,6 +7,7 @@ import {Matrix4, Vector3, Vector4} from "@math.gl/core";
 
 import gsap from "gsap";
 import Timer from "../lib/Timer.ts";
+import {NumericArray} from "@math.gl/types";
 class CloudParticle{
     private position: Vector3 =new Vector3();
     private positionTarget: Vector3 =new Vector3();
@@ -54,14 +55,14 @@ class CloudParticle{
 
     walk(position: Vector3, vel: number) {
         this.canDelete =false;
-        this.position.copy(position)
+        this.position.copy(position as NumericArray)
         this.position.y+=0.1
         this.position.z+=0
 
-        this.positionTarget.copy(position)
+        this.positionTarget.copy(position as NumericArray)
         this.positionTarget.y+=Math.random()*0.1+0.1
-        this.scale =Math.random()+2;
-        let duration =0.5;
+        this.scale =Math.random()+1;
+        let duration =0.8;
         gsap.to( this.position,{x:this.positionTarget.x,y:this.positionTarget.y,z:this.positionTarget.z,ease:"power3.out",duration:duration} )
 
         gsap.to(this,{scale:0,duration:duration,onComplete:()=>{this.canDelete =true}} )
@@ -103,7 +104,7 @@ export default class CloudParticles{
 
         if(this.walkRelease>0) return;
         if(Math.abs(vel)<1) return;
-        this.walkRelease =0.2+Math.random()*0.2;
+        this.walkRelease =0.1+Math.random()*0.1;
                 let p = this.getParticle()
                 p.walk(position,vel)
                 this.particles.push(p)

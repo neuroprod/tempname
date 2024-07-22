@@ -12,6 +12,25 @@ export default class SDFBatch {
 
     constructor() {
     }
+    getCharPosX(mousePos: number, text: string, fontSize: number,bold=false) {
+        fontSize =1/42*fontSize ;
+        let fontArr = SDFFont.charArrayRegular;
+        if(bold){
+            fontArr  = SDFFont.charArrayBold;
+        }
+        let size =0
+        for (let i = 0; i <text.length; i++) {
+            let c = text.charCodeAt(i);
+            let char =fontArr[c];
+            size+=char.xadvance*fontSize
+if(size >mousePos){
+    return i;
+}
+        }
+        return text.length
+
+
+    }
     getCharPos(cursorPos: number, text: string, fontSize: number,bold=false) {
         fontSize =1/42*fontSize ;
         let fontArr = SDFFont.charArrayRegular;

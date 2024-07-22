@@ -82,16 +82,22 @@ export class InputText extends Component{
 
     private textPos =new Vec2()
     private textRect =new Rect();
+    private selectRect=new Rect();
     private cursorRect =new Rect(new Vec2,new Vec2(1,14))
 
     private _textIsDirty: boolean =false;
     private offsetArray:Array<number> =[];
+    private dragPos: number=0;
+    private isSelecting: boolean =false;
+    private isDragging: boolean =false;
     constructor(id:number, settings:ComponentSettings,ref:any,refValue:string,autoFocus:boolean) {
         super(id,settings);
         this.ref = ref;
         this.refValue =refValue;
         this.text = ref[refValue];
         this.cursorPos =this.text.length
+        this.dragPos = 0;
+        this.isSelecting = false;
         if(autoFocus) UI_I.setFocusComponent(this);
     }
     limitMouseCursor(pos: number) {
@@ -113,10 +119,13 @@ export class InputText extends Component{
         }
         if (actionKey == ActionKey.BackSpace) {
 
+            if(this.isSelecting){
+               this.removeSelection()
+            }else {
                 this.text = this.text.slice(0, this.cursorPos - 1) + this.text.slice(this.cursorPos);
-                console.log(  this.cursorPos )
+            }
                 this.cursorPos = this.limitMouseCursor(this.cursorPos - 1);
-            console.log(  this.cursorPos )
+
                 this.setTextDirty();
                 this.setDirty();
             }
@@ -126,6 +135,10 @@ export class InputText extends Component{
 
 
         if (buffer.length) {
+            if (this.isSelecting) {
+                this.removeSelection();
+            }
+
             this.text = [
                 this.text.slice(0, this.cursorPos),
                 buffer,
@@ -138,6 +151,17 @@ export class InputText extends Component{
 
         }
     }
+    removeSelection() {
+        let lPos = this.cursorPos;
+        let rPos = this.dragPos;
+        if (this.dragPos < this.cursorPos) {
+            rPos = this.cursorPos;
+            lPos = this.dragPos;
+        }
+        this.text = [this.text.slice(0, lPos), this.text.slice(rPos)].join("");
+        this.cursorPos = lPos;
+        this.isSelecting = false;
+    }
     onAdded() {
         super.onAdded();
         if( this.ref[ this.refValue] != this.text){
@@ -145,7 +169,40 @@ export class InputText extends Component{
            this.setDirty()
         }
     }
+    getMouseCursorPos() {
+        let pos = UI_I.mouseListener.mousePos.x - this.textPos.x;
+        console.log(pos)
+        pos =  UI_I.currentDrawBatch.sdfBatch. getCharPosX(pos, this.text, 14)
+        pos = this.limitMouseCursor(pos);
+        return pos;
+    }
+    onMouseDown() {
+        if (this.isFocus) {
+            this.cursorPos = this.getMouseCursorPos();
+            this.isDragging = true;
+        } else {
+            this.dragPos = 0;
+            this.isSelecting = true;
+            this.cursorPos = this.text.length;
+            this.setDirty();
+        }
+    }
+    onMouseUp() {
+        this.isDragging = false;
+    }
 
+    updateOnMouseDown() {
+        if (this.isDragging) {
+            this.dragPos = this.getMouseCursorPos();
+            if (this.dragPos != this.cursorPos) {
+                this.isSelecting = true;
+                this.setDirty();
+            } else if (this.isSelecting) {
+                this.isSelecting = false;
+                this.setDirty();
+            }
+        }
+    }
     setTextDirty() {
         this.ref[ this.refValue] = this.text;
 
@@ -163,8 +220,30 @@ export class InputText extends Component{
         this.textRect.pos.y+=1;
 
         this.cursorRect.pos.copy(this.textPos);
-        if(this.text.length>0)
-        this.cursorRect.pos.x +=UI_I.currentDrawBatch.sdfBatch.getCharPos(this.cursorPos,this.text,14)
+
+        if(this.text.length>0) {
+            this.cursorRect.pos.x += UI_I.currentDrawBatch.sdfBatch.getCharPos(this.cursorPos, this.text, 14)
+        }
+
+       if( this.isSelecting){
+
+           let lPos = this.cursorPos;
+           let rPos = this.dragPos;
+           if (this.dragPos < this.cursorPos) {
+               rPos = this.cursorPos;
+               lPos = this.dragPos;
+           }
+
+           this.selectRect.pos.copy(this.textPos)
+           this.selectRect.pos.y -=3
+           this.selectRect.pos.x -=2
+           this.selectRect.size.y =20;
+           let startPos = UI_I.currentDrawBatch.sdfBatch.getCharPos(  lPos, this.text, 14)
+           let cursorPos = UI_I.currentDrawBatch.sdfBatch.getCharPos(rPos, this.text, 14)
+           this.selectRect.pos.x += startPos
+          // this.cursorRect.pos.x += UI_I.currentDrawBatch.sdfBatch.getCharPos(this.cursorPos, this.text, 14)
+           this.selectRect.size.x = cursorPos-startPos+4;
+       }
 
     }
 
@@ -178,6 +257,14 @@ export class InputText extends Component{
             UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.textRect,ButtonColor,InputTextRadius-1);
             UI_I.currentDrawBatch.fillBatch.addRect(this.cursorRect,TextColorBright)
             UI_I.currentDrawBatch.sdfBatch.addLine(this.textPos,this.text,14,TextColorBright);
+
+
+            if (this.isSelecting ) {
+                UI_I.currentDrawBatch.fillBatch.addRect(this.selectRect, ButtonColorBright);
+                console.log(this.selectRect)
+            }
+
+
         }else{
             if (this.isOver) {
                 UI_I.currentDrawBatch.fillBatch.addRoundedRect(this.layoutRect, SelectButtonColor, InputTextRadius);

@@ -157,7 +157,8 @@ export default class CharacterController {
         this.setFeet(delta)
         this.setCharacterDir(hInput);
 
-
+this.charBody.rz = -Math.abs(this.velocity.x)/20;
+        this.charHat.rz =-Math.abs(this.velocity.x)/30;
         this.charBody.y  =lerp(    this.charBody.y ,this.bodyBasePos.y,lerpValueDelta(0.002,delta))
         this.charHat.y  =lerp(    this.charHat.y ,this.hatBasePos.y,lerpValueDelta(0.002,delta))
         this.charBody.sy  =lerp(    this.charBody.sy ,1,lerpValueDelta(0.001,delta))
@@ -256,8 +257,6 @@ let size =0.1;
             this.feetStep %= this.stepLength * 2;
 
             let feetStepLocal = this.feetStep / this.stepLength //0-2
-
-           // this.leftLeg.rz = smoothstep(0,0.1,feetStepLocal)*1.0;
 
 
             let x = Math.sin(feetStepLocal * Math.PI +Math.PI/2) * this.stepLength / 2
