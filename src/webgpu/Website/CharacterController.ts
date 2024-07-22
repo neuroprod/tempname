@@ -48,6 +48,7 @@ export default class CharacterController {
     private feetPos1 =new Vector3()
     private leftLeg: SceneObject3D;
     private rightLeg: SceneObject3D;
+    private distanceToFloor: number =0;
 
     constructor(renderer: Renderer, cloudParticles: CloudParticles) {
         this.renderer = renderer;
@@ -124,13 +125,14 @@ export default class CharacterController {
 
         let distDown  = this.checkRay(this.downRay)
         let yFloor =  this.downRay.rayStart.y-distDown;
-
+this.distanceToFloor =  distDown-0.1;
         if(yFloor>this.targetPos.y-0.001){
                 this.setGrounded(true)
                 this.velocity.y =0;
                 this.targetPos.y =yFloor;
         }else{
                 this.setGrounded(false)
+
         }
 
 
@@ -157,7 +159,7 @@ export default class CharacterController {
         this.setFeet(delta)
         this.setCharacterDir(hInput);
 
-this.charBody.rz = -Math.abs(this.velocity.x)/20;
+        this.charBody.rz = -Math.abs(this.velocity.x)/20;
         this.charHat.rz =-Math.abs(this.velocity.x)/30;
         this.charBody.y  =lerp(    this.charBody.y ,this.bodyBasePos.y,lerpValueDelta(0.002,delta))
         this.charHat.y  =lerp(    this.charHat.y ,this.hatBasePos.y,lerpValueDelta(0.002,delta))
@@ -236,11 +238,19 @@ let size =0.1;
     }
 
     private setFeet(delta:number) {
+        let tScale =Math.sign(this.leftLeg.x-this.rightLeg.x);
+        if(this.distanceToFloor >0.3 && this.velocity.y>0){
 
 
+            this.leftLeg.rz =lerp(    this.leftLeg.rz ,1.2*tScale,lerpValueDelta(0.01,delta));
+            this.rightLeg.rz =lerp(     this.rightLeg.rz ,-1.2*tScale,lerpValueDelta(0.01,delta));
+        }else {
+            this.leftLeg.rz =lerp(    this.leftLeg.rz ,0,lerpValueDelta(0.001,delta));
+            this.rightLeg.rz =lerp(    this.rightLeg.rz ,0,lerpValueDelta(0.001,delta));
+        }
         if(Math.abs(this.velocity.x )<0.01 || !this.isGrounded){
             let lerpVal =lerpValueDelta(0.002,delta)
-            let tScale =Math.sign(this.leftLeg.x-this.rightLeg.x)
+
             this.feetPos1.x = lerp(    this.feetPos1.x ,tScale*(this.stepLength/2)- 0.02,lerpVal);
             this.feetPos1.y =lerp(this.feetPos1.y, 0.17,lerpVal)
 
