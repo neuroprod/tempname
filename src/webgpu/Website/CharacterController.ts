@@ -19,8 +19,8 @@ export default class CharacterController {
     private targetPos: Vector3 = new Vector3()
 
     private gravity =40;
-    private maxVelX = 2;
-    private moveForceX = 6;
+    private maxVelX = 3;
+    private moveForceX = 4;
     private jumpForceX = 3;
     private isGrounded = true;
     private jumpPulse: number =6;
@@ -42,7 +42,7 @@ export default class CharacterController {
 
 
 
-    private stepLength =0.25;
+    private stepLength =0.2;
     private feetStep = 0
     private feetPos2 =new Vector3()
     private feetPos1 =new Vector3()
@@ -262,7 +262,7 @@ let size =0.1;
             this.feetStep =0;
         }else {
 
-
+            this.stepLength   =0.20+Math.abs(this.velocity.x)/30
             this.feetStep += Math.abs(this.velocity.x) * delta;
             this.feetStep %= this.stepLength * 2;
 
