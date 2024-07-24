@@ -131,8 +131,9 @@ this.distanceToFloor =  distDown-0.1;
                 this.velocity.y =0;
                 this.targetPos.y =yFloor;
         }else{
-                this.setGrounded(false)
 
+                this.setGrounded(false)
+            console.log(this.distanceToFloor)
         }
 
 
@@ -206,8 +207,8 @@ this.distanceToFloor =  distDown-0.1;
     private checkRay(ray:Ray){
         let intSide =  ray.intersectModels(SceneData.hitTestModels);
         if(intSide.length>0){
-            DebugDraw.path.moveTo(this.sideRay.rayStart)
-            DebugDraw.path.lineTo(intSide[0].point)
+            DebugDraw.path.moveTo(this.sideRay.rayStart.clone())
+            DebugDraw.path.lineTo(intSide[0].point.clone())
             return intSide[0].distance;
 
         }
