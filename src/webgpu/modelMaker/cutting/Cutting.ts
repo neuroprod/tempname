@@ -296,9 +296,9 @@ export default class Cutting {
     private setMesh() {
         if (!this.currentMesh) return;
 
-        console.log("setMesh")
+
         if(this.currentMesh.meshType  ==MeshType.TRANS_PLANE){
-            console.log("trans")
+
             this.model3D.material.setUniform("transparent" ,1)
         }else {
             this.model3D.material.setUniform("transparent" ,0)
@@ -308,6 +308,8 @@ export default class Cutting {
             this.mesh.setResolve(this.positionsToVec2(this.shapeLineModelSelect.positions), new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0));
 
         } else {
+
+
             this.mesh.setExtrusion(this.positionsToVec2(this.shapeLineModelSelect.positions), this.currentMesh.meshType, 0.03, new Vector3(this.currentMesh.center.x, this.currentMesh.center.y, 0));
 
         }

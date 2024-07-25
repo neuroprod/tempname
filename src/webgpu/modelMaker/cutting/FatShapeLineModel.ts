@@ -48,6 +48,7 @@ export default class FatShapeLineModel extends Model{
         this.visible =true;
         this.positions=[]
         this.indices=[]
+
         path.setMeshData(this.indices,this.positions)
         this.makeBuffers()
        // this.mesh.setPositions(new Float32Array(this.positions))

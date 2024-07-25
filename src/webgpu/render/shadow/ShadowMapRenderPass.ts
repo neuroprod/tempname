@@ -65,7 +65,9 @@ export default class ShadowMapRenderPass extends RenderPass {
        // this.modelRendererClip .setMaterial(this.materialClip )
 
     }
+    update(){
 
+    }
     draw() {
 
         this.modelRenderer.draw(this);

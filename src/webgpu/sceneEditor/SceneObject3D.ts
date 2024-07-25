@@ -7,8 +7,35 @@ import AnimationEditor from "./timeline/AnimationEditor.ts";
 import {TreeSettings} from "../lib/UI/components/Tree.ts";
 import {popObjectTree, pushObjectTree} from "../UI/ObjectTree.ts";
 import SceneEditor from "./SceneEditor.ts";
+import {DEG2RAD, RAD2DEG} from "../lib/MathUtils.ts";
+
+
 
 export default class SceneObject3D extends Object3D{
+    get rxD() {
+        return this.rx *RAD2DEG;
+    }
+
+    set rxD(value) {
+
+        this.rx = value *DEG2RAD
+    }
+
+    get ryD() {
+        return this.ry *RAD2DEG;
+    }
+
+    set ryD(value) {
+        this.ry =  value *DEG2RAD
+    }
+
+    get rzD() {
+        return  this.rz*RAD2DEG;
+    }
+
+    set rzD(value) {
+        this.rz =  value *DEG2RAD
+    }
     setCurrentModel!: (value: (SceneObject3D | null)) => void;
     public  isSceneObject3D =true
     model:Model|null =null;
@@ -19,6 +46,8 @@ export default class SceneObject3D extends Object3D{
     isText: boolean =false;
     text:string =""
     needsHitTest =false;
+
+
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
         if(!SceneObject3D.emptyTreeSettings) {
@@ -61,9 +90,9 @@ export default class SceneObject3D extends Object3D{
         UI.LFloat(this,"y","Y")
         UI.LFloat(this,"z","Z")
 
-        UI.LFloat(this,"rx","Rotation X")
-        UI.LFloat(this,"ry","Y")
-        UI.LFloat(this,"rz","Z")
+        UI.LFloat(this,"rxD","Rotation X")
+        UI.LFloat(this,"ryD","Y")
+        UI.LFloat(this,"rzD","Z")
         if(this.model){
 
             UI.LFloat(this.model,"sx","Scale X")

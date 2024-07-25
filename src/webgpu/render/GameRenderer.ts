@@ -97,6 +97,10 @@ export default class GameRenderer{
 
 
     }
+    update(){
+        this.shadowMapPass.update()
+        this.lightPass.update();
+    }
     onUI(){
         let value = UI.LSelect("Render Pass", this.passSelect)
         if (value != this.currentValue) {

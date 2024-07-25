@@ -19,7 +19,8 @@ export default class MathUtils
     }
 
 }
-
+export const DEG2RAD = Math.PI / 180;
+export const RAD2DEG = 180 / Math.PI;
 export  function smoothstep (min:number, max:number, value:number) {
     let x = Math.max(0, Math.min(1, (value - min) / (max - min)));
     return x * x * (3 - 2 * x);

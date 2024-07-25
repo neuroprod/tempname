@@ -3,7 +3,7 @@ import Renderer from "./lib/Renderer.ts";
 import CanvasRenderPass from "./CanvasRenderPass.ts";
 
 import PreLoader from "./lib/PreLoader.ts";
-import KeyInput from "./game/KeyInput.ts";
+//import KeyInput from "./game/KeyInput.ts";
 import UI from "./lib/UI/UI.ts";
 import ModelMaker from "./modelMaker/ModelMaker.ts";
 import MouseListener from "./lib/MouseListener.ts";
@@ -22,6 +22,7 @@ import {Textures} from "./data/Textures.ts";
 import Camera from "./lib/Camera.ts";
 import GameRenderer from "./render/GameRenderer.ts";
 import Game from "./Website/Game.ts";
+import KeyInput from "./Website/KeyInput.ts";
 
 
 enum MainState {
@@ -146,7 +147,7 @@ export default class Main {
         window.requestAnimationFrame(() => this.tick());
         this.update();
         UI.updateGPU();
-
+        this.gameRenderer.update();
         this.renderer.update(this.draw.bind(this));
 
 

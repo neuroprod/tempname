@@ -1,8 +1,8 @@
 export default class GamePadInput{
-    private gamepad: Gamepad|null;
+    private gamepad: Gamepad|null =null;
     public connected: boolean =false;
     private hDir: number =0;
-    private jump: boolean;
+    private jump: boolean =false;
     constructor() {
        let pads =  navigator.getGamepads()
 
@@ -22,10 +22,10 @@ export default class GamePadInput{
         );
     }
 
-    public gamepadHandler(event:GamepadEvent, connected)
+    public gamepadHandler(event:GamepadEvent, connected:boolean)
     {
         this.gamepad = event.gamepad;
-        console.log(this.gamepad,connected)
+
         // Note:
         // gamepad === navigator.getGamepads()[gamepad.index]
         this.connected  =connected

@@ -30,7 +30,6 @@ export default class GBufferCloudMaterial extends Material{
         uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer))
         uniforms.addSampler("mySampler")
 
-        this.logShader =true;
     }
     getShader(): string {
         return /* wgsl */ `

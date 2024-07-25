@@ -42,7 +42,9 @@ export default class LightRenderPass extends RenderPass{
         this.blit  =new Blit(renderer,"blitLight",this.lightMaterial)
 
     }
+    update(){
 
+    }
     draw() {
 
        this.blit.draw(this)

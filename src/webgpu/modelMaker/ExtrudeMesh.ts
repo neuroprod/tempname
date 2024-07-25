@@ -198,7 +198,7 @@ export default class ExtrudeMesh extends Mesh {
         let numPoints =points.length
 
         let normals:Array<Vector2>=[]
-
+let edges:Array<boolean>=[]
         let N1 =new Vector2()
         let N2 =new Vector2()
         for(let i=0;i<numPoints;i++){
@@ -211,10 +211,21 @@ export default class ExtrudeMesh extends Mesh {
 
             N1.from(pN)
             N1.subtract(p as NumericArray)
+            N1.normalize()
 
             N2.from(p)
             N2.subtract(pP as NumericArray)
+            N2.normalize()
 
+            if(Math.abs(N1.dot(N2))>0.9){
+    //smoothedge edges
+
+                edges.push(false)
+            }else{
+                edges.push(true)
+                //hardEdge
+
+            }
             //N1.normalize()
             //N2.normalize()
 
@@ -287,8 +298,26 @@ export default class ExtrudeMesh extends Mesh {
                 this.p2.set(points[i].x, points[i].y, negThick);
                 this.p3.set(points[i + 1].x, points[i + 1].y, thick);
                 this.p4.set(points[i + 1].x, points[i + 1].y, negThick);
-                this.n1.set(normals[i].x, normals[i].y, 0)
-                this.n2.set(normals[i + 1].x, normals[i + 1].y, 0)
+//sharp
+
+                if(edges[i]){
+
+                    this.n1.set(normals[i].x+normals[i + 1].x, normals[i].y+normals[i + 1].y, 0)
+
+                }else{
+                    this.n1.set(normals[i].x, normals[i].y, 0)
+                }
+                if(edges[i+1]){
+
+                    this.n2.set(normals[i].x+normals[i + 1].x, normals[i].y+normals[i + 1].y, 0)
+                    this.n2.normalize()
+                }else{
+                    this.n2.set(normals[i + 1].x, normals[i + 1].y, 0)
+                    this.n2.normalize()
+                }
+
+
+
                 this.addQuad(indexCount, center);
 
                 indexCount += 4;
@@ -329,11 +358,7 @@ export default class ExtrudeMesh extends Mesh {
         this.pos_temp.push(this.p3.x - center.x, this.p3.y - center.y, this.p3.z);
         this.pos_temp.push(this.p4.x - center.x, this.p4.y - center.y, this.p4.z);
 
-       // this.p2.subtract(this.p1)
-        //this.p3.subtract(this.p1)
 
-        //this.p3.cross(this.p2)
-        //this.p3.normalize()
         this.norm_temp.push(this.n1.x, this.n1.y, this.n1.z);
         this.norm_temp.push(this.n1.x, this.n1.y, this.n1.z);
         this.norm_temp.push(this.n2.x, this.n2.y, this.n2.z);

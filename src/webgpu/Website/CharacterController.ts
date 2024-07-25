@@ -125,7 +125,7 @@ export default class CharacterController {
 
         let distDown  = this.checkRay(this.downRay)
         let yFloor =  this.downRay.rayStart.y-distDown;
-this.distanceToFloor =  distDown-0.1;
+        this.distanceToFloor =  distDown-0.1;
         if(yFloor>this.targetPos.y-0.001){
                 this.setGrounded(true)
                 this.velocity.y =0;
@@ -133,7 +133,7 @@ this.distanceToFloor =  distDown-0.1;
         }else{
 
                 this.setGrounded(false)
-            console.log(this.distanceToFloor)
+
         }
 
 
@@ -170,7 +170,7 @@ this.distanceToFloor =  distDown-0.1;
         if(this.isGrounded ==value)return;
 
         if(this.isGrounded && !value){
-            console.log("leaveGround")
+            //console.log("leaveGround")
 
 
 

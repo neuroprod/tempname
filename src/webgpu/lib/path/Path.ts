@@ -75,6 +75,11 @@ export default class Path {
         this.curves=[]
     }
     public setMeshData(indices: Array<Number>, positions: Array<Number>) {
+
+
+
+
+
         let numCurves = this.curves.length
         for (let i = 0; i < numCurves; i++) {
             this.curves[i].setMeshData(indices, positions)
@@ -183,10 +188,7 @@ export default class Path {
         }
 
     }
-getBezierPoints(){
 
-
-}
     getPoints() {
         let indices:Array<number>=[]
         let positions:Array<number>=[]
