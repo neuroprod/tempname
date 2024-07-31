@@ -5,6 +5,7 @@ import Renderer from "../lib/Renderer.ts";
 import ShapeLineModel from "../modelMaker/cutting/ShapeLineModel.ts";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
 import Camera from "../lib/Camera.ts";
+import {Vector3} from "@math.gl/core";
 
 class DebugDraw {
 
@@ -14,6 +15,11 @@ class DebugDraw {
 
     private shapeLine!: ShapeLineModel;
     private modelRenderer!: ModelRenderer;
+
+
+    p =new Vector3()
+    cp1 =new Vector3()
+    cp2 =new Vector3()
     init(renderer:Renderer,camera:Camera){
         this.renderer =renderer;
         this.shapeLine= new ShapeLineModel(renderer,"debugLines","#FF0000")
@@ -30,6 +36,50 @@ class DebugDraw {
 
         this.modelRenderer.draw(pass);
     }
+
+    drawCircle(pos:Vector3, radius:number){
+        let cpOff = 0.552284749831*radius
+        this.p.copy(pos);
+        this.p.x+=radius
+
+        this.path.moveTo(this.p.clone())
+        this.cp1.copy(this.p);
+        this.cp1.y+=cpOff;
+        this.p.copy(pos);
+        this.p.y +=radius;
+        this.cp2.copy(this.p)
+        this.cp2.x+=cpOff;
+
+        this.path.bezierCurveTo(this.cp1.clone(),this.cp2.clone(),this.p.clone())
+        this.cp1.copy(this.p);
+        this.cp1.x-=cpOff;
+        this.p.copy(pos);
+        this.p.x -=radius;
+        this.cp2.copy(this.p);
+        this.cp2.y+=cpOff;
+        this.path.bezierCurveTo(this.cp1.clone(),this.cp2.clone(),this.p.clone())
+
+        this.cp1.copy(this.p);
+        this.cp1.y-=cpOff;
+        this.p.copy(pos);
+        this.p.y -=radius;
+        this.cp2.copy(this.p);
+        this.cp2.x-=cpOff;
+        this.path.bezierCurveTo(this.cp1.clone(),this.cp2.clone(),this.p.clone())
+
+        this.cp1.copy(this.p);
+        this.cp1.x+=cpOff;
+        this.p.copy(pos);
+        this.p.x +=radius;
+        this.cp2.copy(this.p);
+        this.cp2.y-=cpOff;
+        this.path.bezierCurveTo(this.cp1.clone(),this.cp2.clone(),this.p.clone())
+    }
+
+
+
+
+
 }
 
 export default new DebugDraw();

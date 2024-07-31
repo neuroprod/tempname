@@ -36,6 +36,7 @@ import {saveScene} from "../lib/SaveUtils.ts";
 import {setNewPopup} from "../UI/NewPopup.ts";
 import Animation from "./timeline/animation/Animation.ts";
 import {setAnimePopup} from "../UI/AnimePopup.ts";
+import DebugDraw from "../Website/DebugDraw.ts";
 
 export enum ToolState {
 
@@ -147,6 +148,7 @@ class SceneEditor {
 
         this.editCursor.update()
        AnimationEditor.update();
+        DebugDraw.update()
     }
     onUINice() {
         pushMainMenu("tools",300,MainMenuOffset);
@@ -324,6 +326,7 @@ class SceneEditor {
         this.gameRenderer.drawFinal(pass);
         this.outline.drawFinal(pass);
         this.editCursor.drawFinal(pass);
+        DebugDraw.draw(pass);
     }
 
     public removeModel(m: SceneObject3D) {

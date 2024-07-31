@@ -16,39 +16,38 @@ export default class CharacterController {
     private rotateTimeLine!: gsap.core.Timeline;
     private velocity: Vector3 = new Vector3()
     private positionAdjustment: Vector3 = new Vector3()
-    private targetPos: Vector3 = new Vector3()
+    targetPos: Vector3 = new Vector3()
 
-    private gravity =40;
+    private gravity = 40;
     private maxVelX = 3;
     private moveForceX = 4;
     private jumpForceX = 3;
     private isGrounded = true;
-    private jumpPulse: number =6;
+    private jumpPulse: number = 6;
     private downRay: Ray;
-    private startWithJump: boolean =false;
-    private jumpDown: boolean =false;
+    private startWithJump: boolean = false;
+    private jumpDown: boolean = false;
     private cloudParticles: CloudParticles;
     private charBody: SceneObject3D;
     private bodyBasePos: Vector3;
     private charHat: SceneObject3D;
     private hatBasePos: Vector3;
     private sideRay: Ray;
-    private canJump: boolean =true;
+    private canJump: boolean = true;
 
-    private cross1 =new Vector3()
-    private cross2 =new Vector3()
-    private cross3 =new Vector3()
-    private cross4 =new Vector3()
+    private cross1 = new Vector3()
+    private cross2 = new Vector3()
+    private cross3 = new Vector3()
+    private cross4 = new Vector3()
 
 
-
-    private stepLength =0.2;
+    private stepLength = 0.2;
     private feetStep = 0
-    private feetPos2 =new Vector3()
-    private feetPos1 =new Vector3()
+    private feetPos2 = new Vector3()
+    private feetPos1 = new Vector3()
     private leftLeg: SceneObject3D;
     private rightLeg: SceneObject3D;
-    private distanceToFloor: number =0;
+    private distanceToFloor: number = 0;
 
     constructor(renderer: Renderer, cloudParticles: CloudParticles) {
         this.renderer = renderer;
@@ -62,7 +61,7 @@ export default class CharacterController {
         this.charHat = SceneData.sceneModelsByName["hat"];
         this.hatBasePos = this.charHat.getPosition().clone()
 
-        this.cloudParticles  =cloudParticles;
+        this.cloudParticles = cloudParticles;
         this.downRay = new Ray()
         this.sideRay = new Ray()
 
@@ -70,44 +69,41 @@ export default class CharacterController {
 
 
     update(delta: number, hInput: number, jump: boolean) {
-        if(!jump) this.canJump =true; //release button for a second jump
+        if (!jump) this.canJump = true; //release button for a second jump
 
 
-       this.jumpDown =jump;
+        this.jumpDown = jump;
         if (this.isGrounded) {
-            this.velocity.x += hInput * delta *this.moveForceX;
+            this.velocity.x += hInput * delta * this.moveForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
-            this.cloudParticles.addParticleWalk(this.targetPos,this.velocity.x)
-
-
+            this.cloudParticles.addParticleWalk(this.targetPos, this.velocity.x)
 
 
             if (hInput == 0) {
                 this.velocity.x *= 0.5;
             }
-            if(jump && this.canJump)  {
-                this.velocity.y =this.jumpPulse;
-                this.canJump =false;
-               this.setGrounded(false)
-                this.startWithJump =true;
+            if (jump && this.canJump) {
+                this.velocity.y = this.jumpPulse;
+                this.canJump = false;
+                this.setGrounded(false)
+                this.startWithJump = true;
 
             }
-        }else{
+        } else {
 
-            this.velocity.x += hInput * delta *this.jumpForceX;
+            this.velocity.x += hInput * delta * this.jumpForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
 
             if (hInput == 0) {
                 this.velocity.x *= 0.5;
             }
-            if(this.startWithJump && this.jumpDown &&    this.velocity.y>0){
+            if (this.startWithJump && this.jumpDown && this.velocity.y > 0) {
 
-                this.velocity.y -=this.gravity*0.3*delta;
-            }else{
-                this.velocity.y -=this.gravity*delta;
-                this.startWithJump =false;
+                this.velocity.y -= this.gravity * 0.3 * delta;
+            } else {
+                this.velocity.y -= this.gravity * delta;
+                this.startWithJump = false;
             }
-
 
 
         }
@@ -115,44 +111,40 @@ export default class CharacterController {
         this.positionAdjustment.copy(this.velocity as NumericArray)
         this.positionAdjustment.scale(delta);
 
-        this.targetPos.copy(this.charRoot.getPosition()as NumericArray)
-        this.targetPos.add( this.positionAdjustment as NumericArray);
+        this.targetPos.copy(this.charRoot.getPosition() as NumericArray)
+        this.targetPos.add(this.positionAdjustment as NumericArray);
 
 //checkDown
-        this.downRay.rayDir.set(0,-1,0);
+        this.downRay.rayDir.set(0, -1, 0);
         this.downRay.rayStart.copy(this.charRoot.getPosition() as NumericArray);
-        this.downRay.rayStart.y+=0.1
+        this.downRay.rayStart.y += 0.1
 
-        let distDown  = this.checkRay(this.downRay)
-        let yFloor =  this.downRay.rayStart.y-distDown;
-        this.distanceToFloor =  distDown-0.1;
-        if(yFloor>this.targetPos.y-0.001){
-                this.setGrounded(true)
-                this.velocity.y =0;
-                this.targetPos.y =yFloor;
-        }else{
+        let distDown = this.checkRay(this.downRay)
+        let yFloor = this.downRay.rayStart.y - distDown;
+        this.distanceToFloor = distDown - 0.1;
+        if (yFloor > this.targetPos.y - 0.001) {
+            this.setGrounded(true)
+            this.velocity.y = 0;
+            this.targetPos.y = yFloor;
+        } else {
 
-                this.setGrounded(false)
+            this.setGrounded(false)
 
         }
 
 
-
-
-
-
-        this.sideRay.rayDir.set(Math.sign(this.velocity.x),0,0);
+        this.sideRay.rayDir.set(Math.sign(this.velocity.x), 0, 0);
         this.sideRay.rayStart.copy(this.charRoot.getPosition() as NumericArray);
-        this.sideRay.rayStart.y+=0.1
+        this.sideRay.rayStart.y += 0.1
         let sideDist = this.checkRay(this.sideRay);
-        if(sideDist <0.22){
-            let adj  =(sideDist -0.22)*Math.sign(this.velocity.x);
-            this.targetPos.x+=adj;
-            this.velocity.x =0;
+        if (sideDist < 0.22) {
+            let adj = (sideDist - 0.22) * Math.sign(this.velocity.x);
+            this.targetPos.x += adj;
+            this.velocity.x = 0;
 
         }
 
-       //
+        //
         //console.log(SceneData.hitTestModels)
 
 
@@ -160,33 +152,60 @@ export default class CharacterController {
         this.setFeet(delta)
         this.setCharacterDir(hInput);
 
-        this.charBody.rz = -Math.abs(this.velocity.x)/20;
-        this.charHat.rz =-Math.abs(this.velocity.x)/30;
-        this.charBody.y  =lerp(    this.charBody.y ,this.bodyBasePos.y,lerpValueDelta(0.002,delta))
-        this.charHat.y  =lerp(    this.charHat.y ,this.hatBasePos.y,lerpValueDelta(0.002,delta))
-        this.charBody.sy  =lerp(    this.charBody.sy ,1,lerpValueDelta(0.001,delta))
-    }
-    private setGrounded(value: boolean) {
-        if(this.isGrounded ==value)return;
+        this.charBody.rz = -Math.abs(this.velocity.x) / 20;
+        this.charHat.rz = -Math.abs(this.velocity.x) / 30;
+        this.charBody.y = lerp(this.charBody.y, this.bodyBasePos.y, lerpValueDelta(0.002, delta))
+        this.charHat.y = lerp(this.charHat.y, this.hatBasePos.y, lerpValueDelta(0.002, delta))
+        this.charBody.sy = lerp(this.charBody.sy, 1, lerpValueDelta(0.001, delta))
 
-        if(this.isGrounded && !value){
+
+        DebugDraw.drawCircle(this.targetPos,0.2);
+    }
+
+    drawCross(position: Vector3) {
+        let size = 0.1;
+        this.cross1.copy(position as NumericArray)
+        this.cross1.x -= size
+        this.cross1.y -= size
+        this.cross2.copy(position as NumericArray)
+        this.cross2.x += size
+        this.cross2.y += size
+
+
+        this.cross3.copy(position as NumericArray)
+        this.cross3.x -= size
+        this.cross3.y += size
+        this.cross4.copy(position as NumericArray)
+        this.cross4.x += size
+        this.cross4.y -= size
+        DebugDraw.path.moveTo(this.cross1)
+        DebugDraw.path.lineTo(this.cross2)
+
+        DebugDraw.path.moveTo(this.cross3)
+        DebugDraw.path.lineTo(this.cross4)
+    }
+
+    private setGrounded(value: boolean) {
+        if (this.isGrounded == value) return;
+
+        if (this.isGrounded && !value) {
             //console.log("leaveGround")
 
 
-
-        } else{
+        } else {
 //hit ground animation
-            if(this.velocity.y<-5){
-                let vEf  =Math.abs(this.velocity.y)-5;
-                this.charBody.y = this.bodyBasePos.y-0.07
-                this.charBody.sy =1-smoothstep(1,9,vEf)*0.4;
+            if (this.velocity.y < -5) {
+                let vEf = Math.abs(this.velocity.y) - 5;
+                this.charBody.y = this.bodyBasePos.y - 0.07
+                this.charBody.sy = 1 - smoothstep(1, 9, vEf) * 0.4;
                 this.cloudParticles.addParticlesHitFloor(this.targetPos)
             }
 
 
         }
-        this.isGrounded =value;
+        this.isGrounded = value;
     }
+
     private setCharacterDir(horizontalDir: number) {
         if (horizontalDir > 0 && !this.facingRight) {
             this.facingRight = true;
@@ -204,9 +223,10 @@ export default class CharacterController {
         }
 
     }
-    private checkRay(ray:Ray){
-        let intSide =  ray.intersectModels(SceneData.hitTestModels);
-        if(intSide.length>0){
+
+    private checkRay(ray: Ray) {
+        let intSide = ray.intersectModels(SceneData.hitTestModels);
+        if (intSide.length > 0) {
             DebugDraw.path.moveTo(this.sideRay.rayStart.clone())
             DebugDraw.path.lineTo(intSide[0].point.clone())
             return intSide[0].distance;
@@ -215,69 +235,46 @@ export default class CharacterController {
         return 1000;
     }
 
-    drawCross(position:Vector3){
-let size =0.1;
-        this.cross1.copy(position as NumericArray)
-        this.cross1.x-=size
-        this.cross1.y-=size
-        this.cross2.copy(position as NumericArray)
-        this.cross2.x+=size
-        this.cross2.y+=size
+    private setFeet(delta: number) {
+        let tScale = Math.sign(this.leftLeg.x - this.rightLeg.x);
+        if (this.distanceToFloor > 0.3 && this.velocity.y > 0) {
 
 
-        this.cross3.copy(position as NumericArray)
-        this.cross3.x-=size
-        this.cross3.y+=size
-        this.cross4.copy(position as NumericArray)
-        this.cross4.x+=size
-        this.cross4.y-=size
-        DebugDraw.path.moveTo(this.cross1)
-        DebugDraw.path.lineTo(this.cross2)
-
-        DebugDraw.path.moveTo(this.cross3)
-        DebugDraw.path.lineTo(this.cross4)
-    }
-
-    private setFeet(delta:number) {
-        let tScale =Math.sign(this.leftLeg.x-this.rightLeg.x);
-        if(this.distanceToFloor >0.3 && this.velocity.y>0){
-
-
-            this.leftLeg.rz =lerp(    this.leftLeg.rz ,1.2*tScale,lerpValueDelta(0.01,delta));
-            this.rightLeg.rz =lerp(     this.rightLeg.rz ,-1.2*tScale,lerpValueDelta(0.01,delta));
-        }else {
-            this.leftLeg.rz =lerp(    this.leftLeg.rz ,0,lerpValueDelta(0.001,delta));
-            this.rightLeg.rz =lerp(    this.rightLeg.rz ,0,lerpValueDelta(0.001,delta));
+            this.leftLeg.rz = lerp(this.leftLeg.rz, 1.2 * tScale, lerpValueDelta(0.01, delta));
+            this.rightLeg.rz = lerp(this.rightLeg.rz, -1.2 * tScale, lerpValueDelta(0.01, delta));
+        } else {
+            this.leftLeg.rz = lerp(this.leftLeg.rz, 0, lerpValueDelta(0.001, delta));
+            this.rightLeg.rz = lerp(this.rightLeg.rz, 0, lerpValueDelta(0.001, delta));
         }
-        if(Math.abs(this.velocity.x )<0.01 || !this.isGrounded){
-            let lerpVal =lerpValueDelta(0.002,delta)
+        if (Math.abs(this.velocity.x) < 0.01 || !this.isGrounded) {
+            let lerpVal = lerpValueDelta(0.002, delta)
 
-            this.feetPos1.x = lerp(    this.feetPos1.x ,tScale*(this.stepLength/2)- 0.02,lerpVal);
-            this.feetPos1.y =lerp(this.feetPos1.y, 0.17,lerpVal)
+            this.feetPos1.x = lerp(this.feetPos1.x, tScale * (this.stepLength / 2) - 0.02, lerpVal);
+            this.feetPos1.y = lerp(this.feetPos1.y, 0.17, lerpVal)
 
-            this.feetPos2.x = lerp(    this.feetPos2.x ,tScale* (-this.stepLength/2)- 0.02,lerpVal);
-            this.feetPos2.y =lerp(this.feetPos2.y, 0.17,lerpVal)
+            this.feetPos2.x = lerp(this.feetPos2.x, tScale * (-this.stepLength / 2) - 0.02, lerpVal);
+            this.feetPos2.y = lerp(this.feetPos2.y, 0.17, lerpVal)
 
             this.leftLeg.setPositionV(this.feetPos1)
             this.rightLeg.setPositionV(this.feetPos2)
-            this.feetStep =0;
-        }else {
+            this.feetStep = 0;
+        } else {
 
-            this.stepLength   =0.20+Math.abs(this.velocity.x)/30
+            this.stepLength = 0.20 + Math.abs(this.velocity.x) / 30
             this.feetStep += Math.abs(this.velocity.x) * delta;
             this.feetStep %= this.stepLength * 2;
 
             let feetStepLocal = this.feetStep / this.stepLength //0-2
 
 
-            let x = Math.sin(feetStepLocal * Math.PI +Math.PI/2) * this.stepLength / 2
-            let y = Math.cos(feetStepLocal * Math.PI+Math.PI/2) * this.stepLength / 4;
+            let x = Math.sin(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 2
+            let y = Math.cos(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 4;
 
             this.feetPos1.x = x - 0.02;
             this.feetPos1.y = Math.max(y, 0) + 0.17;
 
-            let x2 = Math.sin(feetStepLocal * Math.PI - Math.PI+Math.PI/2) * this.stepLength / 2
-            let y2 = Math.cos(feetStepLocal * Math.PI - Math.PI+Math.PI/2) * this.stepLength / 4;
+            let x2 = Math.sin(feetStepLocal * Math.PI - Math.PI + Math.PI / 2) * this.stepLength / 2
+            let y2 = Math.cos(feetStepLocal * Math.PI - Math.PI + Math.PI / 2) * this.stepLength / 4;
 
             this.feetPos2.x = x2 - 0.02;
             this.feetPos2.y = Math.max(y2, 0) + 0.17;

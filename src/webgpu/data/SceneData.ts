@@ -39,6 +39,7 @@ class SceneData {
     public sceneModelsByName: { [id: string]: SceneObject3D } = {};
     public animationsByName: { [id: string]: Animation } = {};
    public hitTestModels: Array<Model> = [];
+    public triggerModels: Array<SceneObject3D> = [];
     constructor() {
 
 
@@ -85,10 +86,14 @@ class SceneData {
                     if (d.scale) {
                         sceneObj.model.setScale(d.scale[0], d.scale[1], d.scale[2])
                     }
-                    sceneObj.needsHitTest = d.needsHitTest
+                    sceneObj.setSceneData(d)
+
                     this.usedModels.push(sceneObj.model);
                     if(sceneObj.needsHitTest) {
                         this.hitTestModels.push(sceneObj.model);
+                    }
+                    if(sceneObj.needsTrigger) {
+                        this.triggerModels.push(sceneObj);
                     }
                 }// if(m.model)
             }

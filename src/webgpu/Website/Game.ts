@@ -12,6 +12,7 @@ import GameCamera from "./GameCamera.ts";
 import DebugDraw from "./DebugDraw.ts";
 import CloudParticles from "./CloudParticles.ts";
 import GamePadInput from "./GamePadInput.ts";
+import SceneData from "../data/SceneData.ts";
 
 
 export default class Game{
@@ -57,16 +58,31 @@ export default class Game{
         let hInput = this.keyInput.getHdir()
         if(this.gamepadInput.connected){
 
-            hInput = this.gamepadInput.getHdir()
-            jump =this.gamepadInput.getJump()
+           if(hInput==0) hInput = this.gamepadInput.getHdir()
+
+            if(!jump) jump =this.gamepadInput.getJump()
         }
 
 
         this.characterController.update(delta,hInput,jump)
-
         this.cloudParticles.update();
+        this.checkTriggers()
+       // console.log(SceneData.triggerModels)
+
 //last
         DebugDraw.update();
+    }
+    private checkTriggers() {
+
+       // console.log(this.characterController.targetPos);
+
+        for(let f of    SceneData.triggerModels){
+            if(f.checkTriggerHit(this.characterController.targetPos)){
+    console.log("hit")
+            }
+
+        }
+
     }
     setActive() {
 
@@ -83,6 +99,7 @@ export default class Game{
         this.gameRenderer.drawFinal(pass);
         DebugDraw.draw(pass);
     }
+
 
 
 }

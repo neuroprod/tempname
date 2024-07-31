@@ -8,34 +8,14 @@ import {TreeSettings} from "../lib/UI/components/Tree.ts";
 import {popObjectTree, pushObjectTree} from "../UI/ObjectTree.ts";
 import SceneEditor from "./SceneEditor.ts";
 import {DEG2RAD, RAD2DEG} from "../lib/MathUtils.ts";
+import DebugDraw from "../Website/DebugDraw.ts";
+import {Vector3} from "@math.gl/core";
 
 
 
 export default class SceneObject3D extends Object3D{
-    get rxD() {
-        return this.rx *RAD2DEG;
-    }
 
-    set rxD(value) {
 
-        this.rx = value *DEG2RAD
-    }
-
-    get ryD() {
-        return this.ry *RAD2DEG;
-    }
-
-    set ryD(value) {
-        this.ry =  value *DEG2RAD
-    }
-
-    get rzD() {
-        return  this.rz*RAD2DEG;
-    }
-
-    set rzD(value) {
-        this.rz =  value *DEG2RAD
-    }
     setCurrentModel!: (value: (SceneObject3D | null)) => void;
     public  isSceneObject3D =true
     model:Model|null =null;
@@ -46,7 +26,8 @@ export default class SceneObject3D extends Object3D{
     isText: boolean =false;
     text:string =""
     needsHitTest =false;
-
+    needsTrigger: boolean =false;
+    triggerRadius =0.2
 
     constructor(renderer:Renderer, label :string) {
         super(renderer,label);
@@ -79,12 +60,29 @@ export default class SceneObject3D extends Object3D{
         }
         popObjectTree();
     }
+    checkTriggerHit(targetPos: Vector3) {
+       let ds = this.getWorldPos().distanceSquared(targetPos);
+        if(ds<(this.triggerRadius*this.triggerRadius)){
+
+            return true
+        }
+        return false;
+    }
+
+
     onDataUI() {
         UI.pushID(this.UUID)
         UI.LTextInput("name",this,"label")
         if(this.model) {
             this.needsHitTest = UI.LBool(this, "needsHitTest");
         }
+        this.needsTrigger = UI.LBool(this, "needsTrigger");
+        if(this.needsTrigger){
+            UI.LFloat(this,"triggerRadius","TriggerRadius")
+           DebugDraw.drawCircle(this.getWorldPos(),  this.triggerRadius)
+
+        }
+
 
         UI.LFloat(this,"x","Position X")
         UI.LFloat(this,"y","Y")
@@ -102,16 +100,23 @@ export default class SceneObject3D extends Object3D{
 
         UI.popID()
     }
+    setSceneData(obj: any) {
+      this.needsHitTest=  obj.needsHitTest ;
+        this.needsTrigger=obj.needsTrigger  ;
+        this.triggerRadius =obj.triggerRadius   ;
 
+    }
     getSceneData(dataArr:Array<any>) {
        let obj:any ={}
         obj.id =this.UUID;
-       obj.needsHitTest =this.needsHitTest;
+        obj.needsHitTest =this.needsHitTest;
         obj.label =this.label;
         obj.meshId =this.meshId;
         obj.projectId = this.projectId;
         obj.isText =this.isText;
         obj.text  =this.text;
+        obj.needsTrigger  =this.needsTrigger;
+        obj.triggerRadius =this.triggerRadius
         obj.position =this.getPosition()
         obj.rotation=this.getRotation()
         if(this.model) {
@@ -181,4 +186,31 @@ export default class SceneObject3D extends Object3D{
         return false;
 
     }
+    get rxD() {
+        return this.rx *RAD2DEG;
+    }
+
+    set rxD(value) {
+
+        this.rx = value *DEG2RAD
+    }
+
+    get ryD() {
+        return this.ry *RAD2DEG;
+    }
+
+    set ryD(value) {
+        this.ry =  value *DEG2RAD
+    }
+
+    get rzD() {
+        return  this.rz*RAD2DEG;
+    }
+
+    set rzD(value) {
+        this.rz =  value *DEG2RAD
+    }
+
+
+
 }
