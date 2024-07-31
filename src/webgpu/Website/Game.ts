@@ -13,6 +13,9 @@ import DebugDraw from "./DebugDraw.ts";
 import CloudParticles from "./CloudParticles.ts";
 import GamePadInput from "./GamePadInput.ts";
 import SceneData from "../data/SceneData.ts";
+import CoinHandler from "./handlers/CoinHandler.ts";
+import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import {HitTrigger} from "../data/HitTriggers.ts";
 
 
 export default class Game{
@@ -25,6 +28,7 @@ export default class Game{
     private gameCamera: GameCamera;
     private cloudParticles: CloudParticles;
     private gamepadInput: GamePadInput;
+    private coinHandler: CoinHandler;
 
 
 
@@ -41,6 +45,9 @@ export default class Game{
         this.gameCamera = new GameCamera(renderer,camera);
         this.keyInput =new KeyInput()
         this.gamepadInput = new GamePadInput()
+
+        this.coinHandler = new CoinHandler()
+
         DebugDraw.init(this.renderer,camera);
         this.setActive();
 
@@ -66,6 +73,7 @@ export default class Game{
 
         this.characterController.update(delta,hInput,jump)
         this.cloudParticles.update();
+        this.coinHandler.update();
         this.checkTriggers()
        // console.log(SceneData.triggerModels)
 
@@ -77,12 +85,29 @@ export default class Game{
        // console.log(this.characterController.targetPos);
 
         for(let f of    SceneData.triggerModels){
-            if(f.checkTriggerHit(this.characterController.targetPos)){
-    console.log("hit")
+            f.drawTrigger()
+            if(f.checkTriggerHit(this.characterController.charHitBottomWorld,this.characterController.charHitTopWorld,this.characterController.charHitRadius)){
+
+
+
+                this.resolveHitTrigger(f)
+
             }
 
         }
 
+    }
+    resolveHitTrigger(obj:SceneObject3D){
+        switch(obj.hitTriggerItem){
+            case HitTrigger.COIN:
+                console.log("hitCoin")
+                obj.triggerIsEnabled =false
+                obj.hide()
+                break
+
+
+
+        }
     }
     setActive() {
 

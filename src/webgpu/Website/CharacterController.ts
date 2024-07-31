@@ -48,6 +48,13 @@ export default class CharacterController {
     private leftLeg: SceneObject3D;
     private rightLeg: SceneObject3D;
     private distanceToFloor: number = 0;
+    private charHitBottom =new Vector3(-0.02,0.15,0)
+    private charHitTop =new Vector3(0.01,0.42,0)
+
+    public charHitRadius =0.2
+    public charHitBottomWorld: Vector3=new Vector3(0,0,0)
+    public charHitTopWorld: Vector3=new Vector3(0,0,0)
+
 
     constructor(renderer: Renderer, cloudParticles: CloudParticles) {
         this.renderer = renderer;
@@ -158,8 +165,10 @@ export default class CharacterController {
         this.charHat.y = lerp(this.charHat.y, this.hatBasePos.y, lerpValueDelta(0.002, delta))
         this.charBody.sy = lerp(this.charBody.sy, 1, lerpValueDelta(0.001, delta))
 
-
-        DebugDraw.drawCircle(this.targetPos,0.2);
+        this.charHitTopWorld =this.charBody.getWorldPos(this.charHitTop)
+        this.charHitBottomWorld =this.charRoot.getWorldPos(this.charHitBottom)
+        DebugDraw.drawCircle( this.charHitTopWorld ,this.charHitRadius);
+        DebugDraw.drawCircle( this.charHitBottomWorld ,this.charHitRadius);
     }
 
     drawCross(position: Vector3) {

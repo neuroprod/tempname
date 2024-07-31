@@ -7,144 +7,182 @@ import AnimationEditor from "./timeline/AnimationEditor.ts";
 import {TreeSettings} from "../lib/UI/components/Tree.ts";
 import {popObjectTree, pushObjectTree} from "../UI/ObjectTree.ts";
 import SceneEditor from "./SceneEditor.ts";
-import {DEG2RAD, RAD2DEG} from "../lib/MathUtils.ts";
+import {DEG2RAD, RAD2DEG, sqDistToLineSegment} from "../lib/MathUtils.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
 import {Vector3} from "@math.gl/core";
+import {HitTrigger, HitTriggerSelectItems} from "../data/HitTriggers.ts";
 
 
+export default class SceneObject3D extends Object3D {
 
-export default class SceneObject3D extends Object3D{
 
-
-    setCurrentModel!: (value: (SceneObject3D | null)) => void;
-    public  isSceneObject3D =true
-    model:Model|null =null;
     private static emptyTreeSettings: TreeSettings;
-    projectId: string="";
-    meshId: string="";
+    setCurrentModel!: (value: (SceneObject3D | null)) => void;
+    public isSceneObject3D = true
+    model: Model | null = null;
+    projectId: string = "";
+    meshId: string = "";
 
-    isText: boolean =false;
-    text:string =""
-    needsHitTest =false;
-    needsTrigger: boolean =false;
-    triggerRadius =0.2
+    isText: boolean = false;
+    text: string = ""
+    needsHitTest = false;
+    needsTrigger: boolean = false;
+    triggerRadius = 0.2
+    public triggerIsEnabled =true;
 
-    constructor(renderer:Renderer, label :string) {
-        super(renderer,label);
-        if(!SceneObject3D.emptyTreeSettings) {
+    hitTriggerItem: HitTrigger =HitTrigger.NONE;
+
+    constructor(renderer: Renderer, label: string) {
+        super(renderer, label);
+        if (!SceneObject3D.emptyTreeSettings) {
             SceneObject3D.emptyTreeSettings = new TreeSettings();
             SceneObject3D.emptyTreeSettings.btnColor.setHex("#6e4e4e", 1)
         }
     }
 
-    onUINice(depth:number){
-        let leave =false;
-        if(this.children.length<=1){
-            leave =true;
-            if(this.children.length==1 && (this.children[0] as SceneObject3D).isSceneObject3D ){
-                leave =false;
+    get rxD() {
+        return this.rx * RAD2DEG;
+    }
+
+    set rxD(value) {
+
+        this.rx = value * DEG2RAD
+    }
+
+    get ryD() {
+        return this.ry * RAD2DEG;
+    }
+
+    set ryD(value) {
+        this.ry = value * DEG2RAD
+    }
+
+    get rzD() {
+        return this.rz * RAD2DEG;
+    }
+
+    set rzD(value) {
+        this.rz = value * DEG2RAD
+    }
+
+    onUINice(depth: number) {
+        let leave = false;
+        if (this.children.length <= 1) {
+            leave = true;
+            if (this.children.length == 1 && (this.children[0] as SceneObject3D).isSceneObject3D) {
+                leave = false;
             }
         }
 
-        if(pushObjectTree(this.label,leave,depth,this ==  SceneEditor.currentModel)){
+        if (pushObjectTree(this.label, leave, depth, this == SceneEditor.currentModel)) {
             SceneEditor.setCurrentModel(this);
         }
-       // if(pushObjectTree(this.label,this.children.length<=1).clicked){
+        // if(pushObjectTree(this.label,this.children.length<=1).clicked){
 
         //}
         depth++;
 
-        for (let child of this.children){
+        for (let child of this.children) {
             let co = child as SceneObject3D;
-            if(co.onUINice) co.onUINice(depth)
+            if (co.onUINice) co.onUINice(depth)
         }
         popObjectTree();
     }
-    checkTriggerHit(targetPos: Vector3) {
-       let ds = this.getWorldPos().distanceSquared(targetPos);
-        if(ds<(this.triggerRadius*this.triggerRadius)){
+
+    checkTriggerHit(bottomPos: Vector3, topPos: Vector3, radius: number) {
+        if(!this.triggerIsEnabled) return false;
+        let dsq = sqDistToLineSegment(bottomPos, topPos, this.getWorldPos())
+        let r = this.triggerRadius + radius;
+        if (dsq < (r * r)) {
 
             return true
         }
         return false;
     }
 
+    drawTrigger() {
+        if(!this.triggerIsEnabled) return
+        DebugDraw.drawCircle(this.getWorldPos(), this.triggerRadius)
+    }
 
     onDataUI() {
         UI.pushID(this.UUID)
-        UI.LTextInput("name",this,"label")
-        if(this.model) {
+        UI.LTextInput("name", this, "label")
+        if (this.model) {
             this.needsHitTest = UI.LBool(this, "needsHitTest");
         }
         this.needsTrigger = UI.LBool(this, "needsTrigger");
-        if(this.needsTrigger){
-            UI.LFloat(this,"triggerRadius","TriggerRadius")
-           DebugDraw.drawCircle(this.getWorldPos(),  this.triggerRadius)
+        if (this.needsTrigger) {
+            UI.LFloat(this, "triggerRadius", "TriggerRadius")
+            this.drawTrigger();
+
+            this.hitTriggerItem =UI.LSelect("trigger",HitTriggerSelectItems,  this.hitTriggerItem)
+
 
         }
 
 
-        UI.LFloat(this,"x","Position X")
-        UI.LFloat(this,"y","Y")
-        UI.LFloat(this,"z","Z")
+        UI.LFloat(this, "x", "Position X")
+        UI.LFloat(this, "y", "Y")
+        UI.LFloat(this, "z", "Z")
 
-        UI.LFloat(this,"rxD","Rotation X")
-        UI.LFloat(this,"ryD","Y")
-        UI.LFloat(this,"rzD","Z")
-        if(this.model){
+        UI.LFloat(this, "rxD", "Rotation X")
+        UI.LFloat(this, "ryD", "Y")
+        UI.LFloat(this, "rzD", "Z")
+        if (this.model) {
 
-            UI.LFloat(this.model,"sx","Scale X")
-            UI.LFloat(this.model,"sy","Y")
-            UI.LFloat(this.model,"sz","Z")
+            UI.LFloat(this.model, "sx", "Scale X")
+            UI.LFloat(this.model, "sy", "Y")
+            UI.LFloat(this.model, "sz", "Z")
         }
 
         UI.popID()
     }
-    setSceneData(obj: any) {
-      this.needsHitTest=  obj.needsHitTest ;
-        this.needsTrigger=obj.needsTrigger  ;
-        this.triggerRadius =obj.triggerRadius   ;
 
+    setSceneData(obj: any) {
+        this.needsHitTest = obj.needsHitTest;
+        this.needsTrigger = obj.needsTrigger;
+        this.triggerRadius = obj.triggerRadius;
+this.hitTriggerItem = obj.hitTriggerItem
     }
-    getSceneData(dataArr:Array<any>) {
-       let obj:any ={}
-        obj.id =this.UUID;
-        obj.needsHitTest =this.needsHitTest;
-        obj.label =this.label;
-        obj.meshId =this.meshId;
+
+    getSceneData(dataArr: Array<any>) {
+        let obj: any = {}
+        obj.id = this.UUID;
+        obj.needsHitTest = this.needsHitTest;
+        obj.label = this.label;
+        obj.meshId = this.meshId;
         obj.projectId = this.projectId;
-        obj.isText =this.isText;
-        obj.text  =this.text;
-        obj.needsTrigger  =this.needsTrigger;
-        obj.triggerRadius =this.triggerRadius
-        obj.position =this.getPosition()
-        obj.rotation=this.getRotation()
-        if(this.model) {
+        obj.isText = this.isText;
+        obj.text = this.text;
+        obj.needsTrigger = this.needsTrigger;
+        obj.triggerRadius = this.triggerRadius
+        obj.position = this.getPosition()
+        obj.rotation = this.getRotation()
+        obj.hitTriggerItem =this.hitTriggerItem
+        if (this.model) {
             obj.model = this.model.label
-            obj.scale=this.model.getScale();
+            obj.scale = this.model.getScale();
         }
-        if(this.parent)obj.parentID = this.parent.UUID
+        if (this.parent) obj.parentID = this.parent.UUID
         dataArr.push(obj);
 
-        for (let child of this.children)
-        {
+        for (let child of this.children) {
             let co = child as SceneObject3D;
-            if (co.getSceneData) co.getSceneData(dataArr );
+            if (co.getSceneData) co.getSceneData(dataArr);
         }
     }
 
-
     makeAnimationGroups(root: AnimationEditorGroup) {
-        let group =new AnimationEditorGroup(this.label,this)
+        let group = new AnimationEditorGroup(this.label, this)
         root.addGroup(group)
 
         AnimationEditor.models.push(this);
 
-        for (let child of this.children)
-        {
+        for (let child of this.children) {
             let childSceneObject = child as SceneObject3D;
 
-            if(childSceneObject.isSceneObject3D){
+            if (childSceneObject.isSceneObject3D) {
 
 
                 childSceneObject.makeAnimationGroups(group)
@@ -154,31 +192,31 @@ export default class SceneObject3D extends Object3D{
 
     }
 
-
     setUniqueName(uniqueName: string) {
         this.label = uniqueName
-        if(this.model){
-            this.model.label ="model_"+uniqueName;
+        if (this.model) {
+            this.model.label = "model_" + uniqueName;
         }
     }
 
     getUniqueName(name: string) {
-        let n =name;
-        let count =2;
-        while(this.checkName(n)){
-            n=name+"_"+count;
+        let n = name;
+        let count = 2;
+        while (this.checkName(n)) {
+            n = name + "_" + count;
             count++
         }
         return n;
 
     }
-    checkName(name:string){
-        if(this.label==name){
+
+    checkName(name: string) {
+        if (this.label == name) {
             return true;
         }
-        for(let c of this.children){
-            let f =c as SceneObject3D;
-            if(f.isSceneObject3D) {
+        for (let c of this.children) {
+            let f = c as SceneObject3D;
+            if (f.isSceneObject3D) {
                 if (f.label == name) return true;
                 if (f.checkName(name)) return true;
             }
@@ -186,31 +224,9 @@ export default class SceneObject3D extends Object3D{
         return false;
 
     }
-    get rxD() {
-        return this.rx *RAD2DEG;
+
+
+    hide() {
+        if(this.model)this.model.visible =false
     }
-
-    set rxD(value) {
-
-        this.rx = value *DEG2RAD
-    }
-
-    get ryD() {
-        return this.ry *RAD2DEG;
-    }
-
-    set ryD(value) {
-        this.ry =  value *DEG2RAD
-    }
-
-    get rzD() {
-        return  this.rz*RAD2DEG;
-    }
-
-    set rzD(value) {
-        this.rz =  value *DEG2RAD
-    }
-
-
-
 }

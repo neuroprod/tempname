@@ -174,7 +174,7 @@ export default class ModelMaker {
 
 
         this.scaleToFit()
-        setTimeout(this.scaleToFit.bind(this), 10)
+        setTimeout(this.scaleToFit.bind(this), 100)
     }
 
     public scaleToFit() {
