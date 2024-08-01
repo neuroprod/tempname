@@ -8,6 +8,7 @@ import DebugDraw from "./DebugDraw.ts";
 import CloudParticles from "./CloudParticles.ts";
 import {lerpValueDelta, smoothstep} from "../lib/MathUtils.ts";
 import {NumericArray} from "@math.gl/types";
+import SoundHandler from "./SoundHandler.ts";
 
 export default class CharacterController {
     private charRoot: SceneObject3D;
@@ -54,6 +55,7 @@ export default class CharacterController {
     public charHitRadius =0.2
     public charHitBottomWorld: Vector3=new Vector3(0,0,0)
     public charHitTopWorld: Vector3=new Vector3(0,0,0)
+    private feetStepPrev: number=0;
 
 
     constructor(renderer: Renderer, cloudParticles: CloudParticles) {
@@ -129,14 +131,24 @@ export default class CharacterController {
         let distDown = this.checkRay(this.downRay)
         let yFloor = this.downRay.rayStart.y - distDown;
         this.distanceToFloor = distDown - 0.1;
-        if (yFloor > this.targetPos.y - 0.001) {
+
+
+        if (this.distanceToFloor< 0.1 && this.isGrounded  ) {
             this.setGrounded(true)
             this.velocity.y = 0;
             this.targetPos.y = yFloor;
+
+        } else if (this.distanceToFloor< -this.positionAdjustment.y && this.velocity.y<0.01 ) {
+
+            this.setGrounded(true)
+            this.velocity.y = 0;
+            this.targetPos.y = yFloor;
+
+
         } else {
 
             this.setGrounded(false)
-
+            console.log(this.distanceToFloor)
         }
 
 
@@ -209,7 +221,7 @@ export default class CharacterController {
                 this.charBody.sy = 1 - smoothstep(1, 9, vEf) * 0.4;
                 this.cloudParticles.addParticlesHitFloor(this.targetPos)
             }
-
+            SoundHandler.playHitFloor(Math.abs(this.velocity.y))
 
         }
         this.isGrounded = value;
@@ -273,8 +285,18 @@ export default class CharacterController {
             this.feetStep += Math.abs(this.velocity.x) * delta;
             this.feetStep %= this.stepLength * 2;
 
+
             let feetStepLocal = this.feetStep / this.stepLength //0-2
 
+            if(feetStepLocal>1 && this.feetStepPrev<1){
+                SoundHandler.playStep()
+
+            }
+            if(feetStepLocal<1 && this.feetStepPrev>1){
+                SoundHandler.playStep()
+
+            }
+            this.feetStepPrev =feetStepLocal;
 
             let x = Math.sin(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 2
             let y = Math.cos(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 4;

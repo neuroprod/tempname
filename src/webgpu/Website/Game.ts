@@ -16,6 +16,7 @@ import SceneData from "../data/SceneData.ts";
 import CoinHandler from "./handlers/CoinHandler.ts";
 import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import {HitTrigger} from "../data/HitTriggers.ts";
+import SoundHandler from "./SoundHandler.ts";
 
 
 export default class Game{
@@ -50,7 +51,7 @@ export default class Game{
 
         DebugDraw.init(this.renderer,camera);
         this.setActive();
-
+SoundHandler.init()
     }
 
     update() {
@@ -103,6 +104,7 @@ export default class Game{
                 console.log("hitCoin")
                 obj.triggerIsEnabled =false
                 obj.hide()
+                SoundHandler.playCoin()
                 break
 
 

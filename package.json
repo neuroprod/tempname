@@ -15,8 +15,10 @@
   "dependencies": {
     "@math.gl/core": "^4.0.1",
     "@types/earcut": "^2.1.4",
+    "@types/howler": "^2.2.11",
     "@webgpu/types": "^0.1.40",
     "earcut": "^2.2.4",
-    "gsap": "^3.12.5"
+    "gsap": "^3.12.5",
+    "howler": "^2.2.4"
   }
 }
