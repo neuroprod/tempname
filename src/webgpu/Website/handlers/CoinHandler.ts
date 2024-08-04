@@ -11,7 +11,7 @@ private coins :Array<SceneObject3D> =[];
                 console.log(c.hitTriggerItem )
                 if(c.hitTriggerItem ==HitTrigger.COIN){
                     this.coins.push(c)
-
+                    c.ry =0;
                 }
             }
         console.log(    this.coins)

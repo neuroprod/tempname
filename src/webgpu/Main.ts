@@ -147,7 +147,10 @@ export default class Main {
         window.requestAnimationFrame(() => this.tick());
         this.update();
         UI.updateGPU();
+
         this.gameRenderer.update();
+
+
         this.renderer.update(this.draw.bind(this));
 
 

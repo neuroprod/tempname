@@ -255,7 +255,7 @@ class SceneData {
         }
     }
 
-    private getModel(label: string, projectId: string, meshId: string, id: string): SceneObject3D | null {
+    public getModel(label: string, projectId: string, meshId: string, id: string): SceneObject3D | null {
 
 
         let project = this.projectsMap.get(projectId)

@@ -332,5 +332,9 @@ export default class Object3D extends ObjectGPU {
         }
     }
 
-
+    copyProperties(obj:Object3D){
+        obj.setPositionV(this._position.clone())
+        obj.setScaleV(this._scale.clone())
+        obj.setRotationQ(this._rotation.clone())
+    }
 }

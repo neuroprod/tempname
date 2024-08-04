@@ -25,6 +25,7 @@ export default class ShadowRenderPass extends RenderPass {
     private colorAttachment: ColorAttachment;
     private material: PCSSShadowMaterial;
     private blit: Blit;
+    private dirLight: DirectionalLight;
 
 
 
@@ -35,7 +36,7 @@ export default class ShadowRenderPass extends RenderPass {
         super(renderer, "ShadowRenderPass");
 
 
-
+        this.dirLight =dirLight;
         this.colorTarget = new RenderTexture(renderer, Textures.SHADOW, {
             format: TextureFormat.RG16Float,
             sampleCount: this.sampleCount,
@@ -56,12 +57,16 @@ export default class ShadowRenderPass extends RenderPass {
         this.blit =new Blit(this.renderer,"shadowBlit",this.material)
 
     }
-
+    update() {
+        this.material.setUniform("shadowViewMatrix",this.dirLight.shadowCamera.view)
+        this.material.setUniform("shadowViewProjectionMatrix",this.dirLight.shadowCamera.viewProjection)
+    }
     draw() {
 
         this.blit.draw(this);
 
 
     }
+
 
 }

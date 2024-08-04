@@ -72,6 +72,8 @@ export default class Model extends Object3D {
         return this.bufferMap.get(name);
     }
 
+    clone(){
 
+    }
 
 }

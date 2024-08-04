@@ -46,7 +46,7 @@ export default class GameRenderer{
 
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
-        this.sunLight = new DirectionalLight(renderer)
+        this.sunLight = new DirectionalLight(renderer,camera)
         this.shadowMapPass =new ShadowMapRenderPass(renderer,this.sunLight)
         this.shadowBlurPass =new ShadowBlurRenderPass(renderer);
         this.gBufferPass =new GBufferRenderPass(renderer,camera);
@@ -67,8 +67,8 @@ export default class GameRenderer{
 
         this.debugTextureMaterial = new DebugTextureMaterial(this.renderer,"debugTextureMaterial")
         this.blitFinal =new Blit(renderer,"blitFinal",this.debugTextureMaterial)
-        //this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
-
+   // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
+       // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
        //this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
         this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW, {texture: Textures.SHADOW, type: 0}));
@@ -98,7 +98,9 @@ export default class GameRenderer{
 
     }
     update(){
+        this.sunLight.update();
         this.shadowMapPass.update()
+        this.shadowPass.update();
         this.lightPass.update();
     }
     onUI(){

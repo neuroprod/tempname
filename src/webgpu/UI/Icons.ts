@@ -39,4 +39,6 @@ export const Icons  = {
     DELETE_KEYFRAME: 'z',
     KEYFRAME_MULT: '9',
 
+    COPY: '+',
+
 }

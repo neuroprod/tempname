@@ -75,6 +75,7 @@ class SceneEditor {
 
 
     private numFrames ="60"
+    private copyModel!: SceneObject3D;
 
     constructor() {
     }
@@ -168,7 +169,19 @@ class SceneEditor {
                 this.removeModel(this.currentModel)
             }
         }
-
+        if (addMainMenuButton("Copy", Icons.COPY,true)){
+            if(this.currentModel){
+                //this.removeModel(this.currentModel)
+               let name = this.root.getUniqueName(this.currentModel.label)
+                this.copyModel = this.currentModel
+                let copy =this.copyModel.copy(name);
+                if(copy && copy.model){
+                    this.gameRenderer.gBufferPass.modelRenderer.addModel(copy.model)
+                    this.gameRenderer.shadowMapPass.addSceneObject(copy);
+                }
+               console.log(name, this.currentModel)
+            }
+        }
         addMainMenuDivider("tooldDiv2")
 
 

@@ -7,28 +7,37 @@ export default class DirectionalLight{
     public shadowCamera: Camera;
     public lightColor: Vector4;
     public lightDir: Vector3;
+    private mainCam: Camera;
+    private camOffset: Vector3;
 
 
-    constructor(renderer:Renderer) {
+    constructor(renderer:Renderer,mainCam:Camera) {
 
+        this.mainCam = mainCam;
         this.lightColor =new Vector4(1,0.8,0.5,6)
         this.lightDir = new Vector3(1,3,2)
         this.lightDir.normalize();
+        this.camOffset=this.lightDir.clone()
+        this.camOffset.scale(-3)
         this.shadowCamera =new Camera(renderer);
         this.shadowCamera.fovy=1.0;
-        //this.shadowCamera.setOrtho(-2,2,2,-2);
-        this.shadowCamera.near=3;
-        this.shadowCamera.far=15;
-        let lookAt =new Vector3(0,0,-1.7)
+       this.shadowCamera.setOrtho(4,-4,4,-2);
+        this.shadowCamera.near=-10;
+        this.shadowCamera.far=10;
 
-        this.shadowCamera.cameraLookAt.from(lookAt)
 
-        this.shadowCamera.cameraWorld.set(1,3,2)
-        this.shadowCamera.cameraWorld.subtract(lookAt as NumericArray)
+
         //this.shadowCamera.cameraWorld.scale(2.5)
     }
 
 
+    update(){
 
+        this.shadowCamera.cameraLookAt.from( this.mainCam.cameraLookAt)
+
+        this.shadowCamera.cameraWorld.from( this.shadowCamera.cameraLookAt)
+        this.shadowCamera.cameraWorld.subtract(this.camOffset)
+        this.shadowCamera.update()
+    }
 
 }

@@ -36,8 +36,8 @@ export function lerpValueDelta(lerpVal:number,delta:number)
 
 //https://arrowinmyknee.com/2021/03/15/some-math-about-capsule-collision/
 export function sqDistToLineSegment(l1:Vector3,l2:Vector3,p:Vector3){
-    temp1.copy(l1)
-    temp1.subtract(l2)//ab
+    temp1.copy(l2)
+    temp1.subtract(l1)//ab
 
 
     temp2.copy(p)
@@ -49,9 +49,11 @@ export function sqDistToLineSegment(l1:Vector3,l2:Vector3,p:Vector3){
 
     let  e = temp2.dot(temp1)  // Dot(ac, ab);
     // Handle cases where c projects outside ab
+
     if (e <= 0.0) return  temp2.dot( temp2);
 
     let f = temp1.dot( temp1);// Dot(ab, ab);
+
     if (e >= f) return temp3.dot(temp3);
     // Handle cases where c projects onto ab
     return temp2.dot(temp2)- e * e / f;

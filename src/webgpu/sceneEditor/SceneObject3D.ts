@@ -11,6 +11,7 @@ import {DEG2RAD, RAD2DEG, sqDistToLineSegment} from "../lib/MathUtils.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
 import {Vector3} from "@math.gl/core";
 import {HitTrigger, HitTriggerSelectItems} from "../data/HitTriggers.ts";
+import SceneData from "../data/SceneData.ts";
 
 
 export default class SceneObject3D extends Object3D {
@@ -27,11 +28,10 @@ export default class SceneObject3D extends Object3D {
     text: string = ""
     needsHitTest = false;
     needsTrigger: boolean = false;
-    triggerRadius = 0.2
+
     public triggerIsEnabled =true;
-
     hitTriggerItem: HitTrigger =HitTrigger.NONE;
-
+    triggerRadius = 0.2
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         if (!SceneObject3D.emptyTreeSettings) {
@@ -92,6 +92,7 @@ export default class SceneObject3D extends Object3D {
     checkTriggerHit(bottomPos: Vector3, topPos: Vector3, radius: number) {
         if(!this.triggerIsEnabled) return false;
         let dsq = sqDistToLineSegment(bottomPos, topPos, this.getWorldPos())
+      
         let r = this.triggerRadius + radius;
         if (dsq < (r * r)) {
 
@@ -228,5 +229,27 @@ this.hitTriggerItem = obj.hitTriggerItem
 
     hide() {
         if(this.model)this.model.visible =false
+    }
+    copy(label:string){
+        console.log(this.projectId,this.meshId)
+        let  m =SceneData.getModel(label, this.projectId,this.meshId,"")
+        if(m){
+            this.copyProperties(m)
+            this.parent?.addChild(m);
+        }
+        if(this.model && m?.model){
+            this.model.copyProperties(m?.model)
+        }
+return m;
+
+    }
+    copyProperties(target:SceneObject3D){
+        super.copyProperties(target)
+        target.needsTrigger =this.needsTrigger
+        target.triggerIsEnabled =this.triggerIsEnabled
+        target. hitTriggerItem =this.hitTriggerItem
+        target.triggerRadius =this.triggerRadius
+
+
     }
 }
