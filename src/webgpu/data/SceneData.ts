@@ -32,7 +32,7 @@ class SceneData {
     private renderer!: Renderer;
     private dataScene!: any;
     private defaultShadowMaterial!: ShadowDepthMaterial;
-    private font!: Font;
+    font!: Font;
 
     private defaultFontMaterial!: GBufferFontMaterial;
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;

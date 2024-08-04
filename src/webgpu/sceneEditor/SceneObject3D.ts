@@ -12,6 +12,7 @@ import DebugDraw from "../Website/DebugDraw.ts";
 import {Vector3} from "@math.gl/core";
 import {HitTrigger, HitTriggerSelectItems} from "../data/HitTriggers.ts";
 import SceneData from "../data/SceneData.ts";
+import FontMesh from "../modelMaker/FontMesh.ts";
 
 
 export default class SceneObject3D extends Object3D {
@@ -29,9 +30,11 @@ export default class SceneObject3D extends Object3D {
     needsHitTest = false;
     needsTrigger: boolean = false;
 
-    public triggerIsEnabled =true;
-    hitTriggerItem: HitTrigger =HitTrigger.NONE;
+    public triggerIsEnabled = true;
+    hitTriggerItem: HitTrigger = HitTrigger.NONE;
     triggerRadius = 0.2
+    private lockScaleXY: boolean = false;
+
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         if (!SceneObject3D.emptyTreeSettings) {
@@ -90,9 +93,9 @@ export default class SceneObject3D extends Object3D {
     }
 
     checkTriggerHit(bottomPos: Vector3, topPos: Vector3, radius: number) {
-        if(!this.triggerIsEnabled) return false;
+        if (!this.triggerIsEnabled) return false;
         let dsq = sqDistToLineSegment(bottomPos, topPos, this.getWorldPos())
-      
+
         let r = this.triggerRadius + radius;
         if (dsq < (r * r)) {
 
@@ -102,10 +105,17 @@ export default class SceneObject3D extends Object3D {
     }
 
     drawTrigger() {
-        if(!this.triggerIsEnabled) return
+        if (!this.triggerIsEnabled) return
         DebugDraw.drawCircle(this.getWorldPos(), this.triggerRadius)
     }
 
+    public setText(s:string){
+        if (s != this.text && this.model) {
+        this.text = s;
+        let m = this.model.mesh as FontMesh;
+        m.setText(this.text, SceneData.font)
+        }
+    }
     onDataUI() {
         UI.pushID(this.UUID)
         UI.LTextInput("name", this, "label")
@@ -117,11 +127,14 @@ export default class SceneObject3D extends Object3D {
             UI.LFloat(this, "triggerRadius", "TriggerRadius")
             this.drawTrigger();
 
-            this.hitTriggerItem =UI.LSelect("trigger",HitTriggerSelectItems,  this.hitTriggerItem)
+            this.hitTriggerItem = UI.LSelect("trigger", HitTriggerSelectItems, this.hitTriggerItem)
 
 
         }
-
+        if (this.isText) {
+            let t = UI.LTextInput("text", this.text)
+            this.setText(t)
+        }
 
         UI.LFloat(this, "x", "Position X")
         UI.LFloat(this, "y", "Y")
@@ -131,9 +144,15 @@ export default class SceneObject3D extends Object3D {
         UI.LFloat(this, "ryD", "Y")
         UI.LFloat(this, "rzD", "Z")
         if (this.model) {
+            this.lockScaleXY = UI.LBool(this, "lockScaleXY")
+            if (this.lockScaleXY) {
+                UI.LFloat(this.model, "sx", "Scale XY")
+                this.model.sy = this.model.sx;
+            } else {
+                UI.LFloat(this.model, "sx", "Scale X")
+                UI.LFloat(this.model, "sy", "Y")
+            }
 
-            UI.LFloat(this.model, "sx", "Scale X")
-            UI.LFloat(this.model, "sy", "Y")
             UI.LFloat(this.model, "sz", "Z")
         }
 
@@ -144,7 +163,7 @@ export default class SceneObject3D extends Object3D {
         this.needsHitTest = obj.needsHitTest;
         this.needsTrigger = obj.needsTrigger;
         this.triggerRadius = obj.triggerRadius;
-this.hitTriggerItem = obj.hitTriggerItem
+        this.hitTriggerItem = obj.hitTriggerItem
     }
 
     getSceneData(dataArr: Array<any>) {
@@ -160,7 +179,7 @@ this.hitTriggerItem = obj.hitTriggerItem
         obj.triggerRadius = this.triggerRadius
         obj.position = this.getPosition()
         obj.rotation = this.getRotation()
-        obj.hitTriggerItem =this.hitTriggerItem
+        obj.hitTriggerItem = this.hitTriggerItem
         if (this.model) {
             obj.model = this.model.label
             obj.scale = this.model.getScale();
@@ -228,27 +247,29 @@ this.hitTriggerItem = obj.hitTriggerItem
 
 
     hide() {
-        if(this.model)this.model.visible =false
+        if (this.model) this.model.visible = false
     }
-    copy(label:string){
-        console.log(this.projectId,this.meshId)
-        let  m =SceneData.getModel(label, this.projectId,this.meshId,"")
-        if(m){
+
+    copy(label: string) {
+        console.log(this.projectId, this.meshId)
+        let m = SceneData.getModel(label, this.projectId, this.meshId, "")
+        if (m) {
             this.copyProperties(m)
             this.parent?.addChild(m);
         }
-        if(this.model && m?.model){
+        if (this.model && m?.model) {
             this.model.copyProperties(m?.model)
         }
-return m;
+        return m;
 
     }
-    copyProperties(target:SceneObject3D){
+
+    copyProperties(target: SceneObject3D) {
         super.copyProperties(target)
-        target.needsTrigger =this.needsTrigger
-        target.triggerIsEnabled =this.triggerIsEnabled
-        target. hitTriggerItem =this.hitTriggerItem
-        target.triggerRadius =this.triggerRadius
+        target.needsTrigger = this.needsTrigger
+        target.triggerIsEnabled = this.triggerIsEnabled
+        target.hitTriggerItem = this.hitTriggerItem
+        target.triggerRadius = this.triggerRadius
 
 
     }

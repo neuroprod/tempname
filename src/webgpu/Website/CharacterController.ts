@@ -11,7 +11,7 @@ import {NumericArray} from "@math.gl/types";
 import SoundHandler from "./SoundHandler.ts";
 
 export default class CharacterController {
-    private charRoot: SceneObject3D;
+    charRoot: SceneObject3D;
     private facingRight = true;
     private renderer: Renderer;
     private rotateTimeLine!: gsap.core.Timeline;
@@ -21,7 +21,7 @@ export default class CharacterController {
 
     private gravity = 40;
     private maxVelX = 3;
-    private moveForceX = 4;
+    private moveForceX = 6;
     private jumpForceX = 3;
     private isGrounded = true;
     private jumpPulse: number = 6;

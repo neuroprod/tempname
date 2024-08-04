@@ -6,9 +6,9 @@ import {NumericArray} from "@math.gl/types";
 import {Vector3} from "@math.gl/core";
 import Timer from "../lib/Timer.ts";
 import {lerpValueDelta} from "../lib/MathUtils.ts";
-
+import gsap from "gsap";
 export default class GameCamera{
-    private camera: Camera;
+    camera: Camera;
     private renderer: Renderer;
     private charRoot: SceneObject3D;
     private charPos: Vector3 =new Vector3();
@@ -25,14 +25,14 @@ export default class GameCamera{
         let delta = Timer.delta;
 
         this.camera.ratio = this.renderer.ratio
-
         this.charPos = this.charRoot.getWorldPos()
         this.charPos.y+=0.5
-        this.camTarget.lerp( this.charPos,1 - Math.pow(0.01 ,delta))
 
+        this.camTarget.lerp( this.charPos,1 - Math.pow(0.01 ,delta))
         this.camPos.copy(this.camTarget);
         this.camPos.z+=3;
         this.camPos.y+=0;
+
 
         this.camera.cameraLookAt.copy(this.camTarget as NumericArray);
         this.camera.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.01 ,delta))
@@ -44,4 +44,24 @@ export default class GameCamera{
 
 
     }
+    updateForScene(){
+        this.camera.update()
+    }
+
+    tweenToDefaultPos() {
+        this.charPos = this.charRoot.getWorldPos()
+        this.charPos.y+=0.5;
+
+        this.camTarget.copy(this.charPos);
+        this.camPos.copy(this.camTarget);
+        this.camPos.z+=3;
+        this.camPos.y+=0;
+
+        let tl =gsap.timeline()
+        tl.to(  this.camera.cameraLookAt,{x:this.charPos.x,y:this.charPos.y,z:this.charPos.z, duration:2},0)
+        tl.to(  this.camera.cameraWorld,{x:this.camPos.x,y:this.camPos.y,z:this.camPos.z, duration:2},0)
+
+    }
+
+
 }

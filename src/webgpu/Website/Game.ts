@@ -17,9 +17,10 @@ import CoinHandler from "./handlers/CoinHandler.ts";
 import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import {HitTrigger} from "../data/HitTriggers.ts";
 import SoundHandler from "./SoundHandler.ts";
+import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
 
 
-export default class Game{
+export default class Game {
     private renderer: Renderer;
     private mouseListener: MouseListener;
 
@@ -30,90 +31,89 @@ export default class Game{
     private cloudParticles: CloudParticles;
     private gamepadInput: GamePadInput;
     private coinHandler: CoinHandler;
+    private strawberryScene: StrawBerryScene;
+    private isCutScene: boolean = false;
 
 
-
-
-    constructor(renderer: Renderer, mouseListener: MouseListener, camera:Camera,gameRenderer:GameRenderer) {
+    constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
 
         this.gameRenderer = gameRenderer;
 
-        this.cloudParticles =new CloudParticles(renderer)
-        this.characterController = new CharacterController(renderer,this.cloudParticles)
+        this.cloudParticles = new CloudParticles(renderer)
+        this.characterController = new CharacterController(renderer, this.cloudParticles)
 
-        this.gameCamera = new GameCamera(renderer,camera);
-        this.keyInput =new KeyInput()
+        this.gameCamera = new GameCamera(renderer, camera);
+        this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
         this.coinHandler = new CoinHandler()
 
-        DebugDraw.init(this.renderer,camera);
+
+        this.strawberryScene = new StrawBerryScene()
+
+
+        DebugDraw.init(this.renderer, camera);
         this.setActive();
-SoundHandler.init()
+        SoundHandler.init()
     }
 
     update() {
 
         this.gamepadInput.update();
-
-        this.gameCamera.update()
-
-        let delta  =Timer.delta;
-
-        let jump =this.keyInput.getJump()
+        let delta = Timer.delta;
+        let jump = this.keyInput.getJump()
         let hInput = this.keyInput.getHdir()
-        if(this.gamepadInput.connected){
+        if (this.gamepadInput.connected) {
 
-           if(hInput==0) hInput = this.gamepadInput.getHdir()
+            if (hInput == 0) hInput = this.gamepadInput.getHdir()
 
-            if(!jump) jump =this.gamepadInput.getJump()
+            if (!jump) jump = this.gamepadInput.getJump()
         }
 
+if(this.strawberryScene.finished){
+    this.isCutScene =false;
+}
 
-        this.characterController.update(delta,hInput,jump)
+        if (!this.isCutScene) {
+            this.characterController.update(delta, hInput, jump)
+            this.gameCamera.update()
+
+        } else {
+            this.strawberryScene.update();
+        }
+
         this.cloudParticles.update();
         this.coinHandler.update();
         this.checkTriggers()
-       // console.log(SceneData.triggerModels)
+        // console.log(SceneData.triggerModels)
 
 //last
         DebugDraw.update();
     }
-    private checkTriggers() {
 
-       // console.log(this.characterController.targetPos);
-
-        for(let f of    SceneData.triggerModels){
-            f.drawTrigger()
-            if(f.checkTriggerHit(this.characterController.charHitBottomWorld,this.characterController.charHitTopWorld,this.characterController.charHitRadius)){
-
-
-
-                this.resolveHitTrigger(f)
-
-            }
-
-        }
-
-    }
-    resolveHitTrigger(obj:SceneObject3D){
-        switch(obj.hitTriggerItem){
+    resolveHitTrigger(obj: SceneObject3D) {
+        switch (obj.hitTriggerItem) {
             case HitTrigger.COIN:
                 console.log("hitCoin")
-                obj.triggerIsEnabled =false
+                obj.triggerIsEnabled = false
                 obj.hide()
                 SoundHandler.playCoin()
                 break
-
+            case HitTrigger.STRAWBERRY:
+                obj.triggerIsEnabled = false
+                this.setCutScene(this.strawberryScene)
+                break
 
 
         }
     }
+
     setActive() {
 
     }
+
     draw() {
         this.gameRenderer.draw();
 
@@ -127,6 +127,28 @@ SoundHandler.init()
         DebugDraw.draw(pass);
     }
 
+    private checkTriggers() {
+
+        // console.log(this.characterController.targetPos);
+
+        for (let f of SceneData.triggerModels) {
+            f.drawTrigger()
+            if (f.checkTriggerHit(this.characterController.charHitBottomWorld, this.characterController.charHitTopWorld, this.characterController.charHitRadius)) {
 
 
+                this.resolveHitTrigger(f)
+
+            }
+
+        }
+
+    }
+
+    private setCutScene(strawberryScene: StrawBerryScene) {
+        strawberryScene.characterController =this.characterController
+        strawberryScene.gameCamera = this.gameCamera;
+        strawberryScene.start();
+        this.isCutScene = true;
+
+    }
 }
