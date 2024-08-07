@@ -244,7 +244,9 @@ export default class SceneObject3D extends Object3D {
         return false;
 
     }
-
+    show() {
+        if (this.model) this.model.visible = true
+    }
 
     hide() {
         if (this.model) this.model.visible = false

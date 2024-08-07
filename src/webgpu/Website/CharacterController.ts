@@ -31,7 +31,7 @@ export default class CharacterController {
     private cloudParticles: CloudParticles;
     private charBody: SceneObject3D;
     private bodyBasePos: Vector3;
-    private charHat: SceneObject3D;
+   // private charHat: SceneObject3D;
     private hatBasePos: Vector3;
     private sideRay: Ray;
     private canJump: boolean = true;
@@ -67,8 +67,8 @@ export default class CharacterController {
         this.bodyBasePos = this.charBody.getPosition().clone()
 
 
-        this.charHat = SceneData.sceneModelsByName["hat"];
-        this.hatBasePos = this.charHat.getPosition().clone()
+        //this.charHat = SceneData.sceneModelsByName["piratehat"];
+        //this.hatBasePos = this.charHat.getPosition().clone()
 
         this.cloudParticles = cloudParticles;
         this.downRay = new Ray()
@@ -172,9 +172,9 @@ export default class CharacterController {
         this.setCharacterDir(hInput);
 
         this.charBody.rz = -Math.abs(this.velocity.x) / 20;
-        this.charHat.rz = -Math.abs(this.velocity.x) / 30;
+        //this.charHat.rz = -Math.abs(this.velocity.x) / 30;
         this.charBody.y = lerp(this.charBody.y, this.bodyBasePos.y, lerpValueDelta(0.002, delta))
-        this.charHat.y = lerp(this.charHat.y, this.hatBasePos.y, lerpValueDelta(0.002, delta))
+        //this.charHat.y = lerp(this.charHat.y, this.hatBasePos.y, lerpValueDelta(0.002, delta))
         this.charBody.sy = lerp(this.charBody.sy, 1, lerpValueDelta(0.001, delta))
 
         this.charHitTopWorld =this.charBody.getWorldPos(this.charHitTop)
