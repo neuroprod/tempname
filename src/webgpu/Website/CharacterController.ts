@@ -32,7 +32,7 @@ export default class CharacterController {
     private charBody: SceneObject3D;
     private bodyBasePos: Vector3;
    // private charHat: SceneObject3D;
-    private hatBasePos: Vector3;
+    //private hatBasePos: Vector3;
     private sideRay: Ray;
     private canJump: boolean = true;
 
