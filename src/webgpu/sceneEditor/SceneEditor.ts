@@ -391,7 +391,7 @@ class SceneEditor {
 
 
     setActive() {
-        this.editCamera.setCamera()
+        this.editCamera.setActive()
     }
 }
 export default new SceneEditor();
