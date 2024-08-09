@@ -58,8 +58,8 @@ export default class GameCamera{
         this.camPos.y+=0;
 
         let tl =gsap.timeline()
-        tl.to(  this.camera.cameraLookAt,{x:this.charPos.x,y:this.charPos.y,z:this.charPos.z, duration:2},0)
-        tl.to(  this.camera.cameraWorld,{x:this.camPos.x,y:this.camPos.y,z:this.camPos.z, duration:2},0)
+        tl.to(  this.camera.cameraLookAt,{x:this.charPos.x,y:this.charPos.y,z:this.charPos.z, duration:1},0)
+        tl.to(  this.camera.cameraWorld,{x:this.camPos.x,y:this.camPos.y,z:this.camPos.z, duration:1},0)
 
     }
 

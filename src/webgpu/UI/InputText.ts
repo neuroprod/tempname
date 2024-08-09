@@ -98,7 +98,12 @@ export class InputText extends Component{
         this.cursorPos =this.text.length
         this.dragPos = 0;
         this.isSelecting = false;
-        if(autoFocus) UI_I.setFocusComponent(this);
+        if(autoFocus){
+            UI_I.setFocusComponent(this);
+            this.isSelecting = true;
+            this.cursorPos =     this.text.length;
+
+        }
     }
     limitMouseCursor(pos: number) {
         if (pos < 0) pos = 0;
@@ -151,6 +156,7 @@ export class InputText extends Component{
 
         }
     }
+
     removeSelection() {
         let lPos = this.cursorPos;
         let rPos = this.dragPos;

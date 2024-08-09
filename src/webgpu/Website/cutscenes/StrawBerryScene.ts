@@ -21,7 +21,7 @@ export default class StrawBerryScene{
         tl.to(  this.gameCamera.camera.cameraWorld,{x:this.camPos.x,y:this.camPos.y,z:this.camPos.z,ease:"power2.Out" , duration:1.0},0)
         tl.to(this.characterController.charRoot,{ry:0.5},0)
 
-        tl.to(this.characterController.charRoot,{ry:0.0,duration:2},2)
+        tl.to(this.characterController.charRoot,{ry:0.0,duration:1},2)
         tl.call(()=>{this.gameCamera.tweenToDefaultPos()},[],2)
         tl.call(()=>{this.finished =true},[],3)
     }
