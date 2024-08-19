@@ -35,13 +35,13 @@ export default class Bezier extends Curve{
 
     }
 
-    public setMeshData(indices: Array<Number>, positions: Array<Number>){
+    public setMeshData(indices: Array<Number>, positions: Array<Number>,divisions=8){
 
         let l=positions.length/3
         indices.push(l++)
         positions.push(this.p1.x,this.p1.y,this.p1.z)//startPoint
         //indices.push(l++)
-        let numDivisions =8;
+        let numDivisions =divisions;
         let step = 1/numDivisions;
         for(let i=1;i<numDivisions;i++)
         {

@@ -74,7 +74,7 @@ export default class Path {
     public clear(){
         this.curves=[]
     }
-    public setMeshData(indices: Array<Number>, positions: Array<Number>) {
+    public setMeshData(indices: Array<Number>, positions: Array<Number>,divisions=8) {
 
 
 
@@ -82,7 +82,7 @@ export default class Path {
 
         let numCurves = this.curves.length
         for (let i = 0; i < numCurves; i++) {
-            this.curves[i].setMeshData(indices, positions)
+            this.curves[i].setMeshData(indices, positions,divisions)
 
         }
         //if no endpoint
@@ -189,10 +189,10 @@ export default class Path {
 
     }
 
-    getPoints() {
+    getPoints(divisions=8) {
         let indices:Array<number>=[]
         let positions:Array<number>=[]
-        this.setMeshData(indices, positions)
+        this.setMeshData(indices, positions,divisions)
 
         let arr:Array<Vector2> =[]
         for(let i=0;i<positions.length;i+=3){

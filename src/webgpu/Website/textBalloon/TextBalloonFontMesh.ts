@@ -1,23 +1,29 @@
-import Mesh from "../lib/mesh/Mesh.ts";
+import Mesh from "../../lib/mesh/Mesh.ts";
 
 
-import Font, {Char} from "../data/Font.ts";
+import Font, {Char} from "../../data/Font.ts";
 
-export default class FontMesh extends Mesh{
+export default class TextBalloonFontMesh extends Mesh{
     private startX: number =0;
     private posTemp:Array<number> =[]
     private uvTemp:Array<number> =[]
     private normalTemp:Array<number> =[]
     private indexTemp:Array<number> =[]
     private indicesPos: number=0;
+    private startY: number=0;
 
     setText(text: string,font:Font,fontSize:number=0.003){
         this.startX =0;
+        this.startY =0;
         this.indicesPos =0;
 
         for (let i = 0; i < text.length; i++) {
             let c = text.charCodeAt(i);
-
+            if(c==10){
+                this.startY+=fontSize*37;
+                this.startX =0
+                continue
+            }
             let char =font.charArray[c];
 
 
@@ -27,7 +33,7 @@ export default class FontMesh extends Mesh{
         }
 
         this.setPositions(new Float32Array(this.posTemp))
-        this.setNormals(new Float32Array(this.normalTemp))
+
         this.setUV0(new Float32Array(this.uvTemp))
         this.setIndices(new Uint16Array(this.indexTemp))
 
@@ -45,7 +51,7 @@ export default class FontMesh extends Mesh{
 
 
         let posX = this.startX +char.xOffset*fontSize;;
-        let posY = char.yOffset*fontSize;
+        let posY =  this.startY+char.yOffset*fontSize;
         //
         //
         //

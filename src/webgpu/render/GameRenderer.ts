@@ -142,5 +142,6 @@ export default class GameRenderer{
     //put in canvas
     drawFinal(pass: CanvasRenderPass) {
         this.blitFinal.draw(pass);
+
     }
 }
