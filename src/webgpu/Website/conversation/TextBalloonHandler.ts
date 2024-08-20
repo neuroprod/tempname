@@ -10,7 +10,9 @@ import Path from "../../lib/path/Path.ts";
 import ExtrudeMesh from "../../modelMaker/ExtrudeMesh.ts";
 import {MeshType} from "../../data/ProjectMesh.ts";
 import TextBalloonMaterial from "./TextBalloonMaterial.ts";
-import {Vector2} from "@math.gl/core";
+import {Vector2, Vector3} from "@math.gl/core";
+import SceneObject3D from "../../sceneEditor/SceneObject3D.ts";
+import Object3D from "../../lib/model/Object3D.ts";
 
 
 export default class TextBalloonHandler{
@@ -41,7 +43,15 @@ export default class TextBalloonHandler{
     private br: Vector2=new Vector2();
     private brc1: Vector2=new Vector2();
     private brc2: Vector2=new Vector2();
-    constructor(renderer:Renderer) {
+    private showText: boolean =false;
+    private textMesh: TextBalloonFontMesh;
+    private newBalloon: boolean =true;
+    private model!: SceneObject3D;
+    private modelOffset: Vector3=new Vector3();
+    private holder: Object3D;
+    private gameCamera: Camera;
+    constructor(renderer:Renderer,gameCamera:Camera) {
+        this.gameCamera = gameCamera;
         this.renderer = renderer;
         this.camera = new Camera(renderer)
         this.camera.near=-100;
@@ -52,18 +62,19 @@ export default class TextBalloonHandler{
         this.textModel = new Model(renderer,"textModel")
         this.textModel.material = new TextBalloonFontMaterial(renderer,"textBalloonFontMaterial")
 
-       let mesh =  new TextBalloonFontMesh(renderer)
-        mesh.setText("Hi Strawberry!\nWhats up?\n",SceneData.font,0.15)
+      this.textMesh =  new TextBalloonFontMesh(renderer)
+        this.textMesh.setText("Hi Strawberry!\nWhats up?\n",SceneData.font,0.15)
 
-        this.textModel.mesh =mesh;
+        this.textModel.mesh =this.textMesh;
         this.textModel.setScaler(1)
 
 
 
-        let w = mesh.max.x
-        let h = mesh.min.y
-        this.path = new Path()
 
+
+        this.path = new Path()
+        let w = this.textMesh.max.x
+        let h = this.textMesh.min.y
        this.tl =new Vector2( -this.offset.x,+this.offset.y)
 
        this.tr =new Vector2( w+this.offset.x,+this.offset.y)
@@ -83,6 +94,11 @@ export default class TextBalloonHandler{
         this.balloonModel.material = new TextBalloonMaterial(renderer,"textBalloonMaterial")
         this.modelRenderer.addModel(   this.balloonModel)
         this.modelRenderer.addModel(this.textModel)
+
+        this.holder = new Object3D(renderer,"balloonHolder");
+        this.holder.addChild(this.balloonModel)
+        this.holder.addChild(this.textModel)
+        this.showText =false;
     }
 
     updatePath(){
@@ -104,7 +120,7 @@ export default class TextBalloonHandler{
 
 
 
-
+this.path.clear()
 
         this.path.moveTo( this.tl)
         this.path.bezierCurveTo(this.tlc1,this.trc2,this.tr)
@@ -112,16 +128,58 @@ export default class TextBalloonHandler{
         this.path.bezierCurveTo(this.brc1,this.blc2,this.bl)
         this.path.bezierCurveTo(this.blc1,this.tlc2,this.tl)
 
-        this.extrudeMesh.setExtrusion(   this.path.getPoints(16),MeshType.PLANE)
+        this.extrudeMesh.setExtrusion(   this.path.getPoints(12),MeshType.PLANE)
 
     }
     update(){
+        if(!this.showText)return;
+
         this.camera.setOrtho(100*this.renderer.ratio,-100*this.renderer.ratio,100,-100)
+
+        if(this.model){
+
+            let w =this.model.getWorldPos(this.modelOffset)
+
+            w.transform(this.gameCamera.viewProjection)
+            this.holder.x = w.x*100*this.renderer.ratio;
+            this.holder.y = w.y*100;
+
+        }
 
     }
 
     drawFinal(pass: CanvasRenderPass) {
+        if(!this.showText)return;
         this.modelRenderer.draw(pass)
 
+    }
+
+    setText(text: string) {
+        if(!this.showText)this.newBalloon =true
+        this.showText =true;
+
+        this.textMesh.setText(text,SceneData.font,0.15)
+        let w = this.textMesh.max.x;
+        let h = this.textMesh.min.y;
+this.balloonModel.x = this.textModel.x  = -w/2
+        this.balloonModel.y= this.textModel.y  = -h/2 -5
+    this.tl.set( -this.offset.x,+this.offset.y)
+        this.tr.set(w+this.offset.x,+this.offset.y)
+        this.br.set( w+this.offset.x,h-this.offset.y)
+        this.bl.set( -this.offset.x,h-this.offset.y)
+        this.updatePath()
+
+    }
+
+    setModel(m: SceneObject3D, offset: Array<number>) {
+        if(this.model!=m)this.newBalloon =true
+        this.model = m
+        this.modelOffset.from(offset)
+
+
+    }
+
+    hideText() {
+        this.showText =false;
     }
 }

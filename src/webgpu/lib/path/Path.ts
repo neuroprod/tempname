@@ -72,6 +72,7 @@ export default class Path {
 
     }
     public clear(){
+        this.started =false;
         this.curves=[]
     }
     public setMeshData(indices: Array<Number>, positions: Array<Number>,divisions=8) {

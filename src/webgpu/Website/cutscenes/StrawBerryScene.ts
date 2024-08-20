@@ -3,14 +3,17 @@ import GameCamera from "../GameCamera.ts";
 import Timer from "../../lib/Timer.ts";
 import {Vector3} from "@math.gl/core";
 import gsap from "gsap";
+import ConversationHandler from "../conversation/ConversationHandler.ts";
 export default class StrawBerryScene{
     characterController!: CharacterController;
     gameCamera!: GameCamera;
-
+    conversationHandler!: ConversationHandler;
     public finished =true;
 
    camPos =new Vector3(2.4, 0.12452151451113799, 1.7811109374079286)
     camTarget=new Vector3(2.4, -0.03203107766738261, 0.013283899312188208)
+   waitUserInput: boolean =false;
+    inputDown =false;
     constructor() {
     }
     public start(){
@@ -20,12 +23,17 @@ export default class StrawBerryScene{
         tl.to(  this.gameCamera.camera.cameraLookAt,{x:this.camTarget.x,y:this.camTarget.y,z:this.camTarget.z,ease:"power2.Out" ,duration:1.0},0)
         tl.to(  this.gameCamera.camera.cameraWorld,{x:this.camPos.x,y:this.camPos.y,z:this.camPos.z,ease:"power2.Out" , duration:1.0},0)
         tl.to(this.characterController.charRoot,{ry:0.5},0)
+        tl.call(this.startConversation.bind(this),[],1)
+       // tl.to(this.characterController.charRoot,{ry:0.0,duration:1},2)
 
-        tl.to(this.characterController.charRoot,{ry:0.0,duration:1},2)
-        tl.call(()=>{this.gameCamera.tweenToDefaultPos()},[],2)
-        tl.call(()=>{this.finished =true},[],3)
+       // tl.call(()=>{this.gameCamera.tweenToDefaultPos()},[],2)
+       // tl.call(()=>{this.finished =true},[],3)
     }
-
+    startConversation(){
+        this.conversationHandler.startConversation("strawBerry")
+        this.conversationHandler.setText()
+        this.waitUserInput =true;
+    }
 
     update() {
        if(this.characterController.targetPos.x < 2){
@@ -35,5 +43,19 @@ export default class StrawBerryScene{
        }
         this.gameCamera.updateForScene()
 
+    }
+
+    setInput(hInput: number, jump: boolean) {
+
+        if(this.waitUserInput && jump &&  this.conversationHandler.textReady){
+
+           if( this.conversationHandler.setText()){
+               let tl =gsap.timeline()
+               tl.to(this.characterController.charRoot,{ry:0.0,duration:1},0)
+
+               tl.call(()=>{this.gameCamera.tweenToDefaultPos()},[],0)
+               tl.call(()=>{this.finished =true},[],1)
+           }
+        }
     }
 }

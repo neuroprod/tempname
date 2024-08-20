@@ -18,7 +18,9 @@ import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
 import {HitTrigger} from "../data/HitTriggers.ts";
 import SoundHandler from "./SoundHandler.ts";
 import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
-import TextBalloonHandler from "./textBalloon/TextBalloonHandler.ts";
+import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
+import ConversationHandler from "./conversation/ConversationHandler.ts";
+
 
 
 export default class Game {
@@ -34,7 +36,8 @@ export default class Game {
     private coinHandler: CoinHandler;
     private strawberryScene: StrawBerryScene;
     private isCutScene: boolean = false;
-    private textBalloonHandler!: TextBalloonHandler;
+    private textBalloonHandler: TextBalloonHandler;
+    private conversationHandler: ConversationHandler;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
@@ -50,8 +53,8 @@ export default class Game {
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
-        this.textBalloonHandler =new TextBalloonHandler(renderer)
-
+        this.textBalloonHandler =new TextBalloonHandler(renderer,this.gameCamera.camera)
+        this.conversationHandler = new ConversationHandler(renderer,this.textBalloonHandler)
         this.coinHandler = new CoinHandler()
 
 
@@ -86,6 +89,7 @@ export default class Game {
 
         } else {
             this.strawberryScene.update();
+            this.strawberryScene.setInput(hInput, jump)
         }
 
         this.cloudParticles.update();
@@ -152,6 +156,7 @@ export default class Game {
     private setCutScene(strawberryScene: StrawBerryScene) {
         strawberryScene.characterController =this.characterController
         strawberryScene.gameCamera = this.gameCamera;
+        strawberryScene.conversationHandler =this.conversationHandler;
         strawberryScene.start();
         this.isCutScene = true;
 

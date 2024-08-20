@@ -1,0 +1,10 @@
+[
+  {
+    "name": "strawBerry",
+    "data": [
+      {"char":"charRoot","pos":[0.3, 1, 0],"text": "Hi Strawberry!\nEveryting ok?"},
+      {"text": "You seem ill"},
+      {"char":"strawberry","pos":[-0.3, 0.9, 0],"text": "No, I'm feeling sick\nCan you spare some coints"}
+    ]
+  }
+]
