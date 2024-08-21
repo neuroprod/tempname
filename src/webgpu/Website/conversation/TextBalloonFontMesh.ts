@@ -11,17 +11,18 @@ export default class TextBalloonFontMesh extends Mesh{
     private indexTemp:Array<number> =[]
     private indicesPos: number=0;
     private startY: number=0;
-
+     numLines =0;
     setText(text: string,font:Font,fontSize:number=0.003){
         this.startX =0;
         this.startY =0;
         this.indicesPos =0;
-
+this.numLines =1;
         for (let i = 0; i < text.length; i++) {
             let c = text.charCodeAt(i);
             if(c==10){
-                this.startY+=fontSize*37;
+                this.startY+=fontSize*39;
                 this.startX =0
+                this.numLines ++;
                 continue
             }
             let char =font.charArray[c];
