@@ -58,6 +58,7 @@ export default class TextBalloonHandler {
     private timeLine!: gsap.core.Timeline;
     private extrudeMeshArrow: ExtrudeMesh;
     private arrowModel: Model;
+    private charPos=-4;
 
     constructor(renderer: Renderer, gameCamera: Camera) {
         this.gameCamera = gameCamera;
@@ -159,6 +160,8 @@ export default class TextBalloonHandler {
             this.holder.x = w.x * 100 * this.renderer.ratio;
             this.holder.y = w.y * 100;
 
+            this.textModel.material.setUniform("charPos",this.charPos)
+
         }
 
     }
@@ -192,7 +195,7 @@ export default class TextBalloonHandler {
             this.makeArrow()
         }
         this.showText = true;
-
+        this.charPos =-4
         this.textMesh.setText(text, SceneData.font, 0.15)
         let w = this.textMesh.max.x;
         let h = -this.textMesh.numLines * 7;
@@ -229,10 +232,13 @@ export default class TextBalloonHandler {
         }
         let ease = "back.out(3)";
         let time = 0.3
+        this.charPos =-4;
         let tline = gsap.timeline()
         if(this.newBalloon){
             this.arrowModel.sx =this.arrowModel.sy =0;
             tline.to(this.arrowModel, {sx: 1, sy: 1, duration: 0.2, ease: "power4.out"}, 0)
+            this.holder.setScaler(0);
+            tline.to(this.holder, {sx: 1, sy: 1,sz:1, duration: 0.3, ease: "power4.out"}, 0)
         }
 
         tline.to(this.tl, {x: this.tlS.x, y: this.tlS.y, duration: time, ease: ease}, 0)
@@ -243,6 +249,11 @@ export default class TextBalloonHandler {
                 this.updatePath()
             }
         }, 0)
+
+        tline.to(this, {
+            charPos: this.textMesh.charCount, duration: this.textMesh.charCount/50
+        }, 0.2)
+
         this.newBalloon = false
 
 

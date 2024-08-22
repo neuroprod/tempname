@@ -10,8 +10,8 @@ export default class StrawBerryScene{
     conversationHandler!: ConversationHandler;
     public finished =true;
 
-   camPos =new Vector3(2.4, 0.12452151451113799, 1.7811109374079286)
-    camTarget=new Vector3(2.4, -0.03203107766738261, 0.013283899312188208)
+   camPos =new Vector3(2.4, 0.12452151451113799+0.1, 1.7811109374079286)
+    camTarget=new Vector3(2.4, -0.03203107766738261+0.2, 0.013283899312188208)
    waitUserInput: boolean =false;
     inputDown =false;
     constructor() {

@@ -11,19 +11,19 @@ export default class TextBalloonFontMaterial extends Material{
 
     setup(){
         this.addAttribute("aPos", ShaderType.vec3);
-      //  this.addAttribute("aNormal", ShaderType.vec3);
+       this.addAttribute("aNormal", ShaderType.vec3);
         this.addAttribute("aUV0", ShaderType.vec2);
 
        // this.addVertexOutput("normal", ShaderType.vec3 );
         this.addVertexOutput("uv", ShaderType.vec2 );
-
+        this.addVertexOutput("alpha", ShaderType.vec2  );
         this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer));
         this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer));
 
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-
+        uniforms.addUniform("charPos",8.0)
         uniforms.addTexture("colorTexture",this.renderer.getTexture(Textures.MAINFONT))
         uniforms.addSampler("mySampler")
         this.cullMode =CullMode.None;
@@ -44,8 +44,15 @@ ${this.getShaderUniforms()}
 fn mainVertex( ${this.getShaderAttributes()} ) -> VertexOutput
 {
     var output : VertexOutput;
-    output.position =camera.viewProjectionMatrix*model.modelMatrix* vec4( aPos,1.0);
-   
+    let s  =1.0- smoothstep(uniforms.charPos,uniforms.charPos+4.0, aNormal.z);
+    var pos =  aPos;
+    pos.x -=aNormal.x;
+    pos.y +=aNormal.y;
+    pos*=s;
+     pos.x +=aNormal.x;
+    pos.y -=aNormal.y;
+    output.position =camera.viewProjectionMatrix*model.modelMatrix* vec4( pos,1.0);
+   output.alpha =vec2(s,s);
     output.uv =aUV0;
     return output;
 }
@@ -70,12 +77,12 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 
   let edgeWidth = 0.5;
 
-  let alpha = smoothstep(-edgeWidth, edgeWidth, pxDist);
+  let a= smoothstep(-edgeWidth, edgeWidth, pxDist)*alpha.x;
    
   
 
 
-    return vec4(alpha);
+    return vec4(a);
 }
 ///////////////////////////////////////////////////////////
         `
