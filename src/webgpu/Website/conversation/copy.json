@@ -2,9 +2,15 @@
   {
     "name": "strawBerry",
     "data": [
+      {"char":"strawberry","pos":[-0.3, 0.7, 0],"text": "No, I'm feeling sick\nCan you spare some coints"},
       {"char":"charRoot","pos":[0.3, 0.8, 0],"text": "Hi Strawberry!\nEveryting ok?"},
-      {"text": "You seem ill"},
-      {"char":"strawberry","pos":[-0.3, 0.7, 0],"text": "No, I'm feeling sick\nCan you spare some coints"}
+      {"choice": [
+        {"text": "choise1!\nEveryting ok?"},
+        {"text": "choise2 gsdffds dsf dsfdfs fdsdsffd fdsfdsfsd"},
+        {"text": "choise3"}
+      ]}
+
+
     ]
   }
 ]

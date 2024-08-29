@@ -5,6 +5,8 @@ import UniformGroup from "../../lib/material/UniformGroup.ts";
 import {Textures} from "../../data/Textures.ts";
 import {CullMode} from "../../lib/WebGPUConstants.ts";
 import Blend from "../../lib/material/Blend.ts";
+import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
+import {Vector4} from "@math.gl/core";
 
 
 export default class TextBalloonMaterial extends Material{
@@ -16,7 +18,9 @@ export default class TextBalloonMaterial extends Material{
         this.addUniformGroup(DefaultUniformGroups.getCamera(this.renderer));
         this.addUniformGroup(DefaultUniformGroups.getModelTransform(this.renderer));
 
-
+        let uniforms =new UniformGroup(this.renderer,"uniforms");
+        this.addUniformGroup(uniforms,true);
+        uniforms.addUniform("color",new Vector4(0,0,0,1))
 
         this.cullMode =CullMode.None;
         this.depthCompare="always"
@@ -51,7 +55,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
   
 
 
-    return vec4(0.0,0.0,0.0,1.0);
+    return uniforms.color;
 }
 ///////////////////////////////////////////////////////////
         `

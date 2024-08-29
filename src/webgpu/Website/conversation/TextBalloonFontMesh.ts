@@ -29,7 +29,7 @@ export default class TextBalloonFontMesh extends Mesh{
                 continue;
             }
             if(c==10){
-                this.startY+=fontSize*39;
+                this.startY+=fontSize*45;
                 this.startX =0
                 this.numLines ++;
                 this.charCount+=2

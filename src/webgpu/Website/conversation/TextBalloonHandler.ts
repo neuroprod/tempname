@@ -10,11 +10,12 @@ import Path from "../../lib/path/Path.ts";
 import ExtrudeMesh from "../../modelMaker/ExtrudeMesh.ts";
 import {MeshType} from "../../data/ProjectMesh.ts";
 import TextBalloonMaterial from "./TextBalloonMaterial.ts";
-import {Vector2, Vector3} from "@math.gl/core";
+import {Vector2, Vector3, Vector4} from "@math.gl/core";
 import SceneObject3D from "../../sceneEditor/SceneObject3D.ts";
 import Object3D from "../../lib/model/Object3D.ts";
 import gsap from 'gsap'
 import DebugDraw from "../DebugDraw.ts";
+import {drawCircle} from "../../lib/path/Shapes.ts";
 
 export default class TextBalloonHandler {
     private camera: Camera;
@@ -56,9 +57,17 @@ export default class TextBalloonHandler {
     private holder: Object3D;
     private gameCamera: Camera;
     private timeLine!: gsap.core.Timeline;
+    private extrudeMeshArrowPoint: ExtrudeMesh;
+    private arrowModelPoint: Model;
+    private arrowLeftModel: Model;
+    private arrowRightModel: Model;
+    private charPos = -4;
     private extrudeMeshArrow: ExtrudeMesh;
-    private arrowModel: Model;
-    private charPos=-4;
+    private dots: Array<Model> = [];
+    private extrudeMeshDot: ExtrudeMesh;
+    private numAnswers: number = 0;
+    private newChoice: boolean = false;
+    private dotHolder: Object3D;
 
     constructor(renderer: Renderer, gameCamera: Camera) {
         this.gameCamera = gameCamera;
@@ -68,7 +77,7 @@ export default class TextBalloonHandler {
         this.camera.far = 100;
 
         this.modelRenderer = new ModelRenderer(renderer, "textBalloonRenderer", this.camera)
-
+//text
         this.textModel = new Model(renderer, "textModel")
         this.textModel.material = new TextBalloonFontMaterial(renderer, "textBalloonFontMaterial")
 
@@ -78,7 +87,7 @@ export default class TextBalloonHandler {
         this.textModel.mesh = this.textMesh;
         this.textModel.setScaler(1)
 
-
+///balloon
         this.path = new Path()
         let w = this.textMesh.max.x
         let h = this.textMesh.min.y
@@ -93,27 +102,75 @@ export default class TextBalloonHandler {
 
 
         this.extrudeMesh = new ExtrudeMesh(renderer)
-        this.extrudeMeshArrow = new ExtrudeMesh(renderer)
+        this.extrudeMeshArrowPoint = new ExtrudeMesh(renderer)
 
 
         this.balloonModel = new Model(renderer, "balloonModel")
         this.balloonModel.mesh = this.extrudeMesh;
         this.balloonModel.material = new TextBalloonMaterial(renderer, "textBalloonMaterial")
-
-
-        this.arrowModel = new Model(renderer, "arrowModel")
-        this.arrowModel.mesh = this.extrudeMeshArrow;
-        this.arrowModel.material  =this.balloonModel.material
-        this.arrowModel.y =10;
-        this.modelRenderer.addModel(this.arrowModel)
-
-
         this.modelRenderer.addModel(this.balloonModel)
-        this.modelRenderer.addModel(this.textModel)
 
+        this.arrowModelPoint = new Model(renderer, "arrowModel")
+        this.arrowModelPoint.mesh = this.extrudeMeshArrowPoint;
+        this.arrowModelPoint.material = this.balloonModel.material
+        this.arrowModelPoint.y = 10;
+        this.modelRenderer.addModel(this.arrowModelPoint)
+
+        //conversation arrows
+        this.path.clear()
+        let angle = Math.PI / 2;
+        let radius = 3;
+        this.path.moveTo([Math.sin(angle) * radius, Math.cos(angle) * radius])
+        angle += Math.PI * 2 / 3;
+        this.path.lineTo([Math.sin(angle) * radius, Math.cos(angle) * radius])
+        angle += Math.PI * 2 / 3;
+        this.path.lineTo([Math.sin(angle) * radius, Math.cos(angle) * radius])
+
+        this.extrudeMeshArrow = new ExtrudeMesh(renderer)
+        this.extrudeMeshArrow.setExtrusion(this.path.getPoints(), MeshType.PLANE)
+        this.arrowLeftModel = new Model(renderer, "arrowModel")
+        this.arrowLeftModel.x = -10;
+        this.arrowLeftModel.rz = Math.PI
+        this.arrowLeftModel.mesh = this.extrudeMeshArrow;
+        this.arrowLeftModel.material = new TextBalloonMaterial(renderer, "textBalloonMaterial")
+        this.arrowLeftModel.material.setUniform("color", new Vector4(0.8, 0.8, 0.8, 1))
+        this.modelRenderer.addModel(this.arrowLeftModel)
+
+        this.arrowRightModel = new Model(renderer, "arrowModel")
+        this.arrowRightModel.x = 10;
+
+        this.arrowRightModel.mesh = this.extrudeMeshArrow;
+        this.arrowRightModel.material = this.arrowLeftModel.material
+        this.modelRenderer.addModel(this.arrowRightModel)
+
+
+//
+
+        this.modelRenderer.addModel(this.textModel)
         this.holder = new Object3D(renderer, "balloonHolder");
-        this.holder.addChild(this.arrowModel)
+        this.holder.addChild(this.arrowModelPoint)
         this.holder.addChild(this.balloonModel)
+        this.holder.addChild(this.arrowLeftModel)
+        this.holder.addChild(this.arrowRightModel)
+        //dots
+        this.extrudeMeshDot = new ExtrudeMesh(renderer)
+        this.path.clear()
+        drawCircle(this.path, new Vector3(0, 0, 0), 0.7)
+        this.extrudeMeshDot.setExtrusion(this.path.getPoints(), MeshType.PLANE)
+        this.dotHolder = new Object3D(renderer, "dotHolder");
+        for (let i = 0; i < 4; i++) {
+            let dotModel = new Model(renderer, "arrowModel")
+
+            dotModel.mesh = this.extrudeMeshDot;
+            dotModel.material = new TextBalloonMaterial(renderer, "textBalloonMaterial")
+            dotModel.material.setUniform("color", new Vector4(1, 1, 0.5, 1))
+            this.modelRenderer.addModel(dotModel)
+            this.dotHolder.addChild(dotModel)
+            this.dots.push(dotModel)
+        }
+
+        this.holder.addChild(this.dotHolder)
+
         this.holder.addChild(this.textModel)
         this.showText = false;
     }
@@ -160,7 +217,7 @@ export default class TextBalloonHandler {
             this.holder.x = w.x * 100 * this.renderer.ratio;
             this.holder.y = w.y * 100;
 
-            this.textModel.material.setUniform("charPos",this.charPos)
+            this.textModel.material.setUniform("charPos", this.charPos)
 
         }
 
@@ -171,45 +228,59 @@ export default class TextBalloonHandler {
         this.modelRenderer.draw(pass)
 
     }
-    private makeArrow() {
-        this.path.clear()
-        if(this.modelOffset.x >0){
-        this.path.moveTo(new Vector2(-2,-10))
 
-        this.path.lineTo(new Vector2(-3,0))
-        this.path.lineTo(new Vector2(3,0))
-        }
-        else{
-            this.path.moveTo(new Vector2(2,-10))
-            this.path.lineTo(new Vector2(3,0))
-            this.path.lineTo(new Vector2(-3,0))
-        }
-        this.extrudeMeshArrow.setExtrusion(this.path.getPoints(12), MeshType.PLANE)
-    }
-    setText(text: string) {
+    setText(text: string, numAnswers: number = 0, index: number = 0) {
+        this.setNumAnswers(numAnswers);
+
         if (!this.showText) {
             this.newBalloon = true
 
         }
-        if(this.newBalloon){
-            this.makeArrow()
+        if (this.newBalloon) {
+            this.makeArrowPoint()
         }
         this.showText = true;
-        this.charPos =-4
+        this.charPos = -4
         this.textMesh.setText(text, SceneData.font, 0.15)
         let w = this.textMesh.max.x;
+
+
         let h = -this.textMesh.numLines * 7;
+        let textArrowOffset = 0
+
 
         let ox = -w / 2;
         let oy = -h + 15 - this.textMesh.numLines * 2;
+        if (numAnswers > 0) {
 
-        if(this.modelOffset.x >0){
-            ox+=10
-        }else{
-            ox-=10
+            textArrowOffset += 10
+            this.arrowRightModel.visible = true
+            this.arrowLeftModel.visible = true
+            h -= 2;
+
+            w += 20;
+
+
+            for (let i=0;i< this.numAnswers;i++){
+                if(i==index){
+                    this.dots[i].material.setUniform("color",[0.8,0.8,0.8,1])
+                }
+                else{
+                    this.dots[i].material.setUniform("color",[0.3,0.3,0.3,1])
+                }
+
+            }
+
+
+
+        }
+        if (this.modelOffset.x > 0) {
+            ox += 10
+        } else {
+            ox -= 10
         }
 
-        this.textModel.x = ox;
+        this.textModel.x = ox + textArrowOffset;
         this.textModel.y = oy;
 
 
@@ -230,15 +301,19 @@ export default class TextBalloonHandler {
             this.br.add([-startOff, startOff]);
 
         }
-        let ease = "back.out(3)";
-        let time = 0.3
-        this.charPos =-4;
         let tline = gsap.timeline()
-        if(this.newBalloon){
-            this.arrowModel.sx =this.arrowModel.sy =0;
-            tline.to(this.arrowModel, {sx: 1, sy: 1, duration: 0.2, ease: "power4.out"}, 0)
+
+
+
+        let ease = "back.out(1.5)";
+        let time = 0.3
+        this.charPos = -4;
+
+        if (this.newBalloon) {
+            this.arrowModelPoint.sx = this.arrowModelPoint.sy = 0;
+            tline.to(this.arrowModelPoint, {sx: 1, sy: 1, duration: 0.2, ease: "power4.out"}, 0)
             this.holder.setScaler(0);
-            tline.to(this.holder, {sx: 1, sy: 1,sz:1, duration: 0.3, ease: "power4.out"}, 0)
+            tline.to(this.holder, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power4.out"}, 0)
         }
 
         tline.to(this.tl, {x: this.tlS.x, y: this.tlS.y, duration: time, ease: ease}, 0)
@@ -251,8 +326,44 @@ export default class TextBalloonHandler {
         }, 0)
 
         tline.to(this, {
-            charPos: this.textMesh.charCount, duration: this.textMesh.charCount/50
+            charPos: this.textMesh.charCount, duration: this.textMesh.charCount / 50
         }, 0.2)
+
+
+        if (numAnswers > 0) {
+
+            if (this.newChoice) {
+
+                this.arrowRightModel.x = this.trS.x - 7
+                this.arrowLeftModel.x = this.tlS.x + 7;
+                this.arrowLeftModel.y = this.arrowRightModel.y = (this.blS.y - this.tlS.y) / 2 + this.tlS.y+1
+
+
+                this.dotHolder.x = (this.tlS.x+this.trS.x)/2
+                this.dotHolder.y = this.blS.y +2
+                this.arrowLeftModel.setScaler(0)
+                this.arrowRightModel.setScaler(0)
+                tline.to( this.arrowLeftModel, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power3.out"}, 0.3)
+                tline.to( this.arrowRightModel, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power3.out"}, 0.3)
+
+            } else {
+                let py =  (this.blS.y - this.tlS.y) / 2 + this.tlS.y+1;
+                tline.to( this.arrowLeftModel, {x: this.tlS.x + 7, y: py, duration: 0.3, ease: ease}, 0.0)
+                tline.to( this.arrowRightModel, {x: this.trS.x - 7, y: py, duration: 0.3, ease:ease}, 0.0)
+                tline.to( this.dotHolder, { y:  this.blS.y +2, duration: 0.3, ease:ease}, 0.0)
+
+                //this.dotHolder.x = (this.tlS.x+this.trS.x)/2
+
+            }
+
+            this.newChoice = false;
+
+
+        }
+
+
+
+
 
         this.newBalloon = false
 
@@ -271,5 +382,48 @@ export default class TextBalloonHandler {
         this.showText = false;
     }
 
+    private makeArrowPoint() {
+        this.path.clear()
+        if (this.modelOffset.x > 0) {
+            this.path.moveTo(new Vector2(-2, -10))
 
+            this.path.lineTo(new Vector2(-3, 0))
+            this.path.lineTo(new Vector2(3, 0))
+        } else {
+            this.path.moveTo(new Vector2(2, -10))
+            this.path.lineTo(new Vector2(3, 0))
+            this.path.lineTo(new Vector2(-3, 0))
+        }
+        this.extrudeMeshArrowPoint.setExtrusion(this.path.getPoints(12), MeshType.PLANE)
+    }
+
+    private setNumAnswers(numAnswers: number) {
+
+        if (this.numAnswers == 0 && numAnswers != this.numAnswers) {
+            this.newChoice = true;
+        } else {
+            this.newChoice = false;
+        }
+        this.numAnswers = numAnswers
+        if (numAnswers == 0) {
+
+            this.arrowRightModel.visible = false
+            this.arrowLeftModel.visible = false
+            for (let d of this.dots) {
+                d.visible = false
+            }
+        }else{
+            let step = 2.5;
+            let posStart = -((numAnswers-1)* step)/2;
+
+            for (let i=0;i< this.numAnswers;i++){
+                 this.dots[i].visible = true;
+                 this.dots[i].x = posStart
+
+                posStart+=step;
+            }
+
+        }
+
+    }
 }

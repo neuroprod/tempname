@@ -31,7 +31,7 @@ export default class StrawBerryScene{
     }
     startConversation(){
         this.conversationHandler.startConversation("strawBerry")
-        this.conversationHandler.setText()
+
         this.waitUserInput =true;
     }
 
@@ -47,9 +47,11 @@ export default class StrawBerryScene{
 
     setInput(hInput: number, jump: boolean) {
 
-        if(this.waitUserInput && jump &&  this.conversationHandler.textReady){
+        if(this.waitUserInput){
+            this.conversationHandler.setInput(hInput,jump)
 
-           if( this.conversationHandler.setText()){
+           // this.conversationHandler.setText()
+         if( this.conversationHandler.isDone){
                let tl =gsap.timeline()
                tl.to(this.characterController.charRoot,{ry:0.0,duration:1},0)
 
