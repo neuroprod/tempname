@@ -152,7 +152,15 @@ class SceneEditor {
         DebugDraw.update()
     }
     onUINice() {
-        pushMainMenu("tools",300,MainMenuOffset);
+
+        pushMainMenu("scene",129,MainMenuOffset);
+        if (addMainMenuButton("openGroup", Icons.FOLDER,true)){}
+        if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){}
+        if (addMainMenuButton("DeleteGroup", Icons.REMOVE_GROUP,true)){}
+        popMainMenu()
+
+
+        pushMainMenu("tools",300,MainMenuOffset+129+5);
 
 
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
@@ -182,6 +190,7 @@ class SceneEditor {
                console.log(name, this.currentModel)
             }
         }
+
         addMainMenuDivider("tooldDiv2")
 
 

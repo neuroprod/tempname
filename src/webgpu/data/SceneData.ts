@@ -156,6 +156,7 @@ class SceneData {
         const response = await fetch("./scene1.json");
         let sceneText = await response.text();
         this.dataScene = JSON.parse(sceneText);
+        console.log("loadSceneDone")
     }
 
     async loadProject(folder: string, preloader: PreLoader) {
@@ -270,6 +271,7 @@ class SceneData {
     }
 
     private loadProjects(preloader: PreLoader) {
+
         for (let p of projectsArr) {
             preloader.startLoad()
             this.loadProject(p, preloader).then(() => {

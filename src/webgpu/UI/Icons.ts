@@ -41,4 +41,6 @@ export const Icons  = {
 
     COPY: '+',
 
+    ADD_GROUP: '!',
+    REMOVE_GROUP: '?',
 }
