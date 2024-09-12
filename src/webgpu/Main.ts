@@ -23,6 +23,7 @@ import Camera from "./lib/Camera.ts";
 import GameRenderer from "./render/GameRenderer.ts";
 import Game from "./Website/Game.ts";
 import KeyInput from "./Website/KeyInput.ts";
+import ModelData from "./data/ProjectData.ts";
 
 
 enum MainState {
@@ -87,7 +88,15 @@ export default class Main {
         new TextureLoader(this.renderer, Textures.DRAWING_BACKGROUND)
         // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         // this.sceneLoader = new JsonLoader("scene1", this.preloader)
-        SceneData.init(this.renderer, this.preloader)
+        this.preloader.startLoad()
+        ModelData.init(this.renderer, this.preloader).then(()=>{
+console.log("initDone")
+           // SceneData.init(this.renderer, this.preloader)
+            SceneData.init(this.renderer, this.preloader)
+            this.preloader.stopLoad()
+        })
+
+
 
     }
 

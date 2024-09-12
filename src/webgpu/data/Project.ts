@@ -91,4 +91,13 @@ export default class Project
             this.selectItems.push(new SelectItem(m.name,m))
         }
     }
+
+    async loadPNGTexture(){
+        this.loadTexture =new TextureLoader(this.renderer)
+        await this.loadTexture.loadURL("./data/" + this.id + "/texture.png");
+
+
+
+    }
+
 }

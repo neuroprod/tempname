@@ -160,7 +160,7 @@ class SceneEditor {
         popMainMenu()
 
 
-        pushMainMenu("tools",300,MainMenuOffset+129+5);
+        pushMainMenu("tools",256,MainMenuOffset+129+5);
 
 
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
