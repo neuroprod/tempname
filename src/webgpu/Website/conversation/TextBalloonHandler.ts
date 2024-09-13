@@ -11,7 +11,7 @@ import ExtrudeMesh from "../../modelMaker/ExtrudeMesh.ts";
 import {MeshType} from "../../data/ProjectMesh.ts";
 import TextBalloonMaterial from "./TextBalloonMaterial.ts";
 import {Vector2, Vector3, Vector4} from "@math.gl/core";
-import SceneObject3D from "../../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../../data/SceneObject3D.ts";
 import Object3D from "../../lib/model/Object3D.ts";
 import gsap from 'gsap'
 import DebugDraw from "../DebugDraw.ts";

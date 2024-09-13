@@ -165,7 +165,7 @@ export default class Drawing {
 
             if(this.tool==ToolType.Eraser){
                 this.currentLine.isEraser =true;
-                console.log("erasoRR?")
+
                 this.currentLine.uniformGroup.setUniform("color", [1,1,1,1])
                 this.currentLine.uniformGroup.update();
             }

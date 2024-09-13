@@ -2,16 +2,16 @@ import Object3D from "../lib/model/Object3D.ts";
 import Renderer from "../lib/Renderer.ts";
 import UI from "../lib/UI/UI.ts";
 import Model from "../lib/model/Model.ts";
-import AnimationEditorGroup from "./timeline/AnimationEditorGroup.ts";
-import AnimationEditor from "./timeline/AnimationEditor.ts";
+import AnimationEditorGroup from "../sceneEditor/timeline/AnimationEditorGroup.ts";
+import AnimationEditor from "../sceneEditor/timeline/AnimationEditor.ts";
 import {TreeSettings} from "../lib/UI/components/Tree.ts";
 import {popObjectTree, pushObjectTree} from "../UI/ObjectTree.ts";
-import SceneEditor from "./SceneEditor.ts";
+import SceneEditor from "../sceneEditor/SceneEditor.ts";
 import {DEG2RAD, RAD2DEG, sqDistToLineSegment} from "../lib/MathUtils.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
 import {Vector3} from "@math.gl/core";
-import {HitTrigger, HitTriggerSelectItems} from "../data/HitTriggers.ts";
-import SceneData from "../data/SceneData.ts";
+import {HitTrigger, HitTriggerSelectItems} from "./HitTriggers.ts";
+import SceneData from "./SceneData.ts";
 import FontMesh from "../modelMaker/FontMesh.ts";
 
 
@@ -159,14 +159,14 @@ export default class SceneObject3D extends Object3D {
         UI.popID()
     }
 
-    setSceneData(obj: any) {
+    setObjectData(obj: any) {
         this.needsHitTest = obj.needsHitTest;
         this.needsTrigger = obj.needsTrigger;
         this.triggerRadius = obj.triggerRadius;
         this.hitTriggerItem = obj.hitTriggerItem
     }
 
-    getSceneData(dataArr: Array<any>) {
+    getObjectData(dataArr: Array<any>) {
         let obj: any = {}
         obj.id = this.UUID;
         obj.needsHitTest = this.needsHitTest;
@@ -189,7 +189,7 @@ export default class SceneObject3D extends Object3D {
 
         for (let child of this.children) {
             let co = child as SceneObject3D;
-            if (co.getSceneData) co.getSceneData(dataArr);
+            if (co.getObjectData) co.getObjectData(dataArr);
         }
     }
 

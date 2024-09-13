@@ -7,7 +7,7 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
 
-import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 import {addTextButton} from "./MainMenuTextButton.ts";
 import UI from "../lib/UI/UI.ts";
 import {popPanelMenu, pushPanelMenuFill} from "./PanelMenu.ts";

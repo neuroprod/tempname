@@ -14,7 +14,7 @@ import CircleMesh from "./CircleMesh.ts";
 import CircleLineMaterial from "./CircleLineMaterial.ts";
 import ColorV from "../../lib/ColorV.ts";
 import {ToolState} from "../SceneEditor.ts";
-import SceneObject3D from "../SceneObject3D.ts";
+import SceneObject3D from "../../data/SceneObject3D.ts";
 import AnimationEditor from "../timeline/AnimationEditor.ts";
 import {AnimationType} from "../timeline/animation/Animation.ts";
 import {NumericArray} from "@math.gl/types";

@@ -14,7 +14,7 @@ import CloudParticles from "./CloudParticles.ts";
 import GamePadInput from "./GamePadInput.ts";
 import SceneData from "../data/SceneData.ts";
 import CoinHandler from "./handlers/CoinHandler.ts";
-import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 import {HitTrigger} from "../data/HitTriggers.ts";
 import SoundHandler from "./SoundHandler.ts";
 import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
@@ -29,15 +29,15 @@ export default class Game {
 
     private gameRenderer: GameRenderer;
     private keyInput: KeyInput;
-    private characterController: CharacterController;
+    private characterController!: CharacterController;
     private gameCamera: GameCamera;
-    private cloudParticles: CloudParticles;
+    //private cloudParticles: CloudParticles;
     private gamepadInput: GamePadInput;
-    private coinHandler: CoinHandler;
-    private strawberryScene: StrawBerryScene;
+    //private coinHandler: CoinHandler;
+    private strawberryScene!: StrawBerryScene;
     private isCutScene: boolean = false;
-    private textBalloonHandler: TextBalloonHandler;
-    private conversationHandler: ConversationHandler;
+   // private textBalloonHandler: TextBalloonHandler;
+    private conversationHandler!: ConversationHandler;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
@@ -46,22 +46,22 @@ export default class Game {
 
         this.gameRenderer = gameRenderer;
 
-        this.cloudParticles = new CloudParticles(renderer)
-        this.characterController = new CharacterController(renderer, this.cloudParticles)
+     //   this.cloudParticles = new CloudParticles(renderer)
+      //  this.characterController = new CharacterController(renderer, this.cloudParticles)
 
         this.gameCamera = new GameCamera(renderer, camera);
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
-        this.textBalloonHandler =new TextBalloonHandler(renderer,this.gameCamera.camera)
-        this.conversationHandler = new ConversationHandler(renderer,this.textBalloonHandler)
-        this.coinHandler = new CoinHandler()
+      //  this.textBalloonHandler =new TextBalloonHandler(renderer,this.gameCamera.camera)
+       // this.conversationHandler = new ConversationHandler(renderer,this.textBalloonHandler)
+        //this.coinHandler = new CoinHandler()
 
 
-        this.strawberryScene = new StrawBerryScene()
+       // this.strawberryScene = new StrawBerryScene()
 
 
-        DebugDraw.init(this.renderer, camera);
+
         this.setActive();
         SoundHandler.init()
     }
@@ -78,7 +78,7 @@ export default class Game {
 
             if (!jump) jump = this.gamepadInput.getJump()
         }
-
+/*
         if(this.strawberryScene.finished){
             this.isCutScene =false;
         }
@@ -96,7 +96,7 @@ export default class Game {
         this.coinHandler.update();
         this.checkTriggers()
 
-        this.textBalloonHandler.update()
+        this.textBalloonHandler.update()*/
 //last
         DebugDraw.update();
     }
@@ -132,13 +132,13 @@ export default class Game {
     drawInCanvas(pass: CanvasRenderPass) {
 
         this.gameRenderer.drawFinal(pass);
-        this.textBalloonHandler.drawFinal(pass)
+      //  this.textBalloonHandler.drawFinal(pass)
         DebugDraw.draw(pass);
     }
 
     private checkTriggers() {
 
-        // console.log(this.characterController.targetPos);
+
 
         for (let f of SceneData.triggerModels) {
             f.drawTrigger()

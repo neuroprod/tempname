@@ -1,6 +1,6 @@
 import Renderer from "../lib/Renderer.ts";
 import SceneData from "../data/SceneData.ts";
-import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 import gsap from "gsap";
 import {lerp, Vector3} from "@math.gl/core";
 import Ray from "../lib/Ray.ts";

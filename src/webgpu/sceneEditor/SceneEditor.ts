@@ -10,7 +10,7 @@ import Ray from "../lib/Ray.ts";
 import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
-import SceneObject3D from "./SceneObject3D.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 
 import GameRenderer from "../render/GameRenderer.ts";
 
@@ -37,6 +37,9 @@ import {setNewPopup} from "../UI/NewPopup.ts";
 import Animation from "./timeline/animation/Animation.ts";
 import {setAnimePopup} from "../UI/AnimePopup.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
+import SceneHandler from "../data/SceneHandler.ts";
+import LoadHandler from "../data/LoadHandler.ts";
+import loadHandler from "../data/LoadHandler.ts";
 
 export enum ToolState {
 
@@ -91,16 +94,16 @@ class SceneEditor {
 
 
         this.modelRenderer = new ModelRenderer(renderer, "mainModels", this.camera)
-        this.modelRenderer.setModels(SceneData.usedModels);
+      //  this.modelRenderer.setModels(SceneData.usedModels);
 
 
         this.outline = new Outline(renderer, this.camera)
         this.editCursor = new EditCursor(renderer, this.camera, mouseListener, this.ray)
         this.editCamera = new EditCamera(renderer, this.camera, mouseListener, this.ray)
-        this.root = SceneData.root;
+        //this.root = SceneData.root;
 
 
-        AnimationEditor.setAnimation(SceneData.animations[0])
+        //AnimationEditor.setAnimation(SceneData.animations[0])
 
         this.setCurrentToolState(ToolState.translate)
 
@@ -122,6 +125,7 @@ class SceneEditor {
     }
 
     update() {
+        if(loadHandler.isLoading())return
         this.camera.ratio = this.renderer.ratio
 
         //setScreenRay
@@ -152,7 +156,7 @@ class SceneEditor {
         DebugDraw.update()
     }
     onUINice() {
-
+if(LoadHandler.isLoading())return
         pushMainMenu("scene",129,MainMenuOffset);
         if (addMainMenuButton("openGroup", Icons.FOLDER,true)){}
         if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){}
@@ -275,7 +279,7 @@ class SceneEditor {
 
         pushSplitPanel("Top panel",  this.nodeRightTop);
 
-        this.root.onUINice(0)
+        SceneHandler.root.onUINice(0)
         popSplitPanel()
 
         pushSplitPanel("bottom panel",  this.nodeRightBottom);
@@ -300,8 +304,8 @@ class SceneEditor {
     }
 
     public saveAll(){
-       let sceneData: Array<any> = []
-        SceneData.root.getSceneData(sceneData);
+     /*  let sceneData: Array<any> = []
+       // SceneData.root.getSceneData(sceneData);
 
         let animationData: Array<any> = []
         for (let a of SceneData.animations) {
@@ -314,7 +318,7 @@ class SceneEditor {
             console.log("saved Scene")
         })
 
-
+*/
 
     }
 
@@ -338,6 +342,7 @@ class SceneEditor {
     }
 
     draw() {
+        if(loadHandler.isLoading())return
         this.outline.draw()
 
         this.gameRenderer.draw();
@@ -345,6 +350,7 @@ class SceneEditor {
 
     drawInCanvas(pass: CanvasRenderPass) {
         //  this.modelRenderer.draw(pass);
+        if(loadHandler.isLoading())return
         this.gameRenderer.drawFinal(pass);
         this.outline.drawFinal(pass);
         this.editCursor.drawFinal(pass);
@@ -400,7 +406,19 @@ class SceneEditor {
 
 
     setActive() {
-        this.editCamera.setActive()
+
+        console.log("setActive")
+        LoadHandler.startLoading()
+
+        SceneHandler.setScene("1234").then(()=>{
+            this.editCamera.setActive()
+
+            this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
+            this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+            LoadHandler.stopLoading()
+        });
+
+
     }
 }
 export default new SceneEditor();

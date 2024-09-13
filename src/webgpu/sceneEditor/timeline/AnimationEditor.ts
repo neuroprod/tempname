@@ -4,7 +4,7 @@ import UI_I from "../../lib/UI/UI_I.ts";
 import UIAnimationEditor, {UIAnimationEditorSettings} from "./UIAnimationEditor.ts";
 import Animation, {AnimationType} from "./animation/Animation.ts";
 
-import SceneObject3D from "../SceneObject3D.ts";
+import SceneObject3D from "../../data/SceneObject3D.ts";
 import AnimationChannel from "./animation/AnimationChannel.ts";
 import AnimationChannelEditor from "./AnimationChannelEditor.ts";
 import AnimationEditorGroup from "./AnimationEditorGroup.ts";

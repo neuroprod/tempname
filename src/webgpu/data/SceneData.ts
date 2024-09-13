@@ -7,7 +7,7 @@ import Animation from "../sceneEditor/timeline/animation/Animation.ts";
 import AnimationChannel, {Key} from "../sceneEditor/timeline/animation/AnimationChannel.ts";
 import {Quaternion, Vector3} from "@math.gl/core";
 
-import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "./SceneObject3D.ts";
 import Model from "../lib/model/Model.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
@@ -44,7 +44,19 @@ class SceneData {
 
 
     }
+    public init(renderer: Renderer, preLoader: PreLoader) {
+        this.renderer = renderer;
 
+        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
+        this.defaultFontMaterial = new GBufferFontMaterial(renderer, "fontMaterial");
+        this.defaultFontShadowMaterial = new ShadowFontDepthMaterial(renderer, "fontDepthMaterial");
+        this.font = new Font()
+
+        this.loadBase(preLoader).then(() => {
+        })
+        this.loadProjects(preLoader)
+
+    }
     parseSceneData() {
 
 
@@ -86,7 +98,7 @@ class SceneData {
                     if (d.scale) {
                         sceneObj.model.setScale(d.scale[0], d.scale[1], d.scale[2])
                     }
-                    sceneObj.setSceneData(d)
+                    sceneObj.setObjectData(d)
 
                     this.usedModels.push(sceneObj.model);
                     if(sceneObj.needsHitTest) {
@@ -138,19 +150,7 @@ class SceneData {
 
     }
 
-    public init(renderer: Renderer, preLoader: PreLoader) {
-        this.renderer = renderer;
 
-        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
-        this.defaultFontMaterial = new GBufferFontMaterial(renderer, "fontMaterial");
-        this.defaultFontShadowMaterial = new ShadowFontDepthMaterial(renderer, "fontDepthMaterial");
-        this.font = new Font()
-
-        this.loadBase(preLoader).then(() => {
-        })
-        this.loadProjects(preLoader)
-
-    }
 
     async loadBase(preloader: PreLoader) {
         const response = await fetch("./scene1.json");
