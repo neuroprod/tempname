@@ -150,7 +150,7 @@ export default class Tree extends Component {
         if(this.isLeave !=isLeave){
             this.isLeave =isLeave
 
-            this.setDirty();
+            this.setDirty(true);
         }
 
 

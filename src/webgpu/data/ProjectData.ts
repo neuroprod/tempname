@@ -9,6 +9,11 @@ import ShadowClipDepthMaterial from "../render/shadow/ShadowClipDepthMaterial.ts
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import SceneObject3D from "./SceneObject3D.ts";
 import ShadowDepthMaterial from "../render/shadow/ShadowDepthMaterial.ts";
+import SelectItem from "../lib/UI/math/SelectItem.ts";
+import FontMesh from "../modelMaker/FontMesh.ts";
+import GBufferFontMaterial from "../render/GBuffer/GBufferFontMaterial.ts";
+import ShadowFontDepthMaterial from "../render/shadow/ShadowFontDepthMaterial.ts";
+import Font from "./Font.ts";
 
 class ProjectData {
     private folders!: any;
@@ -18,12 +23,23 @@ class ProjectData {
     public projectsNameMap: Map<string, Project> = new Map<string, Project>();
     private renderer!: Renderer;
     private defaultShadowMaterial!: ShadowDepthMaterial;
+    projectSelectItems: Array<SelectItem> = [];
+    private defaultFontMaterial!: GBufferFontMaterial;
+    private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
+    private font!: Font;
     constructor() {
     }
    async init(renderer:Renderer,preloader:PreLoader,){
-       this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
 
-        this.renderer =renderer;
+       this.renderer =renderer;
+
+       this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
+       this.defaultFontMaterial = new GBufferFontMaterial(renderer, "fontMaterial");
+       this.defaultFontShadowMaterial = new ShadowFontDepthMaterial(renderer, "fontDepthMaterial");
+       this.font = new Font()
+
+
+
        const response = await fetch( "./data.json")
 
        let text = await response.text();
@@ -115,6 +131,36 @@ class ProjectData {
 
         return obj3D;
 
+    }
+
+    makeSelectItems() {
+        this.projectSelectItems = []
+        for (let p of this.projects) {
+            if (p.meshes.length > 0) {
+                this.projectSelectItems.push(new SelectItem(p.name, p))
+                p.makeSelectItems();
+            }
+
+        }
+
+
+    }
+    makeSceneObjectWithText(name: string, text: string) {
+
+        let model = new Model(this.renderer, "textModel")
+        let mesh = new FontMesh(this.renderer, 'fontMesh');
+        mesh.setText(text, this.font);
+        model.mesh = mesh
+
+        model.material = this.defaultFontMaterial;
+        model.setMaterial("shadow", this.defaultFontShadowMaterial)
+
+        let obj3D = new SceneObject3D(this.renderer, name)
+        obj3D.addChild(model)
+        obj3D.isText = true;
+        obj3D.text = text;
+        obj3D.model = model;
+        return obj3D;
     }
 }
 export default new ProjectData();

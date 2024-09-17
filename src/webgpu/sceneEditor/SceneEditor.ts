@@ -57,7 +57,7 @@ class SceneEditor {
     private renderer!: Renderer;
     private camera!: Camera;
     private modelRenderer!: ModelRenderer;
-    private root!: SceneObject3D
+
 
     private mouseListener!: MouseListener;
     private ray: Ray = new Ray();
@@ -156,7 +156,8 @@ class SceneEditor {
         DebugDraw.update()
     }
     onUINice() {
-if(LoadHandler.isLoading())return
+        if(LoadHandler.isLoading())return
+
         pushMainMenu("scene",129,MainMenuOffset);
         if (addMainMenuButton("openGroup", Icons.FOLDER,true)){}
         if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){}
@@ -184,7 +185,7 @@ if(LoadHandler.isLoading())return
         if (addMainMenuButton("Copy", Icons.COPY,true)){
             if(this.currentModel){
                 //this.removeModel(this.currentModel)
-               let name = this.root.getUniqueName(this.currentModel.label)
+               let name = SceneHandler.root.getUniqueName(this.currentModel.label)
                 this.copyModel = this.currentModel
                 let copy =this.copyModel.copy(name);
                 if(copy && copy.model){
@@ -326,6 +327,7 @@ if(LoadHandler.isLoading())return
 
 
     setCurrentModel(value: SceneObject3D | null) {
+
         if (value) {
             this.currentModel = value;
 
@@ -380,8 +382,11 @@ if(LoadHandler.isLoading())return
     }
 
     public addModel(m: SceneObject3D) {
-        if(!this.currentModel)this.currentModel =SceneData.root
-        m.setUniqueName(this.root.getUniqueName(m.label))
+
+
+
+        if(!this.currentModel)this.currentModel =SceneHandler.root
+        m.setUniqueName(SceneHandler.root.getUniqueName(m.label))
 
         this.currentModel.addChild(m)
         if (m.model) {
@@ -408,15 +413,21 @@ if(LoadHandler.isLoading())return
     setActive() {
 
         console.log("setActive")
+        LoadHandler.onComplete=()=>{
+            console.log("done")
+            this.editCamera.setActive()
+            this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
+            this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+        }
         LoadHandler.startLoading()
 
         SceneHandler.setScene("1234").then(()=>{
-            this.editCamera.setActive()
-
-            this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-            this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+console.log("setScene")
             LoadHandler.stopLoading()
         });
+
+
+
 
 
     }

@@ -1,5 +1,4 @@
 import Renderer from "../lib/Renderer.ts";
-import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 import Texture from "../lib/textures/Texture.ts";
 import ProjectMesh from "./ProjectMesh.ts";
 import DrawLine from "../modelMaker/drawing/DrawLine.ts";
@@ -9,6 +8,7 @@ import MathUtils from "../lib/MathUtils.ts";
 import GBufferClipMaterial from "../render/GBuffer/GBufferClipMaterial.ts";
 import ShadowClipDepthMaterial from "../render/shadow/ShadowClipDepthMaterial.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
+import LoadHandler from "./LoadHandler.ts";
 
 export default class Project {
     public name: string = "";
@@ -19,7 +19,7 @@ export default class Project {
     textureDirty: boolean = false;
     textureSize: number = 1024;
     selectItems: Array<SelectItem> = [];
-    baseTexture: Texture;
+    baseTexture!: TextureLoader;
     fullTexture!: Texture;
     loadTexture!: TextureLoader;
     public isNew = true;
@@ -32,7 +32,7 @@ export default class Project {
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
-        this.baseTexture = DefaultTextures.getTransparent(renderer)
+        //this.baseTexture = DefaultTextures.getTransparent(renderer)
 
         this.id = MathUtils.generateUUID();
     }
@@ -98,10 +98,24 @@ export default class Project {
 
     }
 
+    getBaseTexture() {
+        if (!this.baseTexture) {
+            LoadHandler.startLoading()
+            this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp")
+            this.baseTexture.onComplete = () => {
+
+                console.log("textureLoadComplete")
+                LoadHandler.stopLoading()
+            }
+
+        }
+        return this.baseTexture
+    }
+
     getGBufferClipMaterial() {
         if (!this.gBufferClipMaterial) {
             this.gBufferClipMaterial = new GBufferClipMaterial(this.renderer, "gMat");
-          //  this.gBufferClipMaterial.setTexture("colorTexture", this.baseTexture);
+            this.gBufferClipMaterial.setTexture("colorTexture", this.getBaseTexture());
         }
         return this.gBufferClipMaterial
     }
@@ -109,15 +123,15 @@ export default class Project {
     getShadowClipMaterial() {
         if (!this.shadowClipMaterial) {
             this.shadowClipMaterial = new ShadowClipDepthMaterial(this.renderer, "shadowDepthClip")
-         //   this.shadowClipMaterial.setTexture("colorTexture", this.baseTexture);
+            this.shadowClipMaterial.setTexture("colorTexture", this.getBaseTexture());
         }
         return this.shadowClipMaterial
     }
 
     getGBufferMaterial() {
-        if (!   this.GBufferMaterial) {
-            this.GBufferMaterial  = new GBufferMaterial(this.renderer, "gMat");
-          //  this.GBufferMaterial.setTexture("colorTexture",this.baseTexture);
+        if (!this.GBufferMaterial) {
+            this.GBufferMaterial = new GBufferMaterial(this.renderer, "gMat");
+            this.GBufferMaterial.setTexture("colorTexture", this.getBaseTexture());
         }
         return this.GBufferMaterial;
     }
