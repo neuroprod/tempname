@@ -16,12 +16,45 @@ function generate(){
 
 
     let folders =fs.readdirSync(dir)
+    console.log("dataFolders",folders)
+    for(let f of folders){
+        if(f.at(0)==="."){
+            folders.splice( folders.indexOf(f),1)
+        }
+
+    }
+    console.log("dataFolders",folders)
+
     let j = JSON.stringify(folders)
     let path = "../public/";
     if(!fs.existsSync(path)) fs.mkdirSync(path);
 
 
     fs.writeFileSync(path + '/data.json', j);
+
+
+
+
+
+
+}
+function generateScenes(){
+    let dir = "../public/scenes"
+
+
+    let folders =fs.readdirSync(dir)
+    console.log("sceneFolder",folders)
+    let j = JSON.stringify(folders)
+    let path = "../public/";
+    if(!fs.existsSync(path)) fs.mkdirSync(path);
+
+
+    fs.writeFileSync(path + '/scenes.json', j);
+
+
+
+
+
 
 }
 
@@ -69,14 +102,14 @@ app.post('/saveScene',upload.single('file'),(req, res) => {
 
 
     //console.log(req.file)
-    let path = "../public/";
+    let path = "../public/scenes";
 
 
 
     fs.writeFileSync(path + '/'+req.body.fileName+'.json',  req.body.data);
 
 console.log('sceneSaved');
-
+    generateScenes();
     res.send({
         message: 'ok',
     });

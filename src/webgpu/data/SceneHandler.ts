@@ -6,45 +6,44 @@ import SceneObject3D from "./SceneObject3D.ts";
 import ProjectData from "./ProjectData.ts";
 import Model from "../lib/model/Model.ts";
 
- class SceneHandler{
-     private renderer!: Renderer;
-   public scenesData: Array<any>=[];
-     public sceneDataByID: Map<string, any> = new Map<string, any>();
-     public modelsByLoadID: Map<string, SceneObject3D >=new Map<string, SceneObject3D >()
-     usedModels: Array<Model> = [];
+class SceneHandler {
+    public scenesData: Array<any> = [];
+    public sceneDataByID: Map<string, any> = new Map<string, any>();
+    public sceneObjectsByLoadID: Map<string, SceneObject3D> = new Map<string, SceneObject3D>()
+    usedModels: Array<Model> = [];
+    root!: SceneObject3D;
+    private renderer!: Renderer;
+    private currentSceneID: string="";
+    private sceneData: any;
 
-     root!:SceneObject3D;
-
-
-    async init(renderer:Renderer,preloader:PreLoader)
-    {
+    async init(renderer: Renderer, preloader: PreLoader) {
         this.renderer = renderer;
-        this.root = new SceneObject3D(renderer,"MainRoot")
+        this.root = new SceneObject3D(renderer, "MainRoot")
 
 
-        const response = await fetch( "./scenes.json")
+        const response = await fetch("./scenes.json")
 
         let text = await response.text();
-        let scenesIDS= JSON.parse(text);
-        let pArray:Array<Promise<Response>> =[]
+        let scenesIDS = JSON.parse(text);
+        let pArray: Array<Promise<Response>> = []
 
-        for(let folder of   scenesIDS){
+        for (let folder of scenesIDS) {
 
-            let file  = "./scenes/"+folder+".json"
-            let p =  fetch( file)
+            let file = "./scenes/" + folder 
+            let p = fetch(file)
 
 
             pArray.push(p);
         }
         await Promise.all(pArray);
 
-        for(let pr of pArray){
+        for (let pr of pArray) {
 
-            let text  =(await pr).text()
-            await text.then((value)=>{
+            let text = (await pr).text()
+            await text.then((value) => {
                 let sceneData = JSON.parse(value)
                 this.scenesData.push(sceneData);
-                this.sceneDataByID.set(sceneData.id,sceneData)
+                this.sceneDataByID.set(sceneData.id, sceneData)
 
                 console.log("loadScenes")
             })
@@ -52,70 +51,85 @@ import Model from "../lib/model/Model.ts";
     }
 
 
-        async setScene(sceneId:string){
-            //save currentscenes?
+    async setScene(sceneId: string) {
+        //save currentscenes?
 
-            this.root.removeAllChildren()
-            this.usedModels=[];
+        this.root.removeAllChildren()
+        this.usedModels = [];
 
-            this.modelsByLoadID.clear()
+        this.sceneObjectsByLoadID.clear()
 
-            ProjectData.setNewScene()
+        ProjectData.setNewScene()
 
-            let newData =this.sceneDataByID.get(sceneId)
-            if(newData){
+        this.sceneData = this.sceneDataByID.get(sceneId)
+        this.currentSceneID = sceneId;
+        if ( this.sceneData ) {
 
-                this.parseSceneData(newData.scene)
-            }
-
-
+            this.parseSceneData( this.sceneData.scene,true)
         }
 
-     private parseSceneData(sceneData: any) {
 
-         for (let d of sceneData) {
+    }
+
+    saveCurrentScene() {
+        if(! this.sceneData){return }
+
+        let sceneRoot =this.sceneObjectsByLoadID.get( this.sceneData.scene[0].id);
+        if(!sceneRoot)return;
+        let sData:Array<any> =[]
+        sceneRoot.getObjectData(sData);
+        this.sceneData.scene =sData;
+    }
+
+    private parseSceneData(sceneData: any,isRoot:boolean) {
+
+        for (let d of sceneData) {
 
 
-             let sceneObj: SceneObject3D | null = null;
-             if (d.meshId.length > 0 && d.projectId.length > 0) {
-                 sceneObj = ProjectData.getModel(d);
+            let sceneObj: SceneObject3D | null = null;
 
-             } else if (d.isText) {
-               //  sceneObj = this.makeSceneObjectWithText(d.label, d.text)
-             } else {
-                 sceneObj = new SceneObject3D(this.renderer, d.label)
-                 sceneObj.UUID = d.id;
+            if (d.meshId.length > 0 && d.projectId.length > 0) {
+                sceneObj = ProjectData.getModel(d);
 
-             }
-             if (sceneObj) {
+            } else if (d.isText) {
+                //  sceneObj = this.makeSceneObjectWithText(d.label, d.text)
+            } else {
+                sceneObj = new SceneObject3D(this.renderer, d.label)
+                sceneObj.UUID = d.id;
+
+            }
+            if (sceneObj) {
 
                 // this.sceneModelsByName[sceneObj.label] =sceneObj
 
-                 sceneObj.setPosition(d.position[0], d.position[1], d.position[2])
-                 sceneObj.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
+                sceneObj.setPosition(d.position[0], d.position[1], d.position[2])
+                sceneObj.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
 
-                 this.modelsByLoadID.set(d.id, sceneObj);
+                this.sceneObjectsByLoadID.set(d.id, sceneObj);
 
-                 let  parent =this.modelsByLoadID.get(d.parentID)
-                     if(!parent) parent=this.root;
-                     parent.addChild(sceneObj)
-                 if (sceneObj.model) {
-                     if (d.scale) {
-                         sceneObj.model.setScale(d.scale[0], d.scale[1], d.scale[2])
-                     }
-                     sceneObj.setObjectData(d)
+                let parent = this.sceneObjectsByLoadID.get(d.parentID)
+                if (!parent) parent = this.root;
+                parent.addChild(sceneObj)
 
-                     this.usedModels.push(sceneObj.model);
-                     if(sceneObj.needsHitTest) {
-                     //    this.hitTestModels.push(sceneObj.model);
-                     }
-                     if(sceneObj.needsTrigger) {
-                       //  this.triggerModels.push(sceneObj);
-                     }
-                 }// if(m.model)
-             }
-         }
-     }
- }
+
+
+                if (sceneObj.model) {
+                    if (d.scale) {
+                        sceneObj.model.setScale(d.scale[0], d.scale[1], d.scale[2])
+                    }
+                    sceneObj.setObjectData(d)
+
+                    this.usedModels.push(sceneObj.model);
+                    if (sceneObj.needsHitTest) {
+                        //    this.hitTestModels.push(sceneObj.model);
+                    }
+                    if (sceneObj.needsTrigger) {
+                        //  this.triggerModels.push(sceneObj);
+                    }
+                }// if(m.model)
+            }
+        }
+    }
+}
 
 export default new SceneHandler()

@@ -318,6 +318,16 @@ class SceneEditor {
     }
 
     public saveAll(){
+
+        SceneHandler.saveCurrentScene();
+        console.log(SceneHandler.scenesData)
+        for (let s of SceneHandler.scenesData){
+
+            saveScene( s.id, JSON.stringify(s)).then(()=>{
+                console.log("saved Scene")
+            })
+
+        }
      /*  let sceneData: Array<any> = []
        // SceneData.root.getSceneData(sceneData);
 
@@ -433,6 +443,13 @@ class SceneEditor {
     }
 
     private setScene(id: string) {
+
+
+
+        SceneHandler.saveCurrentScene()
+
+
+
 
         this.gameRenderer.gBufferPass.modelRenderer.setModels([])
         this.gameRenderer.shadowMapPass.modelRenderer.setModels([])
