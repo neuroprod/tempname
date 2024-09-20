@@ -71,6 +71,7 @@ export default class Drawing {
     public saveCurrentProject() {
 
         if (this.project) {
+            this.project.baseTexture =new TextureLoader(this.renderer,"")
             this.project.baseTexture.make()
             this.copy1.setTextures(this.project.baseTexture, this.drawBufferTempPass.colorTarget);
             if (!this.project.fullTexture) {

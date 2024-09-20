@@ -12,7 +12,7 @@ import GameCamera from "./GameCamera.ts";
 import DebugDraw from "./DebugDraw.ts";
 import CloudParticles from "./CloudParticles.ts";
 import GamePadInput from "./GamePadInput.ts";
-import SceneData from "../data/SceneData.ts";
+
 import CoinHandler from "./handlers/CoinHandler.ts";
 import SceneObject3D from "../data/SceneObject3D.ts";
 import {HitTrigger} from "../data/HitTriggers.ts";
@@ -62,7 +62,7 @@ export default class Game {
 
 
 
-        this.setActive();
+        //this.setActive();
         SoundHandler.init()
     }
 
@@ -140,7 +140,7 @@ export default class Game {
 
 
 
-        for (let f of SceneData.triggerModels) {
+       /* for (let f of SceneData.triggerModels) {
             f.drawTrigger()
             if (f.checkTriggerHit(this.characterController.charHitBottomWorld, this.characterController.charHitTopWorld, this.characterController.charHitRadius)) {
 
@@ -149,7 +149,7 @@ export default class Game {
 
             }
 
-        }
+        }*/
 
     }
 

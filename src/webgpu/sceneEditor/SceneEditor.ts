@@ -25,10 +25,10 @@ import {addMainMenuButton} from "../UI/MainMenuButton.ts";
 import {Icons} from "../UI/Icons.ts";
 import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
 import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
-import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
+
 import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
 import {addInputText} from "../UI/InputText.ts";
-import SceneData from "../data/SceneData.ts";
+
 import {addMeshPopup} from "../UI/AddMeshPopup.ts";
 import {addPlayButton, addRecButton} from "../UI/PlayPauzeRecButton.ts";
 import {MainMenuOffset} from "../UI/Style.ts";
@@ -40,10 +40,10 @@ import DebugDraw from "../Website/DebugDraw.ts";
 import SceneHandler from "../data/SceneHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import loadHandler from "../data/LoadHandler.ts";
-import {setItemsPopup} from "../UI/ItemsPopup.ts";
-import Project from "../data/Project.ts";
+
 import {setOpenScenePopup} from "../UI/OpenScenePopup.ts";
 import sceneHandler from "../data/SceneHandler.ts";
+import AppState, {AppStates} from "../AppState.ts";
 
 export enum ToolState {
 
@@ -173,7 +173,15 @@ class SceneEditor {
 
 
         }
-        if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){}
+        if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){
+
+            setNewPopup("+ Add new Scene", "new_scene", (name: string) => {
+                let id = SceneHandler.addNewScene(name)
+                this.setScene(id)
+            })
+
+
+        }
         if (addMainMenuButton("DeleteGroup", Icons.REMOVE_GROUP,true)){}
         popMainMenu()
 
@@ -227,23 +235,23 @@ class SceneEditor {
             setNewPopup("+ Add new Anime to "+this.currentModel.label, "new_anime", (name: string) => {
                     if(!this.currentModel)return;
                     let anime = new Animation(this.renderer, name, this.currentModel)
-                    SceneData.animations.push(anime)
+            //      SceneData.animations.push(anime)
                     AnimationEditor.setAnimation(anime)
             })
 
         }
         if(addMainMenuButton("RemoveAnime",  Icons.REMOVE_ANIME,true)){
             if(AnimationEditor.currentAnimation){
-                SceneData.removeAnimation(AnimationEditor.currentAnimation)
+              //  SceneData.removeAnimation(AnimationEditor.currentAnimation)
                 AnimationEditor.setAnimation(null);
 
             }
         }
         if(addMainMenuButton("open", Icons.FOLDER,true)){
-            setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
+           /* setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
                 AnimationEditor.setAnimation(anime);
 
-            })
+            })*/
         }
         if(AnimationEditor.currentAnimation){
             addMainMenuDivider("mydiv3")
@@ -320,11 +328,11 @@ class SceneEditor {
     public saveAll(){
 
         SceneHandler.saveCurrentScene();
-        console.log(SceneHandler.scenesData)
+
         for (let s of SceneHandler.scenesData){
 
             saveScene( s.id, JSON.stringify(s)).then(()=>{
-                console.log("saved Scene")
+
             })
 
         }
@@ -435,16 +443,21 @@ class SceneEditor {
 
     setActive() {
 
-        console.log("setActive")
 
-        this.setScene("456")
+       let scene =  AppState.getState(AppStates.EDIT_SCENE);
+        if(scene){
+            this.setScene(scene)
+        }else{
+            this.setScene("456")
+        }
+
 
 
     }
 
     private setScene(id: string) {
-
-
+        AppState.setState(AppStates.EDIT_SCENE,id)
+        let state = AppState.getState(AppStates.MAIN_STATE);
 
         SceneHandler.saveCurrentScene()
 
@@ -457,7 +470,7 @@ class SceneEditor {
 
 
         LoadHandler.onComplete=()=>{
-            console.log("done",SceneHandler.usedModels)
+
             this.editCamera.setActive()
             this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
           this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
@@ -465,7 +478,7 @@ class SceneEditor {
         LoadHandler.startLoading()
 
         SceneHandler.setScene(id).then(()=>{
-            console.log("setScene")
+
             LoadHandler.stopLoading()
         });
     }

@@ -1,4 +1,4 @@
-import Renderer from "../lib/Renderer.ts";
+/*import Renderer from "../lib/Renderer.ts";
 import PreLoader from "../lib/PreLoader.ts";
 import projectsArr from "./data.json"
 import Project from "./Project.ts";
@@ -290,3 +290,4 @@ class SceneData {
 
 
 export default new SceneData()
+*/

@@ -19,7 +19,7 @@ export default class Project {
     textureDirty: boolean = false;
     textureSize: number = 1024;
     selectItems: Array<SelectItem> = [];
-    baseTexture!: TextureLoader;
+    baseTexture!: Texture;
     fullTexture!: Texture;
     loadTexture!: TextureLoader;
     public isNew = true;
@@ -101,8 +101,8 @@ export default class Project {
     getBaseTexture() {
         if (!this.baseTexture) {
             LoadHandler.startLoading()
-            this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp")
-            this.baseTexture.onComplete = () => {
+            this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp") as Texture
+            (this.baseTexture as TextureLoader).onComplete = () => {
 
                 console.log("textureLoadComplete")
                 LoadHandler.stopLoading()

@@ -14,7 +14,7 @@ import AppState, {AppStates} from "./AppState.ts";
 import {Icons} from "./UI/Icons.ts";
 import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
 import TextureLoader from "./lib/textures/TextureLoader.ts";
-import SceneData from "./data/SceneData.ts";
+
 import {addMainMenuTextButton} from "./UI/MainMenuTextButton.ts";
 import UI_I from "./lib/UI/UI_I.ts";
 import {addMainMenuDivider} from "./UI/MainMenuDivider.ts";
@@ -120,8 +120,8 @@ export default class Main {
         this.camera.fovy = 0.8
 
         this.gameRenderer = new GameRenderer(this.renderer, this.camera)
-        this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
-        this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
+       // this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
+       // this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
 
 
         this.keyInput = new KeyInput();
@@ -136,7 +136,7 @@ export default class Main {
         if (state != undefined) {
             this.setMainState(state)
         } else {
-            this.setMainState(MainState.game)
+            this.setMainState(MainState.editor)
         }
 
         this.tick();

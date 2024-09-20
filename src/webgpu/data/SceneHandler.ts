@@ -5,6 +5,8 @@ import SceneObject3D from "./SceneObject3D.ts";
 
 import ProjectData from "./ProjectData.ts";
 import Model from "../lib/model/Model.ts";
+import Utils from "../lib/UI/math/Utils.ts";
+import MathUtils from "../lib/MathUtils.ts";
 
 class SceneHandler {
     public scenesData: Array<any> = [];
@@ -29,7 +31,7 @@ class SceneHandler {
 
         for (let folder of scenesIDS) {
 
-            let file = "./scenes/" + folder 
+            let file = "./scenes/" + folder
             let p = fetch(file)
 
 
@@ -129,6 +131,19 @@ class SceneHandler {
                 }// if(m.model)
             }
         }
+    }
+
+    addNewScene(name: string) {
+        let uid = MathUtils.generateUUID()
+        let uid2 = MathUtils.generateUUID()
+        let sceneData:any={
+            id:uid,
+            name:name,
+            "scene":[{"id":uid2,"needsHitTest":false,"label":"root","meshId":"","projectId":"","isText":false,"text":"","needsTrigger":false,"triggerRadius":0.2,"position":[0,0,0],"rotation":[0,0,0,1],"hitTriggerItem":0}],
+            "animations":[]}
+        this.scenesData.push(sceneData);
+        this.sceneDataByID.set(sceneData.id, sceneData)
+        return uid;
     }
 }
 

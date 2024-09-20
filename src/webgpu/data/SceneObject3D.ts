@@ -11,8 +11,10 @@ import {DEG2RAD, RAD2DEG, sqDistToLineSegment} from "../lib/MathUtils.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
 import {Vector3} from "@math.gl/core";
 import {HitTrigger, HitTriggerSelectItems} from "./HitTriggers.ts";
-import SceneData from "./SceneData.ts";
+
 import FontMesh from "../modelMaker/FontMesh.ts";
+import SceneHandler from "./SceneHandler.ts";
+import ProjectData from "./ProjectData.ts";
 
 
 export default class SceneObject3D extends Object3D {
@@ -113,7 +115,8 @@ export default class SceneObject3D extends Object3D {
         if (s != this.text && this.model) {
         this.text = s;
         let m = this.model.mesh as FontMesh;
-        m.setText(this.text, SceneData.font)
+       // m.setText(this.text, SceneData.font)
+            console.log("fix this")
         }
     }
     onDataUI() {
@@ -254,7 +257,7 @@ export default class SceneObject3D extends Object3D {
 
     copy(label: string) {
         console.log(this.projectId, this.meshId)
-        let m = SceneData.getModel(label, this.projectId, this.meshId, "")
+        let m =ProjectData.getModel({label:label,projectId: this.projectId, meshID:this.meshId,id:""})
         if (m) {
             this.copyProperties(m)
             this.parent?.addChild(m);
