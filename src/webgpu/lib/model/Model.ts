@@ -75,5 +75,12 @@ export default class Model extends Object3D {
     clone(){
 
     }
+    public destroy() {
+        for (let b of this.buffers){
+            b.destroy()
+        }
+        this.modelTransform.destroy()
+        this.renderer.removeModel(this);
+    }
 
 }

@@ -40,6 +40,10 @@ import DebugDraw from "../Website/DebugDraw.ts";
 import SceneHandler from "../data/SceneHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import loadHandler from "../data/LoadHandler.ts";
+import {setItemsPopup} from "../UI/ItemsPopup.ts";
+import Project from "../data/Project.ts";
+import {setOpenScenePopup} from "../UI/OpenScenePopup.ts";
+import sceneHandler from "../data/SceneHandler.ts";
 
 export enum ToolState {
 
@@ -159,7 +163,16 @@ class SceneEditor {
         if(LoadHandler.isLoading())return
 
         pushMainMenu("scene",129,MainMenuOffset);
-        if (addMainMenuButton("openGroup", Icons.FOLDER,true)){}
+        if (addMainMenuButton("openGroup", Icons.FOLDER,true)){
+
+            setOpenScenePopup("Open Scene", sceneHandler.scenesData, (id: string) => {
+               // this.openProject(project)
+
+                this.setScene(id)
+            })
+
+
+        }
         if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){}
         if (addMainMenuButton("DeleteGroup", Icons.REMOVE_GROUP,true)){}
         popMainMenu()
@@ -413,23 +426,31 @@ class SceneEditor {
     setActive() {
 
         console.log("setActive")
+
+        this.setScene("456")
+
+
+    }
+
+    private setScene(id: string) {
+
+        this.gameRenderer.gBufferPass.modelRenderer.setModels([])
+        this.gameRenderer.shadowMapPass.modelRenderer.setModels([])
+
+
+
         LoadHandler.onComplete=()=>{
-            console.log("done")
+            console.log("done",SceneHandler.usedModels)
             this.editCamera.setActive()
             this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-            this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+          this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
         }
         LoadHandler.startLoading()
 
-        SceneHandler.setScene("1234").then(()=>{
-console.log("setScene")
+        SceneHandler.setScene(id).then(()=>{
+            console.log("setScene")
             LoadHandler.stopLoading()
         });
-
-
-
-
-
     }
 }
 export default new SceneEditor();

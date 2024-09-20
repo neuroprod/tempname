@@ -5,6 +5,7 @@ import {Matrix4, Quaternion, Vector3, Vector4} from "@math.gl/core";
 import {NumericArray} from "@math.gl/types";
 
 
+
 export default class Object3D extends ObjectGPU {
     public parent: Object3D | null = null
     public children: Array<Object3D> = []
@@ -283,9 +284,18 @@ export default class Object3D extends ObjectGPU {
         let index = this.children.indexOf(child);
         if (index < 0) return;
         child.parent = null;
+
         this.children.splice(index, 1);
     }
+    public removeAllChildren(){
+        for(let c of this.children){
+            c.removeAllChildren()
 
+            this.removeChild(c)
+            c.destroy()
+        }
+
+    }
     getScale() {
         return this._scale;
     }
@@ -336,5 +346,9 @@ export default class Object3D extends ObjectGPU {
         obj.setPositionV(this._position.clone())
         obj.setScaleV(this._scale.clone())
         obj.setRotationQ(this._rotation.clone())
+    }
+
+    public destroy() {
+
     }
 }

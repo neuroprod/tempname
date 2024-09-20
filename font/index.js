@@ -13,6 +13,7 @@ function go() {
     makeFont('Roboto-Regular.ttf',"regular")
     makeFont('FiraSans-Black.ttf',"bold")
 
+
 }
 
 function makeSVGFont(){

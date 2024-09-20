@@ -8,13 +8,12 @@ import Model from "../lib/model/Model.ts";
 
  class SceneHandler{
      private renderer!: Renderer;
-     private scenesData: Array<any>=[];
+   public scenesData: Array<any>=[];
      public sceneDataByID: Map<string, any> = new Map<string, any>();
-     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
+     public modelsByLoadID: Map<string, SceneObject3D >=new Map<string, SceneObject3D >()
      usedModels: Array<Model> = [];
 
      root!:SceneObject3D;
-
 
 
     async init(renderer:Renderer,preloader:PreLoader)
@@ -56,8 +55,11 @@ import Model from "../lib/model/Model.ts";
         async setScene(sceneId:string){
             //save currentscenes?
 
+            this.root.removeAllChildren()
+            this.usedModels=[];
 
-            //remove and delete current scene
+            this.modelsByLoadID.clear()
+
             ProjectData.setNewScene()
 
             let newData =this.sceneDataByID.get(sceneId)
@@ -92,9 +94,9 @@ import Model from "../lib/model/Model.ts";
                  sceneObj.setPosition(d.position[0], d.position[1], d.position[2])
                  sceneObj.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
 
-                 this.modelsByLoadID[d.id] = sceneObj;
+                 this.modelsByLoadID.set(d.id, sceneObj);
 
-                 let  parent =this.modelsByLoadID[d.parentID]
+                 let  parent =this.modelsByLoadID.get(d.parentID)
                      if(!parent) parent=this.root;
                      parent.addChild(sceneObj)
                  if (sceneObj.model) {

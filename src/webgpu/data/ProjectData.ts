@@ -4,9 +4,7 @@ import Renderer from "../lib/Renderer.ts";
 import Project from "./Project.ts";
 import Model from "../lib/model/Model.ts";
 import ProjectMesh, {MeshType} from "./ProjectMesh.ts";
-import GBufferClipMaterial from "../render/GBuffer/GBufferClipMaterial.ts";
-import ShadowClipDepthMaterial from "../render/shadow/ShadowClipDepthMaterial.ts";
-import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
+
 import SceneObject3D from "./SceneObject3D.ts";
 import ShadowDepthMaterial from "../render/shadow/ShadowDepthMaterial.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";

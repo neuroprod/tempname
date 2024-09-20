@@ -147,5 +147,15 @@ export default class Renderer {
             m.update();
         }
     }
+
+    removeUniformGroup(u: UniformGroup) {
+        let i =this.uniformGroups.indexOf(u)
+        if(i>-1) this.uniformGroups.splice(i, 1);
+    }
+
+    removeModel(m: Model) {
+        let i =this.models.indexOf(m)
+        if(i>-1) this.models.splice(i, 1);
+    }
 }
 
