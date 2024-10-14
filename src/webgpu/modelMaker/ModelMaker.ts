@@ -45,6 +45,7 @@ import {MeshType} from "../data/ProjectMesh.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {MainMenuOffset} from "../UI/Style.ts";
 import ProjectData from "../data/ProjectData.ts";
+import LoadHandler from "../data/LoadHandler.ts";
 
 
 enum ModelMainState {
@@ -113,7 +114,7 @@ export default class ModelMaker {
     private sizeSelectItems: Array<SelectItem> = [new SelectItem("16x16", 16), new SelectItem("256x256", 256), new SelectItem("512x512", 512), new SelectItem("1024x1024", 1024), new SelectItem("2048x2048", 2048)]
     private backgroundModel: Model;
     private backgroundMaterial: DrawingPreviewMaterial;
-    private isLoading: boolean =false;
+
 
     constructor(renderer: Renderer, mouseListener: MouseListener) {
         this.renderer = renderer;
@@ -199,14 +200,14 @@ export default class ModelMaker {
     }
 
     draw() {
-        if(this.isLoading)return
+        if(LoadHandler.isLoading())return
         this.drawing.draw()
         this.previewRenderer.draw()
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-
-        if(!this.isLoading)this.modelRenderer2D.draw(pass);
+        if(LoadHandler.isLoading())return
+       this.modelRenderer2D.draw(pass);
         this.previewRenderer.drawInCanvas(pass)
 
     }
@@ -461,6 +462,8 @@ export default class ModelMaker {
     }
 
     private openProject(project: Project) {
+        LoadHandler.startLoading()
+
         if (this.currentProject) {
             this.saveTemp();
 
@@ -469,14 +472,16 @@ export default class ModelMaker {
         this.currentProject = project;
 
        if( !this.currentProject.loadTexture ){
-           this.isLoading =true;
+
            this.currentProject.loadPNGTexture().then(()=>{
-                console.log('loaddone')
+
                this.drawing.setProject(this.currentProject);
                this.cutting.setProject(this.currentProject);
                AppState.setState("currentImage", this.currentProject.id)
                this.setTool(ToolType.Paint);
-               this.isLoading =false;
+
+
+               LoadHandler.stopLoading()
            })
 
        }else{
@@ -485,6 +490,7 @@ export default class ModelMaker {
            this.cutting.setProject(this.currentProject);
            AppState.setState("currentImage", this.currentProject.id)
            this.setTool(ToolType.Paint);
+           LoadHandler.stopLoading()
 
        }
 

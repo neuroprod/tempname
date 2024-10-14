@@ -55,13 +55,13 @@ class SceneHandler {
 
     async setScene(sceneId: string) {
         //save currentscenes?
-
+        ProjectData.setNewScene()
         this.root.removeAllChildren()
         this.usedModels = [];
 
         this.sceneObjectsByLoadID.clear()
 
-        ProjectData.setNewScene()
+
 
         this.sceneData = this.sceneDataByID.get(sceneId)
         this.currentSceneID = sceneId;

@@ -456,6 +456,7 @@ class SceneEditor {
     }
 
     private setScene(id: string) {
+        LoadHandler.startLoading()
         AppState.setState(AppStates.EDIT_SCENE,id)
         let state = AppState.getState(AppStates.MAIN_STATE);
 
@@ -475,7 +476,7 @@ class SceneEditor {
             this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
           this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
         }
-        LoadHandler.startLoading()
+
 
         SceneHandler.setScene(id).then(()=>{
 

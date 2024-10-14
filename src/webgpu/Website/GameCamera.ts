@@ -1,12 +1,13 @@
 import Camera from "../lib/Camera.ts";
 import Renderer from "../lib/Renderer.ts";
-import SceneData from "../data/SceneData.ts";
+
 import SceneObject3D from "../data/SceneObject3D.ts";
 import {NumericArray} from "@math.gl/types";
 import {Vector3} from "@math.gl/core";
 import Timer from "../lib/Timer.ts";
 import {lerpValueDelta} from "../lib/MathUtils.ts";
 import gsap from "gsap";
+import SceneHandler from "../data/SceneHandler.ts";
 export default class GameCamera{
     camera: Camera;
     private renderer: Renderer;
@@ -17,7 +18,7 @@ export default class GameCamera{
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.camera = camera;
-        this.charRoot = SceneData.sceneModelsByName["charRoot"];
+        this.charRoot = SceneHandler.root
     }
 
 

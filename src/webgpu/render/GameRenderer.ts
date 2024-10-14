@@ -18,6 +18,7 @@ import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
 import AOPreprocessDepth from "./ComputePasses/AOPreprocessDepth.ts";
 import GTAO from "./ComputePasses/GTAO.ts";
 import TimeStampQuery from "../lib/TimeStampQuery.ts";
+import LoadHandler from "../data/LoadHandler.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
@@ -115,7 +116,7 @@ export default class GameRenderer{
     }
     //doPasses
     draw(){
-
+if(LoadHandler.isLoading())return;
         this.shadowMapPass.add( );
 
         this.gBufferPass.add(this.renderer.timeStamps.getSet(0,1));
@@ -141,6 +142,7 @@ export default class GameRenderer{
 
     //put in canvas
     drawFinal(pass: CanvasRenderPass) {
+
         this.blitFinal.draw(pass);
 
     }

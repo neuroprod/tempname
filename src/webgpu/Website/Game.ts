@@ -20,6 +20,8 @@ import SoundHandler from "./SoundHandler.ts";
 import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
 import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
 import ConversationHandler from "./conversation/ConversationHandler.ts";
+import SceneHandler from "../data/SceneHandler.ts";
+import LoadHandler from "../data/LoadHandler.ts";
 
 
 
@@ -46,7 +48,7 @@ export default class Game {
 
         this.gameRenderer = gameRenderer;
 
-     //   this.cloudParticles = new CloudParticles(renderer)
+    //this.cloudParticles = new CloudParticles(renderer)
       //  this.characterController = new CharacterController(renderer, this.cloudParticles)
 
         this.gameCamera = new GameCamera(renderer, camera);
@@ -78,7 +80,9 @@ export default class Game {
 
             if (!jump) jump = this.gamepadInput.getJump()
         }
-/*
+        this.gameCamera.update()
+        //this.characterController.update(delta, hInput, jump)
+/*  this.characterController.update(delta, hInput, jump)
         if(this.strawberryScene.finished){
             this.isCutScene =false;
         }
@@ -119,10 +123,21 @@ export default class Game {
     }
 
     setActive() {
+console.log("setActive")
+        LoadHandler.startLoading()
+SceneHandler.setScene("1234").then(()=>{
 
+
+
+    this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
+    this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+    LoadHandler.stopLoading()
+})
     }
 
     draw() {
+        if(LoadHandler.isLoading())return
+
         this.gameRenderer.draw();
 
         //SceneData.animations[0].autoPlay(Timer.delta)
@@ -130,7 +145,7 @@ export default class Game {
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-
+        if(LoadHandler.isLoading())return
         this.gameRenderer.drawFinal(pass);
       //  this.textBalloonHandler.drawFinal(pass)
         DebugDraw.draw(pass);

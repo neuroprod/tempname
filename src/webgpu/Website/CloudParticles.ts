@@ -1,6 +1,6 @@
 import Renderer from "../lib/Renderer.ts";
 import Model from "../lib/model/Model.ts";
-import SceneData from "../data/SceneData.ts";
+
 
 import GBufferCloudMaterial from "../render/GBuffer/GBufferCloudMaterial.ts";
 import {Matrix4, Vector3, Vector4} from "@math.gl/core";

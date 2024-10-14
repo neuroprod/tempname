@@ -1,20 +1,36 @@
 class LoadHandler{
 
-    private loading =0;
+    private loadingCount =0;
+    private _isLoading = false;
+
+
     onComplete!: () => void;
+
+    update(){
+        if(this.loadingCount==0 && this._isLoading){
+            this._isLoading =false;
+            if(this.onComplete)this.onComplete()
+            console.log("loadingDone")
+        }
+    }
+
     isLoading(){
-       if(this.loading>0)return true
-        return false;
+
+        return this._isLoading;
     }
 
     startLoading(){
-        this.loading ++;
+        if(this.loadingCount==0){
+            console.log("startLoading")
+            this._isLoading =true;
+        }
+        this.loadingCount ++;
 
     }
     stopLoading(){
-        this.loading--
-        console.log(this.loading,"load")
-        if(this.loading==0)this.onComplete()
+        this.loadingCount--
+
+
 
     }
 

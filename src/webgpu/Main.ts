@@ -26,6 +26,7 @@ import KeyInput from "./Website/KeyInput.ts";
 import ModelData from "./data/ProjectData.ts";
 import DebugDraw from "./Website/DebugDraw.ts";
 import SceneHandler from "./data/SceneHandler.ts";
+import LoadHandler from "./data/LoadHandler.ts";
 
 
 enum MainState {
@@ -128,7 +129,7 @@ export default class Main {
         this.mouseListener = new MouseListener(this.renderer);
 
         DebugDraw.init(this.renderer, this.camera);
-        //  this.game = new Game(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
+      this.game = new Game(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         SceneEditor.init(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener);
 
@@ -174,6 +175,9 @@ export default class Main {
     }
 
     private update() {
+
+        LoadHandler.update()
+
         if (this.currentMainState == MainState.editor) {
             SceneEditor.update();
         } else if (this.currentMainState == MainState.modelMaker) {
