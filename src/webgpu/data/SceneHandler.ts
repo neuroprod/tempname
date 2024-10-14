@@ -58,7 +58,6 @@ class SceneHandler {
         ProjectData.setNewScene()
         this.root.removeAllChildren()
         this.usedModels = [];
-
         this.sceneObjectsByLoadID.clear()
 
 
@@ -72,7 +71,14 @@ class SceneHandler {
 
 
     }
+    async addScene(sceneId: string) {
+        this.sceneData = this.sceneDataByID.get(sceneId)
+        this.currentSceneID = sceneId;
+        if ( this.sceneData ) {
 
+            this.parseSceneData( this.sceneData.scene,true)
+        }
+    }
     saveCurrentScene() {
         if(! this.sceneData){return }
 
@@ -145,6 +151,8 @@ class SceneHandler {
         this.sceneDataByID.set(sceneData.id, sceneData)
         return uid;
     }
+
+
 }
 
 export default new SceneHandler()

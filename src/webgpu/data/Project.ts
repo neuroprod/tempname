@@ -101,7 +101,7 @@ export default class Project {
         if(this.baseTexture){
             this.baseTexture.destroy();
             this.baseTexture =null;
-           
+
         }
     }
     getBaseTexture() {

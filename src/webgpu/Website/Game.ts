@@ -10,19 +10,14 @@ import KeyInput from "./KeyInput.ts";
 import CharacterController from "./CharacterController.ts";
 import GameCamera from "./GameCamera.ts";
 import DebugDraw from "./DebugDraw.ts";
-import CloudParticles from "./CloudParticles.ts";
 import GamePadInput from "./GamePadInput.ts";
-
-import CoinHandler from "./handlers/CoinHandler.ts";
 import SceneObject3D from "../data/SceneObject3D.ts";
 import {HitTrigger} from "../data/HitTriggers.ts";
 import SoundHandler from "./SoundHandler.ts";
 import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
-import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
 import ConversationHandler from "./conversation/ConversationHandler.ts";
 import SceneHandler from "../data/SceneHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
-
 
 
 export default class Game {
@@ -38,7 +33,7 @@ export default class Game {
     //private coinHandler: CoinHandler;
     private strawberryScene!: StrawBerryScene;
     private isCutScene: boolean = false;
-   // private textBalloonHandler: TextBalloonHandler;
+    // private textBalloonHandler: TextBalloonHandler;
     private conversationHandler!: ConversationHandler;
 
 
@@ -48,20 +43,19 @@ export default class Game {
 
         this.gameRenderer = gameRenderer;
 
-    //this.cloudParticles = new CloudParticles(renderer)
-      //  this.characterController = new CharacterController(renderer, this.cloudParticles)
+        //this.cloudParticles = new CloudParticles(renderer)
+        //  this.characterController = new CharacterController(renderer, this.cloudParticles)
 
         this.gameCamera = new GameCamera(renderer, camera);
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
-      //  this.textBalloonHandler =new TextBalloonHandler(renderer,this.gameCamera.camera)
-       // this.conversationHandler = new ConversationHandler(renderer,this.textBalloonHandler)
+        //  this.textBalloonHandler =new TextBalloonHandler(renderer,this.gameCamera.camera)
+        // this.conversationHandler = new ConversationHandler(renderer,this.textBalloonHandler)
         //this.coinHandler = new CoinHandler()
 
 
-       // this.strawberryScene = new StrawBerryScene()
-
+        // this.strawberryScene = new StrawBerryScene()
 
 
         //this.setActive();
@@ -82,25 +76,25 @@ export default class Game {
         }
         this.gameCamera.update()
         //this.characterController.update(delta, hInput, jump)
-/*  this.characterController.update(delta, hInput, jump)
-        if(this.strawberryScene.finished){
-            this.isCutScene =false;
-        }
+        /*  this.characterController.update(delta, hInput, jump)
+                if(this.strawberryScene.finished){
+                    this.isCutScene =false;
+                }
 
-        if (!this.isCutScene) {
-            this.characterController.update(delta, hInput, jump)
-            this.gameCamera.update()
+                if (!this.isCutScene) {
+                    this.characterController.update(delta, hInput, jump)
+                    this.gameCamera.update()
 
-        } else {
-            this.strawberryScene.update();
-            this.strawberryScene.setInput(hInput, jump)
-        }
+                } else {
+                    this.strawberryScene.update();
+                    this.strawberryScene.setInput(hInput, jump)
+                }
 
-        this.cloudParticles.update();
-        this.coinHandler.update();
-        this.checkTriggers()
+                this.cloudParticles.update();
+                this.coinHandler.update();
+                this.checkTriggers()
 
-        this.textBalloonHandler.update()*/
+                this.textBalloonHandler.update()*/
 //last
         DebugDraw.update();
     }
@@ -123,20 +117,23 @@ export default class Game {
     }
 
     setActive() {
-console.log("setActive")
+        console.log("setActive")
         LoadHandler.startLoading()
-SceneHandler.setScene("1234").then(()=>{
+        LoadHandler.startLoading()
+        SceneHandler.setScene("456").then(() => {
 
+            SceneHandler.addScene("1234").then(() => {
 
-
-    this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-    this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
-    LoadHandler.stopLoading()
-})
+                this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
+                this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+                LoadHandler.stopLoading()
+            });
+            LoadHandler.stopLoading()
+        })
     }
 
     draw() {
-        if(LoadHandler.isLoading())return
+        if (LoadHandler.isLoading()) return
 
         this.gameRenderer.draw();
 
@@ -145,33 +142,32 @@ SceneHandler.setScene("1234").then(()=>{
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-        if(LoadHandler.isLoading())return
+        if (LoadHandler.isLoading()) return
         this.gameRenderer.drawFinal(pass);
-      //  this.textBalloonHandler.drawFinal(pass)
+        //  this.textBalloonHandler.drawFinal(pass)
         DebugDraw.draw(pass);
     }
 
     private checkTriggers() {
 
 
+        /* for (let f of SceneData.triggerModels) {
+             f.drawTrigger()
+             if (f.checkTriggerHit(this.characterController.charHitBottomWorld, this.characterController.charHitTopWorld, this.characterController.charHitRadius)) {
 
-       /* for (let f of SceneData.triggerModels) {
-            f.drawTrigger()
-            if (f.checkTriggerHit(this.characterController.charHitBottomWorld, this.characterController.charHitTopWorld, this.characterController.charHitRadius)) {
 
+                 this.resolveHitTrigger(f)
 
-                this.resolveHitTrigger(f)
+             }
 
-            }
-
-        }*/
+         }*/
 
     }
 
     private setCutScene(strawberryScene: StrawBerryScene) {
-        strawberryScene.characterController =this.characterController
+        strawberryScene.characterController = this.characterController
         strawberryScene.gameCamera = this.gameCamera;
-        strawberryScene.conversationHandler =this.conversationHandler;
+        strawberryScene.conversationHandler = this.conversationHandler;
         strawberryScene.start();
         this.isCutScene = true;
 
