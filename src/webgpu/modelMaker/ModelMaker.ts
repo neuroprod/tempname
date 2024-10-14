@@ -150,7 +150,7 @@ export default class ModelMaker {
         this.textureModel = new Model(renderer, "textureModel");
         this.textureModel.mesh = new Quad(renderer)
         this.drawingPreviewMaterial = new DrawingPreviewMaterial(renderer, "materprev");
-        this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
+        this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.getTexture("drawingBufferTemp"));
         this.textureModel.material = this.drawingPreviewMaterial;
         this.textureModel.setScaler(0.5)
         this.textureModel.x = 0.5;

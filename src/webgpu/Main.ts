@@ -134,6 +134,7 @@ export default class Main {
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
+        console.log(state)
         if (state != undefined) {
             this.setMainState(state)
         } else {

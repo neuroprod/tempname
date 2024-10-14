@@ -19,7 +19,7 @@ export default class Project {
     textureDirty: boolean = false;
     textureSize: number = 1024;
     selectItems: Array<SelectItem> = [];
-    baseTexture!: Texture;
+    baseTexture: Texture | null=null;
     fullTexture!: Texture;
     loadTexture!: TextureLoader;
     public isNew = true;
@@ -97,9 +97,17 @@ export default class Project {
 
 
     }
-
+    clearBaseTexture(){
+        if(this.baseTexture){
+            this.baseTexture.destroy();
+            this.baseTexture =null;
+           
+        }
+    }
     getBaseTexture() {
+
         if (!this.baseTexture) {
+            console.log("startLoadBase",this.name)
             LoadHandler.startLoading()
             this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp") as Texture
             (this.baseTexture as TextureLoader).onComplete = () => {
@@ -108,6 +116,7 @@ export default class Project {
                 LoadHandler.stopLoading()
             }
 
+
         }
         return this.baseTexture
     }
@@ -115,24 +124,27 @@ export default class Project {
     getGBufferClipMaterial() {
         if (!this.gBufferClipMaterial) {
             this.gBufferClipMaterial = new GBufferClipMaterial(this.renderer, "gMat");
-            this.gBufferClipMaterial.setTexture("colorTexture", this.getBaseTexture());
+
         }
+        this.gBufferClipMaterial.setTexture("colorTexture", this.getBaseTexture());
         return this.gBufferClipMaterial
     }
 
     getShadowClipMaterial() {
         if (!this.shadowClipMaterial) {
             this.shadowClipMaterial = new ShadowClipDepthMaterial(this.renderer, "shadowDepthClip")
-            this.shadowClipMaterial.setTexture("colorTexture", this.getBaseTexture());
+
         }
+        this.shadowClipMaterial.setTexture("colorTexture", this.getBaseTexture());
         return this.shadowClipMaterial
     }
 
     getGBufferMaterial() {
         if (!this.GBufferMaterial) {
             this.GBufferMaterial = new GBufferMaterial(this.renderer, "gMat");
-            this.GBufferMaterial.setTexture("colorTexture", this.getBaseTexture());
+
         }
+        this.GBufferMaterial.setTexture("colorTexture", this.getBaseTexture());
         return this.GBufferMaterial;
     }
 }

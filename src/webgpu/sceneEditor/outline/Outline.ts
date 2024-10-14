@@ -28,7 +28,7 @@ export default class Outline{
         this.outlinePrePass.modelRenderer.setMaterial( solidMaterial);
 
         let blitMaterial =new BaseBlitMaterial(this.renderer,"baseBlit");
-        blitMaterial.setTexture("colorTexture",this.renderer.textureHandler.texturesByLabel["OutlinePass"]);
+        blitMaterial.setTexture("colorTexture",this.renderer.getTexture("OutlinePass"));
         blitMaterial.blendModes =[Blend.preMultAlpha()];
         this.outlineBlit =new Blit(this.renderer,"outlineBlit",blitMaterial)
     }

@@ -37,6 +37,8 @@ export default class Texture extends ObjectGPU {
         super(renderer, label);
 
         this.options = {...TextureOptionsDefault, ...options};
+
+
         this.renderer.textureHandler.addTexture(this);
 
     }
@@ -80,5 +82,9 @@ export default class Texture extends ObjectGPU {
             {bytesPerRow: bytesPerRow},
             [width, height, depthOrArrayLayers]
         );
+    }
+    public destroy(){
+        this.textureGPU.destroy();
+        this.renderer.textureHandler.removeTexture(this);
     }
 }

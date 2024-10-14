@@ -47,7 +47,7 @@ export default class Cutting {
         this.mesh = new ExtrudeMesh(renderer, "3DMesh")
         this.model3D.mesh = this.mesh;
         this.model3D.visible = false;
-        this.model3D.material.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"])
+        this.model3D.material.setTexture("colorTexture", this.renderer.getTexture("drawingBufferTemp"));
 
         this.pathEditor = new PathEditor(renderer)
 

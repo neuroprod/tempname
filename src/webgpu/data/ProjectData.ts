@@ -80,7 +80,9 @@ class ProjectData {
     }
 
     setNewScene() {
-
+        for(let p of this.projects){
+            p.clearBaseTexture()
+        }
     }
 
     getModel(d: any) {

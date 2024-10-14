@@ -5,6 +5,7 @@ import UniformGroup from "./material/UniformGroup.ts";
 import Model from "./model/Model.ts";
 import {Vector2} from "@math.gl/core";
 import TimeStampQuery from "./TimeStampQuery.ts";
+import Texture from "./textures/Texture.ts";
 
 
 export default class Renderer {
@@ -113,7 +114,7 @@ export default class Renderer {
     }
 
     getTexture(name: string) {
-        return this.textureHandler.texturesByLabel[name];
+        return this.textureHandler.getTextureByName(name) as Texture;
     }
 
     private updateUniformGroups() {
