@@ -187,6 +187,7 @@ export default class SceneObject3D extends Object3D {
             obj.model = this.model.label
             obj.scale = this.model.getScale();
         }
+        console.log(this.text)
         if (this.parent) obj.parentID = this.parent.UUID
         dataArr.push(obj);
 

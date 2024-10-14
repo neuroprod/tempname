@@ -127,7 +127,7 @@ export class AddMeshPopup extends PopUp {
         popPanelMenu()
         if(addTextButton("add Mesh")){
             if(m){
-console.log(m,".???")
+
                 let a  =ProjectData.makeSceneObjectWithMesh(p,m,this.newName,"")
                 this.callBack(a);
                 UI_I.removePopup(this)

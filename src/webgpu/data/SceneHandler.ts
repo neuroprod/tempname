@@ -86,6 +86,7 @@ class SceneHandler {
         if(!sceneRoot)return;
         let sData:Array<any> =[]
         sceneRoot.getObjectData(sData);
+        console.log(sData)
         this.sceneData.scene =sData;
     }
 
@@ -100,7 +101,8 @@ class SceneHandler {
                 sceneObj = ProjectData.getModel(d);
 
             } else if (d.isText) {
-                //  sceneObj = this.makeSceneObjectWithText(d.label, d.text)
+                console.log("text")
+                sceneObj = ProjectData.makeSceneObjectWithText(d.label, d.text)
             } else {
                 sceneObj = new SceneObject3D(this.renderer, d.label)
                 sceneObj.UUID = d.id;
