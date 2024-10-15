@@ -59,6 +59,7 @@ class SceneHandler {
     async setScene(sceneId: string) {
         //save currentscenes?
         ProjectData.setNewScene()
+
         this.root.removeAllChildren()
         this.usedModels = [];
         this.sceneObjectsByLoadID.clear()
@@ -104,7 +105,7 @@ class SceneHandler {
                 sceneObj = ProjectData.getModel(d);
 
             } else if (d.isText) {
-                console.log("text")
+
                 sceneObj = ProjectData.makeSceneObjectWithText(d.label, d.text)
             } else {
                 sceneObj = new SceneObject3D(this.renderer, d.label)
@@ -171,7 +172,7 @@ class SceneHandler {
             console.log(name+ " doesnt exist in level")
 
         }
-console.log(this.sceneObjectsByName)
+
         return this.sceneObjectsByName.get(name) as SceneObject3D;
     }
 }

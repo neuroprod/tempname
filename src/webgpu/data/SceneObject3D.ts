@@ -13,7 +13,7 @@ import {Vector3} from "@math.gl/core";
 import {HitTrigger, HitTriggerSelectItems} from "./HitTriggers.ts";
 
 import FontMesh from "../modelMaker/FontMesh.ts";
-import SceneHandler from "./SceneHandler.ts";
+
 import ProjectData from "./ProjectData.ts";
 
 
@@ -277,6 +277,10 @@ export default class SceneObject3D extends Object3D {
         target.hitTriggerItem = this.hitTriggerItem
         target.triggerRadius = this.triggerRadius
 
+
+    }
+    destroy() {
+        super.destroy();
 
     }
 }

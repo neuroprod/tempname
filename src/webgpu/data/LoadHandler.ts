@@ -4,7 +4,7 @@ class LoadHandler{
     private _isLoading = false;
 
 
-    onComplete:  () => void
+    onComplete!:  () => void
 
     update(){
         if(this.loadingCount==0 && this._isLoading){
