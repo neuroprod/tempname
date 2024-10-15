@@ -11,16 +11,17 @@ export class StartLevel extends BaseLevel{
 
     init() {
         super.init();
+        LoadHandler.onComplete =this.configScene.bind(this)
+        LoadHandler.startLoading()
+        LoadHandler.startLoading()
+        LoadHandler.startLoading()
 
-        LoadHandler.startLoading()
-        LoadHandler.startLoading()
+
         SceneHandler.setScene("456").then(() => {
-
             SceneHandler.addScene("1234").then(() => {
-
-                this.configScene()
-                this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-                this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+                LoadHandler.stopLoading()
+            });
+            SceneHandler.addScene("f26911cf-86dc-498a").then(() => {
                 LoadHandler.stopLoading()
             });
             LoadHandler.stopLoading()
@@ -29,7 +30,20 @@ export class StartLevel extends BaseLevel{
     }
 
     private configScene() {
+
+        LoadHandler.onComplete =()=>{}
+        this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
+        this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+
+        let me = sceneHandler.getSceneObject("headTop")
+        me.setScaler(1.3)
+        me.x = 0.5;
+
+        let char = sceneHandler.getSceneObject("charRoot")
+        console.log(char,"??")
+        char.x = -0.5;
+
         let s =sceneHandler.getSceneObject("titleHolder").model?.mesh as FontMesh
-        s.setText("hello ik ben eenT",new Font())
+        s.setText(" ",new Font())
     }
 }

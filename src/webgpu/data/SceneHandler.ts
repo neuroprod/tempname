@@ -124,7 +124,7 @@ class SceneHandler {
                 if (!parent) parent = this.root;
                 parent.addChild(sceneObj)
 
-
+                this.sceneObjectsByName.set(sceneObj.label,sceneObj)
 
                 if (sceneObj.model) {
                     if (d.scale) {
@@ -144,7 +144,7 @@ class SceneHandler {
 
                     this.usedModels.push(sceneObj.model);
 
-                    this.sceneObjectsByName.set(sceneObj.label,sceneObj)
+
 
                 }// if(m.model)
             }
@@ -171,7 +171,7 @@ class SceneHandler {
             console.log(name+ " doesnt exist in level")
 
         }
-
+console.log(this.sceneObjectsByName)
         return this.sceneObjectsByName.get(name) as SceneObject3D;
     }
 }

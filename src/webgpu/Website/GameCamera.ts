@@ -27,11 +27,11 @@ export default class GameCamera{
 
         this.camera.ratio = this.renderer.ratio
         this.charPos = this.charRoot.getWorldPos()
-        this.charPos.y+=0.5
+        this.charPos.y+=0.5+0.3
 
         this.camTarget.lerp( this.charPos,1 - Math.pow(0.01 ,delta))
         this.camPos.copy(this.camTarget);
-        this.camPos.z+=3;
+        this.camPos.z+=2.5;
         this.camPos.y+=0;
 
 
