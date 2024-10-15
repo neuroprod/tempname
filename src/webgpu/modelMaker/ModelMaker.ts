@@ -327,7 +327,7 @@ export default class ModelMaker {
 
     }
 
-    setProject() {
+    setActive() {
 
         if (this.projects.length) {
 

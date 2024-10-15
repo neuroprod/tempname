@@ -483,5 +483,9 @@ class SceneEditor {
             LoadHandler.stopLoading()
         });
     }
+
+    saveTemp() {
+
+    }
 }
 export default new SceneEditor();

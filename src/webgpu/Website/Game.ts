@@ -18,6 +18,9 @@ import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
 import ConversationHandler from "./conversation/ConversationHandler.ts";
 import SceneHandler from "../data/SceneHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
+import UI from "../lib/UI/UI.ts";
+import LevelHandler from "./Levels/LevelHandler.ts";
+import LevelObjects from "./Levels/LevelObjects.ts";
 
 
 export default class Game {
@@ -35,34 +38,41 @@ export default class Game {
     private isCutScene: boolean = false;
     // private textBalloonHandler: TextBalloonHandler;
     private conversationHandler!: ConversationHandler;
+    private levelObjects: LevelObjects;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
+
         this.renderer = renderer;
+
+
+
+
+
         this.mouseListener = mouseListener;
 
         this.gameRenderer = gameRenderer;
 
-        //this.cloudParticles = new CloudParticles(renderer)
-        //  this.characterController = new CharacterController(renderer, this.cloudParticles)
 
         this.gameCamera = new GameCamera(renderer, camera);
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
-        //  this.textBalloonHandler =new TextBalloonHandler(renderer,this.gameCamera.camera)
-        // this.conversationHandler = new ConversationHandler(renderer,this.textBalloonHandler)
-        //this.coinHandler = new CoinHandler()
+        this.levelObjects = new LevelObjects()
+        this.levelObjects.renderer =renderer;
+        this.levelObjects.gameRenderer = this.gameRenderer;
 
-
-        // this.strawberryScene = new StrawBerryScene()
-
-
-        //this.setActive();
+        LevelHandler.init(this.levelObjects)
         SoundHandler.init()
     }
 
     update() {
+        this.setGUI();
+        this.gamepadInput.update();
+
+        this.gameCamera.update()
+
+/*
 
         this.gamepadInput.update();
         let delta = Timer.delta;
@@ -75,49 +85,14 @@ export default class Game {
             if (!jump) jump = this.gamepadInput.getJump()
         }
         this.gameCamera.update()
-        //this.characterController.update(delta, hInput, jump)
-        /*  this.characterController.update(delta, hInput, jump)
-                if(this.strawberryScene.finished){
-                    this.isCutScene =false;
-                }
 
-                if (!this.isCutScene) {
-                    this.characterController.update(delta, hInput, jump)
-                    this.gameCamera.update()
-
-                } else {
-                    this.strawberryScene.update();
-                    this.strawberryScene.setInput(hInput, jump)
-                }
-
-                this.cloudParticles.update();
-                this.coinHandler.update();
-                this.checkTriggers()
-
-                this.textBalloonHandler.update()*/
-//last
-        DebugDraw.update();
+        DebugDraw.update();*/
     }
 
-    resolveHitTrigger(obj: SceneObject3D) {
-        switch (obj.hitTriggerItem) {
-            case HitTrigger.COIN:
-                console.log("hitCoin")
-                obj.triggerIsEnabled = false
-                obj.hide()
-                SoundHandler.playCoin()
-                break
-            case HitTrigger.STRAWBERRY:
-                obj.triggerIsEnabled = false
-                this.setCutScene(this.strawberryScene)
-                break
-
-
-        }
-    }
 
     setActive() {
-        console.log("setActive")
+        LevelHandler.setLevel("Start")
+       /* console.log("setActive")
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         SceneHandler.setScene("456").then(() => {
@@ -129,7 +104,7 @@ export default class Game {
                 LoadHandler.stopLoading()
             });
             LoadHandler.stopLoading()
-        })
+        })*/
     }
 
     draw() {
@@ -164,12 +139,19 @@ export default class Game {
 
     }
 
-    private setCutScene(strawberryScene: StrawBerryScene) {
-        strawberryScene.characterController = this.characterController
-        strawberryScene.gameCamera = this.gameCamera;
-        strawberryScene.conversationHandler = this.conversationHandler;
-        strawberryScene.start();
-        this.isCutScene = true;
 
+
+    private setGUI() {
+        UI.pushWindow("Game")
+
+        for(let l of LevelHandler.levelKeys){
+            if(UI.LButton(l)){
+                LevelHandler.setLevel(l)
+
+            }
+
+        }
+
+        UI.popWindow()
     }
 }

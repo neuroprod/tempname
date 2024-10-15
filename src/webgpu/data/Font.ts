@@ -1,6 +1,6 @@
 import fontdata from "./bold.json"
 import Vec2 from "../lib/UI/math/Vec2.ts";
-import {SDFChar} from "../lib/UI/draw/SDFFont.ts";
+
 
 
 export class Char{

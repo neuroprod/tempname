@@ -99,8 +99,8 @@ export default class Main {
         });
         this.preloader.startLoad()
         SceneHandler.init(this.renderer, this.preloader).then(() => {
-                console.log("initScenesDone")
-                this.preloader.stopLoad()
+            console.log("initScenesDone")
+            this.preloader.stopLoad()
         });
 
 
@@ -121,20 +121,20 @@ export default class Main {
         this.camera.fovy = 0.8
 
         this.gameRenderer = new GameRenderer(this.renderer, this.camera)
-       // this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
-       // this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
+        // this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
+        // this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
 
 
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
         DebugDraw.init(this.renderer, this.camera);
-      this.game = new Game(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
+        this.game = new Game(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         SceneEditor.init(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
-        console.log(state)
+
         if (state != undefined) {
             this.setMainState(state)
         } else {
@@ -149,8 +149,14 @@ export default class Main {
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.saveTemp()
         }
+        if (this.currentMainState == MainState.editor) {
+            SceneEditor.saveTemp()
+        }
+        if (this.currentMainState == MainState.game) {
+            SceneEditor.saveTemp()
+        }
         if (state == MainState.modelMaker) {
-            this.modelMaker.setProject()
+            this.modelMaker.setActive()
         }
         if (state == MainState.editor) {
             SceneEditor.setActive()

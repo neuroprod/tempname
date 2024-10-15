@@ -12,6 +12,9 @@ class SceneHandler {
     public scenesData: Array<any> = [];
     public sceneDataByID: Map<string, any> = new Map<string, any>();
     public sceneObjectsByLoadID: Map<string, SceneObject3D> = new Map<string, SceneObject3D>()
+
+    public sceneObjectsByName: Map<string, SceneObject3D> = new Map<string, SceneObject3D>()
+
     usedModels: Array<Model> = [];
     root!: SceneObject3D;
     private renderer!: Renderer;
@@ -59,7 +62,7 @@ class SceneHandler {
         this.root.removeAllChildren()
         this.usedModels = [];
         this.sceneObjectsByLoadID.clear()
-
+        this.sceneObjectsByName.clear()
 
 
         this.sceneData = this.sceneDataByID.get(sceneId)
@@ -86,7 +89,7 @@ class SceneHandler {
         if(!sceneRoot)return;
         let sData:Array<any> =[]
         sceneRoot.getObjectData(sData);
-        console.log(sData)
+
         this.sceneData.scene =sData;
     }
 
@@ -129,13 +132,20 @@ class SceneHandler {
                     }
                     sceneObj.setObjectData(d)
 
-                    this.usedModels.push(sceneObj.model);
+
                     if (sceneObj.needsHitTest) {
                         //    this.hitTestModels.push(sceneObj.model);
                     }
                     if (sceneObj.needsTrigger) {
                         //  this.triggerModels.push(sceneObj);
                     }
+
+
+
+                    this.usedModels.push(sceneObj.model);
+
+                    this.sceneObjectsByName.set(sceneObj.label,sceneObj)
+
                 }// if(m.model)
             }
         }
@@ -155,6 +165,15 @@ class SceneHandler {
     }
 
 
+    getSceneObject(name: string) {
+
+        if(!this.sceneObjectsByName.has(name)){
+            console.log(name+ " doesnt exist in level")
+
+        }
+
+        return this.sceneObjectsByName.get(name) as SceneObject3D;
+    }
 }
 
 export default new SceneHandler()
