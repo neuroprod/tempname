@@ -20,6 +20,7 @@ class SceneHandler {
     private renderer!: Renderer;
     private currentSceneID: string="";
     private sceneData: any;
+   hitTestModels: Array<Model> = [];
 
     async init(renderer: Renderer, preloader: PreLoader) {
         this.renderer = renderer;
@@ -62,6 +63,7 @@ class SceneHandler {
 
         this.root.removeAllChildren()
         this.usedModels = [];
+        this.hitTestModels =[];
         this.sceneObjectsByLoadID.clear()
         this.sceneObjectsByName.clear()
 
@@ -135,10 +137,10 @@ class SceneHandler {
 
 
                     if (sceneObj.needsHitTest) {
-                        //    this.hitTestModels.push(sceneObj.model);
+                        this.hitTestModels.push(sceneObj.model);
                     }
                     if (sceneObj.needsTrigger) {
-                        //  this.triggerModels.push(sceneObj);
+                       // this.triggerModels.push(sceneObj);
                     }
 
 

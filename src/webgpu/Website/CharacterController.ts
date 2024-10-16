@@ -1,5 +1,5 @@
 import Renderer from "../lib/Renderer.ts";
-import SceneData from "../data/SceneData.ts";
+
 import SceneObject3D from "../data/SceneObject3D.ts";
 import gsap from "gsap";
 import {lerp, Vector3} from "@math.gl/core";
@@ -9,9 +9,10 @@ import CloudParticles from "./CloudParticles.ts";
 import {lerpValueDelta, smoothstep} from "../lib/MathUtils.ts";
 import {NumericArray} from "@math.gl/types";
 import SoundHandler from "./SoundHandler.ts";
+import SceneHandler from "../data/SceneHandler.ts";
 
 export default class CharacterController {
-    charRoot: SceneObject3D;
+    charRoot!: SceneObject3D;
     private facingRight = true;
     private renderer: Renderer;
     private rotateTimeLine!: gsap.core.Timeline;
@@ -28,11 +29,10 @@ export default class CharacterController {
     private downRay: Ray;
     private startWithJump: boolean = false;
     private jumpDown: boolean = false;
-    private cloudParticles: CloudParticles;
-    private charBody: SceneObject3D;
-    private bodyBasePos: Vector3;
-   // private charHat: SceneObject3D;
-    //private hatBasePos: Vector3;
+  //  private cloudParticles!: CloudParticles;
+    private charBody!: SceneObject3D;
+    private bodyBasePos!: Vector3;
+
     private sideRay: Ray;
     private canJump: boolean = true;
 
@@ -46,8 +46,8 @@ export default class CharacterController {
     private feetStep = 0
     private feetPos2 = new Vector3()
     private feetPos1 = new Vector3()
-    private leftLeg: SceneObject3D;
-    private rightLeg: SceneObject3D;
+    private leftLeg!: SceneObject3D;
+    private rightLeg!: SceneObject3D;
     private distanceToFloor: number = 0;
     private charHitBottom =new Vector3(-0.02,0.15,0)
     private charHitTop =new Vector3(0.01,0.42,0)
@@ -58,9 +58,12 @@ export default class CharacterController {
     private feetStepPrev: number=0;
 
 
-    constructor(renderer: Renderer, cloudParticles: CloudParticles) {
+    constructor(renderer: Renderer) {
         this.renderer = renderer;
-        this.charRoot = SceneData.sceneModelsByName["charRoot"];
+
+
+
+       /* this.charRoot = SceneData.sceneModelsByName["charRoot"];
         this.charBody = SceneData.sceneModelsByName["body"];
         this.leftLeg = SceneData.sceneModelsByName["legLeft"];
         this.rightLeg = SceneData.sceneModelsByName["legRight"];
@@ -70,12 +73,21 @@ export default class CharacterController {
         //this.charHat = SceneData.sceneModelsByName["piratehat"];
         //this.hatBasePos = this.charHat.getPosition().clone()
 
-        this.cloudParticles = cloudParticles;
+        this.cloudParticles = cloudParticles;*/
         this.downRay = new Ray()
         this.sideRay = new Ray()
 
     }
+    setCharacter(){
+        this.charRoot = SceneHandler.getSceneObject("charRoot");
+        this.charBody = SceneHandler.getSceneObject("body");
+        this.leftLeg = SceneHandler.getSceneObject("legLeft");
+        this.rightLeg = SceneHandler.getSceneObject("legRight");
+        this.bodyBasePos = this.charBody.getPosition().clone()
 
+       // this.cloudParticles =new CloudParticles(this.renderer,)
+
+    }
 
     update(delta: number, hInput: number, jump: boolean) {
         if (!jump) this.canJump = true; //release button for a second jump
@@ -85,7 +97,7 @@ export default class CharacterController {
         if (this.isGrounded) {
             this.velocity.x += hInput * delta * this.moveForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
-            this.cloudParticles.addParticleWalk(this.targetPos, this.velocity.x)
+          //  this.cloudParticles.addParticleWalk(this.targetPos, this.velocity.x)
 
 
             if (hInput == 0) {
@@ -148,7 +160,7 @@ export default class CharacterController {
         } else {
 
             this.setGrounded(false)
-            console.log(this.distanceToFloor)
+
         }
 
 
@@ -219,7 +231,7 @@ export default class CharacterController {
                 let vEf = Math.abs(this.velocity.y) - 5;
                 this.charBody.y = this.bodyBasePos.y - 0.07
                 this.charBody.sy = 1 - smoothstep(1, 9, vEf) * 0.4;
-                this.cloudParticles.addParticlesHitFloor(this.targetPos)
+               // this.cloudParticles.addParticlesHitFloor(this.targetPos)
             }
             SoundHandler.playHitFloor(Math.abs(this.velocity.y))
 
@@ -246,7 +258,7 @@ export default class CharacterController {
     }
 
     private checkRay(ray: Ray) {
-        let intSide = ray.intersectModels(SceneData.hitTestModels);
+        let intSide = ray.intersectModels(SceneHandler.hitTestModels);
         if (intSide.length > 0) {
             DebugDraw.path.moveTo(this.sideRay.rayStart.clone())
             DebugDraw.path.lineTo(intSide[0].point.clone())

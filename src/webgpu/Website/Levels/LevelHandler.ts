@@ -12,11 +12,10 @@ class LevelHandler {
     public currentLevel!: BaseLevel;
     private levelObjects!: LevelObjects;
 
-    constructor() {
-        this.addLevel("God", new GodLevel())
+    init(levelObjects: LevelObjects) {
+        this.levelObjects = levelObjects;
         this.addLevel("Start", new StartLevel())
-
-
+        this.addLevel("God", new GodLevel())
     }
 
     setLevel(key: string) {
@@ -29,13 +28,12 @@ class LevelHandler {
 
 
     private addLevel(key: string, level: BaseLevel) {
+
         this.levelKeys.push(key)
         this.levels.set(key, level)
     }
 
-    init(levelObjects: LevelObjects) {
-        this.levelObjects = levelObjects;
-    }
+
 }
 
 export default new LevelHandler()

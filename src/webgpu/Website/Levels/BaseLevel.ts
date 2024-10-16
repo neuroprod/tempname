@@ -12,6 +12,9 @@ export class BaseLevel {
     init(){
 
     }
+    update(){
+
+    }
     destroy(){
 
     }

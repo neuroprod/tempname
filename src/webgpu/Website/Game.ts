@@ -29,15 +29,11 @@ export default class Game {
 
     private gameRenderer: GameRenderer;
     private keyInput: KeyInput;
-    private characterController!: CharacterController;
+
     private gameCamera: GameCamera;
-    //private cloudParticles: CloudParticles;
+
     private gamepadInput: GamePadInput;
-    //private coinHandler: CoinHandler;
-    private strawberryScene!: StrawBerryScene;
-    private isCutScene: boolean = false;
-    // private textBalloonHandler: TextBalloonHandler;
-    private conversationHandler!: ConversationHandler;
+
     private levelObjects: LevelObjects;
 
 
@@ -55,12 +51,17 @@ export default class Game {
 
 
         this.gameCamera = new GameCamera(renderer, camera);
+
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
         this.levelObjects = new LevelObjects()
         this.levelObjects.renderer =renderer;
         this.levelObjects.gameRenderer = this.gameRenderer;
+        this.levelObjects.gameCamera =this.gameCamera
+        this.levelObjects.gamepadInput=this.gamepadInput
+        this.levelObjects.keyInput=this.keyInput
+
 
         LevelHandler.init(this.levelObjects)
         SoundHandler.init()
@@ -68,43 +69,20 @@ export default class Game {
 
     update() {
         this.setGUI();
-        this.gamepadInput.update();
 
-        this.gameCamera.update()
+        if (LoadHandler.isLoading()) return
 
-/*
 
         this.gamepadInput.update();
-        let delta = Timer.delta;
-        let jump = this.keyInput.getJump()
-        let hInput = this.keyInput.getHdir()
-        if (this.gamepadInput.connected) {
-
-            if (hInput == 0) hInput = this.gamepadInput.getHdir()
-
-            if (!jump) jump = this.gamepadInput.getJump()
-        }
+        LevelHandler.currentLevel.update()
         this.gameCamera.update()
-
-        DebugDraw.update();*/
+        DebugDraw.update();
     }
 
 
     setActive() {
-        LevelHandler.setLevel("Start")
-       /* console.log("setActive")
-        LoadHandler.startLoading()
-        LoadHandler.startLoading()
-        SceneHandler.setScene("456").then(() => {
+        LevelHandler.setLevel("God")
 
-            SceneHandler.addScene("1234").then(() => {
-
-                this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-                this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
-                LoadHandler.stopLoading()
-            });
-            LoadHandler.stopLoading()
-        })*/
     }
 
     draw() {
@@ -112,7 +90,6 @@ export default class Game {
 
         this.gameRenderer.draw();
 
-        //SceneData.animations[0].autoPlay(Timer.delta)
 
     }
 

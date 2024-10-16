@@ -146,7 +146,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
        
        let albedo=pow(textureLoad(gColor,  uvPos ,0).xyz,vec3(2.2)); 
       let ao=textureLoad(aoTexture,  uvPos ,0).x; 
-    let aoM = max(ao*ao*ao,0.5);
+    let aoM = ao;//max(ao,0.5);
        let roughness = 0.7;
        let metallic = 0.0;
        let N=normalize(textureLoad(gNormal,  uvPos ,0).xyz*2.0-1.0); 

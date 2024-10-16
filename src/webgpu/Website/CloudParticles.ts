@@ -8,6 +8,7 @@ import {Matrix4, Vector3, Vector4} from "@math.gl/core";
 import gsap from "gsap";
 import Timer from "../lib/Timer.ts";
 import {NumericArray} from "@math.gl/types";
+import Texture from "../lib/textures/Texture.ts";
 class CloudParticle{
     private position: Vector3 =new Vector3();
     private positionTarget: Vector3 =new Vector3();
@@ -75,18 +76,18 @@ export default class CloudParticles{
     private particles:Array<CloudParticle> =[]
     private particlesPool:Array<CloudParticle> =[]
     private walkRelease =0;
-    constructor(renderer:Renderer) {
+    constructor(renderer:Renderer,particlesModel:Model,texture:Texture) {
 
-        this.particlesModel= SceneData.sceneModelsByName["cloudParticles"].model as Model;
+        this.particlesModel= particlesModel;//SceneData.sceneModelsByName["cloudParticles"].model as Model;
         this.particlesModel.material =new GBufferCloudMaterial(renderer,"cloudMaterial")
         this.particlesModel.needCulling =false;
         this.particlesModel.visible =false;
-        let charP = SceneData.projectsNameMap.get("character")
+      //  let charP = SceneData.projectsNameMap.get("character")charP.baseTexture
 
-        if(charP){
+      //  if(charP){
 
-            this.particlesModel.material.setTexture("colorTexture",    charP.baseTexture)
-        }
+            this.particlesModel.material.setTexture("colorTexture",    texture)
+        //}
 
 
 

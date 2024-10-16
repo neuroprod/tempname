@@ -39,7 +39,7 @@ export default class GameCamera{
         this.camera.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.01 ,delta))
 
         this.camera.cameraUp.set(0,1,0)
-
+    
         this.camera.update()
 
 

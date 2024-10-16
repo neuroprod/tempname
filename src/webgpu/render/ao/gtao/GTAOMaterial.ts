@@ -239,7 +239,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  AOOutput
     visibility /= slice_count;
     visibility = clamp(visibility, 0.03, 1.0);
 
-    output.ao = vec4( visibility*visibility,0,0,0);
+    output.ao = vec4( visibility,0,0,0);
     
     
     
