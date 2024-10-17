@@ -20,6 +20,7 @@ class DebugDraw {
     p =new Vector3()
     cp1 =new Vector3()
     cp2 =new Vector3()
+    private needsDrawing: boolean =false;
     init(renderer:Renderer,camera:Camera){
         this.renderer =renderer;
         this.shapeLine= new ShapeLineModel(renderer,"debugLines","#FF0000")
@@ -28,13 +29,17 @@ class DebugDraw {
 
     }
     update(){
-        this.shapeLine.setPath(this.path)
+       if( this.shapeLine.setPath(this.path)){
+
+        this.needsDrawing = true;
         this.path.clear()
+       }else{
+           this.needsDrawing = false;
+       }
     }
 
     draw(pass: RenderPass){
-
-        this.modelRenderer.draw(pass);
+        if(this.needsDrawing) this.modelRenderer.draw(pass);
     }
 
     drawCircle(pos:Vector3, radius:number){

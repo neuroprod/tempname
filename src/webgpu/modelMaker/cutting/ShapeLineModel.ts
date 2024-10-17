@@ -52,7 +52,7 @@ export default class ShapeLineModel extends Model {
 
     setPath(path: Path) {
 
-        if (path.numCurves < 1) return;
+        if (path.numCurves < 1) return false;
 
         this.visible = true;
         this.positions = []
@@ -61,6 +61,7 @@ export default class ShapeLineModel extends Model {
 
         this.mesh.setPositions(new Float32Array(this.positions))
         this.mesh.setIndices(new Uint16Array(this.indices))
+        return true
     }
 
     setPaths(paths: Array<Path>) {

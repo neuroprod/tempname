@@ -31,13 +31,13 @@ export class GodLevel extends PlatformLevel{
         LoadHandler.onComplete =()=>{}
 
         this.characterController.setCharacter()
-
+        this.levelObjects.gameCamera.setCharacter()
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 
 
-        let char = sceneHandler.getSceneObject("charRoot")
-        console.log(char,"??")
+       /* let char = sceneHandler.getSceneObject("charRoot")
+        console.log(char,"??")*/
 
 
     }

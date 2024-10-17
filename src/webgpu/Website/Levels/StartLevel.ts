@@ -4,6 +4,7 @@ import SceneHandler from "../../data/SceneHandler.ts";
 import sceneHandler from "../../data/SceneHandler.ts";
 import FontMesh from "../../modelMaker/FontMesh.ts";
 import Font from "../../data/Font.ts";
+import {Vector3} from "@math.gl/core";
 
 export class StartLevel extends BaseLevel{
 
@@ -40,10 +41,12 @@ export class StartLevel extends BaseLevel{
         me.x = 0.5;
 
         let char = sceneHandler.getSceneObject("charRoot")
-        console.log(char,"??")
+
         char.x = -0.5;
 
-        let s =sceneHandler.getSceneObject("titleHolder").model?.mesh as FontMesh
-        s.setText(" ",new Font())
+        this.levelObjects.gameCamera.setLockedView(new Vector3(0,0.5,0),new Vector3(0,0.5,2))
+
+
+
     }
 }

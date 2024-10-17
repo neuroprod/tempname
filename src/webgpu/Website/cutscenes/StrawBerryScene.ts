@@ -41,7 +41,7 @@ export default class StrawBerryScene{
        }else{
            this.characterController.update(Timer.delta, 0, false)
        }
-        this.gameCamera.updateForScene()
+       // this.gameCamera.updateForScene()
 
     }
 
