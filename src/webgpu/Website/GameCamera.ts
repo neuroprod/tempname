@@ -59,7 +59,7 @@ export default class GameCamera{
 
 
     }
-  
+
 
 
     updateCharCamera(){

@@ -2,8 +2,7 @@ import {BaseLevel} from "./BaseLevel.ts";
 import LoadHandler from "../../data/LoadHandler.ts";
 import SceneHandler from "../../data/SceneHandler.ts";
 import sceneHandler from "../../data/SceneHandler.ts";
-import FontMesh from "../../modelMaker/FontMesh.ts";
-import Font from "../../data/Font.ts";
+
 import {Vector3} from "@math.gl/core";
 
 export class StartLevel extends BaseLevel{
