@@ -9,6 +9,7 @@ import GBufferClipMaterial from "../render/GBuffer/GBufferClipMaterial.ts";
 import ShadowClipDepthMaterial from "../render/shadow/ShadowClipDepthMaterial.ts";
 import GBufferMaterial from "../render/GBuffer/GBufferMaterial.ts";
 import LoadHandler from "./LoadHandler.ts";
+import DefaultTextures from "../lib/textures/DefaultTextures.ts";
 
 export default class Project {
     public name: string = "";
@@ -107,12 +108,12 @@ export default class Project {
     getBaseTexture() {
 
         if (!this.baseTexture) {
-            console.log("startLoadBase",this.name)
+          //  console.log("startLoadBase",this.name)
             LoadHandler.startLoading()
             this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp") as Texture
             (this.baseTexture as TextureLoader).onComplete = () => {
 
-                console.log("textureLoadComplete")
+             //   console.log("textureLoadComplete")
                 LoadHandler.stopLoading()
             }
 

@@ -10,7 +10,7 @@ class LoadHandler{
         if(this.loadingCount==0 && this._isLoading){
             this._isLoading =false;
             if(this.onComplete)this.onComplete()
-            console.log("loadingDone")
+            //console.log("loadingDone")
         }
     }
 
@@ -21,7 +21,7 @@ class LoadHandler{
 
     startLoading(){
         if(this.loadingCount==0){
-            console.log("startLoading")
+           // console.log("startLoading")
             this._isLoading =true;
         }
         this.loadingCount ++;

@@ -200,14 +200,14 @@ export default class ModelMaker {
     }
 
     draw() {
-        if(LoadHandler.isLoading())return
+        if (LoadHandler.isLoading()) return
         this.drawing.draw()
         this.previewRenderer.draw()
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-        if(LoadHandler.isLoading())return
-       this.modelRenderer2D.draw(pass);
+        if (LoadHandler.isLoading()) return
+        this.modelRenderer2D.draw(pass);
         this.previewRenderer.drawInCanvas(pass)
 
     }
@@ -455,6 +455,7 @@ export default class ModelMaker {
         if (!fail) {
             let newProject = new Project(this.renderer);
             newProject.name = newName;
+
             this.projects.push(newProject);
             this.openProject(newProject)
 
@@ -462,6 +463,8 @@ export default class ModelMaker {
     }
 
     private openProject(project: Project) {
+
+
         LoadHandler.startLoading()
 
         if (this.currentProject) {
@@ -471,28 +474,35 @@ export default class ModelMaker {
 
         this.currentProject = project;
 
-       if( !this.currentProject.loadTexture ){
+        if (!this.currentProject.loadTexture) {
+            if (this.currentProject.isNew) {
+                this.drawing.setProject(this.currentProject);
+                this.cutting.setProject(this.currentProject);
+                AppState.setState("currentImage", this.currentProject.id)
+                this.setTool(ToolType.Paint);
+                LoadHandler.stopLoading()
 
-           this.currentProject.loadPNGTexture().then(()=>{
+            } else {
+                this.currentProject.loadPNGTexture().then(() => {
 
-               this.drawing.setProject(this.currentProject);
-               this.cutting.setProject(this.currentProject);
-               AppState.setState("currentImage", this.currentProject.id)
-               this.setTool(ToolType.Paint);
+                    this.drawing.setProject(this.currentProject);
+                    this.cutting.setProject(this.currentProject);
+                    AppState.setState("currentImage", this.currentProject.id)
+                    this.setTool(ToolType.Paint);
 
 
-               LoadHandler.stopLoading()
-           })
+                    LoadHandler.stopLoading()
+                })
+            }
+        } else {
+            console.log('isLoaded')
+            this.drawing.setProject(this.currentProject);
+            this.cutting.setProject(this.currentProject);
+            AppState.setState("currentImage", this.currentProject.id)
+            this.setTool(ToolType.Paint);
+            LoadHandler.stopLoading()
 
-       }else{
-           console.log('isLoaded')
-           this.drawing.setProject(this.currentProject);
-           this.cutting.setProject(this.currentProject);
-           AppState.setState("currentImage", this.currentProject.id)
-           this.setTool(ToolType.Paint);
-           LoadHandler.stopLoading()
-
-       }
+        }
 
 
     }

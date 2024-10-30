@@ -10,6 +10,7 @@ import {lerpValueDelta, smoothstep} from "../lib/MathUtils.ts";
 import {NumericArray} from "@math.gl/types";
 import SoundHandler from "./SoundHandler.ts";
 import SceneHandler from "../data/SceneHandler.ts";
+import Timer from "../lib/Timer.ts";
 
 export default class CharacterController {
     charRoot!: SceneObject3D;
@@ -56,7 +57,7 @@ export default class CharacterController {
     public charHitBottomWorld: Vector3=new Vector3(0,0,0)
     public charHitTopWorld: Vector3=new Vector3(0,0,0)
     private feetStepPrev: number=0;
-
+private idleTime =0;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
@@ -88,9 +89,18 @@ export default class CharacterController {
        // this.cloudParticles =new CloudParticles(this.renderer,)
 
     }
+updateIdle(){
+    this.idleTime+=Timer.delta;
 
+}
     update(delta: number, hInput: number, jump: boolean) {
         if (!jump) this.canJump = true; //release button for a second jump
+
+if(jump || hInput!=0){
+    this.idleTime =0
+}else{
+    this.idleTime+=delta;
+}
 
 
         this.jumpDown = jump;
@@ -186,6 +196,7 @@ export default class CharacterController {
         this.charBody.rz = -Math.abs(this.velocity.x) / 20;
         //this.charHat.rz = -Math.abs(this.velocity.x) / 30;
         this.charBody.y = lerp(this.charBody.y, this.bodyBasePos.y, lerpValueDelta(0.002, delta))
+        this.charBody.y+=Math.sin(this.idleTime)*0.001
         //this.charHat.y = lerp(this.charHat.y, this.hatBasePos.y, lerpValueDelta(0.002, delta))
         this.charBody.sy = lerp(this.charBody.sy, 1, lerpValueDelta(0.001, delta))
 

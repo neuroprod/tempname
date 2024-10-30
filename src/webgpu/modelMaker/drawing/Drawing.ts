@@ -99,12 +99,13 @@ export default class Drawing {
        // this.saveCurrentProject()
 
         this.project = project;
-
+        console.log("makenewTexture")
 
         this.project = project;
         if (!this.project.loadTexture) {
 
             if(this.project.isNew){
+                console.log("makenewTexture")
                 this.project.loadTexture =DefaultTextures.getTransparent(this.renderer) as TextureLoader
                 this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
                 this.updateDrawing()

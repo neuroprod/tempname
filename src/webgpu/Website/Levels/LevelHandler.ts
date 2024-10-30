@@ -1,7 +1,7 @@
-import {GodLevel} from "./GodLevel.ts";
+import {GodLevel} from "./GodLevel/GodLevel.ts";
 
 import {BaseLevel} from "./BaseLevel.ts";
-import {StartLevel} from "./StartLevel.ts";
+import {StartLevel} from "./StartLevel/StartLevel.ts";
 import LevelObjects from "./LevelObjects.ts";
 
 

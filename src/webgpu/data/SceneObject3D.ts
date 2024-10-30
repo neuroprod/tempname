@@ -255,6 +255,11 @@ export default class SceneObject3D extends Object3D {
     hide() {
         if (this.model) this.model.visible = false
     }
+    isShowning(){
+
+        if (this.model) return this.model.visible
+        return false;
+    }
 
     copy(label: string) {
         console.log(this.projectId, this.meshId)

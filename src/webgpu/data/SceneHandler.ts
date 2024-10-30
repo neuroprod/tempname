@@ -51,7 +51,7 @@ class SceneHandler {
                 this.scenesData.push(sceneData);
                 this.sceneDataByID.set(sceneData.id, sceneData)
 
-                console.log("loadScenes")
+                //console.log("loadScenes")
             })
         }
     }
