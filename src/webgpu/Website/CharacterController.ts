@@ -14,13 +14,15 @@ import Timer from "../lib/Timer.ts";
 
 export default class CharacterController {
     charRoot!: SceneObject3D;
+    targetPos: Vector3 = new Vector3()
+    public charHitRadius = 0.2
+    public charHitBottomWorld: Vector3 = new Vector3(0, 0, 0)
+    public charHitTopWorld: Vector3 = new Vector3(0, 0, 0)
     private facingRight = true;
     private renderer: Renderer;
     private rotateTimeLine!: gsap.core.Timeline;
     private velocity: Vector3 = new Vector3()
     private positionAdjustment: Vector3 = new Vector3()
-    targetPos: Vector3 = new Vector3()
-
     private gravity = 40;
     private maxVelX = 3;
     private moveForceX = 6;
@@ -30,19 +32,14 @@ export default class CharacterController {
     private downRay: Ray;
     private startWithJump: boolean = false;
     private jumpDown: boolean = false;
-  //  private cloudParticles!: CloudParticles;
     private charBody!: SceneObject3D;
     private bodyBasePos!: Vector3;
-
     private sideRay: Ray;
     private canJump: boolean = true;
-
     private cross1 = new Vector3()
     private cross2 = new Vector3()
     private cross3 = new Vector3()
     private cross4 = new Vector3()
-
-
     private stepLength = 0.2;
     private feetStep = 0
     private feetPos2 = new Vector3()
@@ -50,64 +47,67 @@ export default class CharacterController {
     private leftLeg!: SceneObject3D;
     private rightLeg!: SceneObject3D;
     private distanceToFloor: number = 0;
-    private charHitBottom =new Vector3(-0.02,0.15,0)
-    private charHitTop =new Vector3(0.01,0.42,0)
-
-    public charHitRadius =0.2
-    public charHitBottomWorld: Vector3=new Vector3(0,0,0)
-    public charHitTopWorld: Vector3=new Vector3(0,0,0)
-    private feetStepPrev: number=0;
-private idleTime =0;
+    private charHitBottom = new Vector3(-0.02, 0.15, 0)
+    private charHitTop = new Vector3(0.01, 0.42, 0)
+    private feetStepPrev: number = 0;
+    private idleTime = 0;
+     cloudParticles: CloudParticles;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
 
 
+        /* this.charRoot = SceneData.sceneModelsByName["charRoot"];
+         this.charBody = SceneData.sceneModelsByName["body"];
+         this.leftLeg = SceneData.sceneModelsByName["legLeft"];
+         this.rightLeg = SceneData.sceneModelsByName["legRight"];
+         this.bodyBasePos = this.charBody.getPosition().clone()
 
-       /* this.charRoot = SceneData.sceneModelsByName["charRoot"];
-        this.charBody = SceneData.sceneModelsByName["body"];
-        this.leftLeg = SceneData.sceneModelsByName["legLeft"];
-        this.rightLeg = SceneData.sceneModelsByName["legRight"];
-        this.bodyBasePos = this.charBody.getPosition().clone()
 
+         //this.charHat = SceneData.sceneModelsByName["piratehat"];
+         //this.hatBasePos = this.charHat.getPosition().clone()
+ */
 
-        //this.charHat = SceneData.sceneModelsByName["piratehat"];
-        //this.hatBasePos = this.charHat.getPosition().clone()
-
-        this.cloudParticles = cloudParticles;*/
+        this.cloudParticles = new CloudParticles(renderer)
         this.downRay = new Ray()
         this.sideRay = new Ray()
 
     }
-    setCharacter(){
+
+    setCharacter() {
         this.charRoot = SceneHandler.getSceneObject("charRoot");
         this.charBody = SceneHandler.getSceneObject("body");
         this.leftLeg = SceneHandler.getSceneObject("legLeft");
         this.rightLeg = SceneHandler.getSceneObject("legRight");
         this.bodyBasePos = this.charBody.getPosition().clone()
 
-       // this.cloudParticles =new CloudParticles(this.renderer,)
+       this.cloudParticles.init()
 
     }
-updateIdle(){
-    this.idleTime+=Timer.delta;
 
-}
+    updateIdle() {
+        this.idleTime += Timer.delta;
+
+    }
+
     update(delta: number, hInput: number, jump: boolean) {
+
+        this.cloudParticles.update()
+
         if (!jump) this.canJump = true; //release button for a second jump
 
-if(jump || hInput!=0){
-    this.idleTime =0
-}else{
-    this.idleTime+=delta;
-}
+        if (jump || hInput != 0) {
+            this.idleTime = 0
+        } else {
+            this.idleTime += delta;
+        }
 
 
         this.jumpDown = jump;
         if (this.isGrounded) {
             this.velocity.x += hInput * delta * this.moveForceX;
             this.velocity.x = Math.max(Math.min(this.velocity.x, this.maxVelX), -this.maxVelX);
-          //  this.cloudParticles.addParticleWalk(this.targetPos, this.velocity.x)
+            this.cloudParticles.addParticleWalk(this.targetPos, this.velocity.x)
 
 
             if (hInput == 0) {
@@ -155,12 +155,12 @@ if(jump || hInput!=0){
         this.distanceToFloor = distDown - 0.1;
 
 
-        if (this.distanceToFloor< 0.1 && this.isGrounded  ) {
+        if (this.distanceToFloor < 0.1 && this.isGrounded) {
             this.setGrounded(true)
             this.velocity.y = 0;
             this.targetPos.y = yFloor;
 
-        } else if (this.distanceToFloor< -this.positionAdjustment.y && this.velocity.y<0.01 ) {
+        } else if (this.distanceToFloor < -this.positionAdjustment.y && this.velocity.y < 0.01) {
 
             this.setGrounded(true)
             this.velocity.y = 0;
@@ -196,14 +196,14 @@ if(jump || hInput!=0){
         this.charBody.rz = -Math.abs(this.velocity.x) / 20;
         //this.charHat.rz = -Math.abs(this.velocity.x) / 30;
         this.charBody.y = lerp(this.charBody.y, this.bodyBasePos.y, lerpValueDelta(0.002, delta))
-        this.charBody.y+=Math.sin(this.idleTime)*0.001
+        this.charBody.y += Math.sin(this.idleTime) * 0.001
         //this.charHat.y = lerp(this.charHat.y, this.hatBasePos.y, lerpValueDelta(0.002, delta))
         this.charBody.sy = lerp(this.charBody.sy, 1, lerpValueDelta(0.001, delta))
 
-        this.charHitTopWorld =this.charBody.getWorldPos(this.charHitTop)
-        this.charHitBottomWorld =this.charRoot.getWorldPos(this.charHitBottom)
-        DebugDraw.drawCircle( this.charHitTopWorld ,this.charHitRadius);
-        DebugDraw.drawCircle( this.charHitBottomWorld ,this.charHitRadius);
+        this.charHitTopWorld = this.charBody.getWorldPos(this.charHitTop)
+        this.charHitBottomWorld = this.charRoot.getWorldPos(this.charHitBottom)
+        DebugDraw.drawCircle(this.charHitTopWorld, this.charHitRadius);
+        DebugDraw.drawCircle(this.charHitBottomWorld, this.charHitRadius);
     }
 
     drawCross(position: Vector3) {
@@ -242,7 +242,7 @@ if(jump || hInput!=0){
                 let vEf = Math.abs(this.velocity.y) - 5;
                 this.charBody.y = this.bodyBasePos.y - 0.07
                 this.charBody.sy = 1 - smoothstep(1, 9, vEf) * 0.4;
-               // this.cloudParticles.addParticlesHitFloor(this.targetPos)
+                this.cloudParticles.addParticlesHitFloor(this.targetPos)
             }
             SoundHandler.playHitFloor(Math.abs(this.velocity.y))
 
@@ -311,15 +311,15 @@ if(jump || hInput!=0){
 
             let feetStepLocal = this.feetStep / this.stepLength //0-2
 
-            if(feetStepLocal>1 && this.feetStepPrev<1){
+            if (feetStepLocal > 1 && this.feetStepPrev < 1) {
                 SoundHandler.playStep()
 
             }
-            if(feetStepLocal<1 && this.feetStepPrev>1){
+            if (feetStepLocal < 1 && this.feetStepPrev > 1) {
                 SoundHandler.playStep()
 
             }
-            this.feetStepPrev =feetStepLocal;
+            this.feetStepPrev = feetStepLocal;
 
             let x = Math.sin(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 2
             let y = Math.cos(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 4;

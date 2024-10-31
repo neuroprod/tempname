@@ -7,6 +7,8 @@ export class BaseLevel {
     constructor() {
     }
     initObjects(levelObjects:LevelObjects){
+
+
         this.levelObjects =levelObjects;
     }
     init(){

@@ -8,7 +8,10 @@ import {Matrix4, Vector3, Vector4} from "@math.gl/core";
 import gsap from "gsap";
 import Timer from "../lib/Timer.ts";
 import {NumericArray} from "@math.gl/types";
-import Texture from "../lib/textures/Texture.ts";
+
+import ProjectData from "../data/ProjectData.ts";
+
+import Mesh from "../lib/mesh/Mesh.ts";
 class CloudParticle{
     private position: Vector3 =new Vector3();
     private positionTarget: Vector3 =new Vector3();
@@ -71,28 +74,48 @@ class CloudParticle{
 }
 
 export default class CloudParticles{
-    private particlesModel: Model ;
+    particlesModel!: Model ;
 
     private particles:Array<CloudParticle> =[]
     private particlesPool:Array<CloudParticle> =[]
     private walkRelease =0;
-    constructor(renderer:Renderer,particlesModel:Model,texture:Texture) {
+    constructor(renderer:Renderer) {
 
-        this.particlesModel= particlesModel;//SceneData.sceneModelsByName["cloudParticles"].model as Model;
+
+        let charProj = ProjectData.projectsNameMap.get("character")
+        if(charProj){
+
+            charProj.getProjectMeshByName("cloudParticles")
+            this.particlesModel = new Model(renderer,"particlesModel")
+            console.log(charProj)
+            this.particlesModel.mesh =charProj.getProjectMeshByName("cloudParticle")?.getMesh() as Mesh
+            console.log( this.particlesModel.mesh )
+            this.particlesModel.material =new GBufferCloudMaterial(renderer,"cloudMaterial")
+
+            this.particlesModel.needCulling =false;
+            this.particlesModel.visible =false;
+
+
+        }
+     /* this.particlesModel= SceneData.sceneModelsByName["cloudParticles"].model as Model;
         this.particlesModel.material =new GBufferCloudMaterial(renderer,"cloudMaterial")
         this.particlesModel.needCulling =false;
         this.particlesModel.visible =false;
-      //  let charP = SceneData.projectsNameMap.get("character")charP.baseTexture
 
-      //  if(charP){
+
 
             this.particlesModel.material.setTexture("colorTexture",    texture)
-        //}
 
 
+*/
 
     }
-
+init(){
+    let charProj = ProjectData.projectsNameMap.get("character")
+    if(charProj){
+        this.particlesModel.material.setTexture("colorTexture",   charProj.getBaseTexture())
+    }
+}
     addParticlesHitFloor(position: Vector3){
         for(let i=0;i<8;i++){
             let p =this.getParticle()

@@ -24,7 +24,7 @@ class ProjectData {
     projectSelectItems: Array<SelectItem> = [];
     private defaultFontMaterial!: GBufferFontMaterial;
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
-    private font!: Font;
+    font!: Font;
     constructor() {
     }
    async init(renderer:Renderer,preloader:PreLoader,){

@@ -72,7 +72,16 @@ export default class Project {
 
 
     }
+    getProjectMeshByName(name: string) {
+        for (let m of this.meshes) {
+            if (m.name == name) {
+                return m
 
+            }
+
+        }
+        return null;
+    }
 
     getProjectMeshByID(id: string) {
         for (let m of this.meshes) {

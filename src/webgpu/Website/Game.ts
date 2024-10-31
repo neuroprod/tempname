@@ -21,6 +21,7 @@ import LoadHandler from "../data/LoadHandler.ts";
 import UI from "../lib/UI/UI.ts";
 import LevelHandler from "./Levels/LevelHandler.ts";
 import LevelObjects from "./Levels/LevelObjects.ts";
+import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
 
 
 export default class Game {
@@ -35,6 +36,7 @@ export default class Game {
     private gamepadInput: GamePadInput;
 
     private levelObjects: LevelObjects;
+    private textBalloonHandler: TextBalloonHandler;
 
 
     constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
@@ -52,6 +54,8 @@ export default class Game {
 
         this.gameCamera = new GameCamera(renderer, camera);
 
+        this.textBalloonHandler =new TextBalloonHandler(this.renderer,this.gameCamera.camera)
+
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
@@ -61,7 +65,7 @@ export default class Game {
         this.levelObjects.gameCamera =this.gameCamera
         this.levelObjects.gamepadInput=this.gamepadInput
         this.levelObjects.keyInput=this.keyInput
-
+        this.levelObjects.textBalloonHandler =this.textBalloonHandler
 
         LevelHandler.init(this.levelObjects)
         SoundHandler.init()
@@ -76,7 +80,10 @@ export default class Game {
         this.gamepadInput.update();
         LevelHandler.currentLevel.update()
         this.gameCamera.update()
+        this.textBalloonHandler.update()
+
         DebugDraw.update();
+
     }
 
 
@@ -96,7 +103,7 @@ export default class Game {
     drawInCanvas(pass: CanvasRenderPass) {
         if (LoadHandler.isLoading()) return
         this.gameRenderer.drawFinal(pass);
-        //  this.textBalloonHandler.drawFinal(pass)
+         this.textBalloonHandler.drawFinal(pass)
         DebugDraw.draw(pass);
     }
 

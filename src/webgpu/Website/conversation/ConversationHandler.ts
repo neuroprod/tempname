@@ -102,7 +102,7 @@ export default class ConversationHandler {
 
                 this.choiceIndex +=s;
                 this.choiceIndex= (( this.choiceIndex % this.numChoices) + this.numChoices) % this.numChoices;
-console.log(this.choiceIndex)
+                console.log(this.choiceIndex)
                 let text = this.currentData.choice[this.choiceIndex].text;
                 this.displayText(text,   this.numChoices,   this.choiceIndex)
 

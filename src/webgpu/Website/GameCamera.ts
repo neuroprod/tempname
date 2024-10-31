@@ -69,7 +69,7 @@ export default class GameCamera{
 
         this.cameraLookAt.lerp( charPos,1 - Math.pow(0.01 ,delta))
         this.camPos.copy(this.cameraLookAt);
-        this.camPos.z+=3.5;
+        this.camPos.z+=2.5;
         this.camPos.y+=0;
 
         this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.01 ,delta))

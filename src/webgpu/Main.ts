@@ -27,6 +27,7 @@ import ModelData from "./data/ProjectData.ts";
 import DebugDraw from "./Website/DebugDraw.ts";
 import SceneHandler from "./data/SceneHandler.ts";
 import LoadHandler from "./data/LoadHandler.ts";
+import TextBalloonHandler from "./Website/conversation/TextBalloonHandler.ts";
 
 
 enum MainState {
@@ -121,6 +122,9 @@ export default class Main {
         this.camera.fovy = 0.8
 
         this.gameRenderer = new GameRenderer(this.renderer, this.camera)
+
+
+
         // this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
         // this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
 

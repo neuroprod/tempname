@@ -4,7 +4,7 @@ import ModelRenderer from "../../lib/model/ModelRenderer.ts";
 import Camera from "../../lib/Camera.ts";
 import Model from "../../lib/model/Model.ts";
 import TextBalloonFontMaterial from "./TextBalloonFontMaterial.ts";
-import SceneData from "../../data/SceneData.ts";
+
 import TextBalloonFontMesh from "./TextBalloonFontMesh.ts";
 import Path from "../../lib/path/Path.ts";
 import ExtrudeMesh from "../../modelMaker/ExtrudeMesh.ts";
@@ -16,6 +16,7 @@ import Object3D from "../../lib/model/Object3D.ts";
 import gsap from 'gsap'
 import DebugDraw from "../DebugDraw.ts";
 import {drawCircle} from "../../lib/path/Shapes.ts";
+import ProjectData from "../../data/ProjectData.ts";
 
 export default class TextBalloonHandler {
     private camera: Camera;
@@ -82,7 +83,7 @@ export default class TextBalloonHandler {
         this.textModel.material = new TextBalloonFontMaterial(renderer, "textBalloonFontMaterial")
 
         this.textMesh = new TextBalloonFontMesh(renderer)
-        this.textMesh.setText("Hi Strawberry!\nWhats up?\n", SceneData.font, 0.15)
+        this.textMesh.setText("Hi Strawberry!\nWhats up?\n", ProjectData.font, 0.15)
 
         this.textModel.mesh = this.textMesh;
         this.textModel.setScaler(1)
@@ -213,6 +214,7 @@ export default class TextBalloonHandler {
 
             let w = this.model.getWorldPos(this.modelOffset)
             DebugDraw.drawCircle(w, 0.01)
+
             w.transform(this.gameCamera.viewProjection)
             this.holder.x = w.x * 100 * this.renderer.ratio;
             this.holder.y = w.y * 100;
@@ -241,7 +243,7 @@ export default class TextBalloonHandler {
         }
         this.showText = true;
         this.charPos = -4
-        this.textMesh.setText(text, SceneData.font, 0.15)
+        this.textMesh.setText(text, ProjectData.font, 0.15)
         let w = this.textMesh.max.x;
 
 

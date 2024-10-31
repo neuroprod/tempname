@@ -116,7 +116,7 @@ export default class GameRenderer{
     }
     //doPasses
     draw(){
-if(LoadHandler.isLoading())return;
+        if(LoadHandler.isLoading())return;
         this.shadowMapPass.add( );
 
         this.gBufferPass.add(this.renderer.timeStamps.getSet(0,1));
