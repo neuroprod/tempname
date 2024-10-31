@@ -442,7 +442,8 @@ ${this.getUniformStruct()}
         }
         this.markDelete = true;
         if (this.autoUpdate) {
-            console.log("fix uniform destroy in renderer")
+            this.renderer.removeUniformGroup(this);
+
         }
     }
 

@@ -14,7 +14,7 @@ import AppState, {AppStates} from "./AppState.ts";
 import {Icons} from "./UI/Icons.ts";
 import {addMainMenuToggleButton} from "./UI/MainMenuToggleButton.ts";
 import TextureLoader from "./lib/textures/TextureLoader.ts";
-import SceneData from "./data/SceneData.ts";
+
 import {addMainMenuTextButton} from "./UI/MainMenuTextButton.ts";
 import UI_I from "./lib/UI/UI_I.ts";
 import {addMainMenuDivider} from "./UI/MainMenuDivider.ts";
@@ -23,6 +23,11 @@ import Camera from "./lib/Camera.ts";
 import GameRenderer from "./render/GameRenderer.ts";
 import Game from "./Website/Game.ts";
 import KeyInput from "./Website/KeyInput.ts";
+import ModelData from "./data/ProjectData.ts";
+import DebugDraw from "./Website/DebugDraw.ts";
+import SceneHandler from "./data/SceneHandler.ts";
+import LoadHandler from "./data/LoadHandler.ts";
+import TextBalloonHandler from "./Website/conversation/TextBalloonHandler.ts";
 
 
 enum MainState {
@@ -78,8 +83,9 @@ export default class Main {
         this.renderer.setCanvasColorAttachment(this.canvasRenderPass.canvasColorAttachment);
 
         this.preloader = new PreLoader((n) => {
-            //onPreload
-        }, this.init.bind(this));
+                //onPreload
+            }, this.init.bind(this)
+        );
         //Todo handle bitmap preload
         new TextureLoader(this.renderer, "bezierPoints.png")
         new TextureLoader(this.renderer, Textures.MAINFONT)
@@ -87,14 +93,26 @@ export default class Main {
         new TextureLoader(this.renderer, Textures.DRAWING_BACKGROUND)
         // this.modelLoader = new ModelLoader(this.renderer, this.preloader)
         // this.sceneLoader = new JsonLoader("scene1", this.preloader)
-        SceneData.init(this.renderer, this.preloader)
+        this.preloader.startLoad()
+        ModelData.init(this.renderer, this.preloader).then(() => {
+            console.log("initModelsDone")
+            this.preloader.stopLoad()
+        });
+        this.preloader.startLoad()
+        SceneHandler.init(this.renderer, this.preloader).then(() => {
+            console.log("initScenesDone")
+            this.preloader.stopLoad()
+        });
+
 
     }
 
 
     private init() {
+        console.log("init")
 
-        SceneData.parseSceneData();
+
+        //   SceneData.parseSceneData();
 
         this.camera = new Camera(this.renderer);
         this.camera.cameraWorld.set(0.5, 0.3, 2)
@@ -104,23 +122,27 @@ export default class Main {
         this.camera.fovy = 0.8
 
         this.gameRenderer = new GameRenderer(this.renderer, this.camera)
-        this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
-        this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
+
+
+
+        // this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneData.usedModels);
+        // this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneData.usedModels);
 
 
         this.keyInput = new KeyInput();
         this.mouseListener = new MouseListener(this.renderer);
 
-
+        DebugDraw.init(this.renderer, this.camera);
         this.game = new Game(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         SceneEditor.init(this.renderer, this.mouseListener, this.camera, this.gameRenderer)
         this.modelMaker = new ModelMaker(this.renderer, this.mouseListener);
 
         let state = AppState.getState(AppStates.MAIN_STATE);
+
         if (state != undefined) {
             this.setMainState(state)
         } else {
-            this.setMainState(MainState.game)
+            this.setMainState(MainState.editor)
         }
 
         this.tick();
@@ -131,14 +153,20 @@ export default class Main {
         if (this.currentMainState == MainState.modelMaker) {
             this.modelMaker.saveTemp()
         }
+        if (this.currentMainState == MainState.editor) {
+            SceneEditor.saveTemp()
+        }
+        if (this.currentMainState == MainState.game) {
+            SceneEditor.saveTemp()
+        }
         if (state == MainState.modelMaker) {
-            this.modelMaker.setProject()
+            this.modelMaker.setActive()
         }
         if (state == MainState.editor) {
-           SceneEditor.setActive()
+            SceneEditor.setActive()
         }
         if (state == MainState.game) {
-           this.game.setActive()
+            this.game.setActive()
         }
         this.currentMainState = state;
     }
@@ -158,6 +186,9 @@ export default class Main {
     }
 
     private update() {
+
+        LoadHandler.update()
+
         if (this.currentMainState == MainState.editor) {
             SceneEditor.update();
         } else if (this.currentMainState == MainState.modelMaker) {
@@ -170,7 +201,7 @@ export default class Main {
 
     private onUI() {
         if (this.currentMainState == MainState.game) {
-         // pushMainMenu("editMenu", 74, 0)
+            // pushMainMenu("editMenu", 74, 0)
             UI_I.currentComponent = UI_I.panelLayer;
             if (addMainMenuTextButton("Edit", true)) {
                 this.setMainState(MainState.editor)

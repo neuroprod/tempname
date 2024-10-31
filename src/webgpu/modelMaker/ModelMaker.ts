@@ -41,9 +41,11 @@ import {popPanelMenu, pushPanelMenuFill} from "../UI/PanelMenu.ts";
 import {popLabel, pushLabel} from "../UI/LabelComponent.ts";
 import {addSelector} from "../UI/Selector.ts";
 import {MeshType} from "../data/ProjectMesh.ts";
-import SceneData from "../data/SceneData.ts";
+
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {MainMenuOffset} from "../UI/Style.ts";
+import ProjectData from "../data/ProjectData.ts";
+import LoadHandler from "../data/LoadHandler.ts";
 
 
 enum ModelMainState {
@@ -113,11 +115,12 @@ export default class ModelMaker {
     private backgroundModel: Model;
     private backgroundMaterial: DrawingPreviewMaterial;
 
+
     constructor(renderer: Renderer, mouseListener: MouseListener) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
 
-        this.projects = SceneData.projects
+        this.projects = ProjectData.projects
 
 
         this.camera2D = new Camera(this.renderer)
@@ -147,7 +150,7 @@ export default class ModelMaker {
         this.textureModel = new Model(renderer, "textureModel");
         this.textureModel.mesh = new Quad(renderer)
         this.drawingPreviewMaterial = new DrawingPreviewMaterial(renderer, "materprev");
-        this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.textureHandler.texturesByLabel["drawingBufferTemp"]);
+        this.drawingPreviewMaterial.setTexture("colorTexture", this.renderer.getTexture("drawingBufferTemp"));
         this.textureModel.material = this.drawingPreviewMaterial;
         this.textureModel.setScaler(0.5)
         this.textureModel.x = 0.5;
@@ -197,12 +200,13 @@ export default class ModelMaker {
     }
 
     draw() {
+        if (LoadHandler.isLoading()) return
         this.drawing.draw()
         this.previewRenderer.draw()
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
-
+        if (LoadHandler.isLoading()) return
         this.modelRenderer2D.draw(pass);
         this.previewRenderer.drawInCanvas(pass)
 
@@ -323,7 +327,7 @@ export default class ModelMaker {
 
     }
 
-    setProject() {
+    setActive() {
 
         if (this.projects.length) {
 
@@ -451,6 +455,7 @@ export default class ModelMaker {
         if (!fail) {
             let newProject = new Project(this.renderer);
             newProject.name = newName;
+
             this.projects.push(newProject);
             this.openProject(newProject)
 
@@ -458,16 +463,48 @@ export default class ModelMaker {
     }
 
     private openProject(project: Project) {
+
+
+        LoadHandler.startLoading()
+
         if (this.currentProject) {
             this.saveTemp();
 
         }
 
         this.currentProject = project;
-        this.drawing.setProject(this.currentProject);
-        this.cutting.setProject(this.currentProject);
-        AppState.setState("currentImage", this.currentProject.id)
-        this.setTool(ToolType.Paint);
+
+        if (!this.currentProject.loadTexture) {
+            if (this.currentProject.isNew) {
+                this.drawing.setProject(this.currentProject);
+                this.cutting.setProject(this.currentProject);
+                AppState.setState("currentImage", this.currentProject.id)
+                this.setTool(ToolType.Paint);
+                LoadHandler.stopLoading()
+
+            } else {
+                this.currentProject.loadPNGTexture().then(() => {
+
+                    this.drawing.setProject(this.currentProject);
+                    this.cutting.setProject(this.currentProject);
+                    AppState.setState("currentImage", this.currentProject.id)
+                    this.setTool(ToolType.Paint);
+
+
+                    LoadHandler.stopLoading()
+                })
+            }
+        } else {
+            console.log('isLoaded')
+            this.drawing.setProject(this.currentProject);
+            this.cutting.setProject(this.currentProject);
+            AppState.setState("currentImage", this.currentProject.id)
+            this.setTool(ToolType.Paint);
+            LoadHandler.stopLoading()
+
+        }
+
+
     }
 
     private deleteCurrentProject() {

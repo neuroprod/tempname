@@ -1,6 +1,6 @@
 import TextBalloonHandler from "./TextBalloonHandler.ts";
 import copy from "./copy.json"
-import SceneData from "../../data/SceneData.ts";
+
 import Renderer from "../../lib/Renderer.ts";
 
 export default class ConversationHandler {
@@ -44,7 +44,7 @@ export default class ConversationHandler {
         let data = this.dataArr[this.dataIndex]
 
         if (data.char && data.pos) {
-            let m = SceneData.sceneModelsByName[data.char];
+         //   let m = SceneData.sceneModelsByName[data.char];
 
             this.textBalloonHandler.setModel(m, data.pos)
 
@@ -102,7 +102,7 @@ export default class ConversationHandler {
 
                 this.choiceIndex +=s;
                 this.choiceIndex= (( this.choiceIndex % this.numChoices) + this.numChoices) % this.numChoices;
-console.log(this.choiceIndex)
+                console.log(this.choiceIndex)
                 let text = this.currentData.choice[this.choiceIndex].text;
                 this.displayText(text,   this.numChoices,   this.choiceIndex)
 

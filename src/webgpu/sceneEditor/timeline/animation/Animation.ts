@@ -1,6 +1,6 @@
 import Renderer from "../../../lib/Renderer.ts";
 import AnimationChannel from "./AnimationChannel.ts";
-import SceneObject3D from "../../SceneObject3D.ts";
+import SceneObject3D from "../../../data/SceneObject3D.ts";
 import Timer from "../../../lib/Timer.ts";
 export enum AnimationType{
     TRANSLATE,

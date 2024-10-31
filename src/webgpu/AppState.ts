@@ -1,5 +1,6 @@
 export const AppStates = {
-    MAIN_STATE: "mainState"
+    MAIN_STATE: "mainState",
+    EDIT_SCENE: "editScene"
 
 
 }

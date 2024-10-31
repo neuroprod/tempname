@@ -7,7 +7,7 @@ import Vec2 from "../lib/UI/math/Vec2.ts";
 import {VerticalLayoutSettings} from "../lib/UI/components/VerticalLayout.ts";
 import UI_IC from "../lib/UI/UI_IC.ts";
 
-import SceneObject3D from "../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 import {addTextButton} from "./MainMenuTextButton.ts";
 import UI from "../lib/UI/UI.ts";
 import {popPanelMenu, pushPanelMenuFill} from "./PanelMenu.ts";
@@ -15,12 +15,12 @@ import {addSelectorBox} from "./Selector.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import {addInputTextBox} from "./InputText.ts";
 import Box from "../lib/UI/math/Box.ts";
-import SceneData from "../data/SceneData.ts";
+
 import Project from "../data/Project.ts";
-import {addTitle} from "./Label.ts";
+
 import ProjectMesh from "../data/ProjectMesh.ts";
-import Mesh from "../lib/mesh/Mesh.ts";
-import Texture from "../lib/textures/Texture.ts";
+import ProjectData from "../data/ProjectData.ts";
+
 
 
 export function addMeshPopup(title: string, callBack: (item: SceneObject3D) => void) {
@@ -78,7 +78,7 @@ export class AddMeshPopup extends PopUp {
 
         this.selector1Box.size.y = this.selector2Box.size.y = 33
 
-        SceneData.makeSelectItems()
+        ProjectData.makeSelectItems()
         this.callBack = callBack;
     }
 
@@ -115,10 +115,10 @@ export class AddMeshPopup extends PopUp {
         pushPanelMenuFill("myPanels", 33 + 5)
 
 
-        let a = [new SelectItem("ffffff", "v"), new SelectItem("aaaaaa", "vf")]
+        //let a = [new SelectItem("ffffff", "v"), new SelectItem("aaaaaa", "vf")]
         let m:ProjectMesh|null =null
 
-        let p = addSelectorBox("test", SceneData.projectSelectItems, 0, this.selector1Box) as Project;
+        let p = addSelectorBox("test",ProjectData.projectSelectItems, 0, this.selector1Box) as Project;
 
         if (p.selectItems.length > 0) {
             m = addSelectorBox(p.name + "randumS", p.selectItems, 0, this.selector2Box)
@@ -128,7 +128,7 @@ export class AddMeshPopup extends PopUp {
         if(addTextButton("add Mesh")){
             if(m){
 
-                let a  =SceneData.makeSceneObjectWithMesh(p,m,this.newName,"")
+                let a  =ProjectData.makeSceneObjectWithMesh(p,m,this.newName,"")
                 this.callBack(a);
                 UI_I.removePopup(this)
             }
@@ -140,7 +140,7 @@ export class AddMeshPopup extends PopUp {
         addInputTextBox("myTextInput", this, "text", false, this.inputTextBox);
         if(addTextButton("add Text")){
 
-            let a  =SceneData.makeSceneObjectWithText(this.newName,this.text)
+            let a  =ProjectData.makeSceneObjectWithText(this.newName,this.text)
             this.callBack(a);
             UI_I.removePopup(this)
 

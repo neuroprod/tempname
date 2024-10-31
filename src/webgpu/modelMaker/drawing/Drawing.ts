@@ -71,6 +71,7 @@ export default class Drawing {
     public saveCurrentProject() {
 
         if (this.project) {
+            this.project.baseTexture =new TextureLoader(this.renderer,"")
             this.project.baseTexture.make()
             this.copy1.setTextures(this.project.baseTexture, this.drawBufferTempPass.colorTarget);
             if (!this.project.fullTexture) {
@@ -98,25 +99,20 @@ export default class Drawing {
        // this.saveCurrentProject()
 
         this.project = project;
-
+        console.log("makenewTexture")
 
         this.project = project;
         if (!this.project.loadTexture) {
 
             if(this.project.isNew){
+                console.log("makenewTexture")
                 this.project.loadTexture =DefaultTextures.getTransparent(this.renderer) as TextureLoader
                 this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
                 this.updateDrawing()
             }else{
 
-                this.project.loadTexture = new TextureLoader(this.renderer, "./data/" + project.id + "/texture.png")
+                console.log("cant be here")
 
-                this.project.loadTexture.onComplete = () => {
-                    this.project.loadTexture.isDirty =true;
-                    this.drawBufferTempPass.blitMat.setTexture("colorTexture", this.project.loadTexture)
-                    this.updateDrawing()
-
-                }
 
 
 
@@ -171,7 +167,7 @@ export default class Drawing {
 
             if(this.tool==ToolType.Eraser){
                 this.currentLine.isEraser =true;
-                console.log("erasoRR?")
+
                 this.currentLine.uniformGroup.setUniform("color", [1,1,1,1])
                 this.currentLine.uniformGroup.update();
             }

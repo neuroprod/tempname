@@ -15,7 +15,7 @@ export default class TextureLoader extends Texture {
 
         this.make();
 
-
+        if(url=="")return;
 
         this.loadURL(url).then(() => {
 

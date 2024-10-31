@@ -30,7 +30,7 @@ export default class OutlinePass extends RenderPass {
         this.colorAttachment = new ColorAttachment(this.colorTarget, {clearValue: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}});
         this.colorAttachments = [this.colorAttachment]
         let material = new OutlineMaterial(this.renderer,"outline");
-        material.setTexture('inputTexture',this.renderer.textureHandler.texturesByLabel["OutlinePrePass"])
+        material.setTexture('inputTexture',this.renderer.getTexture("OutlinePrePass"));
         this.blit =new Blit(renderer,"outline", material)
 
     }

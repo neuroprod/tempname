@@ -15,13 +15,14 @@ import {Icons} from "./Icons.ts";
 
 export function pushObjectTree(label: string, isLeave: boolean, depth: number, selected:boolean) {
 
-    if (!UI_I.setComponent(label)) {
+    let id = label+"_"+isLeave;
+    if (!UI_I.setComponent(id)) {
         let settings = new ComponentSettings()
         settings.box.size.x = -1;
         settings.box.size.y = -1;
 
 
-        let comp = new ObjectTree(UI_I.getID(label), label, settings, depth);
+        let comp = new ObjectTree(UI_I.getID(id), label, settings, depth);
         UI_I.addComponent(comp);
     }
     (UI_I.currentComponent.parent as ObjectTree).setLeave(isLeave);

@@ -10,7 +10,7 @@ import Ray from "../lib/Ray.ts";
 import Outline from "./outline/Outline.ts";
 import EditCursor from "./editCursor/EditCursor.ts";
 import EditCamera from "./EditCamera.ts";
-import SceneObject3D from "./SceneObject3D.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 
 import GameRenderer from "../render/GameRenderer.ts";
 
@@ -25,10 +25,10 @@ import {addMainMenuButton} from "../UI/MainMenuButton.ts";
 import {Icons} from "../UI/Icons.ts";
 import {addMainMenuDivider} from "../UI/MainMenuDivider.ts";
 import {addMainMenuToggleButton} from "../UI/MainMenuToggleButton.ts";
-import {addMainMenuTextButton} from "../UI/MainMenuTextButton.ts";
+
 import {popPanelMenu, pushPanelMenu} from "../UI/PanelMenu.ts";
 import {addInputText} from "../UI/InputText.ts";
-import SceneData from "../data/SceneData.ts";
+
 import {addMeshPopup} from "../UI/AddMeshPopup.ts";
 import {addPlayButton, addRecButton} from "../UI/PlayPauzeRecButton.ts";
 import {MainMenuOffset} from "../UI/Style.ts";
@@ -37,6 +37,13 @@ import {setNewPopup} from "../UI/NewPopup.ts";
 import Animation from "./timeline/animation/Animation.ts";
 import {setAnimePopup} from "../UI/AnimePopup.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
+import SceneHandler from "../data/SceneHandler.ts";
+import LoadHandler from "../data/LoadHandler.ts";
+import loadHandler from "../data/LoadHandler.ts";
+
+import {setOpenScenePopup} from "../UI/OpenScenePopup.ts";
+import sceneHandler from "../data/SceneHandler.ts";
+import AppState, {AppStates} from "../AppState.ts";
 
 export enum ToolState {
 
@@ -54,7 +61,7 @@ class SceneEditor {
     private renderer!: Renderer;
     private camera!: Camera;
     private modelRenderer!: ModelRenderer;
-    private root!: SceneObject3D
+
 
     private mouseListener!: MouseListener;
     private ray: Ray = new Ray();
@@ -91,16 +98,16 @@ class SceneEditor {
 
 
         this.modelRenderer = new ModelRenderer(renderer, "mainModels", this.camera)
-        this.modelRenderer.setModels(SceneData.usedModels);
+      //  this.modelRenderer.setModels(SceneData.usedModels);
 
 
         this.outline = new Outline(renderer, this.camera)
         this.editCursor = new EditCursor(renderer, this.camera, mouseListener, this.ray)
         this.editCamera = new EditCamera(renderer, this.camera, mouseListener, this.ray)
-        this.root = SceneData.root;
+        //this.root = SceneData.root;
 
 
-        AnimationEditor.setAnimation(SceneData.animations[0])
+        //AnimationEditor.setAnimation(SceneData.animations[0])
 
         this.setCurrentToolState(ToolState.translate)
 
@@ -122,6 +129,7 @@ class SceneEditor {
     }
 
     update() {
+        if(loadHandler.isLoading())return
         this.camera.ratio = this.renderer.ratio
 
         //setScreenRay
@@ -152,7 +160,33 @@ class SceneEditor {
         DebugDraw.update()
     }
     onUINice() {
-        pushMainMenu("tools",300,MainMenuOffset);
+        if(LoadHandler.isLoading())return
+
+        pushMainMenu("scene",129,MainMenuOffset);
+        if (addMainMenuButton("openGroup", Icons.FOLDER,true)){
+
+            setOpenScenePopup("Open Scene", sceneHandler.scenesData, (id: string) => {
+               // this.openProject(project)
+
+                this.setScene(id)
+            })
+
+
+        }
+        if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){
+
+            setNewPopup("+ Add new Scene", "new_scene", (name: string) => {
+                let id = SceneHandler.addNewScene(name)
+                this.setScene(id)
+            })
+
+
+        }
+        if (addMainMenuButton("DeleteGroup", Icons.REMOVE_GROUP,true)){}
+        popMainMenu()
+
+
+        pushMainMenu("tools",256,MainMenuOffset+129+5);
 
 
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
@@ -172,7 +206,7 @@ class SceneEditor {
         if (addMainMenuButton("Copy", Icons.COPY,true)){
             if(this.currentModel){
                 //this.removeModel(this.currentModel)
-               let name = this.root.getUniqueName(this.currentModel.label)
+               let name = SceneHandler.root.getUniqueName(this.currentModel.label)
                 this.copyModel = this.currentModel
                 let copy =this.copyModel.copy(name);
                 if(copy && copy.model){
@@ -182,6 +216,7 @@ class SceneEditor {
                console.log(name, this.currentModel)
             }
         }
+
         addMainMenuDivider("tooldDiv2")
 
 
@@ -200,23 +235,23 @@ class SceneEditor {
             setNewPopup("+ Add new Anime to "+this.currentModel.label, "new_anime", (name: string) => {
                     if(!this.currentModel)return;
                     let anime = new Animation(this.renderer, name, this.currentModel)
-                    SceneData.animations.push(anime)
+            //      SceneData.animations.push(anime)
                     AnimationEditor.setAnimation(anime)
             })
 
         }
         if(addMainMenuButton("RemoveAnime",  Icons.REMOVE_ANIME,true)){
             if(AnimationEditor.currentAnimation){
-                SceneData.removeAnimation(AnimationEditor.currentAnimation)
+              //  SceneData.removeAnimation(AnimationEditor.currentAnimation)
                 AnimationEditor.setAnimation(null);
 
             }
         }
         if(addMainMenuButton("open", Icons.FOLDER,true)){
-            setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
+           /* setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
                 AnimationEditor.setAnimation(anime);
 
-            })
+            })*/
         }
         if(AnimationEditor.currentAnimation){
             addMainMenuDivider("mydiv3")
@@ -266,7 +301,7 @@ class SceneEditor {
 
         pushSplitPanel("Top panel",  this.nodeRightTop);
 
-        this.root.onUINice(0)
+        SceneHandler.root.onUINice(0)
         popSplitPanel()
 
         pushSplitPanel("bottom panel",  this.nodeRightBottom);
@@ -291,8 +326,18 @@ class SceneEditor {
     }
 
     public saveAll(){
-       let sceneData: Array<any> = []
-        SceneData.root.getSceneData(sceneData);
+
+        SceneHandler.saveCurrentScene();
+
+        for (let s of SceneHandler.scenesData){
+
+            saveScene( s.id, JSON.stringify(s)).then(()=>{
+
+            })
+
+        }
+     /*  let sceneData: Array<any> = []
+       // SceneData.root.getSceneData(sceneData);
 
         let animationData: Array<any> = []
         for (let a of SceneData.animations) {
@@ -305,7 +350,7 @@ class SceneEditor {
             console.log("saved Scene")
         })
 
-
+*/
 
     }
 
@@ -313,6 +358,7 @@ class SceneEditor {
 
 
     setCurrentModel(value: SceneObject3D | null) {
+
         if (value) {
             this.currentModel = value;
 
@@ -329,6 +375,7 @@ class SceneEditor {
     }
 
     draw() {
+        if(loadHandler.isLoading())return
         this.outline.draw()
 
         this.gameRenderer.draw();
@@ -336,6 +383,7 @@ class SceneEditor {
 
     drawInCanvas(pass: CanvasRenderPass) {
         //  this.modelRenderer.draw(pass);
+        if(loadHandler.isLoading())return
         this.gameRenderer.drawFinal(pass);
         this.outline.drawFinal(pass);
         this.editCursor.drawFinal(pass);
@@ -365,8 +413,11 @@ class SceneEditor {
     }
 
     public addModel(m: SceneObject3D) {
-        if(!this.currentModel)this.currentModel =SceneData.root
-        m.setUniqueName(this.root.getUniqueName(m.label))
+
+
+
+        if(!this.currentModel)this.currentModel =SceneHandler.root
+        m.setUniqueName(SceneHandler.root.getUniqueName(m.label))
 
         this.currentModel.addChild(m)
         if (m.model) {
@@ -391,7 +442,50 @@ class SceneEditor {
 
 
     setActive() {
-        this.editCamera.setActive()
+
+
+       let scene =  AppState.getState(AppStates.EDIT_SCENE);
+        if(scene){
+            this.setScene(scene)
+        }else{
+            this.setScene("456")
+        }
+
+
+
+    }
+
+    private setScene(id: string) {
+        LoadHandler.startLoading()
+        AppState.setState(AppStates.EDIT_SCENE,id)
+        let state = AppState.getState(AppStates.MAIN_STATE);
+
+        SceneHandler.saveCurrentScene()
+
+
+
+
+        this.gameRenderer.gBufferPass.modelRenderer.setModels([])
+        this.gameRenderer.shadowMapPass.modelRenderer.setModels([])
+
+
+
+        LoadHandler.onComplete=()=>{
+
+            this.editCamera.setActive()
+            this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
+          this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+        }
+
+
+        SceneHandler.setScene(id).then(()=>{
+
+            LoadHandler.stopLoading()
+        });
+    }
+
+    saveTemp() {
+
     }
 }
 export default new SceneEditor();

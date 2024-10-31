@@ -16,13 +16,13 @@ export default class Object3D extends ObjectGPU {
     private _rotation = new Quaternion(0, 0, 0, 1);
 
     private eulerDirty: boolean = false;
-    private _euler = new Vector3(0, 0, 0);
+
     constructor(renderer: Renderer, label: string = "") {
         super(renderer, label);
 
     }
 
-
+    private _euler = new Vector3(0, 0, 0);
 
     public get euler() {
         if (this.eulerDirty) {
@@ -110,23 +110,18 @@ export default class Object3D extends ObjectGPU {
         // @ts-ignore
         if (this.euler.x != value) {
 
-            this.setEuler( value, this._euler.y,this._euler.z)
+            this.setEuler(value, this._euler.y, this._euler.z)
             this.setDirty();
         }
     }
-    setRY(value:number){
-        this.ry =value;
-    }
-    getRY(){
-        return this.ry;
-    }
+
     public get ry() {
         return this.euler[1]
     }
 
     public set ry(value: number) {
         if (this.euler[1] != value) {
-            this.setEuler( this._euler.x,value,this._euler.z)
+            this.setEuler(this._euler.x, value, this._euler.z)
             this.setDirty();
         }
     }
@@ -141,7 +136,7 @@ export default class Object3D extends ObjectGPU {
         if (this.euler.z != value) {
 
 
-            this.setEuler( this._euler.x, this._euler.y,value)
+            this.setEuler(this._euler.x, this._euler.y, value)
             this.setDirty();
         }
     }
@@ -198,6 +193,14 @@ export default class Object3D extends ObjectGPU {
         this.updateMatrices();
         return this._localMatrix;
 
+    }
+
+    setRY(value: number) {
+        this.ry = value;
+    }
+
+    getRY() {
+        return this.ry;
     }
 
     public getWorldPos(localPos = new Vector3(0, 0, 0)) {
@@ -281,9 +284,25 @@ export default class Object3D extends ObjectGPU {
 
     public removeChild(child: Object3D) {
         let index = this.children.indexOf(child);
+
         if (index < 0) return;
         child.parent = null;
+
         this.children.splice(index, 1);
+    }
+
+    public removeAllChildren() {
+
+        while (this.children.length > 0) {
+            //
+            let c = this.children[this.children.length - 1]
+            c.removeAllChildren()
+            this.removeChild(c)
+            c.destroy()
+
+        }
+
+
     }
 
     getScale() {
@@ -296,6 +315,16 @@ export default class Object3D extends ObjectGPU {
 
     getPosition() {
         return this._position;
+    }
+
+    copyProperties(obj: Object3D) {
+        obj.setPositionV(this._position.clone())
+        obj.setScaleV(this._scale.clone())
+        obj.setRotationQ(this._rotation.clone())
+    }
+
+    public destroy() {
+
     }
 
     protected updateMatrices() {
@@ -330,11 +359,5 @@ export default class Object3D extends ObjectGPU {
         for (let c of this.children) {
             c.setDirty();
         }
-    }
-
-    copyProperties(obj:Object3D){
-        obj.setPositionV(this._position.clone())
-        obj.setScaleV(this._scale.clone())
-        obj.setRotationQ(this._rotation.clone())
     }
 }

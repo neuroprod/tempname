@@ -1,4 +1,4 @@
-import SceneObject3D from "../../SceneObject3D.ts";
+import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {AnimationType} from "./Animation.ts";
 import {Quaternion, Vector3} from "@math.gl/core";
 

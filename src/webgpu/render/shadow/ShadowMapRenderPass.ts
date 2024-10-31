@@ -9,7 +9,7 @@ import Camera from "../../lib/Camera.ts";
 import {Textures} from "../../data/Textures.ts";
 import ShadowDepthMaterial from "./ShadowDepthMaterial.ts";
 import DirectionalLight from "../lights/DirectionalLight.ts";
-import SceneObject3D from "../../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../../data/SceneObject3D.ts";
 
 
 export default class ShadowMapRenderPass extends RenderPass {

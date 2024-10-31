@@ -13,6 +13,7 @@ function go() {
     makeFont('Roboto-Regular.ttf',"regular")
     makeFont('FiraSans-Black.ttf',"bold")
 
+
 }
 
 function makeSVGFont(){
@@ -24,6 +25,7 @@ function makeSVGFont(){
         fontName: 'icons', // font name
         css: false, // Create CSS files.
         useNameAsUnicode: true,
+
         fontHeight: 42,
     }).then(() => {
         go()

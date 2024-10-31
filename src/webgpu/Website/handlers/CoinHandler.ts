@@ -1,6 +1,6 @@
 import SceneData from "../../data/SceneData.ts";
 import {HitTrigger} from "../../data/HitTriggers.ts";
-import SceneObject3D from "../../sceneEditor/SceneObject3D.ts";
+import SceneObject3D from "../../data/SceneObject3D.ts";
 import Timer from "../../lib/Timer.ts";
 
 export default class CoinHandler{
