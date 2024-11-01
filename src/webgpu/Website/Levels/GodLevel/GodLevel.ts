@@ -6,7 +6,7 @@ import sceneHandler from "../../../data/SceneHandler.ts";
 import gsap from "gsap";
 
 export class GodLevel extends PlatformLevel{
-    private tl: gsap.core.Timeline;
+    private tl!: gsap.core.Timeline;
 
     init() {
         super.init();

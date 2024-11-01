@@ -2,10 +2,10 @@ import Material from "../../lib/material/Material.ts";
 import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import DefaultUniformGroups from "../../lib/material/DefaultUniformGroups.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
-import {Textures} from "../../data/Textures.ts";
+
 import {CullMode} from "../../lib/WebGPUConstants.ts";
 import Blend from "../../lib/material/Blend.ts";
-import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
+
 import {Vector4} from "@math.gl/core";
 
 
