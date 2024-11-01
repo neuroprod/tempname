@@ -46,7 +46,7 @@ export default class ConversationHandler {
         if (data.char && data.pos) {
          //   let m = SceneData.sceneModelsByName[data.char];
 
-            this.textBalloonHandler.setModel(m, data.pos)
+          //  this.textBalloonHandler.setModel(m, data.pos)
 
         }
         this.currentData = data;

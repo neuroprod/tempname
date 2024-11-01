@@ -4,19 +4,16 @@ import Camera from "../lib/Camera.ts";
 import GameRenderer from "../render/GameRenderer.ts";
 import CanvasRenderPass from "../CanvasRenderPass.ts";
 
-import Timer from "../lib/Timer.ts";
+
 
 import KeyInput from "./KeyInput.ts";
-import CharacterController from "./CharacterController.ts";
+
 import GameCamera from "./GameCamera.ts";
 import DebugDraw from "./DebugDraw.ts";
 import GamePadInput from "./GamePadInput.ts";
-import SceneObject3D from "../data/SceneObject3D.ts";
-import {HitTrigger} from "../data/HitTriggers.ts";
+
 import SoundHandler from "./SoundHandler.ts";
-import StrawBerryScene from "./cutscenes/StrawBerryScene.ts";
-import ConversationHandler from "./conversation/ConversationHandler.ts";
-import SceneHandler from "../data/SceneHandler.ts";
+
 import LoadHandler from "../data/LoadHandler.ts";
 import UI from "../lib/UI/UI.ts";
 import LevelHandler from "./Levels/LevelHandler.ts";
