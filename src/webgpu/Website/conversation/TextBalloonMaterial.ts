@@ -20,7 +20,7 @@ export default class TextBalloonMaterial extends Material{
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-        uniforms.addUniform("color",new Vector4(0,0,0,1))
+        uniforms.addUniform("color",new Vector4(0.1,0,0,1))
 
         this.cullMode =CullMode.None;
         this.depthCompare="always"

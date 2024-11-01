@@ -3,9 +3,10 @@ import {PlatformLevel} from "../PlatformLevel.ts";
 import LoadHandler from "../../../data/LoadHandler.ts";
 import SceneHandler from "../../../data/SceneHandler.ts";
 import sceneHandler from "../../../data/SceneHandler.ts";
-
+import gsap from "gsap";
 
 export class GodLevel extends PlatformLevel{
+    private tl: gsap.core.Timeline;
 
     init() {
         super.init();
@@ -52,7 +53,26 @@ export class GodLevel extends PlatformLevel{
         cookie.z =-0.5
         cookie.x =-2
         this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
-        this.levelObjects.textBalloonHandler.setText("My mom told me\nI was a happy baby.")
+
+        this.tl = gsap.timeline({repeat:-1})
+        this.tl.call(()=>{
+            this.levelObjects.textBalloonHandler.setText("My mom told me\nI was a happy baby.")
+        },[],3)
+        this.tl.call(()=>{
+            this.levelObjects.textBalloonHandler.setText("But then I had to go to\nschool and stuff")
+        },[],6)
+        this.tl.call(()=>{
+            this.levelObjects.textBalloonHandler.setText("Now I just want to smash things.")
+        },[],9)
+        this.tl.call(()=>{
+            this.levelObjects.textBalloonHandler.hideText()
+        },[],12)
+
+
+    }
+    destroy(){
+        super.destroy()
+        if(this.tl) this.tl.clear()
 
     }
 }
