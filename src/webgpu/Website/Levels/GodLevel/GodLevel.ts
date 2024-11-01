@@ -44,9 +44,10 @@ export class GodLevel extends PlatformLevel{
 
        let god = sceneHandler.getSceneObject("godRoot")
         god.setScaler(1.5)
-        //god.ry =-0.2
+       god.y =0.8
+        god.ry =-0.5
         god.z =-0.5
-
+        god.x =2.5
         let cookie = sceneHandler.getSceneObject("cookieRoot")
         cookie.setScaler(1.5)
        // cookie.ry =-0.2
