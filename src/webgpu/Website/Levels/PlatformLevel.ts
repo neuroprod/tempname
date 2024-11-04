@@ -1,17 +1,25 @@
 import {BaseLevel} from "./BaseLevel.ts";
 import CharacterController from "../CharacterController.ts";
 import Timer from "../../lib/Timer.ts";
+import SceneHandler from "../../data/SceneHandler.ts";
+import CoinHandler from "../handlers/CoinHandler.ts";
+import SceneObject3D from "../../data/SceneObject3D.ts";
+import {HitTrigger} from "../../data/HitTriggers.ts";
 
 export class PlatformLevel extends BaseLevel{
     public characterController!: CharacterController;
+    private coinHandler!: CoinHandler;
 
 
 
     init() {
         super.init();
         this.characterController = new CharacterController(this.levelObjects.renderer)
-    }
 
+    }
+    configScene(){
+        this.coinHandler =new CoinHandler()
+    }
     update(){
         this.levelObjects.gamepadInput.update();
         let delta = Timer.delta;
@@ -25,5 +33,27 @@ export class PlatformLevel extends BaseLevel{
         }
 
         this.characterController.update(      delta, hInput, jump)
+        this.coinHandler.update()
+        this.checkTriggers()
+
+    }
+    private checkTriggers() {
+        for (let f of SceneHandler.triggerModels) {
+            f.drawTrigger();
+             if (f.checkTriggerHit(this.characterController.charHitBottomWorld, this.characterController.charHitTopWorld, this.characterController.charHitRadius)) {
+                 this.resolveHitTrigger(f)
+
+             }
+
+        }
+
+    }
+
+    private resolveHitTrigger(f: SceneObject3D) {
+        if(f.hitTriggerItem ==HitTrigger.COIN){
+            this.coinHandler.takeCoin(f)
+            return true;
+        }
+        return false;
     }
 }

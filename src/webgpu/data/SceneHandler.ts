@@ -20,8 +20,8 @@ class SceneHandler {
     private renderer!: Renderer;
     private currentSceneID: string="";
     private sceneData: any;
-   hitTestModels: Array<Model> = [];
-
+    hitTestModels: Array<Model> = [];
+    triggerModels: Array<SceneObject3D> = [];
     async init(renderer: Renderer, preloader: PreLoader) {
         this.renderer = renderer;
         this.root = new SceneObject3D(renderer, "MainRoot")
@@ -140,7 +140,7 @@ class SceneHandler {
                         this.hitTestModels.push(sceneObj.model);
                     }
                     if (sceneObj.needsTrigger) {
-                       // this.triggerModels.push(sceneObj);
+                        this.triggerModels.push(sceneObj);
                     }
 
 

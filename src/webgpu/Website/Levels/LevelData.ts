@@ -5,7 +5,7 @@ import GamePadInput from "../GamePadInput.ts";
 import KeyInput from "../KeyInput.ts";
 import TextBalloonHandler from "../conversation/TextBalloonHandler.ts";
 
-export default class LevelObjects {
+export default class LevelData {
 
     renderer!: Renderer;
     gameRenderer!: GameRenderer;

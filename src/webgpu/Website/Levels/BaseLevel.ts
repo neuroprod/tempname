@@ -1,13 +1,13 @@
-import LevelObjects from "./LevelObjects.ts";
+import LevelData from "./LevelData.ts";
 
 export class BaseLevel {
 
-    levelObjects!: LevelObjects;
+    levelObjects!: LevelData;
 
     constructor() {
     }
-    initObjects(levelObjects:LevelObjects){
-
+    initObjects(levelObjects:LevelData){
+console.log("initObjects")
 
         this.levelObjects =levelObjects;
     }

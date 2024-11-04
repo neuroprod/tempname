@@ -2,7 +2,7 @@ import {GodLevel} from "./GodLevel/GodLevel.ts";
 
 import {BaseLevel} from "./BaseLevel.ts";
 import {StartLevel} from "./StartLevel/StartLevel.ts";
-import LevelObjects from "./LevelObjects.ts";
+import LevelData from "./LevelData.ts";
 
 
 class LevelHandler {
@@ -10,9 +10,9 @@ class LevelHandler {
     public levels: Map<string, BaseLevel> = new Map()
 
     public currentLevel!: BaseLevel;
-    private levelObjects!: LevelObjects;
+    private levelObjects!: LevelData;
 
-    init(levelObjects: LevelObjects) {
+    init(levelObjects: LevelData) {
         this.levelObjects = levelObjects;
         this.addLevel("Start", new StartLevel())
         this.addLevel("God", new GodLevel())

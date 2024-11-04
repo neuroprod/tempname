@@ -31,8 +31,8 @@ export class GodLevel extends PlatformLevel{
         })
 
     }
-    private configScene() {
-
+    configScene() {
+        super.configScene()
         LoadHandler.onComplete =()=>{}
 
         this.characterController.setCharacter()

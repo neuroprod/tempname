@@ -17,8 +17,9 @@ import SoundHandler from "./SoundHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import UI from "../lib/UI/UI.ts";
 import LevelHandler from "./Levels/LevelHandler.ts";
-import LevelObjects from "./Levels/LevelObjects.ts";
+import LevelData from "./Levels/LevelData.ts";
 import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
+import SceneHandler from "../data/SceneHandler.ts";
 
 
 export default class Game {
@@ -32,7 +33,7 @@ export default class Game {
 
     private gamepadInput: GamePadInput;
 
-    private levelObjects: LevelObjects;
+    private levelObjects: LevelData;
     private textBalloonHandler: TextBalloonHandler;
 
 
@@ -56,7 +57,7 @@ export default class Game {
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
-        this.levelObjects = new LevelObjects()
+        this.levelObjects = new LevelData()
         this.levelObjects.renderer =renderer;
         this.levelObjects.gameRenderer = this.gameRenderer;
         this.levelObjects.gameCamera =this.gameCamera
@@ -76,6 +77,7 @@ export default class Game {
 
         this.gamepadInput.update();
         LevelHandler.currentLevel.update()
+
         this.gameCamera.update()
         this.textBalloonHandler.update()
 
@@ -104,21 +106,7 @@ export default class Game {
         DebugDraw.draw(pass);
     }
 
-    private checkTriggers() {
 
-
-        /* for (let f of SceneData.triggerModels) {
-             f.drawTrigger()
-             if (f.checkTriggerHit(this.characterController.charHitBottomWorld, this.characterController.charHitTopWorld, this.characterController.charHitRadius)) {
-
-
-                 this.resolveHitTrigger(f)
-
-             }
-
-         }*/
-
-    }
 
 
 
