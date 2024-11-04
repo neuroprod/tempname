@@ -262,8 +262,9 @@ export default class SceneObject3D extends Object3D {
     }
 
     copy(label: string) {
-        console.log(this.projectId, this.meshId)
-        let m =ProjectData.getModel({label:label,projectId: this.projectId, meshID:this.meshId,id:""})
+
+        let m =ProjectData.getModel({label:label,projectId: this.projectId, meshId:this.meshId,id:""})
+
         if (m) {
             this.copyProperties(m)
             this.parent?.addChild(m);

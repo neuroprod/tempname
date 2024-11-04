@@ -87,9 +87,9 @@ class ProjectData {
 
     getModel(d: any) {
         let project = this.projectsMap.get(d.projectId)
+
         if (!project) return null
         let projMesh = project.getProjectMeshByID(d.meshId);
-
         if (!projMesh) return null
 
         let m = this.makeSceneObjectWithMesh(project, projMesh, d.label, d.id);

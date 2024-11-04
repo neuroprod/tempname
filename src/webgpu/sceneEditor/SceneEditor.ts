@@ -213,7 +213,7 @@ class SceneEditor {
                     this.gameRenderer.gBufferPass.modelRenderer.addModel(copy.model)
                     this.gameRenderer.shadowMapPass.addSceneObject(copy);
                 }
-               console.log(name, this.currentModel)
+
             }
         }
 
