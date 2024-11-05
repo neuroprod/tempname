@@ -7,12 +7,17 @@ import {Vector3} from "@math.gl/core";
 import Kris from "./Kris.ts";
 import Intro from "./Intro.ts";
 import gsap from "gsap";
+import Bezier from "../../../lib/path/Bezier.ts";
 
 export class StartLevel extends BaseLevel{
 
     private kris!:Kris;
     private intro!: Intro;
-
+    private bezierCamera!: Bezier;
+    private bezierTarget!: Bezier;
+    private camPos =new Vector3()
+    private camTarget =new Vector3()
+    private bezierTime =0;
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
@@ -46,8 +51,15 @@ export class StartLevel extends BaseLevel{
         let char = sceneHandler.getSceneObject("charRoot")
 
         char.x = -0.5;
-        let startHeight =3
-        this.levelObjects.gameCamera.setLockedView(new Vector3(0,startHeight,3),new Vector3(0,startHeight-0.2,2+3))
+
+
+        this.bezierCamera =new Bezier(new Vector3(0,5-0.5,8+2),new Vector3(0,4,8+7),new Vector3(0,0.5,2+0.2),new Vector3(0,0.5,2));
+        this.bezierTarget =new Bezier(new Vector3(0,5,8),new Vector3(0,4,8+5),new Vector3(0,0.5,0.2),new Vector3(0,0.5,0));
+
+        this.bezierCamera.getTime(this.camPos,0)
+        this.bezierTarget.getTime(this.camTarget,0)
+
+        this.levelObjects.gameCamera.setLockedView(this.camTarget,this.camPos)
 
         if(!this.intro) this.intro=new Intro()
         this.intro.start()
@@ -68,11 +80,14 @@ export class StartLevel extends BaseLevel{
     }
 
     private moveToStartPos() {
-        let tl =gsap.timeline()
 
-        tl.to(   this.levelObjects.gameCamera.cameraLookAt,{y:0.5,duration:1,ease:"power4.Out"},0)
-        tl.to(   this.levelObjects.gameCamera.cameraWorld,{y:0.5,duration:1,ease:"power4.Out"},0)
-        tl.to(   this.levelObjects.gameCamera.cameraLookAt,{z:0.0,duration:2,ease:"power2.Out"},0)
-        tl.to(   this.levelObjects.gameCamera.cameraWorld,{z:2,duration:2,ease:"power2.Out"},0)
+        let tl =gsap.timeline({onUpdate:()=>{
+                this.bezierCamera.getTime(this.camPos,this.bezierTime)
+                this.bezierTarget.getTime(this.camTarget,this.bezierTime)
+                this.levelObjects.gameCamera.setLockedView(this.camTarget,this.camPos)
+            }})
+
+       tl.to(   this,{ bezierTime:1,duration:3,ease:"power3.InOut"},0)
+
     }
 }

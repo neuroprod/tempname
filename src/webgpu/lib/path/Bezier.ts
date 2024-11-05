@@ -82,7 +82,7 @@ export default class Bezier extends Curve {
         p.x = this.p1.x * factor1 + this.c1.x * factor2 + this.c2.x * factor3 + this.p2.x * factor4;
         p.y = this.p1.y * factor1 + this.c1.y * factor2 + this.c2.y * factor3 + this.p2.y * factor4;
         p.z = this.p1.z * factor1 + this.c1.z * factor2 + this.c2.z * factor3 + this.p2.z * factor4;
-
+return p;
     }
 
     getDistanceToPoint(point: Vector3) {
