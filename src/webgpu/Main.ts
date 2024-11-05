@@ -142,7 +142,7 @@ export default class Main {
         if (state != undefined) {
             this.setMainState(state)
         } else {
-            this.setMainState(MainState.editor)
+            this.setMainState(MainState.game)
         }
 
         this.tick();
