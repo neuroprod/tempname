@@ -7,7 +7,7 @@ import {Vector3} from "@math.gl/core";
 import Kris from "./Kris.ts";
 import Intro from "./Intro.ts";
 import gsap from "gsap";
-import Timeline = gsap.core.Timeline;
+
 export class StartLevel extends BaseLevel{
 
     private kris!:Kris;
