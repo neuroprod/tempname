@@ -205,7 +205,7 @@ class SceneEditor {
         }
         if (addMainMenuButton("Copy", Icons.COPY,true)){
             if(this.currentModel){
-                //this.removeModel(this.currentModel)
+
                let name = SceneHandler.root.getUniqueName(this.currentModel.label)
                 this.copyModel = this.currentModel
                 let copy =this.copyModel.copy(name);

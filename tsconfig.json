@@ -26,7 +26,8 @@
   "include": [
     "src",
     "node_modules/@webgpu/types/dist/index.d.ts",
-    "node_modules/@math.gl/core/src/lib/gl-matrix.d.ts"
+    "node_modules/@math.gl/core/src/lib/gl-matrix.d.ts",
+    "node_modules/gsap/types/index.d.ts"
   ],
   "exclude": [
     "node_modules"

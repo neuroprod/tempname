@@ -87,7 +87,7 @@ export default class Game {
 
 
     setActive() {
-        LevelHandler.setLevel("God")
+        LevelHandler.setLevel("Start")
 
     }
 

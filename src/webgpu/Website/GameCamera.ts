@@ -21,9 +21,9 @@ export default class GameCamera{
     private renderer: Renderer;
     private charRoot: SceneObject3D;
 
-    private cameraLookAt: Vector3 =new Vector3();
+   public cameraLookAt: Vector3 =new Vector3();
     private camPos: Vector3 =new Vector3();
-    private cameraWorld: Vector3 =new Vector3();
+    public cameraWorld: Vector3 =new Vector3();
 
     private cameraState:CameraState =CameraState.Locked
 

@@ -76,7 +76,7 @@ export default class Drawing {
             this.copy1.setTextures(this.project.baseTexture, this.drawBufferTempPass.colorTarget);
             if (!this.project.fullTexture) {
 
-                this.project.fullTexture =new Texture(this.renderer,"fullTexture",{width:2018,height:2048,usage:GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST|GPUTextureUsage.COPY_SRC | GPUTextureUsage.RENDER_ATTACHMENT});
+                this.project.fullTexture =new Texture(this.renderer,"fullTexture",{width:2048,height:2048,usage:GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST|GPUTextureUsage.COPY_SRC | GPUTextureUsage.RENDER_ATTACHMENT});
                 this.project.fullTexture.make();
 
             }
