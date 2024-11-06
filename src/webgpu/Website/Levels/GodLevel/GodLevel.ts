@@ -10,6 +10,7 @@ import {HitTrigger} from "../../../data/HitTriggers.ts";
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
     private strawBerry!: SceneObject3D;
+    private cookie!: SceneObject3D;
 
     init() {
         super.init();
@@ -57,15 +58,15 @@ export class GodLevel extends PlatformLevel{
         god.x =2.5
 
 
-        let cookie = sceneHandler.getSceneObject("cookieRoot")
-        cookie.setScaler(1.5)
-        cookie.z =-0.5
-        cookie.x =-2
+        this.cookie = sceneHandler.getSceneObject("cookieRoot")
+        this.cookie.setScaler(1.5)
+        this.cookie.z =-0.5
+        this.cookie.x =-3
 
         this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
         this.strawBerry.setScaler(1.5)
         this.strawBerry.z =-0.5
-        this.strawBerry.x =-4
+        this.strawBerry.x =-8
 
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
@@ -92,15 +93,11 @@ export class GodLevel extends PlatformLevel{
             if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
                 f.triggerIsEnabled =false;
 
-                let camLookAt= this.levelObjects.gameCamera.cameraWorld
-               // let camWorld =
                 let target = this.strawBerry.getWorldPos().add([0.5,0.5,0])
                 this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
-
-
                this.blockInput =true
 
-               this.characterController.gotoAndIdle(sceneHandler.getSceneObject("strawberryRoot").getWorldPos().add([0.9,0,0]),-1,()=>{
+               this.characterController.gotoAndIdle(this.strawBerry.getWorldPos().add([0.9,0,0]),-1,()=>{
                    setTimeout(()=>{
                    this.levelObjects.conversationHandler.startConversation("strawberry")
                    this.levelObjects.conversationHandler.doneCallBack =()=>{
@@ -110,6 +107,25 @@ export class GodLevel extends PlatformLevel{
                    }},1500);
 
                });
+                return true;
+            }
+            if(f.hitTriggerItem ==HitTrigger.COOKIE){
+                f.triggerIsEnabled =false;
+
+                let target = this.cookie.getWorldPos().add([0.5,0.5,0])
+                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
+                this.blockInput =true
+
+                this.characterController.gotoAndIdle(this.cookie.getWorldPos().add([0.9,0,0]),-1,()=>{
+                    setTimeout(()=>{
+                        this.levelObjects.conversationHandler.startConversation("cookie")
+                        this.levelObjects.conversationHandler.doneCallBack =()=>{
+                            this.levelObjects.gameCamera.setCharView()
+                            setTimeout(()=>{this.blockInput =false},500)
+
+                        }},1500);
+
+                });
                 return true;
             }
 

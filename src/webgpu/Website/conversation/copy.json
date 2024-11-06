@@ -12,5 +12,15 @@
       ]}
 
     ]
+  },
+
+  {
+    "name": "cookie",
+    "data": [
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cooky!\nWhy are you always angry?"},
+      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "My mom told me\nI was a happy baby."},
+      {"text": "But then I had to go to\nschool and stuff."},
+      {"text": "Now I just want to smash things."}
+    ]
   }
 ]

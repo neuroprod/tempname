@@ -37,7 +37,7 @@ export default class ConversationHandler {
     setText() {
 
         if (this.dataArr.length == this.dataIndex) {
-            this.textBalloonHandler.hideText()
+
             return true;
         }
 
@@ -119,7 +119,7 @@ export default class ConversationHandler {
         }
 
         if (jump) {
-            this.setText()
+            if(this.setText())     this.setDone()
         }
 
 
