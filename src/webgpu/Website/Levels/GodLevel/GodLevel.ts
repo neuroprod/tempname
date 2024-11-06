@@ -15,6 +15,7 @@ export class GodLevel extends PlatformLevel{
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
+        LoadHandler.startLoading()
         SceneHandler.setScene("e857a11e-d9f9-4a0c").then(() => {
 
             SceneHandler.addScene("1234").then(() => {
@@ -25,6 +26,9 @@ export class GodLevel extends PlatformLevel{
                 LoadHandler.stopLoading()
             });
             SceneHandler.addScene("58745956-acac-4aba").then(() => {
+                LoadHandler.stopLoading()
+            });
+            SceneHandler.addScene("c7dc8752-9088-476b").then(() => {
                 LoadHandler.stopLoading()
             });
             LoadHandler.stopLoading()
@@ -50,9 +54,15 @@ export class GodLevel extends PlatformLevel{
         god.x =2.5
         let cookie = sceneHandler.getSceneObject("cookieRoot")
         cookie.setScaler(1.5)
-       // cookie.ry =-0.2
         cookie.z =-0.5
         cookie.x =-2
+
+        let strawBerry = sceneHandler.getSceneObject("strawberryRoot")
+        strawBerry.setScaler(1.5)
+        strawBerry.z =-0.5
+        strawBerry.x =-4
+
+
         this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
 
         this.tl = gsap.timeline({repeat:-1})

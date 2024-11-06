@@ -80,7 +80,7 @@ export class StartLevel extends BaseLevel{
     }
 
     private moveToStartPos() {
-
+        this.bezierTime =0
         let tl =gsap.timeline({onUpdate:()=>{
                 this.bezierCamera.getTime(this.camPos,this.bezierTime)
                 this.bezierTarget.getTime(this.camTarget,this.bezierTime)
