@@ -13,6 +13,7 @@ import SceneHandler from "../data/SceneHandler.ts";
 import Timer from "../lib/Timer.ts";
 
 export default class CharacterController {
+
     charRoot!: SceneObject3D;
     targetPos: Vector3 = new Vector3()
     public charHitRadius = 0.2
@@ -52,6 +53,11 @@ export default class CharacterController {
     private feetStepPrev: number = 0;
     private idleTime = 0;
      cloudParticles: CloudParticles;
+    private autoWalk: boolean =false;
+    private autoWalkTarget: Vector3 =new Vector3();
+    private autoWalkTargetDir: number =0;
+    private gotoDone!:() => void
+
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
@@ -80,14 +86,39 @@ export default class CharacterController {
         this.leftLeg = SceneHandler.getSceneObject("legLeft");
         this.rightLeg = SceneHandler.getSceneObject("legRight");
         this.bodyBasePos = this.charBody.getPosition().clone()
-
+        this.autoWalk =false;
        this.cloudParticles.init()
 
     }
+    gotoAndIdle(worldPos: Vector3,dir:number =1,gotoDone: () => void) {
+        this.gotoDone =gotoDone;
+        this.autoWalk =true;
+        this.autoWalkTarget.copy(worldPos);
+        this.autoWalkTargetDir =dir;
+    }
+    updateIdle(delta:number) {
 
-    updateIdle() {
-        this.idleTime += Timer.delta;
 
+        if( this.autoWalk){
+
+            let speed = Math.min(3,Math.abs(this.autoWalkTarget.x-this.targetPos.x)*10)
+            if(this.autoWalkTarget.x < this.targetPos.x){
+                this.velocity.x =-speed;
+            }
+            if(this.autoWalkTarget.x > this.targetPos.x){
+                this.velocity.x =speed;
+            }
+
+            if(Math.abs(this.autoWalkTarget.x-this.targetPos.x)<0.1){
+                this.update(delta, this.autoWalkTargetDir*0.001, false)
+                this.autoWalk =false
+                this.gotoDone();
+            }
+
+
+        }
+
+        this.update(delta, 0, false)
     }
 
     update(delta: number, hInput: number, jump: boolean) {
@@ -341,4 +372,6 @@ export default class CharacterController {
             this.rightLeg.setPositionV(this.feetPos2)
         }
     }
+
+
 }

@@ -10,7 +10,7 @@ export class PlatformLevel extends BaseLevel{
     public characterController!: CharacterController;
     private coinHandler!: CoinHandler;
 
-
+    blockInput =false
 
     init() {
         super.init();
@@ -19,6 +19,7 @@ export class PlatformLevel extends BaseLevel{
     }
     configScene(){
         this.coinHandler =new CoinHandler()
+        this.blockInput =false;
     }
     update(){
         this.levelObjects.gamepadInput.update();
@@ -31,8 +32,12 @@ export class PlatformLevel extends BaseLevel{
 
             if (!jump) jump = this.levelObjects.gamepadInput.getJump()
         }
+        if( this.blockInput){
+            this.characterController.updateIdle(delta)
 
-        this.characterController.update(      delta, hInput, jump)
+        }else{
+            this.characterController.update( delta, hInput, jump)
+        }
         this.coinHandler.update()
         this.checkTriggers()
 
@@ -49,7 +54,7 @@ export class PlatformLevel extends BaseLevel{
 
     }
 
-    private resolveHitTrigger(f: SceneObject3D) {
+    resolveHitTrigger(f: SceneObject3D) {
         if(f.hitTriggerItem ==HitTrigger.COIN){
             this.coinHandler.takeCoin(f)
             return true;

@@ -4,6 +4,8 @@ import LoadHandler from "../../../data/LoadHandler.ts";
 import SceneHandler from "../../../data/SceneHandler.ts";
 import sceneHandler from "../../../data/SceneHandler.ts";
 import gsap from "gsap";
+import SceneObject3D from "../../../data/SceneObject3D.ts";
+import {HitTrigger} from "../../../data/HitTriggers.ts";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
@@ -48,10 +50,12 @@ export class GodLevel extends PlatformLevel{
 
        let god = sceneHandler.getSceneObject("godRoot")
         god.setScaler(1.5)
-       god.y =0.8
+        god.y =0.8
         god.ry =-0.5
         god.z =-0.5
         god.x =2.5
+
+
         let cookie = sceneHandler.getSceneObject("cookieRoot")
         cookie.setScaler(1.5)
         cookie.z =-0.5
@@ -63,7 +67,7 @@ export class GodLevel extends PlatformLevel{
         strawBerry.x =-4
 
 
-        this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
+       /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
 
         this.tl = gsap.timeline({repeat:-1})
         this.tl.call(()=>{
@@ -78,9 +82,35 @@ export class GodLevel extends PlatformLevel{
         this.tl.call(()=>{
             this.levelObjects.textBalloonHandler.hideText()
         },[],12)
-
+*/
 
     }
+
+     resolveHitTrigger(f: SceneObject3D) {
+        if(!super.resolveHitTrigger(f)){
+            if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
+                f.triggerIsEnabled =false;
+
+               this.blockInput =true
+               this.characterController.gotoAndIdle(sceneHandler.getSceneObject("strawberryRoot").getWorldPos().add([0.9,0,0]),-1,()=>{
+
+                //   this.blockInput =false
+
+               });
+
+
+
+
+
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
+
     destroy(){
         super.destroy()
         if(this.tl) this.tl.clear()

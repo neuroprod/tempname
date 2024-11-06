@@ -7,7 +7,7 @@ export class BaseLevel {
     constructor() {
     }
     initObjects(levelObjects:LevelData){
-console.log("initObjects")
+
 
         this.levelObjects =levelObjects;
     }

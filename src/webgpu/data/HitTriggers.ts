@@ -6,8 +6,8 @@ export enum HitTrigger
         NONE,
         COIN,
         STRAWBERRY,
-
-
+        GOD,
+        COOKIE,
     }
 
 export  const HitTriggerSelectItems:Array<SelectItem> =[]
