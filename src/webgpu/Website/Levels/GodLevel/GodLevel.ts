@@ -9,6 +9,7 @@ import {HitTrigger} from "../../../data/HitTriggers.ts";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
+    private strawBerry!: SceneObject3D;
 
     init() {
         super.init();
@@ -61,10 +62,10 @@ export class GodLevel extends PlatformLevel{
         cookie.z =-0.5
         cookie.x =-2
 
-        let strawBerry = sceneHandler.getSceneObject("strawberryRoot")
-        strawBerry.setScaler(1.5)
-        strawBerry.z =-0.5
-        strawBerry.x =-4
+        this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
+        this.strawBerry.setScaler(1.5)
+        this.strawBerry.z =-0.5
+        this.strawBerry.x =-4
 
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
@@ -91,17 +92,24 @@ export class GodLevel extends PlatformLevel{
             if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
                 f.triggerIsEnabled =false;
 
-               this.blockInput =true
-               this.characterController.gotoAndIdle(sceneHandler.getSceneObject("strawberryRoot").getWorldPos().add([0.9,0,0]),-1,()=>{
+                let camLookAt= this.levelObjects.gameCamera.cameraWorld
+               // let camWorld =
+                let target = this.strawBerry.getWorldPos().add([0.5,0.5,0])
+                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
 
-                //   this.blockInput =false
+
+               this.blockInput =true
+
+               this.characterController.gotoAndIdle(sceneHandler.getSceneObject("strawberryRoot").getWorldPos().add([0.9,0,0]),-1,()=>{
+                   setTimeout(()=>{
+                   this.levelObjects.conversationHandler.startConversation("strawberry")
+                   this.levelObjects.conversationHandler.doneCallBack =()=>{
+                       this.levelObjects.gameCamera.setCharView()
+                       setTimeout(()=>{this.blockInput =false},500)
+
+                   }},1500);
 
                });
-
-
-
-
-
                 return true;
             }
 

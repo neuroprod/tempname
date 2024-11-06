@@ -2,6 +2,7 @@ import TextBalloonHandler from "./TextBalloonHandler.ts";
 import copy from "./copy.json"
 
 import Renderer from "../../lib/Renderer.ts";
+import SceneHandler from "../../data/SceneHandler.ts";
 
 export default class ConversationHandler {
     textReady: boolean = false;
@@ -14,7 +15,7 @@ export default class ConversationHandler {
     private choiceIndex: number = 0;
     private numChoices = 0;
     isDone: boolean =false;
-
+    doneCallBack!:()=>void;
     constructor(renderer: Renderer, textBalloonHandler: TextBalloonHandler) {
         this.renderer = renderer;
         this.textBalloonHandler = textBalloonHandler;
@@ -24,6 +25,7 @@ export default class ConversationHandler {
 
 
         this.dataArr = this.getCopyData(id);
+        console.log(this.dataArr)
         this.dataIndex = 0
         this.isChoice = false;
         this.isDone =false;
@@ -44,9 +46,9 @@ export default class ConversationHandler {
         let data = this.dataArr[this.dataIndex]
 
         if (data.char && data.pos) {
-         //   let m = SceneData.sceneModelsByName[data.char];
+          let m = SceneHandler.getSceneObject(data.char);
 
-          //  this.textBalloonHandler.setModel(m, data.pos)
+          this.textBalloonHandler.setModel(m, data.pos)
 
         }
         this.currentData = data;
@@ -102,15 +104,14 @@ export default class ConversationHandler {
 
                 this.choiceIndex +=s;
                 this.choiceIndex= (( this.choiceIndex % this.numChoices) + this.numChoices) % this.numChoices;
-                console.log(this.choiceIndex)
+
                 let text = this.currentData.choice[this.choiceIndex].text;
                 this.displayText(text,   this.numChoices,   this.choiceIndex)
 
             }else if(jump) {
 
-                console.log("setChoise")
+        // go to target
                this.setDone();
-
 
             }
 
@@ -139,6 +140,8 @@ export default class ConversationHandler {
 
     private setDone() {
         this.isDone =true;
+        this.textReady =false;
        this.textBalloonHandler.hideText()
+        this.doneCallBack()
     }
 }

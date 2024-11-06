@@ -74,11 +74,20 @@ export default class GameCamera{
 
         this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.01 ,delta))
     }
+setCharView(){
+    this.cameraState  =CameraState.CharCamera
+}
 
+    setLockedView(camLookAt: Vector3|null=null, camPosition: Vector3|null=null) {
+        if(camPosition) this.cameraWorld.copy(camPosition as NumericArray);
+        if(camLookAt) this.cameraLookAt.copy(camLookAt as NumericArray);
+        this.cameraState  =CameraState.Locked;
+    }
 
-    setLockedView(camLookAt: Vector3, camPosition: Vector3) {
-        this.cameraWorld.copy(camPosition as NumericArray)
-        this.cameraLookAt.copy(camLookAt as NumericArray)
-        this.cameraState  =CameraState.Locked
+    TweenToLockedView(camLookAt: Vector3, camPosition: Vector3) {
+        let tl=gsap.timeline()
+        tl.to(this.cameraWorld,{x:camPosition.x,y:camPosition.y,z:camPosition.z,duration:1.5,ease:"power2.out"},0)
+        tl.to(this.cameraLookAt,{x:camLookAt.x,y:camLookAt.y,z:camLookAt.z,duration:1.5,ease:"power2.out"},0)
+        this.cameraState  =CameraState.Locked;
     }
 }

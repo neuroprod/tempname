@@ -32,11 +32,14 @@ export class PlatformLevel extends BaseLevel{
 
             if (!jump) jump = this.levelObjects.gamepadInput.getJump()
         }
-        if( this.blockInput){
-            this.characterController.updateIdle(delta)
 
-        }else{
+        if( !this.blockInput){
             this.characterController.update( delta, hInput, jump)
+        }else{
+            this.characterController.updateIdle(delta)
+            this.levelObjects.conversationHandler.setInput(hInput, jump)
+            this.levelObjects.textBalloonHandler.update()
+
         }
         this.coinHandler.update()
         this.checkTriggers()

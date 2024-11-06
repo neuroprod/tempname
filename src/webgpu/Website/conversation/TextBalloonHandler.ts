@@ -212,7 +212,7 @@ export default class TextBalloonHandler {
 
         if (this.model) {
 
-            let w = this.model.getWorldPos(this.modelOffset)
+            let w = this.model.getWorldPos().add(this.modelOffset)
             DebugDraw.drawCircle(w, 0.01)
 
             w.transform(this.gameCamera.viewProjection)

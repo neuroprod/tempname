@@ -8,6 +8,8 @@ import Kris from "./Kris.ts";
 import Intro from "./Intro.ts";
 import gsap from "gsap";
 import Bezier from "../../../lib/path/Bezier.ts";
+import CharacterController from "../../CharacterController.ts";
+import Timer from "../../../lib/Timer.ts";
 
 export class StartLevel extends BaseLevel{
 
@@ -18,6 +20,7 @@ export class StartLevel extends BaseLevel{
     private camPos =new Vector3()
     private camTarget =new Vector3()
     private bezierTime =0;
+
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
@@ -41,6 +44,7 @@ export class StartLevel extends BaseLevel{
     private configScene() {
 
         LoadHandler.onComplete =()=>{}
+
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 

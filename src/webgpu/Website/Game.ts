@@ -19,41 +19,31 @@ import UI from "../lib/UI/UI.ts";
 import LevelHandler from "./Levels/LevelHandler.ts";
 import LevelData from "./Levels/LevelData.ts";
 import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
-import SceneHandler from "../data/SceneHandler.ts";
+
+import ConversationHandler from "./conversation/ConversationHandler.ts";
 
 
 export default class Game {
     private renderer: Renderer;
     private mouseListener: MouseListener;
-
     private gameRenderer: GameRenderer;
     private keyInput: KeyInput;
-
     private gameCamera: GameCamera;
-
     private gamepadInput: GamePadInput;
-
     private levelObjects: LevelData;
     private textBalloonHandler: TextBalloonHandler;
-
+    private conversationHandler:ConversationHandler;
 
     constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
 
         this.renderer = renderer;
-
-
-
-
-
         this.mouseListener = mouseListener;
-
         this.gameRenderer = gameRenderer;
-
 
         this.gameCamera = new GameCamera(renderer, camera);
 
         this.textBalloonHandler =new TextBalloonHandler(this.renderer,this.gameCamera.camera)
-
+        this.conversationHandler =new ConversationHandler(this.renderer,this.textBalloonHandler)
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
@@ -64,6 +54,7 @@ export default class Game {
         this.levelObjects.gamepadInput=this.gamepadInput
         this.levelObjects.keyInput=this.keyInput
         this.levelObjects.textBalloonHandler =this.textBalloonHandler
+        this.levelObjects.conversationHandler =this.conversationHandler;
 
         LevelHandler.init(this.levelObjects)
         SoundHandler.init()
@@ -74,10 +65,8 @@ export default class Game {
 
         if (LoadHandler.isLoading()) return
 
-
         this.gamepadInput.update();
         LevelHandler.currentLevel.update()
-
         this.gameCamera.update()
         this.textBalloonHandler.update()
 
@@ -116,9 +105,7 @@ export default class Game {
         for(let l of LevelHandler.levelKeys){
             if(UI.LButton(l)){
                 LevelHandler.setLevel(l)
-
             }
-
         }
 
         UI.popWindow()
