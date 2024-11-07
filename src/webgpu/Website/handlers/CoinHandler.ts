@@ -34,7 +34,7 @@ private coins :Array<SceneObject3D> =[];
     takeCoin(f: SceneObject3D) {
         f.triggerIsEnabled =false;
         SoundHandler.playCoin()
-        f.sx
-        gsap.to(f,{ y:f.y+0.3, sx:0,sy:0,sz:0,ease:"back.in",duration:0.2,onComplete:()=>{f.hide()}})
+
+        gsap.to(f,{ y:f.y+0.3, sx:0,sy:0,sz:0,ease:"back.in",duration:0.2,onComplete:()=>{f.hide();f.y-=0.3}})
     }
 }

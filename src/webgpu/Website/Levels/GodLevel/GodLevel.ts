@@ -6,15 +6,20 @@ import sceneHandler from "../../../data/SceneHandler.ts";
 import gsap from "gsap";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
+import God from "./God.ts";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
     private strawBerry!: SceneObject3D;
     private cookie!: SceneObject3D;
+    private tree!: SceneObject3D;
+    private god!: SceneObject3D;
+    private godController!: God;
 
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
+        LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
@@ -35,6 +40,11 @@ export class GodLevel extends PlatformLevel{
             SceneHandler.addScene("c7dc8752-9088-476b").then(() => {
                 LoadHandler.stopLoading()
             });
+
+            SceneHandler.addScene("9f307f29-4140-48d6").then(() => {
+                LoadHandler.stopLoading()
+            });
+
             LoadHandler.stopLoading()
         })
 
@@ -50,12 +60,23 @@ export class GodLevel extends PlatformLevel{
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 
 
-       let god = sceneHandler.getSceneObject("godRoot")
-        god.setScaler(1.5)
-        god.y =0.8
-        god.ry =-0.5
-        god.z =-0.5
-        god.x =2.5
+
+
+
+       this.tree = sceneHandler.getSceneObject("rootTree")
+        this.tree.setScaler(1.5)
+        this.tree.z =-0.05
+        this.tree.x =3
+
+
+        this.god = sceneHandler.getSceneObject("godRoot")
+
+        this.god.setScaler(1.5)
+
+        this.god.ry =-0.3
+        this.god.z =-0.5
+        this.god.x =this.tree.x +1.3
+this.godController =new God(this.god)
 
 
         this.cookie = sceneHandler.getSceneObject("cookieRoot")
@@ -66,7 +87,8 @@ export class GodLevel extends PlatformLevel{
         this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
         this.strawBerry.setScaler(1.5)
         this.strawBerry.z =-0.5
-        this.strawBerry.x =-8
+        this.strawBerry.x =-5
+
 
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
@@ -90,6 +112,35 @@ export class GodLevel extends PlatformLevel{
 
      resolveHitTrigger(f: SceneObject3D) {
         if(!super.resolveHitTrigger(f)){
+
+
+            if(f.hitTriggerItem ==HitTrigger.GOD){
+
+                console.log("hitGOD")
+                f.triggerIsEnabled =false;
+                let target =  f.getWorldPos().add([0.8,-0.2,0])
+                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.2]))
+                this.blockInput =true
+
+                this.characterController.gotoAndIdle(this.tree.getWorldPos(),1,()=>{
+                    this.godController.show(()=>{
+
+                        this.levelObjects.gameCamera.setCharView()
+                        this.blockInput =false
+                    })
+
+                });
+
+            }
+
+            if(f.hitTriggerItem ==HitTrigger.TREE){
+
+                console.log("hitTREE")
+
+            }
+
+
+
             if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
                 f.triggerIsEnabled =false;
 
