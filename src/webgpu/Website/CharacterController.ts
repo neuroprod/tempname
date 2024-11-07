@@ -11,6 +11,7 @@ import {NumericArray} from "@math.gl/types";
 import SoundHandler from "./SoundHandler.ts";
 import SceneHandler from "../data/SceneHandler.ts";
 import Timer from "../lib/Timer.ts";
+import Object3D from "../lib/model/Object3D.ts";
 
 export default class CharacterController {
 
@@ -57,6 +58,7 @@ export default class CharacterController {
     private autoWalkTarget: Vector3 =new Vector3();
     private autoWalkTargetDir: number =0;
     private gotoDone!:() => void
+    private hitObject: Object3D | null=null;
 
 
     constructor(renderer: Renderer) {
@@ -120,7 +122,9 @@ export default class CharacterController {
 
         this.update(delta, 0, false)
     }
-
+setAngle(angle:number){
+        gsap.to( this.charRoot,{ry:angle,duration:0.5,ease:"power2.inOut"})
+}
     update(delta: number, hInput: number, jump: boolean) {
 
         this.cloudParticles.update()
@@ -188,6 +192,7 @@ export default class CharacterController {
 
         if (this.distanceToFloor < 0.1 && this.isGrounded) {
             this.setGrounded(true)
+
             this.velocity.y = 0;
             this.targetPos.y = yFloor;
 
@@ -269,6 +274,7 @@ export default class CharacterController {
 
         } else {
 //hit ground animation
+            console.log(this.hitObject)
             if (this.velocity.y < -5) {
                 let vEf = Math.abs(this.velocity.y) - 5;
                 this.charBody.y = this.bodyBasePos.y - 0.07
@@ -301,7 +307,9 @@ export default class CharacterController {
 
     private checkRay(ray: Ray) {
         let intSide = ray.intersectModels(SceneHandler.hitTestModels);
+
         if (intSide.length > 0) {
+           this.hitObject =intSide[0].model.parent;
             DebugDraw.path.moveTo(this.sideRay.rayStart.clone())
             DebugDraw.path.lineTo(intSide[0].point.clone())
             return intSide[0].distance;

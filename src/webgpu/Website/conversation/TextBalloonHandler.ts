@@ -214,7 +214,7 @@ export default class TextBalloonHandler {
         if (this.model) {
 
             let w = this.model.getWorldPos().add(this.modelOffset)
-            DebugDraw.drawCircle(w, 0.01)
+           // DebugDraw.drawCircle(w, 0.01)
 
             w.transform(this.gameCamera.viewProjection)
             this.holder.x = w.x * 100 * this.renderer.ratio;
@@ -365,7 +365,7 @@ export default class TextBalloonHandler {
 
         }
 
-
+this.updatePath()
 
 
 

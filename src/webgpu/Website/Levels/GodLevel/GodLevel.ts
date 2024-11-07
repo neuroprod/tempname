@@ -126,12 +126,14 @@ this.godController =new God(this.god)
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.tree.getWorldPos(),1,()=>{
+                    this.characterController.setAngle(0.6)
                     this.godController.show(()=>{
 
                         this.levelObjects.conversationHandler.startConversation("god")
                         this.levelObjects.conversationHandler.doneCallBack =()=>{
                             this.levelObjects.gameCamera.setCharView()
-                            setTimeout(()=>{this.blockInput =false},500)
+                            this.characterController.setAngle(0.0)
+                           gsap.delayedCall(0.5,()=>{this.blockInput =false})
 
                         };
                     })
@@ -149,13 +151,15 @@ this.godController =new God(this.god)
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.tree.getWorldPos().add([-0.6,0,0]),1,()=>{
-                    setTimeout(()=>{
+                    this.characterController.setAngle(0.4)
+                    gsap.delayedCall(0.5,()=>{
                         this.levelObjects.conversationHandler.startConversation("tree")
                         this.levelObjects.conversationHandler.doneCallBack =()=>{
                             this.levelObjects.gameCamera.setCharView()
-                            setTimeout(()=>{this.blockInput =false},500)
+                            this.characterController.setAngle(0.0)
+                            gsap.delayedCall(0.5,()=>{this.blockInput =false})
 
-                        }},500);
+                        }});
 
                 });
                 return true;

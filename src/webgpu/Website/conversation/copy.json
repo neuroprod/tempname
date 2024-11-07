@@ -17,8 +17,9 @@
   {
     "name": "cookie",
     "data": [
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cooky!\nWhy are you always angry?"},
-      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "My mom told me\nI was a happy baby."},
+      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "Grmbl grplrrrrr!"},
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie! When did\nyou become so angry?"},
+      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "My mom always told me\nI was a happy baby."},
       {"text": "But then I had to go to\nschool and stuff."},
       {"text": "Now I just want to smash things."}
     ]
@@ -29,26 +30,27 @@
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Hi pirate. Are you ready to\ngo on an adventure!?"},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "No, I'm just collecting\nthose free coins that\nare lying around here."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "You know, there is more\nto live then coins."},
-      {"text": "Climb my braches,\nand discover what its all about."},
-      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "I don't know, seems like a lot of work..."},
+      {"text": "Climb my braches, and discover\nwhat it's all about."},
+      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "I don't know,\nIsn't that dangerous..."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Sigh... The are also\ncoins in the branches."},
-      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "Why didn't you tell me earlier\nI'm on my way!"}
+      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "Why didn't you tell me that earlier\nI'm on my way!"}
     ]
   },
   {
     "name": "god",
     "data": [
       {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Goodmorning little child."},
+      {"text": "You have reached the top"},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "Hi, Are you..."},
       {"text": "Are you God?"},
       {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Noooo, my child!"},
       {"text": "I am the man in the sky!"},
-      {"text": "Every year, I bring present\nto the children!"},
+      {"text": "Every year, I bring\npresents to the children!"},
       {"text": "If they are good, that is."},
       {"text": "Do you want to have a present?"},
-      {"char":"charRoot","pos":[-0.3, 0.8, 0],"choice": [
+      {"char":"charRoot","pos":[0.3, 0.8, 0],"choice": [
         {"text": "I'm not a child, but sure,\nI like presents!","callText":"godYes", "callBack": "godYes" },
-        {"text": "No time old man, I'm here to\nsearch for coins..","callText":"godNo", "callBack": "godNo"}
+        {"text": "No time old man, I'm here to\ncollect the coins..","callText":"godNo", "callBack": "godNo"}
 
       ]}
     ]
@@ -62,7 +64,8 @@
   {
     "name": "godNo",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "You asshole! How do you dare to insult me!"}
+      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "How do you dare to insult me!"},
+      {"text": "You will regret this!"}
     ]
   }
 ]
