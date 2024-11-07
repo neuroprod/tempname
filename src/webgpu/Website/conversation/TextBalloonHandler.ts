@@ -69,6 +69,7 @@ export default class TextBalloonHandler {
     private numAnswers: number = 0;
     private newChoice: boolean = false;
     private dotHolder: Object3D;
+    private tline!: gsap.core.Timeline;
 
     constructor(renderer: Renderer, gameCamera: Camera) {
         this.gameCamera = gameCamera;
@@ -303,7 +304,8 @@ export default class TextBalloonHandler {
             this.br.add([-startOff, startOff]);
 
         }
-        let tline = gsap.timeline()
+        if (this.tline)this.tline.clear()
+            this.tline = gsap.timeline()
 
 
 
@@ -313,21 +315,21 @@ export default class TextBalloonHandler {
 
         if (this.newBalloon) {
             this.arrowModelPoint.sx = this.arrowModelPoint.sy = 0;
-            tline.to(this.arrowModelPoint, {sx: 1, sy: 1, duration: 0.2, ease: "power4.out"}, 0)
+            this.tline.to(this.arrowModelPoint, {sx: 1, sy: 1, duration: 0.2, ease: "power4.out"}, 0)
             this.holder.setScaler(0);
-            tline.to(this.holder, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power4.out"}, 0)
+            this.tline.to(this.holder, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power4.out"}, 0)
         }
 
-        tline.to(this.tl, {x: this.tlS.x, y: this.tlS.y, duration: time, ease: ease}, 0)
-        tline.to(this.tr, {x: this.trS.x, y: this.trS.y, duration: time, ease: ease}, 0)
-        tline.to(this.bl, {x: this.blS.x, y: this.blS.y, duration: time, ease: ease}, 0)
-        tline.to(this.br, {
+        this.tline.to(this.tl, {x: this.tlS.x, y: this.tlS.y, duration: time, ease: ease}, 0)
+        this.tline.to(this.tr, {x: this.trS.x, y: this.trS.y, duration: time, ease: ease}, 0)
+        this.tline.to(this.bl, {x: this.blS.x, y: this.blS.y, duration: time, ease: ease}, 0)
+        this.tline.to(this.br, {
             x: this.brS.x, y: this.brS.y, duration: time, ease: ease, onUpdate: () => {
                 this.updatePath()
             }
         }, 0)
 
-        tline.to(this, {
+        this.tline.to(this, {
             charPos: this.textMesh.charCount, duration: this.textMesh.charCount / 50
         }, 0.2)
 
@@ -345,14 +347,14 @@ export default class TextBalloonHandler {
                 this.dotHolder.y = this.blS.y +2
                 this.arrowLeftModel.setScaler(0)
                 this.arrowRightModel.setScaler(0)
-                tline.to( this.arrowLeftModel, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power3.out"}, 0.3)
-                tline.to( this.arrowRightModel, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power3.out"}, 0.3)
+                this.tline.to( this.arrowLeftModel, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power3.out"}, 0.3)
+                this.tline.to( this.arrowRightModel, {sx: 1, sy: 1, sz: 1, duration: 0.3, ease: "power3.out"}, 0.3)
 
             } else {
                 let py =  (this.blS.y - this.tlS.y) / 2 + this.tlS.y+1;
-                tline.to( this.arrowLeftModel, {x: this.tlS.x + 7, y: py, duration: 0.3, ease: ease}, 0.0)
-                tline.to( this.arrowRightModel, {x: this.trS.x - 7, y: py, duration: 0.3, ease:ease}, 0.0)
-                tline.to( this.dotHolder, { y:  this.blS.y +2, duration: 0.3, ease:ease}, 0.0)
+                this.tline.to( this.arrowLeftModel, {x: this.tlS.x + 7, y: py, duration: 0.3, ease: ease}, 0.0)
+                this.tline.to( this.arrowRightModel, {x: this.trS.x - 7, y: py, duration: 0.3, ease:ease}, 0.0)
+                this.tline.to( this.dotHolder, { y:  this.blS.y +2, duration: 0.3, ease:ease}, 0.0)
 
                 //this.dotHolder.x = (this.tlS.x+this.trS.x)/2
 

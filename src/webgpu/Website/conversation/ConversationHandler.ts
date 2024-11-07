@@ -16,6 +16,7 @@ export default class ConversationHandler {
     private numChoices = 0;
     isDone: boolean =false;
     doneCallBack!:()=>void;
+    dataCallBack!:(data:string)=>void;
     constructor(renderer: Renderer, textBalloonHandler: TextBalloonHandler) {
         this.renderer = renderer;
         this.textBalloonHandler = textBalloonHandler;
@@ -109,9 +110,14 @@ export default class ConversationHandler {
                 this.displayText(text,   this.numChoices,   this.choiceIndex)
 
             }else if(jump) {
-
+                this.setCallBack(this.currentData.choice[this.choiceIndex].callBack)
+                if(this.currentData.choice[this.choiceIndex].callText){
+                    this.startConversation(this.currentData.choice[this.choiceIndex].callText)
+                }else{
+                    this.setDone();
+                }
         // go to target
-               this.setDone();
+               //this.setDone();
 
             }
 
@@ -119,13 +125,17 @@ export default class ConversationHandler {
         }
 
         if (jump) {
+            this.setCallBack(this.currentData.callBack)
             if(this.setText())     this.setDone()
         }
 
 
     }
 
+    public setCallBack(data:string|undefined){
 
+        if(this.dataCallBack && data)this.dataCallBack(data)
+    }
 
     setChoice() {
         this.isChoice = true;

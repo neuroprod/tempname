@@ -109,14 +109,17 @@ this.godController =new God(this.god)
 */
 
     }
-
+    conversationDataCallBack(data:string){
+        super.conversationDataCallBack(data);
+        console.log(data)
+    }
      resolveHitTrigger(f: SceneObject3D) {
         if(!super.resolveHitTrigger(f)){
 
 
             if(f.hitTriggerItem ==HitTrigger.GOD){
 
-                console.log("hitGOD")
+
                 f.triggerIsEnabled =false;
                 let target =  f.getWorldPos().add([0.8,-0.2,0])
                 this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.2]))
@@ -125,8 +128,12 @@ this.godController =new God(this.god)
                 this.characterController.gotoAndIdle(this.tree.getWorldPos(),1,()=>{
                     this.godController.show(()=>{
 
-                        this.levelObjects.gameCamera.setCharView()
-                        this.blockInput =false
+                        this.levelObjects.conversationHandler.startConversation("god")
+                        this.levelObjects.conversationHandler.doneCallBack =()=>{
+                            this.levelObjects.gameCamera.setCharView()
+                            setTimeout(()=>{this.blockInput =false},500)
+
+                        };
                     })
 
                 });
@@ -135,8 +142,23 @@ this.godController =new God(this.god)
 
             if(f.hitTriggerItem ==HitTrigger.TREE){
 
-                console.log("hitTREE")
+                f.triggerIsEnabled =false;
 
+                let target = this.tree.getWorldPos().add([-0.3,0.5,0])
+                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,1.7]))
+                this.blockInput =true
+
+                this.characterController.gotoAndIdle(this.tree.getWorldPos().add([-0.6,0,0]),1,()=>{
+                    setTimeout(()=>{
+                        this.levelObjects.conversationHandler.startConversation("tree")
+                        this.levelObjects.conversationHandler.doneCallBack =()=>{
+                            this.levelObjects.gameCamera.setCharView()
+                            setTimeout(()=>{this.blockInput =false},500)
+
+                        }},500);
+
+                });
+                return true;
             }
 
 

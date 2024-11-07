@@ -19,6 +19,7 @@ export class PlatformLevel extends BaseLevel{
     }
     configScene(){
         this.coinHandler =new CoinHandler()
+        this.levelObjects.conversationHandler.dataCallBack =this.conversationDataCallBack.bind(this)
         this.blockInput =false;
     }
     update(){
@@ -56,7 +57,9 @@ export class PlatformLevel extends BaseLevel{
         }
 
     }
+    conversationDataCallBack(data:string){
 
+    }
     resolveHitTrigger(f: SceneObject3D) {
         if(f.hitTriggerItem ==HitTrigger.COIN){
             this.coinHandler.takeCoin(f)

@@ -22,5 +22,47 @@
       {"text": "But then I had to go to\nschool and stuff."},
       {"text": "Now I just want to smash things."}
     ]
+  },
+  {
+    "name": "tree",
+    "data": [
+      {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Hi pirate. Are you ready to\ngo on an adventure!?"},
+      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "No, I'm just collecting\nthose free coins that\nare lying around here."},
+      {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "You know, there is more\nto live then coins."},
+      {"text": "Climb my braches,\nand discover what its all about."},
+      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "I don't know, seems like a lot of work..."},
+      {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Sigh... The are also\ncoins in the branches."},
+      {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "Why didn't you tell me earlier\nI'm on my way!"}
+    ]
+  },
+  {
+    "name": "god",
+    "data": [
+      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Goodmorning little child."},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "Hi, Are you..."},
+      {"text": "Are you God?"},
+      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Noooo, my child!"},
+      {"text": "I am the man in the sky!"},
+      {"text": "Every year, I bring present\nto the children!"},
+      {"text": "If they are good, that is."},
+      {"text": "Do you want to have a present?"},
+      {"char":"charRoot","pos":[-0.3, 0.8, 0],"choice": [
+        {"text": "I'm not a child, but sure,\nI like presents!","callText":"godYes", "callBack": "godYes" },
+        {"text": "No time old man, I'm here to\nsearch for coins..","callText":"godNo", "callBack": "godNo"}
+
+      ]}
+    ]
+  },
+  {
+    "name": "godYes",
+    "data": [
+      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Good my child! Choose wisely"}
+    ]
+  },
+  {
+    "name": "godNo",
+    "data": [
+      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "You asshole! How do you dare to insult me!"}
+    ]
   }
 ]
