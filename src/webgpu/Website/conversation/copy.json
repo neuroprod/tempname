@@ -67,5 +67,30 @@
       {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "How do you dare to insult me!"},
       {"text": "You will regret this!"}
     ]
+  },
+  {
+    "name": "godPresent0",
+    "data": [
+      {"char":"godRoot","pos":[0.1,0.6,0],"text": "A lightning strike!\nIt doesn't have many uses."}
+    ]
+  },
+  {
+    "name": "godPresent1",
+    "data": [
+      {"char":"godRoot","pos":[0.1,0.6,0],"text": "This is not a present.\nIt's just an empty box."}
+    ]
+  },
+  {
+    "name": "godPresent2",
+    "data": [
+      {"char":"godRoot","pos":[0.1,0.6,0],"text": "A non-disclosure agreement.\nSomeone still has to sign it."}
+    ]
+  },
+  {
+    "name": "godPresent3",
+    "data": [
+      {"char":"godRoot","pos":[0.1,0.6,0],"text": "Its hammer time!\nNow you only have to\nfind some nails."}
+    ]
   }
+
 ]

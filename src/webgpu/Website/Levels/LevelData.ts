@@ -16,5 +16,7 @@ export default class LevelData {
     textBalloonHandler!: TextBalloonHandler;
     conversationHandler!: ConversationHandler;
 
+    //godPresent
+    presentID=-1;
 
 }

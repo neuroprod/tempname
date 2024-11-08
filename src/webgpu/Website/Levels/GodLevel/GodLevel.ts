@@ -7,6 +7,7 @@ import gsap from "gsap";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
 import God from "./God.ts";
+import LevelHandler from "../LevelHandler.ts";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
@@ -52,7 +53,7 @@ export class GodLevel extends PlatformLevel{
     configScene() {
         super.configScene()
         LoadHandler.onComplete =()=>{}
-
+        this.blockInput =false
         this.characterController.setCharacter()
         this.levelObjects.gameCamera.setCharacter()
         SceneHandler.usedModels.push(this.characterController.cloudParticles.particlesModel)
@@ -131,9 +132,12 @@ this.godController =new God(this.god)
 
                         this.levelObjects.conversationHandler.startConversation("god")
                         this.levelObjects.conversationHandler.doneCallBack =()=>{
-                            this.levelObjects.gameCamera.setCharView()
-                            this.characterController.setAngle(0.0)
-                           gsap.delayedCall(0.5,()=>{this.blockInput =false})
+
+                           gsap.delayedCall(0.5,()=>{
+
+                               LevelHandler.setLevel("GodChoice")
+
+                           })
 
                         };
                     })

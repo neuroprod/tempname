@@ -17,5 +17,7 @@ export default class God{
 
         this.tl.call(onComplete)
     }
+    update(){
 
+    }
 }
