@@ -3,6 +3,7 @@ import {GodLevel} from "./GodLevel/GodLevel.ts";
 import {BaseLevel} from "./BaseLevel.ts";
 import {StartLevel} from "./StartLevel/StartLevel.ts";
 import LevelData from "./LevelData.ts";
+import GodChoiceLevel from "./GodChoiceLevel/GodChoiseLevel.ts";
 
 
 class LevelHandler {
@@ -16,6 +17,7 @@ class LevelHandler {
         this.levelObjects = levelObjects;
         this.addLevel("Start", new StartLevel())
         this.addLevel("God", new GodLevel())
+        this.addLevel("GodChoice", new GodChoiceLevel())
     }
 
     setLevel(key: string) {

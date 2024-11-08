@@ -40,7 +40,7 @@
     "name": "god",
     "data": [
       {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Goodmorning little child."},
-      {"text": "You have reached the top"},
+      {"text": "Those where some nice jumps!"},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "Hi, Are you..."},
       {"text": "Are you God?"},
       {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Noooo, my child!"},

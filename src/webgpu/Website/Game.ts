@@ -77,7 +77,7 @@ export default class Game {
 
     setActive() {
        // LevelHandler.setLevel("Start")
-        LevelHandler.setLevel("God")
+        LevelHandler.setLevel("GodChoice")
     }
 
     draw() {
