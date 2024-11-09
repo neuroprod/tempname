@@ -64,6 +64,7 @@ class SceneHandler {
         this.root.removeAllChildren()
         this.usedModels = [];
         this.hitTestModels =[];
+        this.triggerModels =[];
         this.sceneObjectsByLoadID.clear()
         this.sceneObjectsByName.clear()
 

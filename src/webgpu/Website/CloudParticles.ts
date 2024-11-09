@@ -87,9 +87,9 @@ export default class CloudParticles{
 
             charProj.getProjectMeshByName("cloudParticles")
             this.particlesModel = new Model(renderer,"particlesModel")
-            console.log(charProj)
+
             this.particlesModel.mesh =charProj.getProjectMeshByName("cloudParticle")?.getMesh() as Mesh
-            console.log( this.particlesModel.mesh )
+
             this.particlesModel.material =new GBufferCloudMaterial(renderer,"cloudMaterial")
 
             this.particlesModel.needCulling =false;

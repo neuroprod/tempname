@@ -122,9 +122,9 @@ export default class CharacterController {
 
         this.update(delta, 0, false)
     }
-setAngle(angle:number){
-        gsap.to( this.charRoot,{ry:angle,duration:0.5,ease:"power2.inOut"})
-}
+    setAngle(angle:number){
+            gsap.to( this.charRoot,{ry:angle,duration:0.5,ease:"power2.inOut"})
+    }
     update(delta: number, hInput: number, jump: boolean) {
 
         this.cloudParticles.update()
@@ -274,7 +274,7 @@ setAngle(angle:number){
 
         } else {
 //hit ground animation
-            console.log(this.hitObject)
+            //console.log(this.hitObject)
             if (this.velocity.y < -5) {
                 let vEf = Math.abs(this.velocity.y) - 5;
                 this.charBody.y = this.bodyBasePos.y - 0.07

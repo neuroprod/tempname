@@ -25,7 +25,7 @@ export class GodLevel extends PlatformLevel{
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
-        LoadHandler.startLoading()
+
         SceneHandler.setScene("e857a11e-d9f9-4a0c").then(() => {
 
             SceneHandler.addScene("1234").then(() => {
@@ -35,9 +35,7 @@ export class GodLevel extends PlatformLevel{
             SceneHandler.addScene("0c10748d-698e-4393").then(() => {
                 LoadHandler.stopLoading()
             });
-            SceneHandler.addScene("58745956-acac-4aba").then(() => {
-                LoadHandler.stopLoading()
-            });
+
             SceneHandler.addScene("c7dc8752-9088-476b").then(() => {
                 LoadHandler.stopLoading()
             });
@@ -80,10 +78,7 @@ export class GodLevel extends PlatformLevel{
 this.godController =new God(this.god)
 
 
-        this.cookie = sceneHandler.getSceneObject("cookieRoot")
-        this.cookie.setScaler(1.5)
-        this.cookie.z =-0.5
-        this.cookie.x =-3
+
 
         this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
         this.strawBerry.setScaler(1.5)
@@ -190,25 +185,7 @@ this.godController =new God(this.god)
                });
                 return true;
             }
-            if(f.hitTriggerItem ==HitTrigger.COOKIE){
-                f.triggerIsEnabled =false;
 
-                let target = this.cookie.getWorldPos().add([0.5,0.5,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
-                this.blockInput =true
-
-                this.characterController.gotoAndIdle(this.cookie.getWorldPos().add([0.9,0,0]),-1,()=>{
-                    setTimeout(()=>{
-                        this.levelObjects.conversationHandler.startConversation("cookie")
-                        this.levelObjects.conversationHandler.doneCallBack =()=>{
-                            this.levelObjects.gameCamera.setCharView()
-                            setTimeout(()=>{this.blockInput =false},500)
-
-                        }},1500);
-
-                });
-                return true;
-            }
 
         }
 

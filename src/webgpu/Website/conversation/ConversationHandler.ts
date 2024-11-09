@@ -26,7 +26,7 @@ export default class ConversationHandler {
 
 
         this.dataArr = this.getCopyData(id);
-        console.log(this.dataArr)
+
         this.dataIndex = 0
         this.isChoice = false;
         this.isDone =false;
