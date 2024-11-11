@@ -92,7 +92,7 @@ export class CookieLevel extends PlatformLevel{
                 f.triggerIsEnabled =false;
 
                 let target = this.cookie.getWorldPos().add([-0.5,0.5,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
+                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.cookie.getWorldPos().add([-0.9,0,0]),1,()=>{
