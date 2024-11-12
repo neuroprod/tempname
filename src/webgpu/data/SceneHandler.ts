@@ -22,6 +22,7 @@ class SceneHandler {
     private sceneData: any;
     hitTestModels: Array<Model> = [];
     triggerModels: Array<SceneObject3D> = [];
+    mouseHitModels: Array<Model> = [];
     async init(renderer: Renderer, preloader: PreLoader) {
         this.renderer = renderer;
         this.root = new SceneObject3D(renderer, "MainRoot")
@@ -65,6 +66,7 @@ class SceneHandler {
         this.usedModels = [];
         this.hitTestModels =[];
         this.triggerModels =[];
+        this.mouseHitModels =[];
         this.sceneObjectsByLoadID.clear()
         this.sceneObjectsByName.clear()
 
@@ -143,7 +145,9 @@ class SceneHandler {
                     if (sceneObj.needsTrigger) {
                         this.triggerModels.push(sceneObj);
                     }
-
+                    if (sceneObj.needsMouseHit) {
+                        this.mouseHitModels.push(sceneObj.model);
+                    }
 
 
                     this.usedModels.push(sceneObj.model);

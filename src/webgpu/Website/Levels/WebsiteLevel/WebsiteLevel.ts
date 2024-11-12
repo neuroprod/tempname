@@ -4,11 +4,13 @@ import SceneHandler from "../../../data/SceneHandler.ts";
 ;
 
 import {Vector3} from "@math.gl/core";
+import Model from "../../../lib/model/Model.ts";
 
 
 
 
 export class WebsiteLevel extends BaseLevel{
+
 
 
 
@@ -27,14 +29,14 @@ export class WebsiteLevel extends BaseLevel{
 
     }
 
-    private configScene() {
+    configScene() {
 
         LoadHandler.onComplete =()=>{}
 
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 
-
+        this.mouseHitObjects = SceneHandler.mouseHitModels
 
 
         this.levelObjects.gameCamera.setLockedView(new Vector3(0,0,0),new Vector3(0,0,1))
@@ -45,7 +47,7 @@ export class WebsiteLevel extends BaseLevel{
     update() {
         super.update();
         let t =document.body.getBoundingClientRect().top
-let  p =- Math.abs(t/2000)
+        let  p =- Math.abs(t/2000)
         this.levelObjects.gameCamera.setLockedView(new Vector3(0,p,0),new Vector3(0,p,1))
 
     }

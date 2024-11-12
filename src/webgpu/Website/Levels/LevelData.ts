@@ -5,6 +5,7 @@ import GamePadInput from "../GamePadInput.ts";
 import KeyInput from "../KeyInput.ts";
 import TextBalloonHandler from "../conversation/TextBalloonHandler.ts";
 import ConversationHandler from "../conversation/ConversationHandler.ts";
+import MouseListener from "../../lib/MouseListener.ts";
 
 export default class LevelData {
 
@@ -15,8 +16,10 @@ export default class LevelData {
     keyInput!: KeyInput;
     textBalloonHandler!: TextBalloonHandler;
     conversationHandler!: ConversationHandler;
+    mouseListener!: MouseListener;
 
     //godPresent
     presentID=-1;
+
 
 }

@@ -55,7 +55,7 @@ export default class Game {
         this.levelObjects.keyInput=this.keyInput
         this.levelObjects.textBalloonHandler =this.textBalloonHandler
         this.levelObjects.conversationHandler =this.conversationHandler;
-
+        this.levelObjects.mouseListener =this.mouseListener;
         LevelHandler.init(this.levelObjects)
         SoundHandler.init()
     }
@@ -65,7 +65,11 @@ export default class Game {
 
         if (LoadHandler.isLoading()) return
 
+
+
         this.gamepadInput.update();
+
+        LevelHandler.currentLevel.updateMouse()
         LevelHandler.currentLevel.update()
         this.gameCamera.update()
         this.textBalloonHandler.update()
@@ -77,7 +81,7 @@ export default class Game {
 
     setActive() {
        // LevelHandler.setLevel("Start")
-        LevelHandler.setLevel("God")
+        LevelHandler.setLevel("Website")
     }
 
     draw() {

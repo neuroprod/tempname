@@ -31,7 +31,8 @@ export default class SceneObject3D extends Object3D {
     text: string = ""
     needsHitTest = false;
     needsTrigger: boolean = false;
-
+    needsMouseHit: boolean = false;
+    mouseHitID: string = ""
     public triggerIsEnabled = true;
     hitTriggerItem: HitTrigger = HitTrigger.NONE;
     triggerRadius = 0.2
@@ -134,6 +135,12 @@ export default class SceneObject3D extends Object3D {
 
 
         }
+        if (this.model) {
+            this.needsMouseHit = UI.LBool(this, "needsMouseHit");
+            if (this.needsMouseHit) {
+                UI.LTextInput("mouseHitID", this, "mouseHitID")
+            }
+        }
         if (this.isText) {
             let t = UI.LTextInput("text", this.text)
             this.setText(t)
@@ -167,6 +174,11 @@ export default class SceneObject3D extends Object3D {
         this.needsTrigger = obj.needsTrigger;
         this.triggerRadius = obj.triggerRadius;
         this.hitTriggerItem = obj.hitTriggerItem
+        if(obj.needsMouseHit){
+            this.needsMouseHit = obj.needsMouseHit
+            this.mouseHitID = obj.mouseHitID
+        }
+
     }
 
     getObjectData(dataArr: Array<any>) {
@@ -180,6 +192,8 @@ export default class SceneObject3D extends Object3D {
         obj.text = this.text;
         obj.needsTrigger = this.needsTrigger;
         obj.triggerRadius = this.triggerRadius
+        obj.mouseHitID = this.mouseHitID
+        obj.needsMouseHit = this.needsMouseHit
         obj.position = this.getPosition()
         obj.rotation = this.getRotation()
         obj.hitTriggerItem = this.hitTriggerItem
@@ -187,7 +201,7 @@ export default class SceneObject3D extends Object3D {
             obj.model = this.model.label
             obj.scale = this.model.getScale();
         }
-        console.log(this.text)
+
         if (this.parent) obj.parentID = this.parent.UUID
         dataArr.push(obj);
 
