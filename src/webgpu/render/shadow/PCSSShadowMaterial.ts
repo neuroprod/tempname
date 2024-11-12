@@ -21,8 +21,10 @@ export default class PCSSShadowMaterial extends Material {
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
+
         uniforms.addUniform("shadowViewMatrix",0,GPUShaderStage.FRAGMENT,ShaderType.mat4);
         uniforms.addUniform("shadowViewProjectionMatrix",0,GPUShaderStage.FRAGMENT,ShaderType.mat4);
+        uniforms.addUniform("size",0.05);
         uniforms.addTexture("gDepth",this.renderer.getTexture(Textures.GDEPTH), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("shadowMap",this.renderer.getTexture(Textures.SHADOW_DEPTH), {sampleType:TextureSampleType.Float})
         uniforms.addSampler("mySampler");
@@ -122,7 +124,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       {
       
         var offset = rotMat *kernel2[i];
-        offset*=0.01;
+        offset*=uniforms.size;
         offset +=shadowPosProj.xy;
         let  shadowDepth = textureSample(shadowMap, mySampler,   offset).x;
    
@@ -141,7 +143,7 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
       if(blocker>0.0){
         avgBlocker =avgBlocker/blocker;
         size  =(avgBlocker-depth);
-        size =size *0.01+0.001;
+        size =size *uniforms.size+0.001;
       }
 
     

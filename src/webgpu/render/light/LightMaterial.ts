@@ -159,9 +159,9 @@ fn mainFragment(${this.getFragmentInput()}) -> @location(0) vec4f
             let shadow=textureLoad(shadow,  uvPos ,0).x;
        color +=dirLight(normalize(uniforms.lightDir.xyz),uniforms.lightColor,albedo,N,V,F0,roughness)*shadow*aoM;
 
-      let dist = distance( uv0, vec2(0.5, 0.5));
-      let fall =0.3;
-    color =color* smoothstep(0.8, fall * 0.799, dist * (0.6+ fall));
+      //let dist = distance( uv0, vec2(0.5, 0.5));
+     // let fall =0.3;
+   // color =color* smoothstep(0.8, fall * 0.799, dist * (0.6+ fall));
   
       
      return vec4(acestonemap(color),1.0) ;
