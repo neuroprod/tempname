@@ -11,7 +11,7 @@ export default class Model extends Object3D {
 
     material!: Material;
     mesh!: Mesh
-
+public markedDelete =false;
     public modelTransform: ModelTransform;
     public visible: boolean = true;
 
@@ -81,6 +81,8 @@ export default class Model extends Object3D {
         }
         this.modelTransform.destroy()
         this.renderer.removeModel(this);
+        this.markedDelete =true;
+
     }
 
 }

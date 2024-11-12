@@ -467,12 +467,13 @@ class SceneEditor {
 
         this.gameRenderer.gBufferPass.modelRenderer.setModels([])
         this.gameRenderer.shadowMapPass.modelRenderer.setModels([])
-
+        this.setCurrentModel(null)
 
 
         LoadHandler.onComplete=()=>{
 
             this.editCamera.setActive()
+
             this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
           this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
         }

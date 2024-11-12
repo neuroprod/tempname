@@ -44,7 +44,7 @@ export default class Kris{
       let delta=Timer.delta;
 
         this.headAngle +=delta*2;
-        this.head.y =0.3+Math.sin(this.headAngle)*0.01
+        this.head.y =0.32+Math.sin(this.headAngle)*0.01
 
 
 

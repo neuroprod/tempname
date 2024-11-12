@@ -51,6 +51,14 @@ export default class ModelRenderer {
         // passEncoder.setBindGroup(0, this.renderer.camera.bindGroup);
 
         for (let model of this.models) {
+
+            if(model.markedDelete){
+
+                console.warn("deletedModel",model.mesh.label,this)
+                let i = this.models.indexOf(model);
+                this.models.splice(i,1)
+                return;
+            }
             if (!model.visible) continue
             if (!model.mesh) continue;
             if (!model.mesh.positions) continue;
@@ -105,7 +113,7 @@ export default class ModelRenderer {
             for (let attribute of material.attributes) {
                 let buffer = model.mesh.getBufferByName(attribute.name);
                 if (!buffer) buffer = model.getBufferByName(attribute.name);
-                if (buffer) {
+                if (buffer ) {
                     passEncoder.setVertexBuffer(
                         attribute.slot,
                         buffer,
