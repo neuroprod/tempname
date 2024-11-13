@@ -40,6 +40,11 @@ class LevelHandler {
     }
 
 
+    onUI() {
+        if(this.currentLevel){
+            this.currentLevel.onUI()
+        }
+    }
 }
 
 export default new LevelHandler()

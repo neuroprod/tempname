@@ -4,7 +4,8 @@ import SceneHandler from "../../../data/SceneHandler.ts";
 ;
 
 import {Vector3} from "@math.gl/core";
-import Model from "../../../lib/model/Model.ts";
+import UI from "../../../lib/UI/UI.ts";
+
 
 
 
@@ -36,13 +37,17 @@ export class WebsiteLevel extends BaseLevel{
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 
-        this.mouseHitObjects = SceneHandler.mouseHitModels
+        this.setMouseHitObjects( SceneHandler.mouseHitModels);
 
 
         this.levelObjects.gameCamera.setLockedView(new Vector3(0,0,0),new Vector3(0,0,1))
 
+        let webSiteRoot =SceneHandler.getSceneObject("rootWebsite")
+        console.log(webSiteRoot.children);
 
-
+    }
+    onUI(){
+        UI.LFloatSlider("test",0,0,1)
     }
     update() {
         super.update();
