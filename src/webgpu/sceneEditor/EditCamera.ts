@@ -160,4 +160,9 @@ export default class EditCamera {
     }
 
 
+    setFocus(worldPos: Vector3) {
+        this.camTarget.copy(worldPos)
+        this.camDistance =2
+        this.setCamera()
+    }
 }

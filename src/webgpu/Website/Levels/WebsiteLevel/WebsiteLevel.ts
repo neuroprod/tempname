@@ -5,6 +5,7 @@ import SceneHandler from "../../../data/SceneHandler.ts";
 
 import {Vector3} from "@math.gl/core";
 import UI from "../../../lib/UI/UI.ts";
+import WebsiteSphere from "./WebsiteSphere.ts";
 
 
 
@@ -14,8 +15,8 @@ export class WebsiteLevel extends BaseLevel{
 
 
 
-
-
+    private websiteSphere =new WebsiteSphere()
+private sphereBlend =1;
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
@@ -43,18 +44,30 @@ export class WebsiteLevel extends BaseLevel{
         this.levelObjects.gameCamera.setLockedView(new Vector3(0,0,0),new Vector3(0,0,1))
 
         let webSiteRoot =SceneHandler.getSceneObject("rootWebsite")
-        console.log(webSiteRoot.children);
+
+        this.websiteSphere.setObjects(webSiteRoot.children)
+
+        window.scrollTo(0, 0);
+        document.body.style.overflow="visible"
 
     }
+    destroy() {
+        super.destroy();
+        window.scrollTo(0, 0);
+        document.body.style.overflow="hidden"
+        this.websiteSphere.destroy()
+    }
+
     onUI(){
-        UI.LFloatSlider("test",0,0,1)
+        UI.LFloatSlider(this,"sphereBlend",0,1)
     }
     update() {
         super.update();
         let t =document.body.getBoundingClientRect().top
         let  p =- Math.abs(t/2000)
-        this.levelObjects.gameCamera.setLockedView(new Vector3(0,p,0),new Vector3(0,p,1))
+        this.levelObjects.gameCamera.setLockedView(new Vector3(0,p,0),new Vector3(0,p,3-(this.sphereBlend*2)))
 
+        this.websiteSphere.update(this.sphereBlend)
     }
 
 

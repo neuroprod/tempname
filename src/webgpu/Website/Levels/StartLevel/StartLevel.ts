@@ -10,6 +10,8 @@ import gsap from "gsap";
 import Bezier from "../../../lib/path/Bezier.ts";
 import CharacterController from "../../CharacterController.ts";
 import Timer from "../../../lib/Timer.ts";
+import MouseInteractionWrapper from "../../MouseInteractionWrapper.ts";
+import LevelHandler from "../LevelHandler.ts";
 
 export class StartLevel extends BaseLevel{
 
@@ -48,6 +50,8 @@ export class StartLevel extends BaseLevel{
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 
+        this.setMouseHitObjects( SceneHandler.mouseHitModels);
+
 
         if(!this.kris) this.kris=new Kris()
         this.kris.reset()
@@ -68,17 +72,34 @@ export class StartLevel extends BaseLevel{
         if(!this.intro) this.intro=new Intro()
         this.intro.start()
 
+
+        let sky = this.mouseInteractionMap.get("sky") as MouseInteractionWrapper
+        sky.onClick=()=>{
+            if(this.intro.done){
+                this.intro.done =false;
+                this.moveToStartPos();
+            }
+        }
+        let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
+        kris.onClick=()=>{
+
+            LevelHandler.setLevel("Website")
+        }
+        let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
+        mainChar.onClick=()=>{
+            LevelHandler.setLevel("God")
+        }
     }
     update() {
         super.update();
         if(this.kris) this.kris.update()
         if(this.intro) this.intro.update()
 
-        if(this.intro.done && this.levelObjects.keyInput.getJump()){
+        /*if(this.intro.done && this.levelObjects.keyInput.getJump()){
             this.intro.done =false;
             console.log("move")
             this.moveToStartPos();
-        }
+        }*/
 
 
     }

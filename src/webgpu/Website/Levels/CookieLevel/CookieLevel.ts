@@ -7,6 +7,7 @@ import gsap from "gsap";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
 import LevelData from "../LevelData.ts";
+import LevelHandler from "../LevelHandler.ts";
 
 
 
@@ -116,7 +117,11 @@ export class CookieLevel extends PlatformLevel{
 
                         this.levelObjects.conversationHandler.doneCallBack =()=>{
                             this.levelObjects.gameCamera.setCharView()
-                            setTimeout(()=>{this.blockInput =false},500)
+                            setTimeout(()=>{this.blockInput =false
+
+                            LevelHandler.setLevel("CookieGame")
+
+                            },500)
 
                         }},1500);
 

@@ -6,6 +6,7 @@ import LevelData from "./LevelData.ts";
 import GodChoiceLevel from "./GodChoiceLevel/GodChoiseLevel.ts";
 import {CookieLevel} from "./CookieLevel/CookieLevel.ts";
 import {WebsiteLevel} from "./WebsiteLevel/WebsiteLevel.ts";
+import CookieGame from "./CookieGame/CookieGame.ts";
 
 
 class LevelHandler {
@@ -21,6 +22,7 @@ class LevelHandler {
         this.addLevel("God", new GodLevel())
         this.addLevel("GodChoice", new GodChoiceLevel())
         this.addLevel("Cookie", new CookieLevel())
+        this.addLevel("CookieGame", new CookieGame())
         this.addLevel("Website", new WebsiteLevel())
     }
 

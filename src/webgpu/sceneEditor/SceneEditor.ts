@@ -186,7 +186,7 @@ class SceneEditor {
         popMainMenu()
 
 
-        pushMainMenu("tools",256,MainMenuOffset+129+5);
+        pushMainMenu("tools",256+55,MainMenuOffset+129+5);
 
 
         if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
@@ -198,7 +198,7 @@ class SceneEditor {
 
             addMeshPopup("Add Object to "+name,this.addModel.bind(this))
         }
-        if (addMainMenuButton("Remove", Icons.MIN_CUBE,true)){
+        if (addMainMenuButton("Remove", Icons.MIN_CUBE,(this.currentModel != null))){
             if(this.currentModel){
                 this.removeModel(this.currentModel)
             }
@@ -223,6 +223,13 @@ class SceneEditor {
         if ( addMainMenuToggleButton("Move", Icons.MOVE,this.currentToolState == ToolState.translate)) this.setCurrentToolState(ToolState.translate);
         if (addMainMenuToggleButton("Rotate", Icons.ROTATE,this.currentToolState == ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
         if (addMainMenuToggleButton("Scale", Icons.SCALE,this.currentToolState == ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+        addMainMenuDivider("tooldDiv3")
+        if ( addMainMenuButton("Center", Icons.CENTER,true)) {
+
+            console.log(this.currentModel?.getWorldPos())
+this.editCamera.setFocus(this.currentModel?.getWorldPos())
+        }
+
 
         popMainMenu()
 

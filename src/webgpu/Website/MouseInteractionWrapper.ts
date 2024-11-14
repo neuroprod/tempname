@@ -5,23 +5,23 @@ export default class MouseInteractionWrapper{
         this.id =id;
     }
     onRollOver(){
-        console.log("over",this.id)
+       // console.log("over",this.id)
     }
     onRollOut(){
 
-        console.log("out",this.id)
+       // console.log("out",this.id)
 
     }
     onDown(){
-        console.log("down",this.id)
+       // console.log("down",this.id)
     }
     onUp(){
-        console.log("up",this.id)
+        //console.log("up",this.id)
     }
     onClick(){
-        console.log("click",this.id)
+        //console.log("click",this.id)
     }
     onUpOutside(){
-        console.log("upOutside",this.id)
+        //console.log("upOutside",this.id)
     }
 }

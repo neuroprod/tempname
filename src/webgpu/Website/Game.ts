@@ -84,6 +84,7 @@ export default class Game {
         LevelHandler.setLevel("Website")
     }
 
+
     draw() {
         if (LoadHandler.isLoading()) return
 
