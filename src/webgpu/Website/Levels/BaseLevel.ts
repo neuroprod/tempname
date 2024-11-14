@@ -36,7 +36,7 @@ export class BaseLevel {
     }
 
     destroy() {
-
+        this.levelObjects.textBalloonHandler.hideText()
     }
     onUI(){
 
