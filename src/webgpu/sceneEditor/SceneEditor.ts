@@ -35,14 +35,13 @@ import {MainMenuOffset} from "../UI/Style.ts";
 import {saveScene} from "../lib/SaveUtils.ts";
 import {setNewPopup} from "../UI/NewPopup.ts";
 import Animation from "./timeline/animation/Animation.ts";
-import {setAnimePopup} from "../UI/AnimePopup.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
 import SceneHandler from "../data/SceneHandler.ts";
+import sceneHandler from "../data/SceneHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import loadHandler from "../data/LoadHandler.ts";
 
 import {setOpenScenePopup} from "../UI/OpenScenePopup.ts";
-import sceneHandler from "../data/SceneHandler.ts";
 import AppState, {AppStates} from "../AppState.ts";
 
 export enum ToolState {
@@ -58,21 +57,19 @@ class SceneEditor {
 
     public modelsByLoadID: { [id: string]: SceneObject3D } = {};
     gameRenderer!: GameRenderer;
+    currentModel: SceneObject3D | null = null;
     private renderer!: Renderer;
     private camera!: Camera;
     private modelRenderer!: ModelRenderer;
-
-
     private mouseListener!: MouseListener;
     private ray: Ray = new Ray();
-    currentModel: SceneObject3D | null = null;
     private outline!: Outline;
     private editCursor!: EditCursor;
     private editCamera!: EditCamera;
     private currentToolState: ToolState = ToolState.translate;
 
 
-    private rootSplit!:SplitNode
+    private rootSplit!: SplitNode
     private nodeCenter!: SplitNode;
     private nodeRight!: SplitNode;
     private nodeRightTop!: SplitNode;
@@ -81,12 +78,13 @@ class SceneEditor {
     private nodeBottom!: SplitNode;
 
 
-    private numFrames ="60"
+    private numFrames = "60"
     private copyModel!: SceneObject3D;
 
     constructor() {
     }
-    init(renderer: Renderer, mouseListener: MouseListener, camera:Camera,gameRenderer:GameRenderer) {
+
+    init(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
         this.renderer = renderer;
         this.mouseListener = mouseListener;
         this.camera = camera
@@ -94,11 +92,8 @@ class SceneEditor {
         this.gameRenderer = gameRenderer;
 
 
-
-
-
         this.modelRenderer = new ModelRenderer(renderer, "mainModels", this.camera)
-      //  this.modelRenderer.setModels(SceneData.usedModels);
+        //  this.modelRenderer.setModels(SceneData.usedModels);
 
 
         this.outline = new Outline(renderer, this.camera)
@@ -111,25 +106,25 @@ class SceneEditor {
 
         this.setCurrentToolState(ToolState.translate)
 
-        this.rootSplit =new SplitNode("root")
+        this.rootSplit = new SplitNode("root")
 
-        let a = this.rootSplit.split(DockSplit.Horizontal,"top","bottom")
-        this.nodeTop =a[0];
-        this.nodeBottom =a[1];
+        let a = this.rootSplit.split(DockSplit.Horizontal, "top", "bottom")
+        this.nodeTop = a[0];
+        this.nodeBottom = a[1];
 
-      let b =  this.nodeTop.split(DockSplit.Vertical,"center","right")
-        this.nodeCenter =b[0];
-        this.nodeRight =b[1];
+        let b = this.nodeTop.split(DockSplit.Vertical, "center", "right")
+        this.nodeCenter = b[0];
+        this.nodeRight = b[1];
 
-        let c =  this.nodeRight.split(DockSplit.Horizontal,"rightTop","rightLeft");
-        this.nodeRightTop =c[0];
-        this.nodeRightBottom =c[1];
+        let c = this.nodeRight.split(DockSplit.Horizontal, "rightTop", "rightLeft");
+        this.nodeRightTop = c[0];
+        this.nodeRightBottom = c[1];
 
 
     }
 
     update() {
-        if(loadHandler.isLoading())return
+        if (loadHandler.isLoading()) return
         this.camera.ratio = this.renderer.ratio
 
         //setScreenRay
@@ -156,24 +151,25 @@ class SceneEditor {
         }
 
         this.editCursor.update()
-       AnimationEditor.update();
+        AnimationEditor.update();
         DebugDraw.update()
     }
-    onUINice() {
-        if(LoadHandler.isLoading())return
 
-        pushMainMenu("scene",129,MainMenuOffset);
-        if (addMainMenuButton("openGroup", Icons.FOLDER,true)){
+    onUINice() {
+        if (LoadHandler.isLoading()) return
+
+        pushMainMenu("scene", 129, MainMenuOffset);
+        if (addMainMenuButton("openGroup", Icons.FOLDER, true)) {
 
             setOpenScenePopup("Open Scene", sceneHandler.scenesData, (id: string) => {
-               // this.openProject(project)
+                // this.openProject(project)
 
                 this.setScene(id)
             })
 
 
         }
-        if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP,true)){
+        if (addMainMenuButton("AddNewGroup", Icons.ADD_GROUP, true)) {
 
             setNewPopup("+ Add new Scene", "new_scene", (name: string) => {
                 let id = SceneHandler.addNewScene(name)
@@ -182,34 +178,35 @@ class SceneEditor {
 
 
         }
-        if (addMainMenuButton("DeleteGroup", Icons.REMOVE_GROUP,true)){}
+        if (addMainMenuButton("DeleteGroup", Icons.REMOVE_GROUP, true)) {
+        }
         popMainMenu()
 
 
-        pushMainMenu("tools",256+55,MainMenuOffset+129+5);
+        pushMainMenu("tools", 256 + 55, MainMenuOffset + 129 + 5);
 
 
-        if (addMainMenuButton("Add", Icons.PLUS_CUBE,true)){
+        if (addMainMenuButton("Add", Icons.PLUS_CUBE, true)) {
 
-            let name ="root"
-            if(this.currentModel){
+            let name = "root"
+            if (this.currentModel) {
                 name = this.currentModel.label
             }
 
-            addMeshPopup("Add Object to "+name,this.addModel.bind(this))
+            addMeshPopup("Add Object to " + name, this.addModel.bind(this))
         }
-        if (addMainMenuButton("Remove", Icons.MIN_CUBE,(this.currentModel != null))){
-            if(this.currentModel){
+        if (addMainMenuButton("Remove", Icons.MIN_CUBE, (this.currentModel != null))) {
+            if (this.currentModel) {
                 this.removeModel(this.currentModel)
             }
         }
-        if (addMainMenuButton("Copy", Icons.COPY,true)){
-            if(this.currentModel){
+        if (addMainMenuButton("Copy", Icons.COPY, true)) {
+            if (this.currentModel) {
 
-               let name = SceneHandler.root.getUniqueName(this.currentModel.label)
+                let name = SceneHandler.root.getUniqueName(this.currentModel.label)
                 this.copyModel = this.currentModel
-                let copy =this.copyModel.copy(name);
-                if(copy && copy.model){
+                let copy = this.copyModel.copy(name);
+                if (copy && copy.model) {
                     this.gameRenderer.gBufferPass.modelRenderer.addModel(copy.model)
                     this.gameRenderer.shadowMapPass.addSceneObject(copy);
                 }
@@ -220,82 +217,82 @@ class SceneEditor {
         addMainMenuDivider("tooldDiv2")
 
 
-        if ( addMainMenuToggleButton("Move", Icons.MOVE,this.currentToolState == ToolState.translate)) this.setCurrentToolState(ToolState.translate);
-        if (addMainMenuToggleButton("Rotate", Icons.ROTATE,this.currentToolState == ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
-        if (addMainMenuToggleButton("Scale", Icons.SCALE,this.currentToolState == ToolState.scale)) this.setCurrentToolState(ToolState.scale);
+        if (addMainMenuToggleButton("Move", Icons.MOVE, this.currentToolState == ToolState.translate)) this.setCurrentToolState(ToolState.translate);
+        if (addMainMenuToggleButton("Rotate", Icons.ROTATE, this.currentToolState == ToolState.rotate)) this.setCurrentToolState(ToolState.rotate);
+        if (addMainMenuToggleButton("Scale", Icons.SCALE, this.currentToolState == ToolState.scale)) this.setCurrentToolState(ToolState.scale);
         addMainMenuDivider("tooldDiv3")
-        if ( addMainMenuButton("Center", Icons.CENTER,true)) {
+        if (addMainMenuButton("Center", Icons.CENTER, true)) {
 
-            console.log(this.currentModel?.getWorldPos())
-this.editCamera.setFocus(this.currentModel?.getWorldPos())
+            if (this.currentModel)
+                this.editCamera.setFocus(this.currentModel.getWorldPos())
         }
 
 
         popMainMenu()
 
-        pushSplitPanel("horizontal panel",  this.nodeBottom,false);
+        pushSplitPanel("horizontal panel", this.nodeBottom, false);
         pushPanelMenu("animationMenu")
-        if(addMainMenuButton("AddAnime", Icons.ADD_ANIME,true)){
+        if (addMainMenuButton("AddAnime", Icons.ADD_ANIME, true)) {
 
-            if(!this.currentModel)return;
+            if (!this.currentModel) return;
 
-            setNewPopup("+ Add new Anime to "+this.currentModel.label, "new_anime", (name: string) => {
-                    if(!this.currentModel)return;
-                    let anime = new Animation(this.renderer, name, this.currentModel)
-            //      SceneData.animations.push(anime)
-                    AnimationEditor.setAnimation(anime)
+            setNewPopup("+ Add new Anime to " + this.currentModel.label, "new_anime", (name: string) => {
+                if (!this.currentModel) return;
+                let anime = new Animation(this.renderer, name, this.currentModel)
+                //      SceneData.animations.push(anime)
+                AnimationEditor.setAnimation(anime)
             })
 
         }
-        if(addMainMenuButton("RemoveAnime",  Icons.REMOVE_ANIME,true)){
-            if(AnimationEditor.currentAnimation){
-              //  SceneData.removeAnimation(AnimationEditor.currentAnimation)
+        if (addMainMenuButton("RemoveAnime", Icons.REMOVE_ANIME, true)) {
+            if (AnimationEditor.currentAnimation) {
+                //  SceneData.removeAnimation(AnimationEditor.currentAnimation)
                 AnimationEditor.setAnimation(null);
 
             }
         }
-        if(addMainMenuButton("open", Icons.FOLDER,true)){
-           /* setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
-                AnimationEditor.setAnimation(anime);
+        if (addMainMenuButton("open", Icons.FOLDER, true)) {
+            /* setAnimePopup("nenenne",SceneData.animations,(anime:Animation)=>{
+                 AnimationEditor.setAnimation(anime);
 
-            })*/
+             })*/
         }
-        if(AnimationEditor.currentAnimation){
+        if (AnimationEditor.currentAnimation) {
             addMainMenuDivider("mydiv3")
-            addInputText(AnimationEditor.currentAnimation.label,AnimationEditor.currentAnimation,"label",false,3,0,150)
+            addInputText(AnimationEditor.currentAnimation.label, AnimationEditor.currentAnimation, "label", false, 3, 0, 150)
 
             addMainMenuDivider("mydiv")
-            if(addMainMenuButton("keyAll", Icons.KEYFRAME_MULT,true)){
+            if (addMainMenuButton("keyAll", Icons.KEYFRAME_MULT, true)) {
                 AnimationEditor.addKeysAll()
             }
-            if(addMainMenuButton("key", Icons.KEYFRAME,true)){
-                if(this.currentModel)
-                AnimationEditor.addAllKeysToModel(this.currentModel)
+            if (addMainMenuButton("key", Icons.KEYFRAME, true)) {
+                if (this.currentModel)
+                    AnimationEditor.addAllKeysToModel(this.currentModel)
             }
-            if(addMainMenuButton("deletekey", Icons.DELETE_KEYFRAME,true)){
+            if (addMainMenuButton("deletekey", Icons.DELETE_KEYFRAME, true)) {
                 AnimationEditor.deleteSelectedKeys()
             }
             addMainMenuDivider("mydiv2")
-            if(addRecButton("record",AnimationEditor.isRecording)){
+            if (addRecButton("record", AnimationEditor.isRecording)) {
 
 
-                    AnimationEditor.isRecording=  !AnimationEditor.isRecording
+                AnimationEditor.isRecording = !AnimationEditor.isRecording
 
             }
-            if(addPlayButton("play", AnimationEditor.isPlaying)){
+            if (addPlayButton("play", AnimationEditor.isPlaying)) {
 
 
-                if(AnimationEditor.isPlaying){
+                if (AnimationEditor.isPlaying) {
                     AnimationEditor.pause()
-                }else{
+                } else {
                     AnimationEditor.play()
                 }
 
             }
-           // this.numFrames  =AnimationEditor.currentAnimation.numFrames+"";
-            addInputText("numFrames",this,"numFrames",false,2,0,70)
-            if(this.numFrames!= AnimationEditor.currentAnimation.numFrames+""){
-                AnimationEditor.currentAnimation.numFrames =Number.parseFloat(this.numFrames);
+            // this.numFrames  =AnimationEditor.currentAnimation.numFrames+"";
+            addInputText("numFrames", this, "numFrames", false, 2, 0, 70)
+            if (this.numFrames != AnimationEditor.currentAnimation.numFrames + "") {
+                AnimationEditor.currentAnimation.numFrames = Number.parseFloat(this.numFrames);
 
 
             }
@@ -306,14 +303,14 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
         AnimationEditor.onUI();
         popSplitPanel()
 
-        pushSplitPanel("Top panel",  this.nodeRightTop);
+        pushSplitPanel("Top panel", this.nodeRightTop);
 
         SceneHandler.root.onUINice(0)
         popSplitPanel()
 
-        pushSplitPanel("bottom panel",  this.nodeRightBottom);
+        pushSplitPanel("bottom panel", this.nodeRightBottom);
 
-        if(this.currentModel) {
+        if (this.currentModel) {
             this.currentModel.onDataUI()
         }
         popSplitPanel()
@@ -322,46 +319,43 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
         this.rootSplit.setDividers();
 
         let s = UI_I.pixelSize.clone()
-        s.x-=20
-        s.y-=20
+        s.x -= 20
+        s.y -= 20
         if (this.rootSplit.resize(s)) {
-         this.rootSplit.updateLayout();
+            this.rootSplit.updateLayout();
         }
-
 
 
     }
 
-    public saveAll(){
+    public saveAll() {
 
         SceneHandler.saveCurrentScene();
 
-        for (let s of SceneHandler.scenesData){
+        for (let s of SceneHandler.scenesData) {
 
-            saveScene( s.id, JSON.stringify(s)).then(()=>{
+            saveScene(s.id, JSON.stringify(s)).then(() => {
 
             })
 
         }
-     /*  let sceneData: Array<any> = []
-       // SceneData.root.getSceneData(sceneData);
+        /*  let sceneData: Array<any> = []
+          // SceneData.root.getSceneData(sceneData);
 
-        let animationData: Array<any> = []
-        for (let a of SceneData.animations) {
-            a.getAnimationData(animationData);
-        }
-        let data: any = {}
-        data.scene = sceneData;
-        data.animation = animationData;
-        saveScene("scene1", JSON.stringify(data)).then(()=>{
-            console.log("saved Scene")
-        })
+           let animationData: Array<any> = []
+           for (let a of SceneData.animations) {
+               a.getAnimationData(animationData);
+           }
+           let data: any = {}
+           data.scene = sceneData;
+           data.animation = animationData;
+           saveScene("scene1", JSON.stringify(data)).then(()=>{
+               console.log("saved Scene")
+           })
 
-*/
+   */
 
     }
-
-
 
 
     setCurrentModel(value: SceneObject3D | null) {
@@ -382,7 +376,7 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
     }
 
     draw() {
-        if(loadHandler.isLoading())return
+        if (loadHandler.isLoading()) return
         this.outline.draw()
 
         this.gameRenderer.draw();
@@ -390,7 +384,7 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
 
     drawInCanvas(pass: CanvasRenderPass) {
         //  this.modelRenderer.draw(pass);
-        if(loadHandler.isLoading())return
+        if (loadHandler.isLoading()) return
         this.gameRenderer.drawFinal(pass);
         this.outline.drawFinal(pass);
         this.editCursor.drawFinal(pass);
@@ -410,7 +404,7 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
         }
         if (m.model) {
             this.gameRenderer.gBufferPass.modelRenderer.removeModel(m.model)
-           // this.gameRenderer.shadowMapPass.modelRenderer.removeModel(m.model)
+            // this.gameRenderer.shadowMapPass.modelRenderer.removeModel(m.model)
             this.gameRenderer.shadowMapPass.removeSceneObject(m);
             m.removeChild(m.model)
             m.model = null
@@ -422,8 +416,7 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
     public addModel(m: SceneObject3D) {
 
 
-
-        if(!this.currentModel)this.currentModel =SceneHandler.root
+        if (!this.currentModel) this.currentModel = SceneHandler.root
         m.setUniqueName(SceneHandler.root.getUniqueName(m.label))
 
         this.currentModel.addChild(m)
@@ -440,36 +433,34 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
         this.setCurrentModel(m)
     }
 
+    setActive() {
 
+
+        let scene = AppState.getState(AppStates.EDIT_SCENE);
+        if (scene) {
+            this.setScene(scene)
+        } else {
+            this.setScene("456")
+        }
+
+
+    }
+
+    saveTemp() {
+
+    }
 
     private setCurrentToolState(toolState: ToolState) {
         this.currentToolState = toolState;
         this.editCursor.setToolState(this.currentToolState);
     }
 
-
-    setActive() {
-
-
-       let scene =  AppState.getState(AppStates.EDIT_SCENE);
-        if(scene){
-            this.setScene(scene)
-        }else{
-            this.setScene("456")
-        }
-
-
-
-    }
-
     private setScene(id: string) {
         LoadHandler.startLoading()
-        AppState.setState(AppStates.EDIT_SCENE,id)
+        AppState.setState(AppStates.EDIT_SCENE, id)
         let state = AppState.getState(AppStates.MAIN_STATE);
 
         SceneHandler.saveCurrentScene()
-
-
 
 
         this.gameRenderer.gBufferPass.modelRenderer.setModels([])
@@ -477,23 +468,20 @@ this.editCamera.setFocus(this.currentModel?.getWorldPos())
         this.setCurrentModel(null)
 
 
-        LoadHandler.onComplete=()=>{
+        LoadHandler.onComplete = () => {
 
             this.editCamera.setActive()
 
             this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-          this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+            this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
         }
 
 
-        SceneHandler.setScene(id).then(()=>{
+        SceneHandler.setScene(id).then(() => {
 
             LoadHandler.stopLoading()
         });
     }
-
-    saveTemp() {
-
-    }
 }
+
 export default new SceneEditor();
