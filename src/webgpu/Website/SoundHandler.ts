@@ -5,6 +5,7 @@ import {Howl} from 'howler';
     private coin!: Howl;
      private step!: Howl;
      private hitFloor!: Howl;
+     private wetHit!: Howl;
 
 
     init() {
@@ -19,6 +20,18 @@ import {Howl} from 'howler';
                 s1: [1000, 800],
                 s2: [2000, 800],
                 s3: [3000, 800],
+
+
+            }
+        });
+
+        this.wetHit = new Howl({
+            src: ['sound/wetHit.mp3'],
+            sprite: {
+                s0: [0, 400],
+                s1: [400, 400],
+                s2: [800, 400],
+                s3: [1200, 400],
 
 
             }
@@ -76,6 +89,20 @@ import {Howl} from 'howler';
         this.coin.play("s" + s)
 
     }
+
+     playWetHit(hit:boolean) {
+
+
+         let s = Math.floor(Math.random() * 4) ;
+
+        let vol =0.1
+         if(hit)vol=1;
+         this.wetHit.volume( this.fxVolume*vol);
+         this.wetHit.play("s" + s)
+
+     }
+
+
      playStep() {
 
 

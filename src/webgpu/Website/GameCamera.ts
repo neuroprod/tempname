@@ -26,6 +26,7 @@ export default class GameCamera{
     public cameraWorld: Vector3 =new Vector3();
 
     private cameraState:CameraState =CameraState.Locked
+    private shakeY: number=0;
 
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
@@ -45,6 +46,8 @@ export default class GameCamera{
         this.camera.ratio = this.renderer.ratio
         this.camera.cameraLookAt.copy(this.cameraLookAt as NumericArray);
         this.camera.cameraWorld.copy(this.cameraWorld as NumericArray);
+        this.camera.cameraWorld.y+=this.shakeY;
+        this.camera.cameraLookAt.y+=this.shakeY*0.5
         this.camera.cameraUp.set(0,1,0)
         this.camera.update()
 
@@ -89,5 +92,13 @@ setCharView(){
         tl.to(this.cameraWorld,{x:camPosition.x,y:camPosition.y,z:camPosition.z,duration:1.5,ease:"power2.out"},0)
         tl.to(this.cameraLookAt,{x:camLookAt.x,y:camLookAt.y,z:camLookAt.z,duration:1.5,ease:"power2.out"},0)
         this.cameraState  =CameraState.Locked;
+    }
+
+    screenShakeCookie(value: number) {
+gsap.delayedCall(0.1,()=>{this.shakeY=value
+
+    gsap.to(this,{shakeY:0,ease: "rough({template:none.out,strength: 10,points:20,taper:none,randomize:true,clamp:false})",duration:0.3})
+})
+
     }
 }
