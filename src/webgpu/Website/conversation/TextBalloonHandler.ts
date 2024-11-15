@@ -243,6 +243,7 @@ export default class TextBalloonHandler {
             this.makeArrowPoint()
         }
         this.showText = true;
+
         this.charPos = -4
         this.textMesh.setText(text, ProjectData.font, 0.15)
         let w = this.textMesh.max.x;
@@ -304,14 +305,15 @@ export default class TextBalloonHandler {
             this.br.add([-startOff, startOff]);
 
         }
+
         if (this.tline)this.tline.clear()
-            this.tline = gsap.timeline()
+        this.tline = gsap.timeline()
 
 
 
         let ease = "back.out(1.5)";
         let time = 0.3
-        this.charPos = -4;
+
 
         if (this.newBalloon) {
             this.arrowModelPoint.sx = this.arrowModelPoint.sy = 0;
@@ -329,6 +331,7 @@ export default class TextBalloonHandler {
             }
         }, 0)
 
+        this.textModel.material.setUniform("charPos", this.charPos)
         this.tline.to(this, {
             charPos: this.textMesh.charCount, duration: this.textMesh.charCount / 50
         }, 0.2)

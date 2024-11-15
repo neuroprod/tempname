@@ -33,7 +33,7 @@ export default class CookieGame extends BaseLevel{
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
 
-        this.levelObjects.gameCamera.setLockedView(new Vector3(-0.1,.6,0),new Vector3(-0.1-0.1,.7,1.6))
+        this.levelObjects.gameCamera.setLockedView(new Vector3(-0,.5,0),new Vector3(-0.0-0.04,.6,1.6))
 
 
         let cookie = sceneHandler.getSceneObject("cookieBody")
