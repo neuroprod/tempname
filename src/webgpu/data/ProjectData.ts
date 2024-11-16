@@ -25,6 +25,7 @@ class ProjectData {
     private defaultFontMaterial!: GBufferFontMaterial;
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
     font!: Font;
+    private copy: any;
     constructor() {
     }
    async init(renderer:Renderer,preloader:PreLoader,){
@@ -66,7 +67,10 @@ class ProjectData {
             this.addProject(p)
         })
        }
+       const responseW = await fetch( "./websiteCopy.json")
 
+       let textW = await responseW.text();
+       this.copy = JSON.parse(textW);
 
 
 
@@ -149,6 +153,18 @@ class ProjectData {
 
         let model = new Model(this.renderer, "textModel")
         let mesh = new FontMesh(this.renderer, 'fontMesh');
+        let textData =text;
+        if(text.startsWith("#")){
+
+           let id = text.slice(1)
+            let copy =this.copy[id]
+
+
+            if(copy){
+                text=copy;
+            }
+        }
+        console.log(text,textData)
         mesh.setText(text, this.font);
         model.mesh = mesh
 
@@ -158,7 +174,7 @@ class ProjectData {
         let obj3D = new SceneObject3D(this.renderer, name)
         obj3D.addChild(model)
         obj3D.isText = true;
-        obj3D.text = text;
+        obj3D.text = textData;
         obj3D.model = model;
         return obj3D;
     }

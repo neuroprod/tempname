@@ -2,30 +2,52 @@ import Mesh from "../lib/mesh/Mesh.ts";
 
 
 import Font, {Char} from "../data/Font.ts";
+export enum HAlign {
+    Right,
+    Center,
+    Left
 
+}
+
+export enum VAlign {
+    Top,
+    Center,
+    Bottom
+
+}
 export default class FontMesh extends Mesh{
     private startX: number =0;
+    private startY: number =0;
     private posTemp:Array<number> =[]
     private uvTemp:Array<number> =[]
     private normalTemp:Array<number> =[]
     private indexTemp:Array<number> =[]
     private indicesPos: number=0;
 
-    setText(text: string,font:Font,fontSize:number=0.003){
-        this.startX =0;
-        this.indicesPos =0;
+    setText(text: string, font: Font, fontSize = 0.0021, hAligh: HAlign = HAlign.Left, vAligh: VAlign = VAlign.Top) {
 
-        for (let i = 0; i < text.length; i++) {
-            let c = text.charCodeAt(i);
+        this.indicesPos = 0;
+        let textArr = text.split("\n")
+        let fontHeight = fontSize * 45;
+        let numLines = textArr.length
 
-            let char =font.charArray[c];
+        this.startY = 0;
 
-
-            this.addChar( char,fontSize);
-            //startPos.x += Font.charSize.x;
-            //rect.pos = startPos.clone();
+        if (vAligh == VAlign.Bottom) {
+            this.startY = -(fontHeight * numLines);//-fontSize;
+        }
+        if (vAligh == VAlign.Center) {
+            this.startY = -(fontHeight * numLines) / 2;
         }
 
+        this.startX = 0;
+
+
+        for (let i = 0; i < numLines; i++) {
+            this.addLine(textArr[i], font, fontSize, hAligh)
+            this.startY += fontHeight;
+
+        }
         this.setPositions(new Float32Array(this.posTemp))
         this.setNormals(new Float32Array(this.normalTemp))
         this.setUV0(new Float32Array(this.uvTemp))
@@ -39,13 +61,46 @@ export default class FontMesh extends Mesh{
 
     }
 
+    addLine(line: string, font: Font, fontSize: number, hAligh: HAlign) {
 
+        this.startX =0;
+
+
+        if (hAligh == HAlign.Center) {
+            let lineSize = this.getLineSize(line, font, fontSize);
+            this.startX = -lineSize / 2
+        }
+        if (hAligh == HAlign.Right) {
+            let lineSize = this.getLineSize(line, font, fontSize);
+            this.startX = -lineSize
+        }
+
+        for (let i = 0; i < line.length; i++) {
+            let c = line.charCodeAt(i);
+            let char = font.charArray[c];
+
+            this.addChar(char, fontSize);
+
+        }
+
+    }
+    getLineSize(line: string, font: Font, fontSize: number) {
+        let size = 0
+        for (let i = 0; i < line.length; i++) {
+            let c = line.charCodeAt(i);
+            let char = font.charArray[c];
+            size += char.xadvance * fontSize;
+
+        }
+        return size;
+
+    }
     addChar( char: Char,fontSize:number) {
 
 
 
-        let posX = this.startX +char.xOffset*fontSize;;
-        let posY = char.yOffset*fontSize;
+        let posX = this.startX + char.xOffset * fontSize;
+        let posY = this.startY + char.yOffset * fontSize;
         //
         //
         //
