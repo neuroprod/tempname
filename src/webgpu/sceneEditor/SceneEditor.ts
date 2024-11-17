@@ -209,6 +209,8 @@ class SceneEditor {
                 if (copy && copy.model) {
                     this.gameRenderer.gBufferPass.modelRenderer.addModel(copy.model)
                     this.gameRenderer.shadowMapPass.addSceneObject(copy);
+                }else{
+                    console.log("cant copy this?")
                 }
 
             }

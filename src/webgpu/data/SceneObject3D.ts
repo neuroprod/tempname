@@ -15,6 +15,7 @@ import {HitTrigger, HitTriggerSelectItems} from "./HitTriggers.ts";
 import FontMesh from "../modelMaker/FontMesh.ts";
 
 import ProjectData from "./ProjectData.ts";
+import SceneHandler from "./SceneHandler.ts";
 
 
 export default class SceneObject3D extends Object3D {
@@ -116,7 +117,7 @@ export default class SceneObject3D extends Object3D {
         if (s != this.text && this.model) {
         this.text = s;
         let m = this.model.mesh as FontMesh;
-       // m.setText(this.text, SceneData.font)
+        m.setText(this.text, ProjectData.font)
             console.log("fix this")
         }
     }
@@ -277,16 +278,28 @@ export default class SceneObject3D extends Object3D {
 
     copy(label: string) {
 
-        let m =ProjectData.getModel({label:label,projectId: this.projectId, meshId:this.meshId,id:""})
-
-        if (m) {
+        if(this.isText){
+            let m = ProjectData.makeSceneObjectWithText(label,this.text)
             this.copyProperties(m)
             this.parent?.addChild(m);
+            if (this.model && m?.model) {
+                this.model.copyProperties(m?.model)
+            }
+            return m;
+        }else{
+            let m = ProjectData.getModel({label:label,projectId: this.projectId, meshId:this.meshId,id:""})
+            if (m) {
+                this.copyProperties(m)
+                this.parent?.addChild(m);
+            }
+            if (this.model && m?.model) {
+                this.model.copyProperties(m?.model)
+            }
+            return m;
         }
-        if (this.model && m?.model) {
-            this.model.copyProperties(m?.model)
-        }
-        return m;
+
+        return null;
+
 
     }
 

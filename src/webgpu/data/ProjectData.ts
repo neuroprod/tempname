@@ -164,7 +164,7 @@ class ProjectData {
                 text=copy;
             }
         }
-        console.log(text,textData)
+
         mesh.setText(text, this.font);
         model.mesh = mesh
 
