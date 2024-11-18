@@ -19,7 +19,7 @@ export default class Kris{
     reset(){
         this.kris = sceneHandler.getSceneObject("krisRoot")
         this.kris.setScaler(1.2)
-        this.kris.x = 0.5;
+        this.kris.x = 0.7;
 
         //headTopKris
         this.head= sceneHandler.getSceneObject("headTopKris")

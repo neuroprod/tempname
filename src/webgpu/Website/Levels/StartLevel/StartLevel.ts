@@ -57,15 +57,16 @@ export class StartLevel extends BaseLevel{
 
         let char = sceneHandler.getSceneObject("charRoot")
 
-        char.x = -0.5;
+        char.x = 0;
 
 
-        this.bezierCamera =new Bezier(new Vector3(0,5-0.5,8+2),new Vector3(0,4,8+7),new Vector3(0,0.5,2+0.2),new Vector3(0,0.5,2));
-        this.bezierTarget =new Bezier(new Vector3(0,5,8),new Vector3(0,4,8+5),new Vector3(0,0.5,0.2),new Vector3(0,0.5,0));
+        this.bezierCamera =new Bezier(new Vector3(0,5-0.5,8+2),new Vector3(0,4,8+7),new Vector3(0,0.5,2+0.2),new Vector3(0,1.9,2));
+        this.bezierTarget =new Bezier(new Vector3(0,5,8),new Vector3(0,4,8+5),new Vector3(0,0.5,0.2),new Vector3(0,1.9,0));
 
-        this.bezierCamera.getTime(this.camPos,0)
-        this.bezierTarget.getTime(this.camTarget,0)
-
+        this.bezierCamera.getTime(this.camPos,1)
+        this.bezierTarget.getTime(this.camTarget,1)
+this.camPos.set(0,0.7,2)
+        this.camTarget.set(0,0.7,0)
         this.levelObjects.gameCamera.setLockedView(this.camTarget,this.camPos)
 
         if(!this.intro) this.intro=new Intro()
@@ -76,7 +77,7 @@ export class StartLevel extends BaseLevel{
         sky.onClick=()=>{
             if(this.intro.done){
                 this.intro.done =false;
-                this.moveToStartPos();
+            //    this.moveToStartPos();
             }
         }
         let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
