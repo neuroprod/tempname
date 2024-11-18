@@ -10,6 +10,7 @@ import {Textures} from "../../data/Textures.ts";
 import ShadowDepthMaterial from "./ShadowDepthMaterial.ts";
 import DirectionalLight from "../lights/DirectionalLight.ts";
 import SceneObject3D from "../../data/SceneObject3D.ts";
+import Model from "../../lib/model/Model.ts";
 
 
 export default class ShadowMapRenderPass extends RenderPass {
@@ -75,16 +76,5 @@ export default class ShadowMapRenderPass extends RenderPass {
 
     }
 
-    addSceneObject(m: SceneObject3D) {
-        if(!m.model)return;
 
-            this.modelRenderer.addModel(m.model)
-
-    }
-
-    removeSceneObject(m: SceneObject3D) {
-        if(!m.model)return;
-        this.modelRenderer.removeModel(m.model)
-
-    }
 }

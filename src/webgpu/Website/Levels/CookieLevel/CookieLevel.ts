@@ -50,9 +50,7 @@ export class CookieLevel extends PlatformLevel{
         this.blockInput =false
         this.characterController.setCharacter()
         this.levelObjects.gameCamera.setCharacter()
-        SceneHandler.usedModels.push(this.characterController.cloudParticles.particlesModel)
-        this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-        this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
 
 

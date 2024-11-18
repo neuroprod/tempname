@@ -44,8 +44,7 @@ export default class GodChoiceLevel extends BaseLevel{
 
         LoadHandler.onComplete =()=>{}
 
-        this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-        this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
         this.god = sceneHandler.getSceneObject("godRoot")
         sceneHandler.getSceneObject("godLightning").hide()

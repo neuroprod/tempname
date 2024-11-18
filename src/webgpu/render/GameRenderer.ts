@@ -20,10 +20,11 @@ import GTAO from "./ComputePasses/GTAO.ts";
 import TimeStampQuery from "../lib/TimeStampQuery.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
+import Model from "../lib/model/Model.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
-    public gBufferPass: GBufferRenderPass;
+   private gBufferPass: GBufferRenderPass;
     private debugTextureMaterial: DebugTextureMaterial;
     private blitFinal: Blit;
 
@@ -32,7 +33,7 @@ export default class GameRenderer{
     private passSelect: Array<SelectItem> = []
     private lightPass: LightRenderPass;
     private sunLight: DirectionalLight;
-    public shadowMapPass: ShadowMapRenderPass;
+    private shadowMapPass: ShadowMapRenderPass;
     private shadowBlurPass: ShadowBlurRenderPass;
     //preProcessDepth: PreProcessDepth;
    // private gtoaPass: GTAORenderPass;
@@ -43,7 +44,10 @@ export default class GameRenderer{
     private preProcessDepth: PreProcessDepth;
     private aoDenoise: DeNoisePass;
     private shadowDenoise: DeNoisePass;
-    transparentModelRenderer: ModelRenderer;
+    private transparentModelRenderer: ModelRenderer;
+
+
+    public allModels:Array<Model> =[]
 
 
 
@@ -104,6 +108,55 @@ export default class GameRenderer{
 
 
     }
+    public clearAllModels(){
+
+        this.gBufferPass.modelRenderer.setModels([])
+        this.shadowMapPass.modelRenderer.setModels([])
+        this.transparentModelRenderer.setModels([])
+        this.allModels =[]
+
+
+    }
+   public setModels(models:Array<Model>){
+        this.clearAllModels()
+        for(let m of models){
+            this.addModel(m)
+        }
+
+    }
+    public addModel(m:Model){
+        if(m.transparent){
+            this.transparentModelRenderer.addModel(m)
+        }else{
+            this.gBufferPass.modelRenderer.addModel(m)
+        }
+
+        this.shadowMapPass.modelRenderer.addModel(m)
+        this.allModels.push(m)
+
+
+    }
+    public removeModel(m:Model){
+        this.gBufferPass.modelRenderer.removeModel(m)
+        this.shadowMapPass.modelRenderer.removeModel(m)
+        this.transparentModelRenderer.removeModel(m)
+
+
+
+        const index = this.allModels.indexOf(m, 0);
+        if (index > -1) {
+            this.allModels.splice(index, 1);
+        }
+
+    }
+    public updateModel(m:Model){
+        this.removeModel(m)
+        this.addModel(m)
+
+    }
+
+
+
     update(){
         this.sunLight.update();
         this.shadowMapPass.update()

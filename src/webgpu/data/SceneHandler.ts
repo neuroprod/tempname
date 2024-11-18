@@ -5,7 +5,7 @@ import SceneObject3D from "./SceneObject3D.ts";
 
 import ProjectData from "./ProjectData.ts";
 import Model from "../lib/model/Model.ts";
-import Utils from "../lib/UI/math/Utils.ts";
+
 import MathUtils from "../lib/MathUtils.ts";
 
 class SceneHandler {
@@ -14,8 +14,10 @@ class SceneHandler {
     public sceneObjectsByLoadID: Map<string, SceneObject3D> = new Map<string, SceneObject3D>()
 
     public sceneObjectsByName: Map<string, SceneObject3D> = new Map<string, SceneObject3D>()
+    allModels: Array<Model> = [];
 
-    usedModels: Array<Model> = [];
+  //  usedModels: Array<Model> = [];
+   // usedModelsTrans: Array<Model> = [];
     root!: SceneObject3D;
     private renderer!: Renderer;
     private currentSceneID: string="";
@@ -23,7 +25,7 @@ class SceneHandler {
     hitTestModels: Array<Model> = [];
     triggerModels: Array<SceneObject3D> = [];
     mouseHitModels: Array<Model> = [];
-   usedModelsTrans: Array<Model> = [];
+
     async init(renderer: Renderer, preloader: PreLoader) {
         this.renderer = renderer;
         this.root = new SceneObject3D(renderer, "MainRoot")
@@ -64,8 +66,8 @@ class SceneHandler {
         ProjectData.setNewScene()
 
         this.root.removeAllChildren()
-        this.usedModels = [];
-        this.usedModelsTrans = [];
+        this.allModels = [];
+
         this.hitTestModels =[];
         this.triggerModels =[];
         this.mouseHitModels =[];
@@ -151,12 +153,10 @@ class SceneHandler {
                         this.mouseHitModels.push(sceneObj.model);
                     }
 
-                    if(d.isText){
-                        this.usedModelsTrans.push(sceneObj.model);
 
-                    }else{
-                        this.usedModels.push(sceneObj.model);
-                    }
+                        this.allModels.push(sceneObj.model);
+
+
 
 
 

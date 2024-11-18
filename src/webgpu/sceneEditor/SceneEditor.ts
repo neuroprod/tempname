@@ -139,7 +139,7 @@ class SceneEditor {
         }
         //check modelSelect
         if (!cursorNeeded && this.mouseListener.isDownThisFrame && !UI.needsMouse()) {
-            let intersections = this.ray.intersectModels(this.gameRenderer.gBufferPass.modelRenderer.models)
+            let intersections = this.ray.intersectModels(this.gameRenderer.allModels)
             if (intersections.length) {
                 let m = intersections[0].model;
                 this.setCurrentModel(m.parent as SceneObject3D)
@@ -207,9 +207,11 @@ class SceneEditor {
                 this.copyModel = this.currentModel
                 let copy = this.copyModel.copy(name);
                 if (copy && copy.model) {
-                    this.gameRenderer.gBufferPass.modelRenderer.addModel(copy.model)
-                    this.gameRenderer.shadowMapPass.addSceneObject(copy);
-                }else{
+                    if (copy.model) {
+                        this.gameRenderer.addModel(copy.model)
+                    }
+
+                } else {
                     console.log("cant copy this?")
                 }
 
@@ -405,16 +407,8 @@ class SceneEditor {
 
         }
         if (m.model) {
-            if(m.model.transparent){
-                this.gameRenderer.gBufferPass.modelRenderer.removeModel(m.model)
-            }else{
-                this.gameRenderer.transparentModelRenderer.removeModel(m.model)
-            }
 
-            // this.gameRenderer.shadowMapPass.modelRenderer.removeModel(m.model)
-            this.gameRenderer.shadowMapPass.removeSceneObject(m);
-
-
+            this.gameRenderer.removeModel(m.model)
 
             m.removeChild(m.model)
             m.model = null
@@ -431,18 +425,8 @@ class SceneEditor {
 
         this.currentModel.addChild(m)
         if (m.model) {
+            this.gameRenderer.addModel(m.model)
 
-            if(m.model.transparent){
-                this.gameRenderer.transparentModelRenderer.addModel(m.model)
-             
-            }else{
-                this.gameRenderer.gBufferPass.modelRenderer.addModel(m.model)
-            }
-            this.gameRenderer.shadowMapPass.addSceneObject(m);
-            //this.gameRenderer.shadowMapPass.modelRenderer.addModel(m.model)
-            //shadowPassclip
-
-            //transparentPass
 
         }
 
@@ -478,22 +462,20 @@ class SceneEditor {
 
         SceneHandler.saveCurrentScene()
 
+        this.gameRenderer.clearAllModels()
 
-        this.gameRenderer.gBufferPass.modelRenderer.setModels([])
-        this.gameRenderer.shadowMapPass.modelRenderer.setModels([])
-        this.gameRenderer.transparentModelRenderer.setModels([])
         this.setCurrentModel(null)
 
 
         LoadHandler.onComplete = () => {
 
             this.editCamera.setActive()
+            for (let m of SceneHandler.allModels) {
+                this.gameRenderer.addModel(m)
+            }
 
-            this.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-            this.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
-            this.gameRenderer.transparentModelRenderer.setModels(SceneHandler.usedModelsTrans)
         }
-
+//this.hitModels = this.hitModels.concat(SceneHandler.usedModels)
 
         SceneHandler.setScene(id).then(() => {
 

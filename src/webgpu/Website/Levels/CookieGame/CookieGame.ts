@@ -120,8 +120,8 @@ export default class CookieGame extends BaseLevel{
 
         LoadHandler.onComplete =()=>{}
 
-        this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
-        this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
+        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+
 
         this.levelObjects.gameCamera.setLockedView(new Vector3(-0,.5,0),new Vector3(-0.0-0.04,.6,1.6))
         this.hat = sceneHandler.getSceneObject("hat")
