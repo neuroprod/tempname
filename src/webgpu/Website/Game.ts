@@ -80,8 +80,8 @@ export default class Game {
 
 
     setActive() {
-       // LevelHandler.setLevel("Start")
-        LevelHandler.setLevel("Website")
+        LevelHandler.setLevel("Start")
+       // LevelHandler.setLevel("Website")
     }
 
 
