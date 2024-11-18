@@ -19,6 +19,7 @@ import AOPreprocessDepth from "./ComputePasses/AOPreprocessDepth.ts";
 import GTAO from "./ComputePasses/GTAO.ts";
 import TimeStampQuery from "../lib/TimeStampQuery.ts";
 import LoadHandler from "../data/LoadHandler.ts";
+import ModelRenderer from "../lib/model/ModelRenderer.ts";
 
 export default class GameRenderer{
     private renderer: Renderer;
@@ -42,6 +43,7 @@ export default class GameRenderer{
     private preProcessDepth: PreProcessDepth;
     private aoDenoise: DeNoisePass;
     private shadowDenoise: DeNoisePass;
+    transparentModelRenderer: ModelRenderer;
 
 
 
@@ -97,6 +99,10 @@ export default class GameRenderer{
         this.debugTextureMaterial.setUniform("renderType",  this.currentValue.type)
 
 
+        this.transparentModelRenderer =new ModelRenderer(this.renderer,"transparent",camera)
+
+
+
     }
     update(){
         this.sunLight.update();
@@ -145,5 +151,6 @@ export default class GameRenderer{
 
         this.blitFinal.draw(pass);
 
+        this.transparentModelRenderer.draw(pass)
     }
 }

@@ -12,6 +12,7 @@ import FontMesh from "../modelMaker/FontMesh.ts";
 import GBufferFontMaterial from "../render/GBuffer/GBufferFontMaterial.ts";
 import ShadowFontDepthMaterial from "../render/shadow/ShadowFontDepthMaterial.ts";
 import Font from "./Font.ts";
+import FontMaterial from "../render/TransparentMaterials/FontMaterial.ts";
 
 class ProjectData {
     private folders!: any;
@@ -22,7 +23,7 @@ class ProjectData {
     private renderer!: Renderer;
     private defaultShadowMaterial!: ShadowDepthMaterial;
     projectSelectItems: Array<SelectItem> = [];
-    private defaultFontMaterial!: GBufferFontMaterial;
+    private defaultFontMaterial!: FontMaterial;
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
     font!: Font;
     private copy: any;
@@ -33,7 +34,7 @@ class ProjectData {
        this.renderer =renderer;
 
        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
-       this.defaultFontMaterial = new GBufferFontMaterial(renderer, "fontMaterial");
+       this.defaultFontMaterial = new FontMaterial(renderer, "fontMaterial");
        this.defaultFontShadowMaterial = new ShadowFontDepthMaterial(renderer, "fontDepthMaterial");
        this.font = new Font()
 
@@ -152,6 +153,7 @@ class ProjectData {
     makeSceneObjectWithText(name: string, text: string) {
 
         let model = new Model(this.renderer, "textModel")
+        model.transparent =true;
         let mesh = new FontMesh(this.renderer, 'fontMesh');
         let textData =text;
         if(text.startsWith("#")){

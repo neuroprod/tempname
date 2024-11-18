@@ -23,6 +23,7 @@ class SceneHandler {
     hitTestModels: Array<Model> = [];
     triggerModels: Array<SceneObject3D> = [];
     mouseHitModels: Array<Model> = [];
+   usedModelsTrans: Array<Model> = [];
     async init(renderer: Renderer, preloader: PreLoader) {
         this.renderer = renderer;
         this.root = new SceneObject3D(renderer, "MainRoot")
@@ -64,6 +65,7 @@ class SceneHandler {
 
         this.root.removeAllChildren()
         this.usedModels = [];
+        this.usedModelsTrans = [];
         this.hitTestModels =[];
         this.triggerModels =[];
         this.mouseHitModels =[];
@@ -149,8 +151,12 @@ class SceneHandler {
                         this.mouseHitModels.push(sceneObj.model);
                     }
 
+                    if(d.isText){
+                        this.usedModelsTrans.push(sceneObj.model);
 
-                    this.usedModels.push(sceneObj.model);
+                    }else{
+                        this.usedModels.push(sceneObj.model);
+                    }
 
 
 

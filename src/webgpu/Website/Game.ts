@@ -87,16 +87,14 @@ export default class Game {
 
     draw() {
         if (LoadHandler.isLoading()) return
-
         this.gameRenderer.draw();
-
-
     }
 
     drawInCanvas(pass: CanvasRenderPass) {
         if (LoadHandler.isLoading()) return
         this.gameRenderer.drawFinal(pass);
-         this.textBalloonHandler.drawFinal(pass)
+
+        this.textBalloonHandler.drawFinal(pass)
         DebugDraw.draw(pass);
     }
 

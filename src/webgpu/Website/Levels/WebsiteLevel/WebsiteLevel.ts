@@ -37,7 +37,7 @@ private sphereBlend =1;
 
         this.levelObjects.gameRenderer.gBufferPass.modelRenderer.setModels(SceneHandler.usedModels)
         this.levelObjects.gameRenderer.shadowMapPass.modelRenderer.setModels(SceneHandler.usedModels)
-
+        this.levelObjects.gameRenderer.transparentModelRenderer.setModels(SceneHandler.usedModelsTrans)
         this.setMouseHitObjects( SceneHandler.mouseHitModels);
 
 

@@ -21,6 +21,7 @@ public markedDelete =false;
 
     private materialMap: Map<string, Material> = new Map<string, Material>();
     needCulling: boolean =true;
+    transparent: boolean =false
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         this.modelTransform = new ModelTransform(renderer)
