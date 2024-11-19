@@ -71,7 +71,7 @@ export class CookieLevel extends PlatformLevel{
         this.cookie.x =4
         this.cookie.ry =-0.4
 
-
+        this.levelObjects.gameCamera.setMinMaxX(-0.3,100)
 
 
 

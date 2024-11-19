@@ -21,7 +21,7 @@ export default class DirectionalLight{
         this.camOffset.scale(-3)
         this.shadowCamera =new Camera(renderer);
         //this.shadowCamera.fovy=0.5;
-       this.shadowCamera.setOrtho(4,-4,4,-2);
+        this.shadowCamera.setOrtho(4,-4,4,-2);
         this.shadowCamera.setOrtho(1,-1,1,-1);
         this.shadowCamera.near=-10;
         this.shadowCamera.far=10;

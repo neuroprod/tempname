@@ -39,16 +39,16 @@
   {
     "name": "god",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Goodmorning little child."},
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Goodmorning little child."},
       {"text": "Those where some nice jumps!"},
-      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "Hi, Are you..."},
+      {"char":"charRoot","pos":[0.1, 0.8, 0],"text": "Hi, Are you..."},
       {"text": "Are you God?"},
-      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Noooo, my child!"},
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Noooo, my child!"},
       {"text": "I am the man in the sky!"},
       {"text": "Every year, I bring\npresents to the children!"},
       {"text": "If they are good, that is."},
       {"text": "Do you want to have a present?"},
-      {"char":"charRoot","pos":[0.3, 0.8, 0],"choice": [
+      {"char":"charRoot","pos":[0.1, 0.83, 0],"choice": [
         {"text": "I'm not a child, but sure,\nI like presents!","callText":"godYes", "callBack": "godYes" },
         {"text": "No time old man, I'm here to\ncollect the coins..","callText":"godNo", "callBack": "godNo"}
 
@@ -58,38 +58,38 @@
   {
     "name": "godYes",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "Good my child! Choose wisely"}
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Good my child! Choose wisely"}
     ]
   },
   {
     "name": "godNo",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 1.0, 0],"text": "How do you dare to insult me!"},
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "How do you dare to insult me!"},
       {"text": "You will regret this!"}
     ]
   },
   {
     "name": "godPresent0",
     "data": [
-      {"char":"godRoot","pos":[0.1,0.6,0],"text": "A lightning strike!\nIt doesn't have many uses."}
+      {"char":"godRoot","pos":[0.15,0.8,0],"text": "A lightning strike!\nIt doesn't have many uses."}
     ]
   },
   {
     "name": "godPresent1",
     "data": [
-      {"char":"godRoot","pos":[0.1,0.6,0],"text": "An empty box\nWith a ribbon warped around it."}
+      {"char":"godRoot","pos":[0.15,0.8,0],"text": "An empty box\nWith a ribbon warped around it."}
     ]
   },
   {
     "name": "godPresent2",
     "data": [
-      {"char":"godRoot","pos":[0.1,0.6,0],"text": "A non-disclosure agreement.\nHow exiting!"}
+      {"char":"godRoot","pos":[0.15,0.8,0],"text": "A non-disclosure agreement.\nHow exiting!"}
     ]
   },
   {
     "name": "godPresent3",
     "data": [
-      {"char":"godRoot","pos":[0.1,0.6,0],"text": "A toy hamer\nYou can't realy use that"}
+      {"char":"godRoot","pos":[0.15,0.8,0],"text": "A toy hamer\nYou can't realy use that"}
     ]
   }
 

@@ -21,8 +21,10 @@ export class PlatformLevel extends BaseLevel{
         this.coinHandler =new CoinHandler()
         this.levelObjects.conversationHandler.dataCallBack =this.conversationDataCallBack.bind(this)
         this.blockInput =false;
+this.levelObjects.gameRenderer.setLevelType("platform")
     }
     update(){
+
         this.levelObjects.gamepadInput.update();
         let delta = Timer.delta;
         let jump = this.levelObjects.keyInput.getJump()

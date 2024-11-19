@@ -47,6 +47,7 @@ export default class GodChoiceLevel extends BaseLevel{
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
         this.god = sceneHandler.getSceneObject("godRoot")
+        this.god.setScaler(1.3)
         sceneHandler.getSceneObject("godLightning").hide()
         sceneHandler.getSceneObject("godNDA").hide()
         sceneHandler.getSceneObject("godCloud").hide()
@@ -57,7 +58,7 @@ export default class GodChoiceLevel extends BaseLevel{
 
         let holder = sceneHandler.getSceneObject("godHolder")
         holder.addChild(this.god)
-        this.levelObjects.textBalloonHandler.setModel(this.god,[0.1,0.6,0])
+        this.levelObjects.textBalloonHandler.setModel(this.god,[0.15,0.8,0])
         this.levelObjects.textBalloonHandler.setText("Ow boy, Get ready!")
         this.levelObjects.gameCamera.setLockedView(new Vector3(0,.32,0),new Vector3(0,.32,2))
 

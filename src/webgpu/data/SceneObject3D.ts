@@ -33,6 +33,7 @@ export default class SceneObject3D extends Object3D {
     needsHitTest = false;
     needsTrigger: boolean = false;
     needsMouseHit: boolean = false;
+    dropShadow:boolean =true;
     mouseHitID: string = ""
     public triggerIsEnabled = true;
     hitTriggerItem: HitTrigger = HitTrigger.NONE;
@@ -124,28 +125,7 @@ export default class SceneObject3D extends Object3D {
     onDataUI() {
         UI.pushID(this.UUID)
         UI.LTextInput("name", this, "label")
-        if (this.model) {
-            this.needsHitTest = UI.LBool(this, "needsHitTest");
-        }
-        this.needsTrigger = UI.LBool(this, "needsTrigger");
-        if (this.needsTrigger) {
-            UI.LFloat(this, "triggerRadius", "TriggerRadius")
-            this.drawTrigger();
 
-            this.hitTriggerItem = UI.LSelect("trigger", HitTriggerSelectItems, this.hitTriggerItem)
-
-
-        }
-        if (this.model) {
-            this.needsMouseHit = UI.LBool(this, "needsMouseHit");
-            if (this.needsMouseHit) {
-                UI.LTextInput("mouseHitID", this, "mouseHitID")
-            }
-        }
-        if (this.isText) {
-            let t = UI.LTextInput("text", this.text)
-            this.setText(t)
-        }
 
         UI.LFloat(this, "x", "Position X")
         UI.LFloat(this, "y", "Y")
@@ -166,7 +146,29 @@ export default class SceneObject3D extends Object3D {
 
             UI.LFloat(this.model, "sz", "Z")
         }
+        if (this.model) {
+            this.needsHitTest = UI.LBool(this, "needsHitTest");
+        }
+        this.needsTrigger = UI.LBool(this, "needsTrigger");
+        if (this.needsTrigger) {
+            UI.LFloat(this, "triggerRadius", "TriggerRadius")
+            this.drawTrigger();
 
+            this.hitTriggerItem = UI.LSelect("trigger", HitTriggerSelectItems, this.hitTriggerItem)
+
+
+        }
+        this.dropShadow = UI.LBool(this, "dropShadow");
+        if (this.model) {
+            this.needsMouseHit = UI.LBool(this, "needsMouseHit");
+            if (this.needsMouseHit) {
+                UI.LTextInput("mouseHitID", this, "mouseHitID")
+            }
+        }
+        if (this.isText) {
+            let t = UI.LTextInput("text", this.text)
+            this.setText(t)
+        }
         UI.popID()
     }
 
@@ -178,6 +180,10 @@ export default class SceneObject3D extends Object3D {
         if(obj.needsMouseHit){
             this.needsMouseHit = obj.needsMouseHit
             this.mouseHitID = obj.mouseHitID
+        }
+        if(obj.dropShadow !=undefined){
+            this.dropShadow = obj.dropShadow
+
         }
 
     }
@@ -198,6 +204,9 @@ export default class SceneObject3D extends Object3D {
         obj.position = this.getPosition()
         obj.rotation = this.getRotation()
         obj.hitTriggerItem = this.hitTriggerItem
+
+        obj.dropShadow = this.dropShadow
+
         if (this.model) {
             obj.model = this.model.label
             obj.scale = this.model.getScale();

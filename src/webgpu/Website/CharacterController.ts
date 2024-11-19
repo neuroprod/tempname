@@ -90,7 +90,7 @@ export default class CharacterController {
         this.bodyBasePos = this.charBody.getPosition().clone()
         this.autoWalk =false;
        this.cloudParticles.init()
-
+        this.targetPos.copy(this.charRoot.getPosition() as NumericArray)
     }
     gotoAndIdle(worldPos: Vector3,dir:number =1,gotoDone: () => void) {
         this.gotoDone =gotoDone;
@@ -99,11 +99,12 @@ export default class CharacterController {
         this.autoWalkTargetDir =dir;
     }
     updateIdle(delta:number) {
-
+        if(! this.charRoot )return;
 
         if( this.autoWalk){
 
             let speed = Math.min(3,Math.abs(this.autoWalkTarget.x-this.targetPos.x)*10)
+
             if(this.autoWalkTarget.x < this.targetPos.x){
                 this.velocity.x =-speed;
             }
@@ -115,6 +116,7 @@ export default class CharacterController {
                 this.update(delta, this.autoWalkTargetDir*0.001, false)
                 this.autoWalk =false
                 this.gotoDone();
+
             }
 
 
@@ -126,7 +128,7 @@ export default class CharacterController {
             gsap.to( this.charRoot,{ry:angle,duration:0.5,ease:"power2.inOut"})
     }
     update(delta: number, hInput: number, jump: boolean) {
-
+if(! this.charRoot )return;
         this.cloudParticles.update()
 
         if (!jump) this.canJump = true; //release button for a second jump

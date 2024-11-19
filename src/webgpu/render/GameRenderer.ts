@@ -12,31 +12,29 @@ import ShadowMapRenderPass from "./shadow/ShadowMapRenderPass.ts";
 import DirectionalLight from "./lights/DirectionalLight.ts";
 import ShadowBlurRenderPass from "./shadow/ShadowBlurRenderPass.ts";
 import PreProcessDepth from "./ao/PreProcessDepth.ts";
-import GTAORenderPass from "./ao/GTAORenderPass.ts";
 import DeNoisePass from "./ao/DeNoisePass.ts";
 import ShadowRenderPass from "./shadow/ShadowRenderPass.ts";
 import AOPreprocessDepth from "./ComputePasses/AOPreprocessDepth.ts";
 import GTAO from "./ComputePasses/GTAO.ts";
-import TimeStampQuery from "../lib/TimeStampQuery.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import ModelRenderer from "../lib/model/ModelRenderer.ts";
 import Model from "../lib/model/Model.ts";
+import SceneObject3D from "../data/SceneObject3D.ts";
 
-export default class GameRenderer{
+export default class GameRenderer {
+    public allModels: Array<Model> = []
     private renderer: Renderer;
-   private gBufferPass: GBufferRenderPass;
+    private gBufferPass: GBufferRenderPass;
     private debugTextureMaterial: DebugTextureMaterial;
     private blitFinal: Blit;
-
     private currentValue = {texture: "kka", type: 0}
-
     private passSelect: Array<SelectItem> = []
     private lightPass: LightRenderPass;
     private sunLight: DirectionalLight;
     private shadowMapPass: ShadowMapRenderPass;
-    private shadowBlurPass: ShadowBlurRenderPass;
     //preProcessDepth: PreProcessDepth;
-   // private gtoaPass: GTAORenderPass;
+    // private gtoaPass: GTAORenderPass;
+    private shadowBlurPass: ShadowBlurRenderPass;
     //private gtoaDenoisePass: GTAODenoisePass;
     private shadowPass: ShadowRenderPass;
     private preDept: AOPreprocessDepth;
@@ -46,45 +44,38 @@ export default class GameRenderer{
     private shadowDenoise: DeNoisePass;
     private transparentModelRenderer: ModelRenderer;
 
-
-    public allModels:Array<Model> =[]
-
-
-
-    constructor(renderer:Renderer,camera:Camera) {
-        this.renderer =renderer;
-        this.sunLight = new DirectionalLight(renderer,camera)
-        this.shadowMapPass =new ShadowMapRenderPass(renderer,this.sunLight)
-        this.shadowBlurPass =new ShadowBlurRenderPass(renderer);
-        this.gBufferPass =new GBufferRenderPass(renderer,camera);
-       this.preProcessDepth = new PreProcessDepth(renderer);
+    constructor(renderer: Renderer, camera: Camera) {
+        this.renderer = renderer;
+        this.sunLight = new DirectionalLight(renderer, camera)
+        this.shadowMapPass = new ShadowMapRenderPass(renderer, this.sunLight)
+        this.shadowBlurPass = new ShadowBlurRenderPass(renderer);
+        this.gBufferPass = new GBufferRenderPass(renderer, camera);
+        this.preProcessDepth = new PreProcessDepth(renderer);
         //this.gtoaPass = new GTAORenderPass(renderer,camera);
-        this.shadowPass = new ShadowRenderPass(renderer,camera,this.sunLight)
+        this.shadowPass = new ShadowRenderPass(renderer, camera, this.sunLight)
         //this.gtoaDenoisePass = new GTAODenoisePass(renderer);
-        this.preDept=new AOPreprocessDepth(renderer)
-        this.ao = new GTAO(renderer,camera)
-        this.aoDenoise = new DeNoisePass(renderer,Textures.GTAO_DENOISE,Textures.GTAO)
-        this.shadowDenoise = new DeNoisePass(renderer,Textures.SHADOW_DENOISE,Textures.SHADOW)
+        this.preDept = new AOPreprocessDepth(renderer)
+        this.ao = new GTAO(renderer, camera)
+        this.aoDenoise = new DeNoisePass(renderer, Textures.GTAO_DENOISE, Textures.GTAO)
+        this.shadowDenoise = new DeNoisePass(renderer, Textures.SHADOW_DENOISE, Textures.SHADOW)
 
 
-        this.lightPass =new LightRenderPass(renderer,camera,this.sunLight)
+        this.lightPass = new LightRenderPass(renderer, camera, this.sunLight)
 
 
-
-
-        this.debugTextureMaterial = new DebugTextureMaterial(this.renderer,"debugTextureMaterial")
-        this.blitFinal =new Blit(renderer,"blitFinal",this.debugTextureMaterial)
-   // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
-       // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
-       //this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
+        this.debugTextureMaterial = new DebugTextureMaterial(this.renderer, "debugTextureMaterial")
+        this.blitFinal = new Blit(renderer, "blitFinal", this.debugTextureMaterial)
+        // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
+        // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
+        //this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
         this.passSelect.push(new SelectItem(Textures.LIGHT, {texture: Textures.LIGHT, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW, {texture: Textures.SHADOW, type: 0}));
-       // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
+        // this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH_BLUR, {texture: Textures.SHADOW_DEPTH_BLUR, type: 0}));
         this.passSelect.push(new SelectItem(Textures.SHADOW_DEPTH, {texture: Textures.SHADOW_DEPTH, type: 2}));
 
         this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR, {texture: Textures.DEPTH_BLUR, type: 1}));
-       // this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
-       // this.passSelect.push(new SelectItem( Textures.GTAO_DENOISE, {texture: Textures.GTAO_DENOISE, type: 1}));
+        // this.passSelect.push(new SelectItem(Textures.GTAO, {texture: Textures.GTAO, type: 1}));
+        // this.passSelect.push(new SelectItem( Textures.GTAO_DENOISE, {texture: Textures.GTAO_DENOISE, type: 1}));
 
         //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP4, {texture: Textures.DEPTH_BLUR_MIP4, type: 1}));
         //this.passSelect.push(new SelectItem(Textures.DEPTH_BLUR_MIP3, {texture: Textures.DEPTH_BLUR_MIP3, type: 1}));
@@ -99,48 +90,63 @@ export default class GameRenderer{
 
 
         this.currentValue = this.passSelect[0].value;
-        this.debugTextureMaterial.setTexture("colorTexture",this.renderer.getTexture(this.currentValue.texture));
-        this.debugTextureMaterial.setUniform("renderType",  this.currentValue.type)
+        this.debugTextureMaterial.setTexture("colorTexture", this.renderer.getTexture(this.currentValue.texture));
+        this.debugTextureMaterial.setUniform("renderType", this.currentValue.type)
 
 
-        this.transparentModelRenderer =new ModelRenderer(this.renderer,"transparent",camera)
-
+        this.transparentModelRenderer = new ModelRenderer(this.renderer, "transparent", camera)
 
 
     }
-    public clearAllModels(){
+
+    public setLevelType(type: string) {
+        if (type == "platform") {
+            this.sunLight.shadowCamera.setOrtho(4, -4, 4, -2);
+
+        }
+        if (type == "website") {
+            this.sunLight.shadowCamera.setOrtho(1, -1, 1, -1);
+        }
+    }
+
+    public clearAllModels() {
 
         this.gBufferPass.modelRenderer.setModels([])
         this.shadowMapPass.modelRenderer.setModels([])
         this.transparentModelRenderer.setModels([])
-        this.allModels =[]
+        this.allModels = []
 
 
     }
-   public setModels(models:Array<Model>){
+
+    public setModels(models: Array<Model>) {
         this.clearAllModels()
-        for(let m of models){
+        for (let m of models) {
             this.addModel(m)
         }
 
     }
-    public addModel(m:Model){
-        if(m.transparent){
+
+    public addModel(m: Model) {
+        if (m.transparent) {
             this.transparentModelRenderer.addModel(m)
-        }else{
+        } else {
             this.gBufferPass.modelRenderer.addModel(m)
         }
+        if ((m.parent as SceneObject3D).dropShadow) {
 
-        this.shadowMapPass.modelRenderer.addModel(m)
+            this.shadowMapPass.modelRenderer.addModel(m)
+        }
+
         this.allModels.push(m)
 
 
     }
-    public removeModel(m:Model){
+
+    public removeModel(m: Model) {
         this.gBufferPass.modelRenderer.removeModel(m)
         this.shadowMapPass.modelRenderer.removeModel(m)
         this.transparentModelRenderer.removeModel(m)
-
 
 
         const index = this.allModels.indexOf(m, 0);
@@ -149,45 +155,47 @@ export default class GameRenderer{
         }
 
     }
-    public updateModel(m:Model){
+
+    public updateModel(m: Model) {
         this.removeModel(m)
         this.addModel(m)
 
     }
 
 
-
-    update(){
+    update() {
         this.sunLight.update();
         this.shadowMapPass.update()
         this.shadowPass.update();
         this.lightPass.update();
     }
-    onUI(){
+
+    onUI() {
         let value = UI.LSelect("Render Pass", this.passSelect)
         if (value != this.currentValue) {
             this.currentValue = value;
 
-            this.debugTextureMaterial.setTexture("colorTexture",this.renderer.getTexture(this.currentValue.texture));
-            this.debugTextureMaterial.setUniform("renderType",  this.currentValue.type)
+            this.debugTextureMaterial.setTexture("colorTexture", this.renderer.getTexture(this.currentValue.texture));
+            this.debugTextureMaterial.setUniform("renderType", this.currentValue.type)
 
         }
     }
-    //doPasses
-    draw(){
-        if(LoadHandler.isLoading())return;
-        this.shadowMapPass.add( );
 
-        this.gBufferPass.add(this.renderer.timeStamps.getSet(0,1));
+    //doPasses
+    draw() {
+        if (LoadHandler.isLoading()) return;
+        this.shadowMapPass.add();
+
+        this.gBufferPass.add(this.renderer.timeStamps.getSet(0, 1));
 
         this.preProcessDepth.add();
 
 ///this.preDept.add()
         this.ao.add()
 
-      //this.preProcessDepth.add();
-     // this.gtoaPass.add()
-       /// this.gtoaDenoisePass.add();
+        //this.preProcessDepth.add();
+        // this.gtoaPass.add()
+        /// this.gtoaDenoisePass.add();
 
 
         this.shadowPass.add();
@@ -195,7 +203,7 @@ export default class GameRenderer{
         this.shadowDenoise.add()
         //this.shadowBlurPass.add();
 
-        this.lightPass.add(this.renderer.timeStamps.getSet(2,3));
+        this.lightPass.add(this.renderer.timeStamps.getSet(2, 3));
 
     }
 

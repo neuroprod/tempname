@@ -3,16 +3,19 @@ import gsap from "gsap";
 export default class God{
     private god: SceneObject3D;
     private tl!: gsap.core.Timeline;
+    private endX: number;
 
     constructor(god: SceneObject3D) {
         this.god =god;
-        this.god.y =5.3 +2
-
+        this.god.y =5.3 +4
+        this.god.z =-2
+        this.endX = god.x;
+        god.x+=2;
     }
     public show(onComplete:()=>void){
         this.tl =gsap.timeline()
 
-        this.tl.to(this.god,{y:5.3,duration:4,ease:"power3.out"})
+        this.tl.to(this.god,{y:5.3,z:-0.2,x:this.endX,duration:4,ease:"power3.out"})
 
 
         this.tl.call(onComplete)

@@ -1,7 +1,7 @@
 import sceneHandler from "../../../data/SceneHandler.ts";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import Timer from "../../../lib/Timer.ts";
-
+import gsap from "gsap";
 export default class Kris{
     private kris!: SceneObject3D;
     private eyeLeftClosed!: SceneObject3D;
@@ -13,6 +13,7 @@ export default class Kris{
 
     private head!: SceneObject3D;
   private headAngle =0
+    private state=0;
     constructor() {
 
     }
@@ -20,7 +21,7 @@ export default class Kris{
         this.kris = sceneHandler.getSceneObject("krisRoot")
         this.kris.setScaler(1.2)
         this.kris.x = 0.7;
-
+        this.kris.y=0
         //headTopKris
         this.head= sceneHandler.getSceneObject("headTopKris")
 
@@ -35,11 +36,16 @@ export default class Kris{
         this.eyeRightTime  =Math.random()*4+3;
     }
     update(){
-
-        this.updateIdle()
+        if(this.state==0) this.updateIdle()
 
     }
-
+     jump(){
+        this.state =2;
+        let tl = gsap.timeline()
+         tl.to(this.head,{y:0.27,ease:"power2.in"},0)
+         tl.to(this.head,{y:0.35,duration:0.2,ease:"power2.in"},1)
+         tl.to( this.kris,{y:2,x:0.9,duration:0.5,ease:"power2.in"},1.1)
+    }
     private updateIdle() {
       let delta=Timer.delta;
 

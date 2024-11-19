@@ -22,9 +22,11 @@ export class StartLevel extends BaseLevel{
     private camPos =new Vector3()
     private camTarget =new Vector3()
     private bezierTime =0;
+    private characterController!: CharacterController;
 
     init() {
         super.init();
+        this.characterController = new CharacterController(this.levelObjects.renderer)
         LoadHandler.onComplete =this.configScene.bind(this)
         LoadHandler.startLoading()
         LoadHandler.startLoading()
@@ -48,24 +50,24 @@ export class StartLevel extends BaseLevel{
         LoadHandler.onComplete =()=>{}
 
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
-
+        this.levelObjects.gameRenderer.setLevelType("platform")
         this.setMouseHitObjects( SceneHandler.mouseHitModels);
+
 
 
         if(!this.kris) this.kris=new Kris()
         this.kris.reset()
 
         let char = sceneHandler.getSceneObject("charRoot")
-
-        char.x = 0;
-
-
+        char.x = -2;
+        char.y = 1;
+        this.characterController.setCharacter()
         this.bezierCamera =new Bezier(new Vector3(0,5-0.5,8+2),new Vector3(0,4,8+7),new Vector3(0,0.5,2+0.2),new Vector3(0,1.9,2));
         this.bezierTarget =new Bezier(new Vector3(0,5,8),new Vector3(0,4,8+5),new Vector3(0,0.5,0.2),new Vector3(0,1.9,0));
 
         this.bezierCamera.getTime(this.camPos,1)
         this.bezierTarget.getTime(this.camTarget,1)
-this.camPos.set(0,0.7,2)
+        this.camPos.set(0,0.7,2)
         this.camTarget.set(0,0.7,0)
         this.levelObjects.gameCamera.setLockedView(this.camTarget,this.camPos)
 
@@ -82,19 +84,21 @@ this.camPos.set(0,0.7,2)
         }
         let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
         kris.onClick=()=>{
-
-            LevelHandler.setLevel("Website")
+           // this.kris.jump()
+           LevelHandler.setLevel("Website")
         }
         let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
         mainChar.onClick=()=>{
             LevelHandler.setLevel("God")
         }
+
+        this.characterController.gotoAndIdle(new Vector3(0,0.1,0),1,()=>{})
     }
     update() {
         super.update();
         if(this.kris) this.kris.update()
         if(this.intro) this.intro.update()
-
+      this.characterController.updateIdle(Timer.delta)
         /*if(this.intro.done && this.levelObjects.keyInput.getJump()){
             this.intro.done =false;
             console.log("move")

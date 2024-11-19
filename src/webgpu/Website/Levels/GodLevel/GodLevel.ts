@@ -24,7 +24,7 @@ export class GodLevel extends PlatformLevel{
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
-        LoadHandler.startLoading()
+
 
         SceneHandler.setScene("e857a11e-d9f9-4a0c").then(() => {
 
@@ -36,9 +36,7 @@ export class GodLevel extends PlatformLevel{
                 LoadHandler.stopLoading()
             });
 
-            SceneHandler.addScene("c7dc8752-9088-476b").then(() => {
-                LoadHandler.stopLoading()
-            });
+
 
             SceneHandler.addScene("9f307f29-4140-48d6").then(() => {
                 LoadHandler.stopLoading()
@@ -73,17 +71,19 @@ export class GodLevel extends PlatformLevel{
         this.god.ry =-0.3
         this.god.z =-0.5
         this.god.x =this.tree.x +1.3
+
 this.godController =new God(this.god)
 
 
 
 
-        this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
-        this.strawBerry.setScaler(1.5)
-        this.strawBerry.z =-0.5
-        this.strawBerry.x =-5
 
 
+       let charRoot = SceneHandler.getSceneObject("charRoot");
+        charRoot.x = -2
+        charRoot.y = 0.15
+
+        this.levelObjects.gameCamera.setMinMaxX(-2,4.5)
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
 
@@ -115,7 +115,7 @@ this.godController =new God(this.god)
 
 
                 f.triggerIsEnabled =false;
-                let target =  f.getWorldPos().add([0.8,-0.2,0])
+                let target =  f.getWorldPos().add([1,-0.1,0])
                 this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.2]))
                 this.blockInput =true
 
@@ -147,7 +147,7 @@ this.godController =new God(this.god)
                 this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,1.7]))
                 this.blockInput =true
 
-                this.characterController.gotoAndIdle(this.tree.getWorldPos().add([-0.6,0,0]),1,()=>{
+                this.characterController.gotoAndIdle(this.tree.getWorldPos().add([-0.65,0,0]),1,()=>{
                     this.characterController.setAngle(0.4)
                     gsap.delayedCall(0.5,()=>{
                         this.levelObjects.conversationHandler.startConversation("tree")
@@ -164,7 +164,7 @@ this.godController =new God(this.god)
 
 
 
-            if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
+          /*  if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
                 f.triggerIsEnabled =false;
 
                 let target = this.strawBerry.getWorldPos().add([0.5,0.5,0])
@@ -182,7 +182,7 @@ this.godController =new God(this.god)
 
                });
                 return true;
-            }
+            }*/
 
 
         }

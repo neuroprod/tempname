@@ -22,12 +22,17 @@ export default class GameCamera{
     private charRoot: SceneObject3D;
 
    public cameraLookAt: Vector3 =new Vector3();
-    private camPos: Vector3 =new Vector3();
     public cameraWorld: Vector3 =new Vector3();
+
+
+
+    private camPos: Vector3 =new Vector3();
+
 
     private cameraState:CameraState =CameraState.Locked
     private shakeY: number=0;
-
+    private minX: number=-100;
+    private maxX: number=100;
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.camera = camera;
@@ -68,18 +73,19 @@ export default class GameCamera{
     updateCharCamera(){
         let delta = Timer.delta;
         let charPos = this.charRoot.getWorldPos()
-       charPos.y+=0.5
-
+       charPos.y+=0.5+0.2
+        if(charPos.x<this.minX)charPos.x=this.minX
+        if(charPos.x>this.maxX)charPos.x=this.maxX
         this.cameraLookAt.lerp( charPos,1 - Math.pow(0.01 ,delta))
         this.camPos.copy(this.cameraLookAt);
         this.camPos.z+=2.5;
         this.camPos.y+=0;
 
-        this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.01 ,delta))
+        this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.001 ,delta))
     }
-setCharView(){
-    this.cameraState  =CameraState.CharCamera
-}
+    setCharView(){
+        this.cameraState  =CameraState.CharCamera
+    }
 
     setLockedView(camLookAt: Vector3|null=null, camPosition: Vector3|null=null) {
         if(camPosition) this.cameraWorld.copy(camPosition as NumericArray);
@@ -95,10 +101,20 @@ setCharView(){
     }
 
     screenShakeCookie(value: number) {
-gsap.delayedCall(0.1,()=>{this.shakeY=value
+        gsap.delayedCall(0.1, () => {
+            this.shakeY = value
 
-    gsap.to(this,{shakeY:0,ease: "rough({template:none.out,strength: 10,points:20,taper:none,randomize:true,clamp:false})",duration:0.3})
-})
+            gsap.to(this, {
+                shakeY: 0,
+                ease: "rough({template:none.out,strength: 10,points:20,taper:none,randomize:true,clamp:false})",
+                duration: 0.3
+            })
+        })
 
+    }
+
+    setMinMaxX(minX: number, maxX: number) {
+        this.minX = minX
+        this.maxX = maxX
     }
 }
