@@ -87,7 +87,7 @@ export default class Kris {
     private updateIdle() {
         let delta = Timer.delta;
 
-        this.headAngle += delta * 2;
+        this.headAngle += delta * (2+this.armLerp*9);
         this.head.y = 0.32 + Math.sin(this.headAngle) * 0.009
 
         this.arm1Angle += delta * 8
