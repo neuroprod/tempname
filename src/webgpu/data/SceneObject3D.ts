@@ -43,7 +43,7 @@ export default class SceneObject3D extends Object3D {
  lockScaleXY: boolean = false;
 
     posEditor:Vector3=new Vector3()
-
+    rotEditor:Vector3=new Vector3()
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
         if (!SceneObject3D.emptyTreeSettings) {
@@ -53,6 +53,7 @@ export default class SceneObject3D extends Object3D {
     }
     setEditorValues(){
         this.posEditor.from(this._position)
+        this.rotEditor.from(this.euler)
     }
     get rxD() {
         return this.rx * RAD2DEG;
@@ -195,6 +196,9 @@ export default class SceneObject3D extends Object3D {
         }
         if(obj.dropShadow !=undefined){
             this.dropShadow = obj.dropShadow
+
+        } if(obj.lockScaleXY !=undefined){
+            this.lockScaleXY = obj.lockScaleXY
 
         }
         if(obj.textColor !=undefined){

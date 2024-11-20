@@ -78,7 +78,7 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 
 
 
-    return   uniforms.color*a;;
+    return   uniforms.color*a;
 }
 ///////////////////////////////////////////////////////////
         `

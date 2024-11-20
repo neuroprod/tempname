@@ -5,7 +5,7 @@ import sceneHandler from "../../../data/SceneHandler.ts";
 
 import {Vector3} from "@math.gl/core";
 import Kris from "./Kris.ts";
-import Intro from "./Intro.ts";
+
 import gsap from "gsap";
 import Bezier from "../../../lib/path/Bezier.ts";
 import CharacterController from "../../CharacterController.ts";
@@ -13,21 +13,21 @@ import Timer from "../../../lib/Timer.ts";
 import MouseInteractionWrapper from "../../MouseInteractionWrapper.ts";
 import LevelHandler from "../LevelHandler.ts";
 
-export class StartLevel extends BaseLevel{
+export class StartLevel extends BaseLevel {
 
-    private kris!:Kris;
-    private intro!: Intro;
+    private kris!: Kris;
+
     private bezierCamera!: Bezier;
     private bezierTarget!: Bezier;
-    private camPos =new Vector3()
-    private camTarget =new Vector3()
-    private bezierTime =0;
+    private camPos = new Vector3()
+    private camTarget = new Vector3()
+    private bezierTime = 0;
     private characterController!: CharacterController;
 
     init() {
         super.init();
         this.characterController = new CharacterController(this.levelObjects.renderer)
-        LoadHandler.onComplete =this.configScene.bind(this)
+        LoadHandler.onComplete = this.configScene.bind(this)
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
@@ -45,50 +45,11 @@ export class StartLevel extends BaseLevel{
 
     }
 
-    private configScene() {
-
-        LoadHandler.onComplete =()=>{}
-
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
-        this.levelObjects.gameRenderer.setLevelType("platform")
-        this.setMouseHitObjects( SceneHandler.mouseHitModels);
-
-
-
-        if(!this.kris) this.kris=new Kris()
-        this.kris.reset()
-
-        let char = sceneHandler.getSceneObject("charRoot")
-        char.x = -2;
-        char.y = 1;
-        this.characterController.setCharacter()
-
-        this.camPos.set(0,0.7,2)
-        this.camTarget.set(0,0.7,0)
-        this.levelObjects.gameCamera.setLockedView(this.camTarget.add([0,0,0]),this.camPos.clone().add([0,0,1]))
-        this.levelObjects.gameCamera.TweenToLockedView(this.camTarget,this.camPos,3)
-        if(!this.intro) this.intro=new Intro()
-        this.intro.start()
-
-
-        let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
-        kris.onClick=()=>{
-           this.kris.jump()
-            gsap.delayedCall(1.5,()=>{LevelHandler.setLevel("Website")})
-          // LevelHandler.setLevel("Website")
-        }
-        let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
-        mainChar.onClick=()=>{
-            LevelHandler.setLevel("God")
-        }
-        this.kris.show();
-        this.characterController.gotoAndIdle(new Vector3(0,0.1,0),1,()=>{})
-    }
     update() {
         super.update();
-        if(this.kris) this.kris.update()
-        if(this.intro) this.intro.update()
-      this.characterController.updateIdle(Timer.delta)
+        if (this.kris) this.kris.update()
+
+        this.characterController.updateIdle(Timer.delta)
         /*if(this.intro.done && this.levelObjects.keyInput.getJump()){
             this.intro.done =false;
             console.log("move")
@@ -98,15 +59,86 @@ export class StartLevel extends BaseLevel{
 
     }
 
-    private moveToStartPos() {
-        this.bezierTime =0
-        let tl =gsap.timeline({onUpdate:()=>{
-                this.bezierCamera.getTime(this.camPos,this.bezierTime)
-                this.bezierTarget.getTime(this.camTarget,this.bezierTime)
-                this.levelObjects.gameCamera.setLockedView(this.camTarget,this.camPos)
-            }})
+    private configScene() {
 
-       tl.to(   this,{ bezierTime:1,duration:3,ease:"power3.InOut"},0)
+        LoadHandler.onComplete = () => {
+        }
+
+        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+        this.levelObjects.gameRenderer.setLevelType("platform")
+        this.setMouseHitObjects(SceneHandler.mouseHitModels);
+
+
+        if (!this.kris) this.kris = new Kris()
+        this.kris.reset()
+
+        let char = sceneHandler.getSceneObject("charRoot")
+        char.x = -2;
+        char.y = 1;
+        this.characterController.setCharacter()
+
+        this.camPos.set(0, 0.7, 2)
+        this.camTarget.set(0, 0.7, 0)
+        this.levelObjects.gameCamera.setLockedView(this.camTarget.add([0, 0, 0]), this.camPos.clone().add([0, 0, 1]))
+        this.levelObjects.gameCamera.TweenToLockedView(this.camTarget, this.camPos, 3)
+
+
+        let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
+        kris.onClick = () => {
+            this.kris.jump()
+            gsap.delayedCall(1.5, () => {
+                LevelHandler.setLevel("Website")
+            })
+            // LevelHandler.setLevel("Website")
+        }
+        kris.onRollOver =()=>{
+            this.kris.startWave()
+
+        }
+        kris.onRollOut =()=>{
+            this.kris.stopWave()
+
+        }
+
+        let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
+        mainChar.onClick = () => {
+            LevelHandler.setLevel("God")
+        }
+
+        this.kris.show();
+        this.characterController.gotoAndIdle(new Vector3(0, 0.1, 0), 1, () => {
+        })
+
+        let choose = SceneHandler.getSceneObject("choose")
+        let your = SceneHandler.getSceneObject("your")
+        let hero = SceneHandler.getSceneObject("hero")
+        choose.setScaler(0)
+        your.setScaler(0)
+        hero.setScaler(0)
+        let delay = 3
+        gsap.to(choose, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay, duration: 0.5})
+        gsap.to(your, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.1, duration: 0.5})
+        gsap.to(hero, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.2, duration: 0.5})
+
+        let graphicsDev = SceneHandler.getSceneObject("graphicsDev")
+        let pirate = SceneHandler.getSceneObject("pirate")
+        graphicsDev.setScaler(0)
+        pirate.setScaler(0)
+        gsap.to(pirate, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.7, duration: 0.5})
+        gsap.to(graphicsDev, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.8, duration: 0.5})
+    }
+
+    private moveToStartPos() {
+        this.bezierTime = 0
+        let tl = gsap.timeline({
+            onUpdate: () => {
+                this.bezierCamera.getTime(this.camPos, this.bezierTime)
+                this.bezierTarget.getTime(this.camTarget, this.bezierTime)
+                this.levelObjects.gameCamera.setLockedView(this.camTarget, this.camPos)
+            }
+        })
+
+        tl.to(this, {bezierTime: 1, duration: 3, ease: "power3.InOut"}, 0)
 
     }
 }
