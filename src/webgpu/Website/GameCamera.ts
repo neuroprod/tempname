@@ -24,8 +24,8 @@ export default class GameCamera{
    public cameraLookAt: Vector3 =new Vector3();
     public cameraWorld: Vector3 =new Vector3();
 
-
-
+public camDistance =2.5
+    public heightOffset =0.5
     private camPos: Vector3 =new Vector3();
 
 
@@ -73,12 +73,12 @@ export default class GameCamera{
     updateCharCamera(){
         let delta = Timer.delta;
         let charPos = this.charRoot.getWorldPos()
-       charPos.y+=0.5+0.2
+       charPos.y+=this.heightOffset
         if(charPos.x<this.minX)charPos.x=this.minX
         if(charPos.x>this.maxX)charPos.x=this.maxX
         this.cameraLookAt.lerp( charPos,1 - Math.pow(0.01 ,delta))
         this.camPos.copy(this.cameraLookAt);
-        this.camPos.z+=2.5;
+        this.camPos.z+=this.camDistance;
         this.camPos.y+=0;
 
         this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.001 ,delta))
@@ -93,10 +93,10 @@ export default class GameCamera{
         this.cameraState  =CameraState.Locked;
     }
 
-    TweenToLockedView(camLookAt: Vector3, camPosition: Vector3) {
+    TweenToLockedView(camLookAt: Vector3, camPosition: Vector3,duration=1.5) {
         let tl=gsap.timeline()
-        tl.to(this.cameraWorld,{x:camPosition.x,y:camPosition.y,z:camPosition.z,duration:1.5,ease:"power2.out"},0)
-        tl.to(this.cameraLookAt,{x:camLookAt.x,y:camLookAt.y,z:camLookAt.z,duration:1.5,ease:"power2.out"},0)
+        tl.to(this.cameraWorld,{x:camPosition.x,y:camPosition.y,z:camPosition.z,duration:duration,ease:"power2.out"},0)
+        tl.to(this.cameraLookAt,{x:camLookAt.x,y:camLookAt.y,z:camLookAt.z,duration:duration,ease:"power2.out"},0)
         this.cameraState  =CameraState.Locked;
     }
 

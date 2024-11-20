@@ -38,7 +38,9 @@ export default class SceneObject3D extends Object3D {
     public triggerIsEnabled = true;
     hitTriggerItem: HitTrigger = HitTrigger.NONE;
     triggerRadius = 0.2
-    private lockScaleXY: boolean = false;
+ lockScaleXY: boolean = false;
+
+    posEditor:Vector3=new Vector3()
 
     constructor(renderer: Renderer, label: string) {
         super(renderer, label);
@@ -47,7 +49,9 @@ export default class SceneObject3D extends Object3D {
             SceneObject3D.emptyTreeSettings.btnColor.setHex("#6e4e4e", 1)
         }
     }
-
+    setEditorValues(){
+        this.posEditor.from(this._position)
+    }
     get rxD() {
         return this.rx * RAD2DEG;
     }
@@ -294,11 +298,13 @@ export default class SceneObject3D extends Object3D {
             if (this.model && m?.model) {
                 this.model.copyProperties(m?.model)
             }
+            m.setEditorValues()
             return m;
         }else{
             let m = ProjectData.getModel({label:label,projectId: this.projectId, meshId:this.meshId,id:""})
             if (m) {
                 this.copyProperties(m)
+                m.setEditorValues()
                 this.parent?.addChild(m);
             }
             if (this.model && m?.model) {

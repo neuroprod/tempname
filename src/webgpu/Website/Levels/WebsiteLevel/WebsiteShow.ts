@@ -36,6 +36,8 @@ export default class WebsiteShow {
 
 
     private items:Array<ShowItem>=[]
+    private head!: Object3D;
+    private mofo!: Object3D;
     constructor() {
     }
 
@@ -46,7 +48,16 @@ export default class WebsiteShow {
         for(let c of children){
             if(c.label!="background" &&      c.label!="headKris" && c.label!="mofo"){
             this.items.push(new ShowItem(c))}
+
+            if(c.label=="headKris"){
+                this.head = c;
+            }
+            if(c.label=="mofo"){
+                this.mofo= c;
+            }
         }
+
+
     }
 
     public destroy(){
@@ -62,8 +73,14 @@ export default class WebsiteShow {
             if(a.posY>b.posY)return-1
             return 1;
         })
+       let y = this.head.y
+        this.head.y =0.5;
+        this.mofo.setScaler(0)
         let tl =gsap.timeline()
-        let time =0;
+        tl.to(this.head,{y:y,duration:1,ease:"elastic.out(0.5,0.3)"})
+        tl.to( this.mofo,{sx:1,sy:1,sz:1, duration:0.5,ease:"back.out"})
+
+        let time =2;
         for(let t of this.items){
             tl.to(t.obj,{z:t.posZ,sx:t.baseScale.x,sy:t.baseScale.y,sz:t.baseScale.z,duration:0.5,ease:"back.out",onStart:()=>{
                 //SoundHandler.playStep()

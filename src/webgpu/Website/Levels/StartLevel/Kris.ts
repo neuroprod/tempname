@@ -42,9 +42,10 @@ export default class Kris{
      jump(){
         this.state =2;
         let tl = gsap.timeline()
-         tl.to(this.head,{y:0.27,ease:"power2.in"},0)
-         tl.to(this.head,{y:0.35,duration:0.2,ease:"power2.in"},1)
-         tl.to( this.kris,{y:2,x:0.9,duration:0.5,ease:"power2.in"},1.1)
+
+         tl.to( this.kris,{y:3, duration:0.5,ease:"back.in(1)"},0)
+         tl.to( this.kris,{x:0, duration:0.3,ease:"power2.in"},0.2)
+         tl.to( this.kris,{rz:3, duration:0.3,ease:"power2.in"},0.2)
     }
     private updateIdle() {
       let delta=Timer.delta;
@@ -80,5 +81,12 @@ export default class Kris{
             }
         }
 
+    }
+
+    show() {
+        let tl = gsap.timeline()
+        this.kris.x = 0.7+2;
+
+        tl.to( this.kris,{x:0.7, duration:2,ease:"power1.out"},1)
     }
 }

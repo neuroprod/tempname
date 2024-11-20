@@ -83,6 +83,8 @@ this.godController =new God(this.god)
         charRoot.x = -2
         charRoot.y = 0.15
 
+        this.levelObjects.gameCamera.camDistance =2;
+        this.levelObjects.gameCamera.heightOffset =0.5
         this.levelObjects.gameCamera.setMinMaxX(-2,4.5)
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
@@ -116,7 +118,7 @@ this.godController =new God(this.god)
 
                 f.triggerIsEnabled =false;
                 let target =  f.getWorldPos().add([1,-0.1,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.2]))
+                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.tree.getWorldPos(),1,()=>{
@@ -153,6 +155,8 @@ this.godController =new God(this.god)
                         this.levelObjects.conversationHandler.startConversation("tree")
                         this.levelObjects.conversationHandler.doneCallBack =()=>{
                             this.levelObjects.gameCamera.setCharView()
+                            this.levelObjects.gameCamera.camDistance =2.5;
+                            this.levelObjects.gameCamera.heightOffset =0.7
                             this.characterController.setAngle(0.0)
                             gsap.delayedCall(0.5,()=>{this.blockInput =false})
 

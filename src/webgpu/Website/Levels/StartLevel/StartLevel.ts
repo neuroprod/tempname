@@ -62,36 +62,26 @@ export class StartLevel extends BaseLevel{
         char.x = -2;
         char.y = 1;
         this.characterController.setCharacter()
-        this.bezierCamera =new Bezier(new Vector3(0,5-0.5,8+2),new Vector3(0,4,8+7),new Vector3(0,0.5,2+0.2),new Vector3(0,1.9,2));
-        this.bezierTarget =new Bezier(new Vector3(0,5,8),new Vector3(0,4,8+5),new Vector3(0,0.5,0.2),new Vector3(0,1.9,0));
 
-        this.bezierCamera.getTime(this.camPos,1)
-        this.bezierTarget.getTime(this.camTarget,1)
         this.camPos.set(0,0.7,2)
         this.camTarget.set(0,0.7,0)
-        this.levelObjects.gameCamera.setLockedView(this.camTarget,this.camPos)
-
+        this.levelObjects.gameCamera.setLockedView(this.camTarget.add([0,0,0]),this.camPos.clone().add([0,0,1]))
+        this.levelObjects.gameCamera.TweenToLockedView(this.camTarget,this.camPos,3)
         if(!this.intro) this.intro=new Intro()
         this.intro.start()
 
 
-        let sky = this.mouseInteractionMap.get("sky") as MouseInteractionWrapper
-        sky.onClick=()=>{
-            if(this.intro.done){
-                this.intro.done =false;
-            //    this.moveToStartPos();
-            }
-        }
         let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
         kris.onClick=()=>{
-           // this.kris.jump()
-           LevelHandler.setLevel("Website")
+           this.kris.jump()
+            gsap.delayedCall(1.5,()=>{LevelHandler.setLevel("Website")})
+          // LevelHandler.setLevel("Website")
         }
         let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
         mainChar.onClick=()=>{
             LevelHandler.setLevel("God")
         }
-
+        this.kris.show();
         this.characterController.gotoAndIdle(new Vector3(0,0.1,0),1,()=>{})
     }
     update() {
