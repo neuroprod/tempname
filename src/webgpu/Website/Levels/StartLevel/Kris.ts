@@ -25,6 +25,11 @@ export default class Kris {
     private armLerp = 0
     private state = 0;
 
+    private legLerp = 0
+    private leg1!: SceneObject3D;
+    private leg2!: SceneObject3D;
+
+    private legRot=0;
     constructor() {
 
     }
@@ -51,6 +56,8 @@ export default class Kris {
         this.armLeft = sceneHandler.getSceneObject("krisArmLeft")
         this.armRight = sceneHandler.getSceneObject("krisArmRight")
 
+        this.leg1= sceneHandler.getSceneObject( "krisLeg1");
+        this.leg2= sceneHandler.getSceneObject( "krisLeg2");
 
     }
 
@@ -70,22 +77,31 @@ export default class Kris {
 
     public startWave() {
         gsap.to(this, {armLerp: 1, duration: 0.3})
+        gsap.to(this, {legLerp: 0.5, duration: 0.3})
     }
 
     public stopWave() {
         gsap.to(this, {armLerp: 0, duration: 0.3})
+        gsap.to(this, {legLerp: 0, duration: 0.3})
     }
 
     show() {
         let tl = gsap.timeline()
         this.kris.x = 0.7 + 2;
         this.armLerp = 0.5
+        this.legLerp = 1
         tl.to(this.kris, {x: 0.7, duration: 2, ease: "power1.out"}, 1)
-        tl.to(this, {armLerp: 0, duration: 0.3})
+        tl.to(this, {armLerp: 0, duration: 0.3},3)
+        tl.to(this, {legLerp: 0, duration: 0.3},3-0.3)
     }
 
     private updateIdle() {
         let delta = Timer.delta;
+
+        this.legRot+=delta*30;
+        let legSize =0.035
+        this.leg1.y =lerp(0, Math.sin(this.legRot)*legSize+legSize,this.legLerp)
+        this.leg2.y = lerp(0,Math.cos(this.legRot)*legSize+legSize,this.legLerp)
 
         this.headAngle += delta * (2+this.armLerp*9);
         this.head.y = 0.32 + Math.sin(this.headAngle) * 0.009

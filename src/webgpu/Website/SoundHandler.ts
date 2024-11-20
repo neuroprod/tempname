@@ -6,6 +6,7 @@ import {Howl} from 'howler';
      private step!: Howl;
      private hitFloor!: Howl;
      private wetHit!: Howl;
+   playSound =false;
 
 
     init() {
@@ -81,7 +82,7 @@ import {Howl} from 'howler';
 
 
     playCoin() {
-
+if(!this.playSound) return
 
         let s = Math.floor(Math.random() * 1000) % 4;
 
@@ -91,7 +92,7 @@ import {Howl} from 'howler';
     }
 
      playWetHit(hit:boolean) {
-
+         if(!this.playSound) return
 
          let s = Math.floor(Math.random() * 4) ;
 
@@ -105,7 +106,7 @@ import {Howl} from 'howler';
 
      playStep() {
 
-
+         if(!this.playSound) return
          let s = Math.floor(Math.random() * 1000) % 9;
 
          this.step.volume( this.fxVolume*0.1);
@@ -114,7 +115,7 @@ import {Howl} from 'howler';
      }
      playHitFloor(strength:number) {
 
-
+         if(!this.playSound) return
          let s = Math.floor(Math.random() * 1000) % 9;
 
          this.hitFloor.volume( this.fxVolume);

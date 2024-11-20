@@ -12,6 +12,7 @@ import CharacterController from "../../CharacterController.ts";
 import Timer from "../../../lib/Timer.ts";
 import MouseInteractionWrapper from "../../MouseInteractionWrapper.ts";
 import LevelHandler from "../LevelHandler.ts";
+import SoundHandler from "../../SoundHandler.ts";
 
 export class StartLevel extends BaseLevel {
 
@@ -85,6 +86,7 @@ export class StartLevel extends BaseLevel {
 
         let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
         kris.onClick = () => {
+            SoundHandler.playSound =true
             this.kris.jump()
             gsap.delayedCall(1.5, () => {
                 LevelHandler.setLevel("Website")
@@ -102,6 +104,7 @@ export class StartLevel extends BaseLevel {
 
         let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
         mainChar.onClick = () => {
+            SoundHandler.playSound =true
             LevelHandler.setLevel("God")
         }
 
@@ -112,14 +115,16 @@ export class StartLevel extends BaseLevel {
         let choose = SceneHandler.getSceneObject("choose")
         let your = SceneHandler.getSceneObject("your")
         let hero = SceneHandler.getSceneObject("hero")
+        let exMark = SceneHandler.getSceneObject("exMark")
         choose.setScaler(0)
         your.setScaler(0)
         hero.setScaler(0)
+        exMark.setScaler(0)
         let delay = 3
         gsap.to(choose, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay, duration: 0.5})
         gsap.to(your, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.1, duration: 0.5})
         gsap.to(hero, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.2, duration: 0.5})
-
+        gsap.to( exMark, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.3, duration: 0.5})
         let graphicsDev = SceneHandler.getSceneObject("graphicsDev")
         let pirate = SceneHandler.getSceneObject("pirate")
         graphicsDev.setScaler(0)
