@@ -9,7 +9,7 @@ import SceneObject3D from "./SceneObject3D.ts";
 import ShadowDepthMaterial from "../render/shadow/ShadowDepthMaterial.ts";
 import SelectItem from "../lib/UI/math/SelectItem.ts";
 import FontMesh from "../modelMaker/FontMesh.ts";
-import GBufferFontMaterial from "../render/GBuffer/GBufferFontMaterial.ts";
+
 import ShadowFontDepthMaterial from "../render/shadow/ShadowFontDepthMaterial.ts";
 import Font from "./Font.ts";
 import FontMaterial from "../render/TransparentMaterials/FontMaterial.ts";
@@ -23,7 +23,7 @@ class ProjectData {
     private renderer!: Renderer;
     private defaultShadowMaterial!: ShadowDepthMaterial;
     projectSelectItems: Array<SelectItem> = [];
-    private defaultFontMaterial!: FontMaterial;
+
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
     font!: Font;
     private copy: any;
@@ -34,7 +34,7 @@ class ProjectData {
        this.renderer =renderer;
 
        this.defaultShadowMaterial = new ShadowDepthMaterial(renderer, "shadowDepth");
-       this.defaultFontMaterial = new FontMaterial(renderer, "fontMaterial");
+
        this.defaultFontShadowMaterial = new ShadowFontDepthMaterial(renderer, "fontDepthMaterial");
        this.font = new Font()
 
@@ -170,7 +170,7 @@ class ProjectData {
         mesh.setText(text, this.font);
         model.mesh = mesh
 
-        model.material = this.defaultFontMaterial;
+        model.material =  new FontMaterial(this.renderer, "fontMaterial");
         model.setMaterial("shadow", this.defaultFontShadowMaterial)
 
         let obj3D = new SceneObject3D(this.renderer, name)

@@ -9,13 +9,14 @@ import {popObjectTree, pushObjectTree} from "../UI/ObjectTree.ts";
 import SceneEditor from "../sceneEditor/SceneEditor.ts";
 import {DEG2RAD, RAD2DEG, sqDistToLineSegment} from "../lib/MathUtils.ts";
 import DebugDraw from "../Website/DebugDraw.ts";
-import {Vector3} from "@math.gl/core";
+import {Vector3, Vector4} from "@math.gl/core";
 import {HitTrigger, HitTriggerSelectItems} from "./HitTriggers.ts";
 
 import FontMesh from "../modelMaker/FontMesh.ts";
 
 import ProjectData from "./ProjectData.ts";
 import SceneHandler from "./SceneHandler.ts";
+import ColorV from "../lib/ColorV.ts";
 
 
 export default class SceneObject3D extends Object3D {
@@ -30,6 +31,7 @@ export default class SceneObject3D extends Object3D {
 
     isText: boolean = false;
     text: string = ""
+    textColor:ColorV =new ColorV(0,0,0,1)
     needsHitTest = false;
     needsTrigger: boolean = false;
     needsMouseHit: boolean = false;
@@ -118,13 +120,14 @@ export default class SceneObject3D extends Object3D {
         DebugDraw.drawCircle(this.getWorldPos(), this.triggerRadius)
     }
 
-    public setText(s:string){
+    public setText(s:string,color:Vector4 =new Vector4()){
         if (s != this.text && this.model) {
         this.text = s;
         let m = this.model.mesh as FontMesh;
         m.setText(this.text, ProjectData.font)
             console.log("fix this")
         }
+
     }
     onDataUI() {
         UI.pushID(this.UUID)
@@ -171,7 +174,12 @@ export default class SceneObject3D extends Object3D {
         }
         if (this.isText) {
             let t = UI.LTextInput("text", this.text)
-            this.setText(t)
+
+
+            let tc = UI.LColor("textColor", this.textColor)
+            if( this.model) {
+                this.model.material.setUniform("color", this.textColor)
+            }
         }
         UI.popID()
     }
@@ -187,6 +195,16 @@ export default class SceneObject3D extends Object3D {
         }
         if(obj.dropShadow !=undefined){
             this.dropShadow = obj.dropShadow
+
+        }
+        if(obj.textColor !=undefined){
+          this.textColor.r  =obj.textColor[0]
+            this.textColor.g  =obj.textColor[1]
+            this.textColor.b  =obj.textColor[2]
+            this.textColor.a  =obj.textColor[3]
+if(this.isText && this.model){
+    this.model.material.setUniform("color",this.textColor)
+}
 
         }
 
@@ -208,9 +226,9 @@ export default class SceneObject3D extends Object3D {
         obj.position = this.getPosition()
         obj.rotation = this.getRotation()
         obj.hitTriggerItem = this.hitTriggerItem
-
+        obj.lockScaleXY =this.lockScaleXY
         obj.dropShadow = this.dropShadow
-
+        obj.textColor =[this.textColor.r,this.textColor.g,this.textColor.b,this.textColor.a]
         if (this.model) {
             obj.model = this.model.label
             obj.scale = this.model.getScale();

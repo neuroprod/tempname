@@ -5,6 +5,7 @@ import UniformGroup from "../../lib/material/UniformGroup.ts";
 import {Textures} from "../../data/Textures.ts";
 import {CullMode} from "../../lib/WebGPUConstants.ts";
 import Blend from "../../lib/material/Blend.ts";
+import {Vector4} from "@math.gl/core";
 
 
 export default class FontMaterial extends Material{
@@ -23,7 +24,7 @@ export default class FontMaterial extends Material{
 
         let uniforms =new UniformGroup(this.renderer,"uniforms");
         this.addUniformGroup(uniforms,true);
-
+        uniforms.addUniform("color",new Vector4(0,0,0,1))
         uniforms.addTexture("colorTexture",this.renderer.getTexture(Textures.MAINFONT))
         uniforms.addSampler("mySampler")
         this.cullMode =CullMode.None;
@@ -74,10 +75,10 @@ fn mainFragment(${this.getFragmentInput()}) ->  @location(0) vec4f
 
   let a= smoothstep(-edgeWidth, edgeWidth, pxDist);
    
-  
 
 
-    return vec4(0.0,0.0,0.0,a);
+
+    return   uniforms.color*a;;
 }
 ///////////////////////////////////////////////////////////
         `
