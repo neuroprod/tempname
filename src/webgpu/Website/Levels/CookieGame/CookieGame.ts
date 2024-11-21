@@ -27,8 +27,11 @@ class StrawberryData{
 
         this.strawBerry = sceneHandler.getSceneObject("strawberry"+index)
         this.sbTopPos =  this.strawBerry.getPosition().clone()
+        this.sbTopPos.y =0.24
+        this.sbTopPos.z =0.1
         this.sbBottomPos = this.sbTopPos.clone();
-        this.sbBottomPos.y-=0.24
+
+        this.sbBottomPos.y-=0.34
         this.sbBottomPos.z-=0.1
         this.strawBerry.setPositionV(this.sbBottomPos)
         this.hamer = sceneHandler.getSceneObject("hamer"+index)

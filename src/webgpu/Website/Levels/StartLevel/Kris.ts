@@ -35,10 +35,12 @@ export default class Kris {
     }
 
     reset() {
+        this.state = 0;
         this.kris = sceneHandler.getSceneObject("krisRoot")
         this.kris.setScaler(1.2)
         this.kris.x = 0.7;
         this.kris.y = 0
+        this.kris.z = -0.1
         //headTopKris
         this.head = sceneHandler.getSceneObject("headTopKris")
 
@@ -76,6 +78,7 @@ export default class Kris {
     }
 
     public startWave() {
+        console.log("startWave")
         gsap.to(this, {armLerp: 1, duration: 0.3})
         gsap.to(this, {legLerp: 0.5, duration: 0.3})
     }

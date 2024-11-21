@@ -8,6 +8,7 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
 import God from "./God.ts";
 import LevelHandler from "../LevelHandler.ts";
+import {Vector3} from "@math.gl/core";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
@@ -50,7 +51,7 @@ export class GodLevel extends PlatformLevel{
         super.configScene()
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
-        this.characterController.setCharacter()
+
         this.levelObjects.gameCamera.setCharacter()
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
@@ -77,15 +78,19 @@ this.godController =new God(this.god)
 
 
 
-
+        this.blockInput =true
 
        let charRoot = SceneHandler.getSceneObject("charRoot");
-        charRoot.x = -2
+        charRoot.x = -5
         charRoot.y = 0.15
+        this.characterController.setCharacter()
+        this.characterController.gotoAndIdle(new Vector3(-3, 0.1, 0), 1, () => {
+            this.blockInput =false
 
+        })
         this.levelObjects.gameCamera.camDistance =2;
         this.levelObjects.gameCamera.heightOffset =0.5
-        this.levelObjects.gameCamera.setMinMaxX(-2,4.5)
+        this.levelObjects.gameCamera.setMinMaxX(-3,4.5)
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
 

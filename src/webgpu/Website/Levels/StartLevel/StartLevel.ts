@@ -105,7 +105,10 @@ export class StartLevel extends BaseLevel {
         let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
         mainChar.onClick = () => {
             SoundHandler.playSound =true
-            LevelHandler.setLevel("God")
+
+            this.characterController.gotoAndIdle(new Vector3(3, 0.1, 0), 1, () => {
+                LevelHandler.setLevel("God")
+            })
         }
 
         this.kris.show();

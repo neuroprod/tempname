@@ -53,12 +53,14 @@ export class CookieLevel extends PlatformLevel{
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
 
-
-
-
+        sceneHandler.getSceneObject("coinTree1").hide()
+        sceneHandler.getSceneObject("coinTree2").hide()
+        sceneHandler.getSceneObject("coinTree3").hide()
+        sceneHandler.getSceneObject("cointree4").hide()
+        sceneHandler.getSceneObject("topCoin").hide()
         this.tree = sceneHandler.getSceneObject("rootTree")
        // this.tree.setScaler(1.5)
-        this.tree.z =-3
+        this.tree.z =-2
         this.tree.x =-1.5
 
 
@@ -68,7 +70,7 @@ export class CookieLevel extends PlatformLevel{
         this.cookie = sceneHandler.getSceneObject("cookieRoot")
         this.cookie.setScaler(1.5)
         this.cookie.z =-0.5
-        this.cookie.x =4
+        this.cookie.x =8
         this.cookie.ry =-0.4
 
         this.levelObjects.gameCamera.setMinMaxX(-0.3,100)
