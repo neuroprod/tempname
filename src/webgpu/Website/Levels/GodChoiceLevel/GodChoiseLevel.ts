@@ -79,9 +79,9 @@ export default class GodChoiceLevel extends BaseLevel{
         }
         this.state=0
         this.selectIndex =-1;
-        this.setSelectIndex()
 
-        gsap.delayedCall(1,()=>{
+
+        gsap.delayedCall(2,()=>{
             this.state=1
 
         })

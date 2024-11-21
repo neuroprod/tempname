@@ -110,7 +110,7 @@ export class CookieLevel extends PlatformLevel{
                         else if(this.levelObjects.presentID==2){
                             this.levelObjects.conversationHandler.startConversation("cookieNDA")
                         }
-                        else if(this.levelObjects.presentID==2){
+                        else if(this.levelObjects.presentID==3){
                             this.levelObjects.conversationHandler.startConversation("cookieHammer")
                         }
                    //     this.levelObjects.conversationHandler.startConversation("cookie")
