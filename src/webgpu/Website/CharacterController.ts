@@ -59,7 +59,11 @@ export default class CharacterController {
     private autoWalkTargetDir: number =0;
     private gotoDone!:() => void
     private hitObject: Object3D | null=null;
-
+    private armLeft!: SceneObject3D;
+    private waveTL!: gsap.core.Timeline;
+    private browTL!: gsap.core.Timeline;
+    private browLeft!: SceneObject3D;
+    private browRight!: SceneObject3D;
 
     constructor(renderer: Renderer) {
         this.renderer = renderer;
@@ -81,12 +85,33 @@ export default class CharacterController {
         this.sideRay = new Ray()
 
     }
+    public startWave(){
+        if(this.waveTL)this.waveTL.clear()
+        this.waveTL =gsap.timeline({repeat:-1,repeatRefresh:true})
+        this.waveTL.to( this.armLeft,{rz:0.2,x:0.02,duration:0.4,ease:"sine.inOut"})
+        this.waveTL.to( this.armLeft,{rz:-0.4,x:0.06,duration:0.5,ease:"sine.inOut"})
 
+        if(this.browTL)this.browTL.clear()
+        this.browTL =gsap.timeline({repeat:1})
+        this.browTL.to(this.browRight,{y:0.07,duration:0.2},0)
+        this.browTL.to(this.browLeft,{y:0.07,duration:0.2},0)
+        this.browTL.to(this.browRight,{y:0.063,duration:0.4},0.2)
+        this.browTL.to(this.browLeft,{y:0.063,duration:0.4},0.2)
+    }
+    public stopWave(){
+        if(this.waveTL)this.waveTL.clear()
+        this.waveTL =gsap.timeline({})
+        this.waveTL.to( this.armLeft,{rz:-0.7,x:0.06,ease:"power2.inOut"})
+    }
     setCharacter() {
+        if(this.waveTL)this.waveTL.clear()
         this.charRoot = SceneHandler.getSceneObject("charRoot");
         this.charBody = SceneHandler.getSceneObject("body");
         this.leftLeg = SceneHandler.getSceneObject("legLeft");
         this.rightLeg = SceneHandler.getSceneObject("legRight");
+        this.armLeft = SceneHandler.getSceneObject("armLeft");
+        this.browLeft = SceneHandler.getSceneObject("browLeft");
+        this.browRight = SceneHandler.getSceneObject("browRight");
         this.bodyBasePos = this.charBody.getPosition().clone()
         this.autoWalk =false;
        this.cloudParticles.init()

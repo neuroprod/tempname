@@ -14,23 +14,14 @@
     ]
   },
 
-  {
-    "name": "cookie",
-    "data": [
-      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "Grmbl grplrrrrr!"},
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie! When did\nyou become so angry?"},
-      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "My mom always told me\nI was a happy baby."},
-      {"text": "But then I had to go to\nschool and stuff."},
-      {"text": "Now I just want to smash things."}
-    ]
-  },
+
   {
     "name": "tree",
     "data": [
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Hi pirate. Are you ready to\ngo on an adventure!?"},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "No, I'm just collecting\nthose free coins that\nare lying around here."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "You know, there is more\nto live then coins."},
-      {"text": "Climb my braches, and discover\nwhat it's all about."},
+      {"text": "Climb my branches, and discover\nwhat it's all about."},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "I don't know,\nIsn't that dangerous..."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Sigh... The are also\ncoins in the branches."},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "Why didn't you tell me that earlier\nI'm on my way!"}
@@ -64,8 +55,8 @@
   {
     "name": "godNo",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "How do you dare to insult me!"},
-      {"text": "You will regret this!"}
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Ow..."},
+      {"text": "I think you will regret this!"}
     ]
   },
   {
@@ -91,6 +82,48 @@
     "data": [
       {"char":"godRoot","pos":[0.15,0.8,0],"text": "A toy hamer\nYou can't realy use that"}
     ]
-  }
+  },
+  {
+    "name": "cookieNoPresent",
+    "data": [
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, you won't believe who I just met!"}
+    ]
+  },
+  {
+    "name": "cookieLightning",
+    "data": [
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, want to the striking thing I just got?"}
+    ]
+  },
+  {
+    "name": "cookieNDA",
+    "data": [
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, Want to sign my NDA?"}
+    ]
+  },
+  {
+    "name": "cookieHammer",
+    "data": [
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, I got a new hammer!"}
+    ]
+  },
+  {
+    "name": "cookieBox",
+    "data": [
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, do you want to check out my new box?"}
+    ]
+  },
+  {
+    "name": "cookie",
+    "data": [
+      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "Fuck off man!"},
+      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Sorry. Why are you always so angry?"},
+      {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "I don't know?\nMy mom told me\nI was a happy baby."},
+      {"text": "But then I had to go to\nschool and stuff."},
+      {"text": "Now I just want to smash things.\nYou should try it! It helps"}
 
+    ]
+  }
 ]
+
+

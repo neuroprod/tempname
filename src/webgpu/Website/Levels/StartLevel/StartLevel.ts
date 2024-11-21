@@ -87,7 +87,10 @@ export class StartLevel extends BaseLevel {
         let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper
         kris.onClick = () => {
             SoundHandler.playSound =true
+            gsap.to(pirate, {sx: 0, sy: 0, sz: 0, duration: 0.2})
+            gsap.to(graphicsDev, {sx: 0, sy: 0, sz: 0, duration: 0.2})
             this.kris.jump()
+            this.kris.stopWave()
             gsap.delayedCall(1.5, () => {
                 LevelHandler.setLevel("Website")
             })
@@ -105,12 +108,20 @@ export class StartLevel extends BaseLevel {
         let mainChar = this.mouseInteractionMap.get("mainChar") as MouseInteractionWrapper
         mainChar.onClick = () => {
             SoundHandler.playSound =true
-
+            gsap.to(pirate, {sx: 0, sy: 0, sz: 0, duration: 0.2})
+            gsap.to(graphicsDev, {sx: 0, sy: 0, sz: 0, duration: 0.2})
             this.characterController.gotoAndIdle(new Vector3(3, 0.1, 0), 1, () => {
                 LevelHandler.setLevel("God")
             })
         }
+        mainChar.onRollOver =()=>{
+            this.characterController.startWave()
 
+        }
+        mainChar.onRollOut =()=>{
+            this.characterController.stopWave()
+
+        }
         this.kris.show();
         this.characterController.gotoAndIdle(new Vector3(0, 0.1, 0), 1, () => {
         })

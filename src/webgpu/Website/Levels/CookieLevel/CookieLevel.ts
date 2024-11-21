@@ -98,7 +98,7 @@ export class CookieLevel extends PlatformLevel{
 
                 this.characterController.gotoAndIdle(this.cookie.getWorldPos().add([-0.9,0,0]),1,()=>{
                     setTimeout(()=>{
-                      /*  if(this.levelObjects.presentID==-1){
+                        if(this.levelObjects.presentID==-1){
                             this.levelObjects.conversationHandler.startConversation("cookieNoPresent")
                         }
                         else if(this.levelObjects.presentID==0){
@@ -112,17 +112,23 @@ export class CookieLevel extends PlatformLevel{
                         }
                         else if(this.levelObjects.presentID==2){
                             this.levelObjects.conversationHandler.startConversation("cookieHammer")
-                        }*/
-                        this.levelObjects.conversationHandler.startConversation("cookie")
+                        }
+                   //     this.levelObjects.conversationHandler.startConversation("cookie")
 
                         this.levelObjects.conversationHandler.doneCallBack =()=>{
-                            this.levelObjects.gameCamera.setCharView()
-                            setTimeout(()=>{this.blockInput =false
 
-                            LevelHandler.setLevel("CookieGame")
+                            this.levelObjects.conversationHandler.startConversation("cookie")
 
-                            },500)
+                            this.levelObjects.conversationHandler.doneCallBack =()=> {
 
+                                this.levelObjects.gameCamera.setCharView()
+                                setTimeout(() => {
+                                    this.blockInput = false
+
+                                    LevelHandler.setLevel("CookieGame")
+
+                                }, 500)
+                            }
                         }},1500);
 
                 });

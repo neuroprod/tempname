@@ -95,7 +95,7 @@ export default class Game {
         this.gameRenderer.drawFinal(pass);
 
         this.textBalloonHandler.drawFinal(pass)
-        DebugDraw.draw(pass);
+       // DebugDraw.draw(pass);
     }
 
 
