@@ -17,6 +17,7 @@ export class GodLevel extends PlatformLevel{
     private tree!: SceneObject3D;
     private god!: SceneObject3D;
     private godController!: God;
+    private skipGodChoice: boolean =false;
 
     init() {
         super.init();
@@ -51,7 +52,7 @@ export class GodLevel extends PlatformLevel{
         super.configScene()
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
-
+        this.skipGodChoice =false
         this.levelObjects.gameCamera.setCharacter()
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
@@ -112,7 +113,9 @@ this.godController =new God(this.god)
     }
     conversationDataCallBack(data:string){
         super.conversationDataCallBack(data);
-        console.log(data)
+        if(data=="godNo"){
+            this.skipGodChoice =true;
+        }
     }
      resolveHitTrigger(f: SceneObject3D) {
         if(!super.resolveHitTrigger(f)){
@@ -135,7 +138,13 @@ this.godController =new God(this.god)
 
                            gsap.delayedCall(0.5,()=>{
 
-                               LevelHandler.setLevel("GodChoice")
+                               if( this.skipGodChoice){
+                                   LevelHandler.setLevel("Cookie")
+
+                               }
+                                    else{
+                                   LevelHandler.setLevel("GodChoice")
+                                    }
 
                            })
 

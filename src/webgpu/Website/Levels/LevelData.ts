@@ -20,6 +20,7 @@ export default class LevelData {
 
     //godPresent
     presentID=-1;
+    numCoins: number =0;
 
 
 }

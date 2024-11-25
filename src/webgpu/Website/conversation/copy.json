@@ -55,8 +55,8 @@
   {
     "name": "godNo",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Ow..."},
-      {"text": "I think you will regret this!"}
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Ow... You can have my coins if you want?"},
+      {"text": "No need for coins in the sky"}
     ]
   },
   {
@@ -121,6 +121,23 @@
       {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "I don't know?\nMy mom told me\nI was a happy baby."},
       {"text": "But then I had to go to\nschool and stuff."},
       {"text": "Now I just want to smash things.\nYou should try it! It helps"}
+
+    ]
+  },
+  {
+    "name": "strawBerry",
+    "data": [
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "What's going on Strawberry?"},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just got a call from my mum:\nMy brother got squased by some jerk!"},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "Ow..."},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy dru.., euh,my happy medicine"},
+      {"text":"Can you spare me some coins?"},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "How much do you need?"},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just 8 coins..."},
+      {"char":"charRoot","pos":[0.1, 0.8, 0],"choice": [
+        {"text": "Those are all my coins Strawberry,\nI might need them later. I cant do that."},
+        {"text": "Here you go! All my coins.\nI know it's a tough world out there!"}
+      ]}
 
     ]
   }

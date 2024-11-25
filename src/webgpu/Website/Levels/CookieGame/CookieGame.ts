@@ -11,6 +11,7 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import Timer from "../../../lib/Timer.ts";
 import gsap from "gsap";
 import SoundHandler from "../../SoundHandler.ts";
+import LevelHandler from "../LevelHandler.ts";
 class StrawberryData{
     strawBerry:SceneObject3D;
     hamer:SceneObject3D;
@@ -68,6 +69,7 @@ class StrawberryData{
             hit =true;
 
         }
+
         SoundHandler.playWetHit(hit)
         this.hamer.show()
         this.hamer.y =this.hamerY+0.5
@@ -105,6 +107,7 @@ export default class CookieGame extends BaseLevel{
     private points =0;
     private hat!: SceneObject3D;
     private hatY: number=0;
+    private hitCount =0;
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
@@ -198,9 +201,11 @@ this.points =0;
             this.levelObjects.textBalloonHandler.setText("Ow, you missed")
         }
 
+        this.hitCount++;
 
-
-
+if(this.points>1 && this.hitCount>8){
+   this.endGame()
+}
 
     }
     destroy() {
@@ -210,5 +215,9 @@ this.points =0;
         }
         this.hat.y =this.hatY;
         this.strawBerryData =[]
+    }
+
+    private endGame() {
+        LevelHandler.setLevel("StrawBerry")
     }
 }
