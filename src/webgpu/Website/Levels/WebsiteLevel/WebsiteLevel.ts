@@ -52,7 +52,7 @@ export class WebsiteLevel extends BaseLevel {
         window.scrollTo(0, 0);
         document.body.style.overflow = "visible"
         let char = SceneHandler.getSceneObject("charRoot")
-        char.setScaler(0.6)
+        char.setScaler(0.5)
         char.x =0.45
         char.z =0.1
         char.ry =Math.PI-0.35
@@ -97,16 +97,17 @@ export class WebsiteLevel extends BaseLevel {
     }
 
     destroy() {
-        super.destroy();
-        window.scrollTo(0, 0);
-        document.body.style.overflow = "hidden"
-        this.websiteShow.destroy()
-
         let char = SceneHandler.getSceneObject("charRoot")
         char.x =0
         char.z =0
         char.ry =0
         char.y =0
+        super.destroy();
+        window.scrollTo(0, 0);
+        document.body.style.overflow = "hidden"
+        this.websiteShow.destroy()
+
+
     }
 
     onUI() {
