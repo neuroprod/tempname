@@ -86,7 +86,7 @@ export default class WebsiteShow {
                 //SoundHandler.playStep()
 
                 }},time)
-            time+=0.1;
+            time+=0.03;
         }
 
 

@@ -22,10 +22,12 @@ export class WebsiteLevel extends BaseLevel {
         super.init();
         LoadHandler.onComplete = this.configScene.bind(this)
         LoadHandler.startLoading()
-
+        LoadHandler.startLoading()
 
         SceneHandler.setScene("1f78eea8-a005-4204").then(() => {
-
+            SceneHandler.addScene("1234").then(() => {
+                LoadHandler.stopLoading()
+            });
             LoadHandler.stopLoading()
         })
 
@@ -49,8 +51,12 @@ export class WebsiteLevel extends BaseLevel {
 
         window.scrollTo(0, 0);
         document.body.style.overflow = "visible"
-
-
+        let char = SceneHandler.getSceneObject("charRoot")
+        char.setScaler(0.6)
+        char.x =0.45
+        char.z =0.1
+        char.ry =Math.PI-0.35
+        char.y =-1.6
         let webSiteRoot = SceneHandler.getSceneObject("rootWebsite")
         this.websiteShow.setObjects(webSiteRoot.children)
 
@@ -58,13 +64,13 @@ export class WebsiteLevel extends BaseLevel {
         gsap.delayedCall(2, () => {
             let backButton = this.mouseInteractionMap.get("backButton") as MouseInteractionWrapper
             backButton.onClick = () => {
-LevelHandler.setLevel("Start")
+                LevelHandler.setLevel("Start")
             }
             backButton.onRollOver = () => {
 
                 this.bounce("backButton")
             }
-            let meat1Button = this.mouseInteractionMap.get("meat1") as MouseInteractionWrapper
+           /* let meat1Button = this.mouseInteractionMap.get("meat1") as MouseInteractionWrapper
 
             meat1Button.onRollOver = () => {
 
@@ -75,7 +81,7 @@ LevelHandler.setLevel("Start")
             star1Button.onRollOver = () => {
 
                 this.bounce("star1")
-            }
+            }*/
         });
     }
 

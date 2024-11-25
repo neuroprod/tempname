@@ -127,7 +127,7 @@ class SceneHandler {
 
                 sceneObj.setPosition(d.position[0], d.position[1], d.position[2])
                 sceneObj.setRotation(d.rotation[0], d.rotation[1], d.rotation[2], d.rotation[3])
-
+                sceneObj.setEditorValues()
                 this.sceneObjectsByLoadID.set(d.id, sceneObj);
 
                 let parent = this.sceneObjectsByLoadID.get(d.parentID)

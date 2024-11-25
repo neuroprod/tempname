@@ -10,6 +10,7 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import Timer from "../../../lib/Timer.ts";
 import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
+import God from "../GodLevel/God.ts";
 export default class GodChoiceLevel extends BaseLevel{
     private god!: SceneObject3D;
     private arrow!: SceneObject3D;
@@ -22,6 +23,7 @@ export default class GodChoiceLevel extends BaseLevel{
     private switchTime =0;
     private speed =0.1;
     private state =0;
+    private godHandler!: God;
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
@@ -48,13 +50,11 @@ export default class GodChoiceLevel extends BaseLevel{
 
         this.god = sceneHandler.getSceneObject("godRoot")
         this.god.setScaler(1.3)
-        sceneHandler.getSceneObject("godLightning").hide()
-        sceneHandler.getSceneObject("godNDA").hide()
-        sceneHandler.getSceneObject("godCloud").hide()
-        sceneHandler.getSceneObject("godPresent").hide()
-        sceneHandler.getSceneObject("godLightning").hide()
-        sceneHandler.getSceneObject("godHamer").hide()
 
+
+
+        this.godHandler =new God()
+        this.godHandler.initGame()
 
         let holder = sceneHandler.getSceneObject("godHolder")
         holder.addChild(this.god)
@@ -95,7 +95,7 @@ export default class GodChoiceLevel extends BaseLevel{
     }
     update() {
         super.update();
-
+ this.godHandler.update()
 
         let jump = this.levelObjects.keyInput.getJump()
         if (this.levelObjects.gamepadInput.connected) {
@@ -139,6 +139,12 @@ export default class GodChoiceLevel extends BaseLevel{
 
         }
     }
+destroy() {
+    super.destroy();
+
+        this.godHandler.destroy()
+
+}
 
     private setChoise() {
         let tl =gsap.timeline()

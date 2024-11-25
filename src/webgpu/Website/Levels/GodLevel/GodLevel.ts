@@ -12,8 +12,7 @@ import {Vector3} from "@math.gl/core";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
-    private strawBerry!: SceneObject3D;
-    private cookie!: SceneObject3D;
+
     private tree!: SceneObject3D;
     private god!: SceneObject3D;
     private godController!: God;
@@ -74,7 +73,8 @@ export class GodLevel extends PlatformLevel{
         this.god.z =-0.5
         this.god.x =this.tree.x +1.3
 
-this.godController =new God(this.god)
+        this.godController =new God()
+        this.godController.init(this.god)
 
 
 
@@ -207,10 +207,14 @@ this.godController =new God(this.god)
 
         return false;
     }
-
+update(){
+        super.update()
+    this.godController.update()
+}
 
     destroy(){
         super.destroy()
+        this.godController.destroy()
         if(this.tl) this.tl.clear()
 
     }
