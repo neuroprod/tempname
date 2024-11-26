@@ -8,6 +8,7 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
 import LevelData from "../LevelData.ts";
 import LevelHandler from "../LevelHandler.ts";
+import Strawberry from "./Strawberry.ts";
 
 
 
@@ -16,13 +17,13 @@ export class StrawberryLevel extends PlatformLevel{
 
     private strawBerry!: SceneObject3D;
 
-
+    strawBerryHandler =new Strawberry()
 
 
     init() {
         super.init();
 
-        console.log("strawberryInit")
+
         LoadHandler.onComplete =this.configScene.bind(this)
         LoadHandler.startLoading()
         LoadHandler.startLoading()
@@ -51,6 +52,7 @@ export class StrawberryLevel extends PlatformLevel{
         this.levelObjects.gameCamera.setCharacter()
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
 
+        this.strawBerryHandler.init()
 
 
 
@@ -60,14 +62,19 @@ export class StrawberryLevel extends PlatformLevel{
 
         this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
         this.strawBerry.setScaler(1.3)
-        this.strawBerry.z =-0.3
-        this.strawBerry.x =2
+        this.strawBerry.z =0
+        this.strawBerry.x =4
         this.strawBerry.ry =-0.4
 
         this.levelObjects.gameCamera.setMinMaxX(-0.3,100)
 
-console.log("strawberrySetup")
 
+
+    }
+    update(){
+        super.update()
+
+        this.strawBerryHandler.update()
     }
     conversationDataCallBack(data:string){
         super.conversationDataCallBack(data);
@@ -115,6 +122,7 @@ console.log("strawberrySetup")
 
 
     destroy(){
+        this.strawBerryHandler.destroy()
         super.destroy()
         if(this.tl) this.tl.clear()
 
