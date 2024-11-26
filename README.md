@@ -1,5 +1,4 @@
 
-New project!, 
-Doesn't have a name because I don't know what it is...
+working on my new website. Its gonna take a while before its done
 
-preview: https://neuroprod.github.io/tempname/
+preview: https://neuroprod.github.io/website/
