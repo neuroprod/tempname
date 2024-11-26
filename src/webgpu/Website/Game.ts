@@ -5,7 +5,6 @@ import GameRenderer from "../render/GameRenderer.ts";
 import CanvasRenderPass from "../CanvasRenderPass.ts";
 
 
-
 import KeyInput from "./KeyInput.ts";
 
 import GameCamera from "./GameCamera.ts";
@@ -32,7 +31,7 @@ export default class Game {
     private gamepadInput: GamePadInput;
     private levelObjects: LevelData;
     private textBalloonHandler: TextBalloonHandler;
-    private conversationHandler:ConversationHandler;
+    private conversationHandler: ConversationHandler;
 
     constructor(renderer: Renderer, mouseListener: MouseListener, camera: Camera, gameRenderer: GameRenderer) {
 
@@ -42,20 +41,20 @@ export default class Game {
 
         this.gameCamera = new GameCamera(renderer, camera);
 
-        this.textBalloonHandler =new TextBalloonHandler(this.renderer,this.gameCamera.camera)
-        this.conversationHandler =new ConversationHandler(this.renderer,this.textBalloonHandler)
+        this.textBalloonHandler = new TextBalloonHandler(this.renderer, this.gameCamera.camera)
+        this.conversationHandler = new ConversationHandler(this.renderer, this.textBalloonHandler)
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
         this.levelObjects = new LevelData()
-        this.levelObjects.renderer =renderer;
+        this.levelObjects.renderer = renderer;
         this.levelObjects.gameRenderer = this.gameRenderer;
-        this.levelObjects.gameCamera =this.gameCamera
-        this.levelObjects.gamepadInput=this.gamepadInput
-        this.levelObjects.keyInput=this.keyInput
-        this.levelObjects.textBalloonHandler =this.textBalloonHandler
-        this.levelObjects.conversationHandler =this.conversationHandler;
-        this.levelObjects.mouseListener =this.mouseListener;
+        this.levelObjects.gameCamera = this.gameCamera
+        this.levelObjects.gamepadInput = this.gamepadInput
+        this.levelObjects.keyInput = this.keyInput
+        this.levelObjects.textBalloonHandler = this.textBalloonHandler
+        this.levelObjects.conversationHandler = this.conversationHandler;
+        this.levelObjects.mouseListener = this.mouseListener;
         LevelHandler.init(this.levelObjects)
         SoundHandler.init()
     }
@@ -66,12 +65,11 @@ export default class Game {
         if (LoadHandler.isLoading()) return
 
 
-
         this.gamepadInput.update();
-if( LevelHandler.currentLevel){
-    LevelHandler.currentLevel.updateMouse()
-    LevelHandler.currentLevel.update()
-}
+        if (LevelHandler.currentLevel) {
+            LevelHandler.currentLevel.updateMouse()
+            LevelHandler.currentLevel.update()
+        }
 
         this.gameCamera.update()
         this.textBalloonHandler.update()
@@ -83,7 +81,7 @@ if( LevelHandler.currentLevel){
 
     setActive() {
         LevelHandler.setLevel("Start")
-       // LevelHandler.setLevel("Website")
+        // LevelHandler.setLevel("Website")
     }
 
 
@@ -97,18 +95,15 @@ if( LevelHandler.currentLevel){
         this.gameRenderer.drawFinal(pass);
 
         this.textBalloonHandler.drawFinal(pass)
-       // DebugDraw.draw(pass);
+        // DebugDraw.draw(pass);
     }
-
-
-
 
 
     private setGUI() {
         UI.pushWindow("Game")
 
-        for(let l of LevelHandler.levelKeys){
-            if(UI.LButton(l)){
+        for (let l of LevelHandler.levelKeys) {
+            if (UI.LButton(l)) {
                 LevelHandler.setLevel(l)
             }
         }
