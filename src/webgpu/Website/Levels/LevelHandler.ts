@@ -14,7 +14,7 @@ class LevelHandler {
     public levelKeys: Array<string> = [];
     public levels: Map<string, BaseLevel> = new Map()
 
-    public currentLevel!: BaseLevel;
+    public currentLevel!: BaseLevel|null;
     private levelObjects!: LevelData;
 
     init(levelObjects: LevelData) {
@@ -35,7 +35,10 @@ class LevelHandler {
         this.currentLevel.initObjects(this.levelObjects)
         this.currentLevel.init()
     }
-
+ destroyCurrentLevel(){
+     if (this.currentLevel) this.currentLevel.destroy()
+     this.currentLevel =null;
+}
 
     private addLevel(key: string, level: BaseLevel) {
 

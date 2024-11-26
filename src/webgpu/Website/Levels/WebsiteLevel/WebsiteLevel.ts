@@ -98,10 +98,12 @@ export class WebsiteLevel extends BaseLevel {
 
     destroy() {
         let char = SceneHandler.getSceneObject("charRoot")
-        char.x =0
-        char.z =0
-        char.ry =0
-        char.y =0
+     if(char) {
+         char.x = 0
+         char.z = 0
+         char.ry = 0
+         char.y = 0
+     }
         super.destroy();
         window.scrollTo(0, 0);
         document.body.style.overflow = "hidden"

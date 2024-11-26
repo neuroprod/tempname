@@ -28,6 +28,7 @@ import DebugDraw from "./Website/DebugDraw.ts";
 import SceneHandler from "./data/SceneHandler.ts";
 import LoadHandler from "./data/LoadHandler.ts";
 import TextBalloonHandler from "./Website/conversation/TextBalloonHandler.ts";
+import LevelHandler from "./Website/Levels/LevelHandler.ts";
 
 
 enum MainState {
@@ -157,7 +158,7 @@ export default class Main {
             SceneEditor.saveTemp()
         }
         if (this.currentMainState == MainState.game) {
-            SceneEditor.saveTemp()
+           LevelHandler.destroyCurrentLevel()
         }
         if (state == MainState.modelMaker) {
             this.modelMaker.setActive()
