@@ -37,6 +37,7 @@ export class WebsiteLevel extends BaseLevel {
 
         LoadHandler.onComplete = () => {
         }
+
         //leftMargin
         this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
         this.setMouseHitObjects(SceneHandler.mouseHitModels);

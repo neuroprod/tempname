@@ -68,9 +68,11 @@ export default class Game {
 
 
         this.gamepadInput.update();
+if( LevelHandler.currentLevel){
+    LevelHandler.currentLevel.updateMouse()
+    LevelHandler.currentLevel.update()
+}
 
-        LevelHandler.currentLevel.updateMouse()
-        LevelHandler.currentLevel.update()
         this.gameCamera.update()
         this.textBalloonHandler.update()
 
