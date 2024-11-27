@@ -19,7 +19,7 @@ class Tear{
         this.tl.set(this.tear,{y:this.startY},Math.random()+3)
     }
 
- 
+
 
     public destroy(){
         this.tl.clear()
