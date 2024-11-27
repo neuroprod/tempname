@@ -82,16 +82,19 @@ export class GodLevel extends PlatformLevel{
         this.blockInput =true
 
        let charRoot = SceneHandler.getSceneObject("charRoot");
-        charRoot.x = -5
+        charRoot.x = -5-2
         charRoot.y = 0.15
         this.characterController.setCharacter()
-        this.characterController.gotoAndIdle(new Vector3(-3, 0.1, 0), 1, () => {
+        this.characterController.gotoAndIdle(new Vector3(-3-2, 0.1, 0), 1, () => {
             this.blockInput =false
 
         })
         this.levelObjects.gameCamera.camDistance =2;
         this.levelObjects.gameCamera.heightOffset =0.5
-        this.levelObjects.gameCamera.setMinMaxX(-3,4.5)
+        this.levelObjects.gameCamera.setMinMaxX(-3-2,4.5)
+
+
+        this.levelObjects.gameCamera.setForCharPos(new Vector3(-6, 0, 0))
 
        /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
 

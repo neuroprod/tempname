@@ -36,6 +36,7 @@ export class BaseLevel {
     }
 
     destroy() {
+        this.levelObjects.gameCamera.destroyTweens()
         this.levelObjects.textBalloonHandler.hideText()
     }
     onUI(){

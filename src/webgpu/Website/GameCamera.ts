@@ -33,6 +33,7 @@ public camDistance =2.5
     private shakeY: number=0;
     private minX: number=-100;
     private maxX: number=100;
+    private tl!: gsap.core.Timeline;
     constructor(renderer:Renderer,camera:Camera) {
         this.renderer =renderer;
         this.camera = camera;
@@ -68,7 +69,17 @@ public camDistance =2.5
 
     }
 
+setForCharPos(charPos:Vector3){
+    charPos.y+=this.heightOffset
+    if(charPos.x<this.minX)charPos.x=this.minX
+    if(charPos.x>this.maxX)charPos.x=this.maxX
+    this.cameraLookAt.lerp( charPos,1)
+    this.camPos.copy(this.cameraLookAt);
+    this.camPos.z+=this.camDistance;
+    this.camPos.y+=0;
 
+    this.cameraWorld.lerp( this.camPos as NumericArray,1)
+}
 
     updateCharCamera(){
         let delta = Timer.delta;
@@ -94,9 +105,9 @@ public camDistance =2.5
     }
 
     TweenToLockedView(camLookAt: Vector3, camPosition: Vector3,duration=1.5) {
-        let tl=gsap.timeline()
-        tl.to(this.cameraWorld,{x:camPosition.x,y:camPosition.y,z:camPosition.z,duration:duration,ease:"power2.out"},0)
-        tl.to(this.cameraLookAt,{x:camLookAt.x,y:camLookAt.y,z:camLookAt.z,duration:duration,ease:"power2.out"},0)
+        this.tl=gsap.timeline()
+        this.tl.to(this.cameraWorld,{x:camPosition.x,y:camPosition.y,z:camPosition.z,duration:duration,ease:"power2.out"},0)
+        this.tl.to(this.cameraLookAt,{x:camLookAt.x,y:camLookAt.y,z:camLookAt.z,duration:duration,ease:"power2.out"},0)
         this.cameraState  =CameraState.Locked;
     }
 
@@ -116,5 +127,11 @@ public camDistance =2.5
     setMinMaxX(minX: number, maxX: number) {
         this.minX = minX
         this.maxX = maxX
+    }
+
+    destroyTweens() {
+
+       if(this.tl)this.tl.clear()
+        gsap.killTweensOf(this)
     }
 }

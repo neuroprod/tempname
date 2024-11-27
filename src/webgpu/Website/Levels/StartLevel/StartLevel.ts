@@ -18,12 +18,12 @@ export class StartLevel extends BaseLevel {
 
     private kris!: Kris;
 
-    private bezierCamera!: Bezier;
-    private bezierTarget!: Bezier;
+
     private camPos = new Vector3()
     private camTarget = new Vector3()
-    private bezierTime = 0;
+
     private characterController!: CharacterController;
+
 
     init() {
         super.init();
@@ -135,6 +135,8 @@ export class StartLevel extends BaseLevel {
         hero.setScaler(0)
         exMark.setScaler(0)
         let delay = 3
+
+
         gsap.to(choose, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay, duration: 0.5})
         gsap.to(your, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.1, duration: 0.5})
         gsap.to(hero, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.2, duration: 0.5})
@@ -146,18 +148,8 @@ export class StartLevel extends BaseLevel {
         gsap.to(pirate, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.7, duration: 0.5})
         gsap.to(graphicsDev, {sx: 1, sy: 1, sz: 1, ease: "back.out", delay: delay + 0.8, duration: 0.5})
     }
+destroy() {
+    super.destroy();
+}
 
-    private moveToStartPos() {
-        this.bezierTime = 0
-        let tl = gsap.timeline({
-            onUpdate: () => {
-                this.bezierCamera.getTime(this.camPos, this.bezierTime)
-                this.bezierTarget.getTime(this.camTarget, this.bezierTime)
-                this.levelObjects.gameCamera.setLockedView(this.camTarget, this.camPos)
-            }
-        })
-
-        tl.to(this, {bezierTime: 1, duration: 3, ease: "power3.InOut"}, 0)
-
-    }
 }
