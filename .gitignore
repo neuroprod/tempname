@@ -21,6 +21,7 @@ dist-ssr
 *.ntvs*
 *.njsproj
 *.sln
+*.psd
 *.sw?
 /server/temp/*
 /font/fonts/
