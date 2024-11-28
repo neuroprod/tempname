@@ -16,7 +16,7 @@ export class PlatformLevel extends BaseLevel{
     init() {
         super.init();
         this.characterController = new CharacterController(GameModel.renderer)
-
+        GameModel.coinHandeler.show()
     }
     configScene(){
         this.coinHandler =new CoinGrabber()

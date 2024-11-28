@@ -9,6 +9,7 @@ import {WebsiteLevel} from "./WebsiteLevel/WebsiteLevel.ts";
 import CookieGame from "./CookieGame/CookieGame.ts";
 import {StrawberryLevel} from "./StrawberryLevel/StrawberryLevel.ts";
 import AppState from "../../AppState.ts";
+import GameModel from "../GameModel.ts";
 
 
 class LevelHandler {
@@ -30,7 +31,7 @@ class LevelHandler {
     }
 
     setLevel(key: string) {
-
+        GameModel.coinHandeler.hide()
         if (this.currentLevel) this.currentLevel.destroy()
         this.currentLevel = this.levels.get(key) as BaseLevel;
         if (this.currentLevel) {
