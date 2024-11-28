@@ -14,6 +14,7 @@ export default class ConversationHandler {
     private isChoice!: boolean;
     private choiceIndex: number = 0;
     private numChoices = 0;
+    public replaceMap:Map<string,string>=new Map()
     isDone: boolean =false;
     doneCallBack!:()=>void;
     dataCallBack!:(data:string)=>void;
@@ -70,7 +71,7 @@ export default class ConversationHandler {
 
     displayText(text:string, numAnswers:number, currentAnswer:number){
         this.textReady = false
-        this.textBalloonHandler.setText(text,  numAnswers, currentAnswer)
+        this.textBalloonHandler.setText(this.replace(text),  numAnswers, currentAnswer)
         setTimeout(() => {
             this.textReady = true
         }, 800)
@@ -112,12 +113,11 @@ export default class ConversationHandler {
             }else if(jump) {
                 this.setCallBack(this.currentData.choice[this.choiceIndex].callBack)
                 if(this.currentData.choice[this.choiceIndex].callText){
-                    this.startConversation(this.currentData.choice[this.choiceIndex].callText)
+                    this.startConversation( this.currentData.choice[this.choiceIndex].callText)
                 }else{
                     this.setDone();
                 }
-        // go to target
-               //this.setDone();
+
 
             }
 
@@ -131,7 +131,12 @@ export default class ConversationHandler {
 
 
     }
+replace(input:string){
 
+    return input.replace(/#(\w+)/g, (_, $1)=> {
+      return  this.replaceMap.get($1) as string
+       })
+}
     public setCallBack(data:string|undefined){
 
         if(this.dataCallBack && data)this.dataCallBack(data)

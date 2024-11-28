@@ -1,18 +1,5 @@
 [
-  {
-    "name": "strawberry",
-    "data": [
-      {"char":"charRoot","pos":[-0.3, 0.8, 0],"text": "Hi Strawberry!\nEveryting ok?"},
-      {"char":"strawberryRoot","pos":[0.3, 0.9, 0],"text": "No, I'm feeling sick\nCan you spare some coins?"},
 
-      {"char":"charRoot","pos":[-0.3, 0.8, 0],"choice": [
-        {"text": "choise1!\nEveryting ok?"},
-        {"text": "choise2 gsdffds dsf dsfdfs fdsdsffd fdsfdsfsd"},
-        {"text": "choise3"}
-      ]}
-
-    ]
-  },
 
 
   {
@@ -129,14 +116,14 @@
     "data": [
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "What's going on Strawberry?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just got a call from my mum:\nMy brother got squased by some jerk!"},
-      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "Ow..."},
-      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy dru.., euh,my happy medicine"},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": " Ow... "},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy dru...\n euh,my happy medicine"},
       {"text":"Can you spare me some coins?"},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "How much do you need?"},
-      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just 8 coins..."},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just #numCoins coins..."},
       {"char":"charRoot","pos":[0.1, 0.8, 0],"choice": [
-        {"text": "Those are all my coins Strawberry,\nI might need them later. I cant do that."},
-        {"text": "Here you go! All my coins.\nI know it's a tough world out there!"}
+        {"text": "Those are all my coins Strawberry,\nI might need them later. I cant do that.", "callBack": "coinsNo" },
+        {"text": "Here you go! All my coins.\nI know it's a tough world out there!","callBack": "coinsYes" }
       ]}
 
     ]

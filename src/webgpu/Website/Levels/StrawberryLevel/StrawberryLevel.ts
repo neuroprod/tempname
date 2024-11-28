@@ -79,6 +79,9 @@ export class StrawberryLevel extends PlatformLevel{
     }
     conversationDataCallBack(data:string){
         super.conversationDataCallBack(data);
+        if(data=="coinsYes"){
+            GameModel.coinHandeler.addCoins(GameModel.coinHandeler.numCoins*-1);
+        }
 
     }
     resolveHitTrigger(f: SceneObject3D) {
@@ -96,21 +99,13 @@ export class StrawberryLevel extends PlatformLevel{
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.strawBerry.getWorldPos().add([-0.9,0,0]),1,()=>{
-                    setTimeout(()=>{
-
-                            GameModel.conversationHandler.startConversation("strawBerry")
-
-                        //     GameModel.conversationHandler.startConversation("cookie")
+                    gsap.delayedCall(1.5,()=>{
+                        GameModel.conversationHandler.replaceMap.set("numCoins",GameModel.coinHandeler.numCoins+"")
+                        GameModel.conversationHandler.startConversation("strawBerry")
 
                         GameModel.conversationHandler.doneCallBack =()=>{
-                            GameModel.conversationHandler
-                         //   GameModel.conversationHandler.startConversation("cookie")
 
-                            GameModel.conversationHandler.doneCallBack =()=> {
-
-
-                            }
-                        }},1500);
+                        }});
 
                 });
                 return true;

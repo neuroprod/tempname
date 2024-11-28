@@ -25,7 +25,7 @@ import CoinHandler from "./handlers/CoinHandler.ts";
 
     //godPresent
     presentID=-1;
-    numCoins: number =0;
+
 
 
 

@@ -19,7 +19,7 @@ export default class CoinHandler{
         this.textModel.material = new TextBalloonFontMaterial(renderer, "textBalloonFontMaterial")
 
         this.textMesh = new TextBalloonFontMesh(renderer)
-        this.textMesh.setText("0", ProjectData.font, 0.15)
+        this.textMesh.setText( this.displayCoins+"", ProjectData.font, 0.15)
 
         this.textModel.mesh = this.textMesh;
         this.textModel.setScaler(2)
@@ -48,7 +48,7 @@ export default class CoinHandler{
                 }
                this.textMesh.setText(""+this.displayCoins, ProjectData.font, 0.15)
                 if(this.numCoins!=this.displayCoins){
-                    this.displayTime =0.3;
+                    this.displayTime =0.1;
                 }
             }
 
