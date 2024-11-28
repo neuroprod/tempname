@@ -5,7 +5,7 @@ import SceneHandler from "../../data/SceneHandler.ts";
 import CoinHandler from "../handlers/CoinHandler.ts";
 import SceneObject3D from "../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../data/HitTriggers.ts";
-import GameModel from "./GameModel.ts";
+import GameModel from "../GameModel.ts";
 
 export class PlatformLevel extends BaseLevel{
     public characterController!: CharacterController;

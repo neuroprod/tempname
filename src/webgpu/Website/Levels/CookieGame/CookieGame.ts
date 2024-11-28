@@ -10,7 +10,7 @@ import Timer from "../../../lib/Timer.ts";
 import gsap from "gsap";
 import SoundHandler from "../../SoundHandler.ts";
 import LevelHandler from "../LevelHandler.ts";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 
 class StrawberryData {
     strawBerry: SceneObject3D;

@@ -17,10 +17,10 @@ import gsap from 'gsap'
 import DebugDraw from "../DebugDraw.ts";
 import {drawCircle} from "../../lib/path/Shapes.ts";
 import ProjectData from "../../data/ProjectData.ts";
+import GameModel from "../GameModel.ts";
 
 export default class TextBalloonHandler {
-    private camera: Camera;
-    private modelRenderer: ModelRenderer;
+
     private renderer: Renderer;
     private textModel: Model;
     private path: Path;
@@ -57,7 +57,7 @@ export default class TextBalloonHandler {
     private modelOffset: Vector3 = new Vector3();
     private holder: Object3D;
     private gameCamera: Camera;
-    private timeLine!: gsap.core.Timeline;
+
     private extrudeMeshArrowPoint: ExtrudeMesh;
     private arrowModelPoint: Model;
     private arrowLeftModel: Model;
@@ -74,11 +74,7 @@ export default class TextBalloonHandler {
     constructor(renderer: Renderer, gameCamera: Camera) {
         this.gameCamera = gameCamera;
         this.renderer = renderer;
-        this.camera = new Camera(renderer)
-        this.camera.near = -100;
-        this.camera.far = 100;
 
-        this.modelRenderer = new ModelRenderer(renderer, "textBalloonRenderer", this.camera)
 //text
         this.textModel = new Model(renderer, "textModel")
         this.textModel.material = new TextBalloonFontMaterial(renderer, "textBalloonFontMaterial")
@@ -110,13 +106,13 @@ export default class TextBalloonHandler {
         this.balloonModel = new Model(renderer, "balloonModel")
         this.balloonModel.mesh = this.extrudeMesh;
         this.balloonModel.material = new TextBalloonMaterial(renderer, "textBalloonMaterial")
-        this.modelRenderer.addModel(this.balloonModel)
+       GameModel.overlay.modelRenderer.addModel(this.balloonModel)
 
         this.arrowModelPoint = new Model(renderer, "arrowModel")
         this.arrowModelPoint.mesh = this.extrudeMeshArrowPoint;
         this.arrowModelPoint.material = this.balloonModel.material
         this.arrowModelPoint.y = 10;
-        this.modelRenderer.addModel(this.arrowModelPoint)
+        GameModel.overlay.modelRenderer.addModel(this.arrowModelPoint)
 
         //conversation arrows
         this.path.clear()
@@ -136,19 +132,19 @@ export default class TextBalloonHandler {
         this.arrowLeftModel.mesh = this.extrudeMeshArrow;
         this.arrowLeftModel.material = new TextBalloonMaterial(renderer, "textBalloonMaterial")
         this.arrowLeftModel.material.setUniform("color", new Vector4(0.8, 0.8, 0.8, 1))
-        this.modelRenderer.addModel(this.arrowLeftModel)
+        GameModel.overlay.modelRenderer.addModel(this.arrowLeftModel)
 
         this.arrowRightModel = new Model(renderer, "arrowModel")
         this.arrowRightModel.x = 10;
 
         this.arrowRightModel.mesh = this.extrudeMeshArrow;
         this.arrowRightModel.material = this.arrowLeftModel.material
-        this.modelRenderer.addModel(this.arrowRightModel)
+        GameModel.overlay.modelRenderer.addModel(this.arrowRightModel)
 
 
 //
 
-        this.modelRenderer.addModel(this.textModel)
+        GameModel.overlay.modelRenderer.addModel(this.textModel)
         this.holder = new Object3D(renderer, "balloonHolder");
         this.holder.addChild(this.arrowModelPoint)
         this.holder.addChild(this.balloonModel)
@@ -166,7 +162,7 @@ export default class TextBalloonHandler {
             dotModel.mesh = this.extrudeMeshDot;
             dotModel.material = new TextBalloonMaterial(renderer, "textBalloonMaterial")
             dotModel.material.setUniform("color", new Vector4(1, 1, 0.5, 1))
-            this.modelRenderer.addModel(dotModel)
+            GameModel.overlay.modelRenderer.addModel(dotModel)
             this.dotHolder.addChild(dotModel)
             this.dots.push(dotModel)
         }
@@ -175,6 +171,7 @@ export default class TextBalloonHandler {
 
         this.holder.addChild(this.textModel)
         this.showText = false;
+        this.hideText()
     }
 
     updatePath() {
@@ -209,7 +206,6 @@ export default class TextBalloonHandler {
     update() {
         if (!this.showText) return;
 
-        this.camera.setOrtho(100 * this.renderer.ratio, -100 * this.renderer.ratio, 100, -100)
 
         if (this.model) {
 
@@ -226,11 +222,7 @@ export default class TextBalloonHandler {
 
     }
 
-    drawFinal(pass: CanvasRenderPass) {
-        if (!this.showText) return;
-        this.modelRenderer.draw(pass)
 
-    }
 
     setText(text: string, numAnswers: number = 0, index: number = 0) {
         this.setNumAnswers(numAnswers);
@@ -386,7 +378,7 @@ this.updatePath()
     }
 
     hideText() {
-        this.showText = false;
+
         if(this.tLine)this.tLine.clear()
         this.charPos =-4
         this.textModel.material.setUniform("charPos", this.charPos)

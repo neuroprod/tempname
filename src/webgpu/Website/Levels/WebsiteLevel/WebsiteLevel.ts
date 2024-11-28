@@ -9,7 +9,7 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 
 import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 
 
 

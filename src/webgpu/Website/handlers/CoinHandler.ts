@@ -6,7 +6,7 @@ import SceneHandler from "../../data/SceneHandler.ts";
 import SoundHandler from "../SoundHandler.ts";
 import gsap from "gsap";
 import Game from "../Game.ts";
-import GameModel from "../Levels/GameModel.ts";
+import GameModel from "../GameModel.ts";
 export default class CoinHandler{
 
 private coins :Array<SceneObject3D> =[];

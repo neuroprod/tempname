@@ -9,7 +9,7 @@ import {HitTrigger} from "../../../data/HitTriggers.ts";
 import God from "./God.ts";
 import LevelHandler from "../LevelHandler.ts";
 import {Vector3} from "@math.gl/core";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;

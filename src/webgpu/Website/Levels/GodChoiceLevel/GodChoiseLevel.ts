@@ -11,7 +11,7 @@ import Timer from "../../../lib/Timer.ts";
 import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
 import God from "../GodLevel/God.ts";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 
 export default class GodChoiceLevel extends BaseLevel{
     private god!: SceneObject3D;

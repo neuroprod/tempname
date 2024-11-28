@@ -9,7 +9,7 @@ import {HitTrigger} from "../../../data/HitTriggers.ts";
 
 
 import Strawberry from "./Strawberry.ts";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 
 
 

@@ -6,7 +6,7 @@ import sceneHandler from "../../../data/SceneHandler.ts";
 import gsap from "gsap";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 import LevelHandler from "../LevelHandler.ts";
 
 

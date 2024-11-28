@@ -1,4 +1,4 @@
-import GameModel from "./GameModel.ts";
+import GameModel from "../GameModel.ts";
 
 import {Vector2} from "@math.gl/core";
 import Model from "../../lib/model/Model.ts";

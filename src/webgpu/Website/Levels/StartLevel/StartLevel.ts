@@ -13,7 +13,7 @@ import Timer from "../../../lib/Timer.ts";
 import MouseInteractionWrapper from "../../MouseInteractionWrapper.ts";
 import LevelHandler from "../LevelHandler.ts";
 import SoundHandler from "../../SoundHandler.ts";
-import GameModel from "../GameModel.ts";
+import GameModel from "../../GameModel.ts";
 
 export class StartLevel extends BaseLevel {
 
