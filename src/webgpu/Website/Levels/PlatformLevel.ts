@@ -66,7 +66,7 @@ export class PlatformLevel extends BaseLevel{
     resolveHitTrigger(f: SceneObject3D) {
         if(f.hitTriggerItem ==HitTrigger.COIN){
             this.coinHandler.takeCoin(f)
-           GameModel.numCoins++;
+
             return true;
         }
         return false;
