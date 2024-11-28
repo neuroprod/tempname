@@ -7,7 +7,7 @@ import TextBalloonHandler from "../conversation/TextBalloonHandler.ts";
 import ConversationHandler from "../conversation/ConversationHandler.ts";
 import MouseListener from "../../lib/MouseListener.ts";
 
-export default class LevelData {
+ class GameModel {
 
     renderer!: Renderer;
     gameRenderer!: GameRenderer;
@@ -24,3 +24,4 @@ export default class LevelData {
 
 
 }
+export default  new GameModel()

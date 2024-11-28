@@ -5,6 +5,7 @@ import SceneHandler from "../../data/SceneHandler.ts";
 import CoinHandler from "../handlers/CoinHandler.ts";
 import SceneObject3D from "../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../data/HitTriggers.ts";
+import GameModel from "./GameModel.ts";
 
 export class PlatformLevel extends BaseLevel{
     public characterController!: CharacterController;
@@ -14,34 +15,34 @@ export class PlatformLevel extends BaseLevel{
 
     init() {
         super.init();
-        this.characterController = new CharacterController(this.levelObjects.renderer)
+        this.characterController = new CharacterController(GameModel.renderer)
 
     }
     configScene(){
         this.coinHandler =new CoinHandler()
-        this.levelObjects.conversationHandler.dataCallBack =this.conversationDataCallBack.bind(this)
+       GameModel.conversationHandler.dataCallBack =this.conversationDataCallBack.bind(this)
         this.blockInput =false;
-        this.levelObjects.gameRenderer.setLevelType("platform")
+       GameModel.gameRenderer.setLevelType("platform")
     }
     update(){
 
-        this.levelObjects.gamepadInput.update();
+       GameModel.gamepadInput.update();
         let delta = Timer.delta;
-        let jump = this.levelObjects.keyInput.getJump()
-        let hInput = this.levelObjects.keyInput.getHdir()
-        if (this.levelObjects.gamepadInput.connected) {
+        let jump =GameModel.keyInput.getJump()
+        let hInput = GameModel.keyInput.getHdir()
+        if (GameModel.gamepadInput.connected) {
 
-            if (hInput == 0) hInput = this.levelObjects.gamepadInput.getHdir()
+            if (hInput == 0) hInput = GameModel.gamepadInput.getHdir()
 
-            if (!jump) jump = this.levelObjects.gamepadInput.getJump()
+            if (!jump) jump = GameModel.gamepadInput.getJump()
         }
 
         if( !this.blockInput){
             this.characterController.update( delta, hInput, jump)
         }else{
             this.characterController.updateIdle(delta)
-            this.levelObjects.conversationHandler.setInput(hInput, jump)
-            this.levelObjects.textBalloonHandler.update()
+           GameModel.conversationHandler.setInput(hInput, jump)
+           GameModel.textBalloonHandler.update()
 
         }
         this.coinHandler.update()
@@ -65,7 +66,7 @@ export class PlatformLevel extends BaseLevel{
     resolveHitTrigger(f: SceneObject3D) {
         if(f.hitTriggerItem ==HitTrigger.COIN){
             this.coinHandler.takeCoin(f)
-            this.levelObjects.numCoins++;
+           GameModel.numCoins++;
             return true;
         }
         return false;

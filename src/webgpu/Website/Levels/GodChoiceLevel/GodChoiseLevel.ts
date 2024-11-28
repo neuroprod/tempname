@@ -11,6 +11,8 @@ import Timer from "../../../lib/Timer.ts";
 import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
 import God from "../GodLevel/God.ts";
+import GameModel from "../GameModel.ts";
+
 export default class GodChoiceLevel extends BaseLevel{
     private god!: SceneObject3D;
     private arrow!: SceneObject3D;
@@ -46,7 +48,7 @@ export default class GodChoiceLevel extends BaseLevel{
 
         LoadHandler.onComplete =()=>{}
 
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+        GameModel.gameRenderer.setModels(SceneHandler.allModels)
 
         this.god = sceneHandler.getSceneObject("godRoot")
         this.god.setScaler(1.3)
@@ -58,9 +60,9 @@ export default class GodChoiceLevel extends BaseLevel{
 
         let holder = sceneHandler.getSceneObject("godHolder")
         holder.addChild(this.god)
-        this.levelObjects.textBalloonHandler.setModel(this.god,[0.15,0.8,0])
-        this.levelObjects.textBalloonHandler.setText("Ow boy, Get ready!")
-        this.levelObjects.gameCamera.setLockedView(new Vector3(0,.32,0),new Vector3(0,.32,2))
+        GameModel.textBalloonHandler.setModel(this.god,[0.15,0.8,0])
+        GameModel.textBalloonHandler.setText("Ow boy, Get ready!")
+        GameModel.gameCamera.setLockedView(new Vector3(0,.32,0),new Vector3(0,.32,2))
 
         this.selectItems=[]
         this.selectItems.push( sceneHandler.getSceneObject("godSelect1"))
@@ -87,8 +89,8 @@ export default class GodChoiceLevel extends BaseLevel{
         })
         this.setSelectIndex()
 
-        this.levelObjects.conversationHandler.doneCallBack =()=>{
-            this.levelObjects.presentID =this.selectIndex;
+        GameModel.conversationHandler.doneCallBack =()=>{
+            GameModel.presentID =this.selectIndex;
 
             LevelHandler.setLevel("Cookie")
         }
@@ -97,9 +99,9 @@ export default class GodChoiceLevel extends BaseLevel{
         super.update();
  this.godHandler.update()
 
-        let jump = this.levelObjects.keyInput.getJump()
-        if (this.levelObjects.gamepadInput.connected) {
-            if (!jump) jump = this.levelObjects.gamepadInput.getJump()
+        let jump = GameModel.keyInput.getJump()
+        if (GameModel.gamepadInput.connected) {
+            if (!jump) jump = GameModel.gamepadInput.getJump()
         }
 
 
@@ -119,8 +121,8 @@ export default class GodChoiceLevel extends BaseLevel{
             }
         }
         if(this.state==2){
-            this.levelObjects.conversationHandler.setInput(0, jump)
-            this.levelObjects.textBalloonHandler.update()
+            GameModel.conversationHandler.setInput(0, jump)
+            GameModel.textBalloonHandler.update()
         }
 
 
@@ -149,7 +151,7 @@ destroy() {
     private setChoise() {
         let tl =gsap.timeline()
         tl.to(this.presentItems[this.selectIndex],{sx: this.presentStartScale[this.selectIndex]*1.1,sy: this.presentStartScale[this.selectIndex]*1.2})
-        this.levelObjects.conversationHandler.startConversation("godPresent"+this.selectIndex)
+        GameModel.conversationHandler.startConversation("godPresent"+this.selectIndex)
 
     }
 }

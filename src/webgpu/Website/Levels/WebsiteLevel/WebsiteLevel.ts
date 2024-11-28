@@ -9,8 +9,8 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 
 import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
+import GameModel from "../GameModel.ts";
 
-;
 
 
 export class WebsiteLevel extends BaseLevel {
@@ -39,16 +39,16 @@ export class WebsiteLevel extends BaseLevel {
         }
 
         //leftMargin
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+        GameModel.gameRenderer.setModels(SceneHandler.allModels)
         this.setMouseHitObjects(SceneHandler.mouseHitModels);
 
 
         this.setMouseHitObjects(SceneHandler.mouseHitModels);
 
 
-        this.levelObjects.gameCamera.setLockedView(new Vector3(0, 0, 0), new Vector3(0, 0, 1))
+        GameModel.gameCamera.setLockedView(new Vector3(0, 0, 0), new Vector3(0, 0, 1))
 
-        this.levelObjects.gameRenderer.setLevelType("website")
+        GameModel.gameRenderer.setLevelType("website")
 
         window.scrollTo(0, 0);
         document.body.style.overflow = "visible"
@@ -121,7 +121,7 @@ export class WebsiteLevel extends BaseLevel {
         super.update();
         let t = document.body.getBoundingClientRect().top
         let p = -Math.abs(t / 2000)
-        this.levelObjects.gameCamera.setLockedView(new Vector3(0, p, 0), new Vector3(0, p, 1));
+        GameModel.gameCamera.setLockedView(new Vector3(0, p, 0), new Vector3(0, p, 1));
 
         // this.websiteSphere.update(this.sphereBlend)
     }

@@ -6,7 +6,7 @@ import sceneHandler from "../../../data/SceneHandler.ts";
 import gsap from "gsap";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
-import LevelData from "../LevelData.ts";
+import GameModel from "../GameModel.ts";
 import LevelHandler from "../LevelHandler.ts";
 
 
@@ -49,8 +49,8 @@ export class CookieLevel extends PlatformLevel{
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
         this.characterController.setCharacter()
-        this.levelObjects.gameCamera.setCharacter()
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+       GameModel.gameCamera.setCharacter()
+       GameModel.gameRenderer.setModels(SceneHandler.allModels)
 
 
         sceneHandler.getSceneObject("coinTree1").hide()
@@ -73,7 +73,7 @@ export class CookieLevel extends PlatformLevel{
         this.cookie.x =8
         this.cookie.ry =-0.4
 
-        this.levelObjects.gameCamera.setMinMaxX(-0.3,100)
+       GameModel.gameCamera.setMinMaxX(-0.3,100)
 
 
 
@@ -93,35 +93,35 @@ export class CookieLevel extends PlatformLevel{
                 f.triggerIsEnabled =false;
 
                 let target = this.cookie.getWorldPos().add([-0.5,0.5,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.cookie.getWorldPos().add([-0.9,0,0]),1,()=>{
                     setTimeout(()=>{
-                        if(this.levelObjects.presentID==-1){
-                            this.levelObjects.conversationHandler.startConversation("cookieNoPresent")
+                        if(GameModel.presentID==-1){
+                            GameModel.conversationHandler.startConversation("cookieNoPresent")
                         }
-                        else if(this.levelObjects.presentID==0){
-                            this.levelObjects.conversationHandler.startConversation("cookieLightning")
+                        else if(GameModel.presentID==0){
+                            GameModel.conversationHandler.startConversation("cookieLightning")
                         }
-                        else if(this.levelObjects.presentID==1){
-                            this.levelObjects.conversationHandler.startConversation("cookieBox")
+                        else if(GameModel.presentID==1){
+                            GameModel.conversationHandler.startConversation("cookieBox")
                         }
-                        else if(this.levelObjects.presentID==2){
-                            this.levelObjects.conversationHandler.startConversation("cookieNDA")
+                        else if(GameModel.presentID==2){
+                            GameModel.conversationHandler.startConversation("cookieNDA")
                         }
-                        else if(this.levelObjects.presentID==3){
-                            this.levelObjects.conversationHandler.startConversation("cookieHammer")
+                        else if(GameModel.presentID==3){
+                            GameModel.conversationHandler.startConversation("cookieHammer")
                         }
-                   //     this.levelObjects.conversationHandler.startConversation("cookie")
+                   //     GameModel.conversationHandler.startConversation("cookie")
 
-                        this.levelObjects.conversationHandler.doneCallBack =()=>{
+                        GameModel.conversationHandler.doneCallBack =()=>{
 
-                            this.levelObjects.conversationHandler.startConversation("cookie")
+                            GameModel.conversationHandler.startConversation("cookie")
 
-                            this.levelObjects.conversationHandler.doneCallBack =()=> {
+                            GameModel.conversationHandler.doneCallBack =()=> {
 
-                                this.levelObjects.gameCamera.setCharView()
+                                GameModel.gameCamera.setCharView()
                                 setTimeout(() => {
                                     this.blockInput = false
 

@@ -9,6 +9,7 @@ import {HitTrigger} from "../../../data/HitTriggers.ts";
 import God from "./God.ts";
 import LevelHandler from "../LevelHandler.ts";
 import {Vector3} from "@math.gl/core";
+import GameModel from "../GameModel.ts";
 
 export class GodLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
@@ -52,8 +53,8 @@ export class GodLevel extends PlatformLevel{
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
         this.skipGodChoice =false
-        this.levelObjects.gameCamera.setCharacter()
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+        GameModel.gameCamera.setCharacter()
+        GameModel.gameRenderer.setModels(SceneHandler.allModels)
 
 
 
@@ -89,27 +90,27 @@ export class GodLevel extends PlatformLevel{
             this.blockInput =false
 
         })
-        this.levelObjects.gameCamera.camDistance =2;
-        this.levelObjects.gameCamera.heightOffset =0.5
-        this.levelObjects.gameCamera.setMinMaxX(-3-2,4.5)
+        GameModel.gameCamera.camDistance =2;
+        GameModel.gameCamera.heightOffset =0.5
+        GameModel.gameCamera.setMinMaxX(-3-2,4.5)
 
 
-        this.levelObjects.gameCamera.setForCharPos(new Vector3(-6, 0, 0))
+        GameModel.gameCamera.setForCharPos(new Vector3(-6, 0, 0))
 
-       /* this.levelObjects.textBalloonHandler.setModel( cookie,[0.13,0.69])
+       /* GameModel.textBalloonHandler.setModel( cookie,[0.13,0.69])
 
         this.tl = gsap.timeline({repeat:-1})
         this.tl.call(()=>{
-            this.levelObjects.textBalloonHandler.setText("My mom told me\nI was a happy baby.")
+            GameModel.textBalloonHandler.setText("My mom told me\nI was a happy baby.")
         },[],3)
         this.tl.call(()=>{
-            this.levelObjects.textBalloonHandler.setText("But then I had to go to\nschool and stuff")
+            GameModel.textBalloonHandler.setText("But then I had to go to\nschool and stuff")
         },[],6)
         this.tl.call(()=>{
-            this.levelObjects.textBalloonHandler.setText("Now I just want to smash things.")
+            GameModel.textBalloonHandler.setText("Now I just want to smash things.")
         },[],9)
         this.tl.call(()=>{
-            this.levelObjects.textBalloonHandler.hideText()
+            GameModel.textBalloonHandler.hideText()
         },[],12)
 */
 
@@ -129,15 +130,15 @@ export class GodLevel extends PlatformLevel{
 
                 f.triggerIsEnabled =false;
                 let target =  f.getWorldPos().add([1,-0.1,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.tree.getWorldPos(),1,()=>{
                     this.characterController.setAngle(0.6)
                     this.godController.show(()=>{
 
-                        this.levelObjects.conversationHandler.startConversation("god")
-                        this.levelObjects.conversationHandler.doneCallBack =()=>{
+                        GameModel.conversationHandler.startConversation("god")
+                        GameModel.conversationHandler.doneCallBack =()=>{
 
                            gsap.delayedCall(0.5,()=>{
 
@@ -163,17 +164,17 @@ export class GodLevel extends PlatformLevel{
                 f.triggerIsEnabled =false;
 
                 let target = this.tree.getWorldPos().add([-0.3,0.5,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,1.7]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,1.7]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.tree.getWorldPos().add([-0.65,0,0]),1,()=>{
                     this.characterController.setAngle(0.4)
                     gsap.delayedCall(0.5,()=>{
-                        this.levelObjects.conversationHandler.startConversation("tree")
-                        this.levelObjects.conversationHandler.doneCallBack =()=>{
-                            this.levelObjects.gameCamera.setCharView()
-                            this.levelObjects.gameCamera.camDistance =2.5;
-                            this.levelObjects.gameCamera.heightOffset =0.7
+                        GameModel.conversationHandler.startConversation("tree")
+                        GameModel.conversationHandler.doneCallBack =()=>{
+                            GameModel.gameCamera.setCharView()
+                            GameModel.gameCamera.camDistance =2.5;
+                            GameModel.gameCamera.heightOffset =0.7
                             this.characterController.setAngle(0.0)
                             gsap.delayedCall(0.5,()=>{this.blockInput =false})
 
@@ -189,14 +190,14 @@ export class GodLevel extends PlatformLevel{
                 f.triggerIsEnabled =false;
 
                 let target = this.strawBerry.getWorldPos().add([0.5,0.5,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
                this.blockInput =true
 
                this.characterController.gotoAndIdle(this.strawBerry.getWorldPos().add([0.9,0,0]),-1,()=>{
                    setTimeout(()=>{
-                   this.levelObjects.conversationHandler.startConversation("strawberry")
-                   this.levelObjects.conversationHandler.doneCallBack =()=>{
-                       this.levelObjects.gameCamera.setCharView()
+                   GameModel.conversationHandler.startConversation("strawberry")
+                   GameModel.conversationHandler.doneCallBack =()=>{
+                       GameModel.gameCamera.setCharView()
                        setTimeout(()=>{this.blockInput =false},500)
 
                    }},1500);

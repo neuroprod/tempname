@@ -13,6 +13,7 @@ import Timer from "../../../lib/Timer.ts";
 import MouseInteractionWrapper from "../../MouseInteractionWrapper.ts";
 import LevelHandler from "../LevelHandler.ts";
 import SoundHandler from "../../SoundHandler.ts";
+import GameModel from "../GameModel.ts";
 
 export class StartLevel extends BaseLevel {
 
@@ -27,7 +28,7 @@ export class StartLevel extends BaseLevel {
 
     init() {
         super.init();
-        this.characterController = new CharacterController(this.levelObjects.renderer)
+        this.characterController = new CharacterController(GameModel.renderer)
         LoadHandler.onComplete = this.configScene.bind(this)
         LoadHandler.startLoading()
         LoadHandler.startLoading()
@@ -51,7 +52,7 @@ export class StartLevel extends BaseLevel {
         if (this.kris) this.kris.update()
 
         this.characterController.updateIdle(Timer.delta)
-        /*if(this.intro.done && this.levelObjects.keyInput.getJump()){
+        /*if(this.intro.done && GameModel.keyInput.getJump()){
             this.intro.done =false;
             console.log("move")
             this.moveToStartPos();
@@ -65,8 +66,8 @@ export class StartLevel extends BaseLevel {
         LoadHandler.onComplete = () => {
         }
 
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
-        this.levelObjects.gameRenderer.setLevelType("platform")
+        GameModel.gameRenderer.setModels(SceneHandler.allModels)
+        GameModel.gameRenderer.setLevelType("platform")
         this.setMouseHitObjects(SceneHandler.mouseHitModels);
 
 
@@ -80,8 +81,8 @@ export class StartLevel extends BaseLevel {
 
         this.camPos.set(0, 0.7, 2)
         this.camTarget.set(0, 0.7, 0)
-        this.levelObjects.gameCamera.setLockedView(this.camTarget.add([0, 0, 0]), this.camPos.clone().add([0, 0, 1]))
-        this.levelObjects.gameCamera.TweenToLockedView(this.camTarget, this.camPos, 3)
+        GameModel.gameCamera.setLockedView(this.camTarget.add([0, 0, 0]), this.camPos.clone().add([0, 0, 1]))
+        GameModel.gameCamera.TweenToLockedView(this.camTarget, this.camPos, 3)
 
 
         let kris = this.mouseInteractionMap.get("kris") as MouseInteractionWrapper

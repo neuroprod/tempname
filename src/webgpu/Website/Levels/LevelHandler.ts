@@ -2,7 +2,7 @@ import {GodLevel} from "./GodLevel/GodLevel.ts";
 
 import {BaseLevel} from "./BaseLevel.ts";
 import {StartLevel} from "./StartLevel/StartLevel.ts";
-import LevelData from "./LevelData.ts";
+
 import GodChoiceLevel from "./GodChoiceLevel/GodChoiseLevel.ts";
 import {CookieLevel} from "./CookieLevel/CookieLevel.ts";
 import {WebsiteLevel} from "./WebsiteLevel/WebsiteLevel.ts";
@@ -15,10 +15,10 @@ class LevelHandler {
     public levels: Map<string, BaseLevel> = new Map()
 
     public currentLevel!: BaseLevel|null;
-    private levelObjects!: LevelData;
 
-    init(levelObjects: LevelData) {
-        this.levelObjects = levelObjects;
+
+    init() {
+
         this.addLevel("Start", new StartLevel())
         this.addLevel("God", new GodLevel())
         this.addLevel("GodChoice", new GodChoiceLevel())
@@ -32,7 +32,7 @@ class LevelHandler {
 
         if (this.currentLevel) this.currentLevel.destroy()
         this.currentLevel = this.levels.get(key) as BaseLevel;
-        this.currentLevel.initObjects(this.levelObjects)
+
         this.currentLevel.init()
     }
  destroyCurrentLevel(){

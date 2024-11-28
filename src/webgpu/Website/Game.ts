@@ -16,7 +16,7 @@ import SoundHandler from "./SoundHandler.ts";
 import LoadHandler from "../data/LoadHandler.ts";
 import UI from "../lib/UI/UI.ts";
 import LevelHandler from "./Levels/LevelHandler.ts";
-import LevelData from "./Levels/LevelData.ts";
+import GameModel from "./Levels/GameModel.ts";
 import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
 
 import ConversationHandler from "./conversation/ConversationHandler.ts";
@@ -29,7 +29,7 @@ export default class Game {
     private keyInput: KeyInput;
     private gameCamera: GameCamera;
     private gamepadInput: GamePadInput;
-    private levelObjects: LevelData;
+
     private textBalloonHandler: TextBalloonHandler;
     private conversationHandler: ConversationHandler;
 
@@ -46,16 +46,16 @@ export default class Game {
         this.keyInput = new KeyInput()
         this.gamepadInput = new GamePadInput()
 
-        this.levelObjects = new LevelData()
-        this.levelObjects.renderer = renderer;
-        this.levelObjects.gameRenderer = this.gameRenderer;
-        this.levelObjects.gameCamera = this.gameCamera
-        this.levelObjects.gamepadInput = this.gamepadInput
-        this.levelObjects.keyInput = this.keyInput
-        this.levelObjects.textBalloonHandler = this.textBalloonHandler
-        this.levelObjects.conversationHandler = this.conversationHandler;
-        this.levelObjects.mouseListener = this.mouseListener;
-        LevelHandler.init(this.levelObjects)
+
+       GameModel.renderer = renderer;
+       GameModel.gameRenderer = this.gameRenderer;
+       GameModel.gameCamera = this.gameCamera
+       GameModel.gamepadInput = this.gamepadInput
+       GameModel.keyInput = this.keyInput
+       GameModel.textBalloonHandler = this.textBalloonHandler
+       GameModel.conversationHandler = this.conversationHandler;
+       GameModel.mouseListener = this.mouseListener;
+        LevelHandler.init()
         SoundHandler.init()
     }
 

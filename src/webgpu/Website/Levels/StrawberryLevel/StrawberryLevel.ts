@@ -6,9 +6,10 @@ import sceneHandler from "../../../data/SceneHandler.ts";
 import gsap from "gsap";
 import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
-import LevelData from "../LevelData.ts";
-import LevelHandler from "../LevelHandler.ts";
+
+
 import Strawberry from "./Strawberry.ts";
+import GameModel from "../GameModel.ts";
 
 
 
@@ -49,8 +50,8 @@ export class StrawberryLevel extends PlatformLevel{
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
         this.characterController.setCharacter()
-        this.levelObjects.gameCamera.setCharacter()
-        this.levelObjects.gameRenderer.setModels(SceneHandler.allModels)
+        GameModel.gameCamera.setCharacter()
+        GameModel.gameRenderer.setModels(SceneHandler.allModels)
 
         this.strawBerryHandler.init()
 
@@ -66,7 +67,7 @@ export class StrawberryLevel extends PlatformLevel{
         this.strawBerry.x =4
         this.strawBerry.ry =-0.4
 
-        this.levelObjects.gameCamera.setMinMaxX(-0.3,100)
+        GameModel.gameCamera.setMinMaxX(-0.3,100)
 
 
 
@@ -91,21 +92,21 @@ export class StrawberryLevel extends PlatformLevel{
                 f.triggerIsEnabled =false;
 
                 let target = this.strawBerry.getWorldPos().add([-0.5,0.5,0])
-                this.levelObjects.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.strawBerry.getWorldPos().add([-0.9,0,0]),1,()=>{
                     setTimeout(()=>{
 
-                            this.levelObjects.conversationHandler.startConversation("strawBerry")
+                            GameModel.conversationHandler.startConversation("strawBerry")
 
-                        //     this.levelObjects.conversationHandler.startConversation("cookie")
+                        //     GameModel.conversationHandler.startConversation("cookie")
 
-                        this.levelObjects.conversationHandler.doneCallBack =()=>{
-                            this.levelObjects.conversationHandler
-                         //   this.levelObjects.conversationHandler.startConversation("cookie")
+                        GameModel.conversationHandler.doneCallBack =()=>{
+                            GameModel.conversationHandler
+                         //   GameModel.conversationHandler.startConversation("cookie")
 
-                            this.levelObjects.conversationHandler.doneCallBack =()=> {
+                            GameModel.conversationHandler.doneCallBack =()=> {
 
 
                             }

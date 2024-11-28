@@ -1,4 +1,4 @@
-import LevelData from "./LevelData.ts";
+import GameModel from "./GameModel.ts";
 
 import {Vector2} from "@math.gl/core";
 import Model from "../../lib/model/Model.ts";
@@ -8,7 +8,7 @@ import MouseInteractionWrapper from "../MouseInteractionWrapper.ts";
 
 export class BaseLevel {
 
-    levelObjects!: LevelData;
+
     mouseHitObjects!: Array<Model>;
     prevMousePos = new Vector2(-1, -1);
     ray = new Ray()
@@ -21,10 +21,10 @@ export class BaseLevel {
     constructor() {
     }
 
-    initObjects(levelObjects: LevelData) {
+    initObjects() {
 
 
-        this.levelObjects = levelObjects;
+
     }
 
     init() {
@@ -36,8 +36,8 @@ export class BaseLevel {
     }
 
     destroy() {
-        this.levelObjects.gameCamera.destroyTweens()
-        this.levelObjects.textBalloonHandler.hideText()
+      GameModel.gameCamera.destroyTweens()
+       GameModel.textBalloonHandler.hideText()
     }
     onUI(){
 
@@ -60,10 +60,10 @@ export class BaseLevel {
 
     updateMouse() {
         if (!this.mouseHitObjects) return;
-        if (this.levelObjects.mouseListener.mousePos.equals(this.prevMousePos)) {
+        if (GameModel.mouseListener.mousePos.equals(this.prevMousePos)) {
             return;
         }
-        this.ray.setFromCamera(this.levelObjects.gameCamera.camera, this.levelObjects.mouseListener.getMouseNorm())
+        this.ray.setFromCamera(GameModel.gameCamera.camera, GameModel.mouseListener.getMouseNorm())
         let intersections = this.ray.intersectModels(this.mouseHitObjects);
 
         if (intersections.length) {
@@ -93,14 +93,14 @@ export class BaseLevel {
             }
 
         }
-        if(this.levelObjects.mouseListener.isDownThisFrame){
+        if(GameModel.mouseListener.isDownThisFrame){
 
             if( this.mouseOverObject){
                 this.mouseOverObject.onDown()
                 this.mouseDownObject =this.mouseOverObject;
             }
         }
-        if(this.levelObjects.mouseListener.isUpThisFrame){
+        if(GameModel.mouseListener.isUpThisFrame){
 
             if(  this.mouseDownObject){
                 this.mouseDownObject.onUp()
