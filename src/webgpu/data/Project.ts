@@ -102,7 +102,8 @@ export default class Project {
     }
 
     async loadPNGTexture() {
-        this.loadTexture = new TextureLoader(this.renderer)
+        this.loadTexture = new TextureLoader(this.renderer,"",{mipLevelCount:1})
+console.log(this.loadTexture)
         await this.loadTexture.loadURL("./data/" + this.id + "/texture.png");
 
 
@@ -119,7 +120,7 @@ export default class Project {
         if (!this.baseTexture) {
           //  console.log("startLoadBase",this.name)
             LoadHandler.startLoading()
-            this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp") as Texture
+            this.baseTexture = new TextureLoader(this.renderer, "./data/" + this.id + "/texture.webp",{mipLevelCount:4}) as Texture
             (this.baseTexture as TextureLoader).onComplete = () => {
 
              //   console.log("textureLoadComplete")

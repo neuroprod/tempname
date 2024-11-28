@@ -6,6 +6,7 @@ import Model from "./model/Model.ts";
 import {Vector2} from "@math.gl/core";
 import TimeStampQuery from "./TimeStampQuery.ts";
 import Texture from "./textures/Texture.ts";
+import MipMapQueue from "./textures/MipMapQueue.ts";
 
 
 export default class Renderer {
@@ -29,6 +30,7 @@ export default class Renderer {
     private canvasTextureView!: GPUTexture;
     private canvasColorAttachment!: ColorAttachment;
     private uniformGroups: Array<UniformGroup> = [];
+    mipmapQueue!: MipMapQueue;
 
     constructor() {
 
@@ -66,7 +68,7 @@ export default class Renderer {
 
         }
         this.timeStamps = new TimeStampQuery(this, 4)
-
+        this.mipmapQueue = new MipMapQueue(this)
     }
 
     public startCommandEncoder(setCommands: () => void) {
@@ -82,7 +84,7 @@ export default class Renderer {
         this.updateSize();
         this.updateModels();
         this.updateUniformGroups()
-        this.timeStamps.readback()
+      //  this.timeStamps.readback()
         //
         this.device.queue.onSubmittedWorkDone().then(() => {
             this.canvasTextureView = this.context.getCurrentTexture();
@@ -90,8 +92,9 @@ export default class Renderer {
 
 
             this.commandEncoder = this.device.createCommandEncoder();
+          this.mipmapQueue.processQue();
             setCommands();
-            this.timeStamps.getData()
+           // this.timeStamps.getData()
             this.device.queue.submit([this.commandEncoder.finish()]);
 
 
