@@ -15,7 +15,7 @@ import GameModel from "../GameModel.ts";
 
 export default class GodChoiceLevel extends BaseLevel{
     private god!: SceneObject3D;
-    private arrow!: SceneObject3D;
+
 
 
     private selectItems:Array<SceneObject3D>=[]

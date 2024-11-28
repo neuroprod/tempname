@@ -20,6 +20,7 @@ import GameModel from "./Levels/GameModel.ts";
 import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
 
 import ConversationHandler from "./conversation/ConversationHandler.ts";
+import AppState from "../AppState.ts";
 
 
 export default class Game {
@@ -72,6 +73,7 @@ export default class Game {
         }
 
         this.gameCamera.update()
+
         this.textBalloonHandler.update()
 
         DebugDraw.update();
@@ -80,8 +82,14 @@ export default class Game {
 
 
     setActive() {
-        LevelHandler.setLevel("Start")
-        // LevelHandler.setLevel("Website")
+        let newName = AppState.getState("currentLevel");
+        if(!newName){
+            LevelHandler.setLevel("Start")
+        }else{
+            LevelHandler.setLevel(newName)
+        }
+
+        
     }
 
 

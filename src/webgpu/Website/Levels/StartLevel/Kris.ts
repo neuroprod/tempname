@@ -78,7 +78,7 @@ export default class Kris {
     }
 
     public startWave() {
-       
+
         gsap.to(this, {armLerp: 1, duration: 0.3})
         gsap.to(this, {legLerp: 0.5, duration: 0.3})
     }

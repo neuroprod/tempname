@@ -97,22 +97,7 @@ export class GodLevel extends PlatformLevel{
 
         GameModel.gameCamera.setForCharPos(new Vector3(-6, 0, 0))
 
-       /* GameModel.textBalloonHandler.setModel( cookie,[0.13,0.69])
 
-        this.tl = gsap.timeline({repeat:-1})
-        this.tl.call(()=>{
-            GameModel.textBalloonHandler.setText("My mom told me\nI was a happy baby.")
-        },[],3)
-        this.tl.call(()=>{
-            GameModel.textBalloonHandler.setText("But then I had to go to\nschool and stuff")
-        },[],6)
-        this.tl.call(()=>{
-            GameModel.textBalloonHandler.setText("Now I just want to smash things.")
-        },[],9)
-        this.tl.call(()=>{
-            GameModel.textBalloonHandler.hideText()
-        },[],12)
-*/
 
     }
     conversationDataCallBack(data:string){
@@ -144,6 +129,7 @@ export class GodLevel extends PlatformLevel{
 
                                if( this.skipGodChoice){
                                    LevelHandler.setLevel("Cookie")
+                                   GameModel.addCoins(5)
 
                                }
                                     else{

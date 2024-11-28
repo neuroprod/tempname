@@ -8,13 +8,14 @@ import {CookieLevel} from "./CookieLevel/CookieLevel.ts";
 import {WebsiteLevel} from "./WebsiteLevel/WebsiteLevel.ts";
 import CookieGame from "./CookieGame/CookieGame.ts";
 import {StrawberryLevel} from "./StrawberryLevel/StrawberryLevel.ts";
+import AppState from "../../AppState.ts";
 
 
 class LevelHandler {
     public levelKeys: Array<string> = [];
     public levels: Map<string, BaseLevel> = new Map()
 
-    public currentLevel!: BaseLevel|null;
+    public currentLevel!: BaseLevel | null;
 
 
     init() {
@@ -32,25 +33,30 @@ class LevelHandler {
 
         if (this.currentLevel) this.currentLevel.destroy()
         this.currentLevel = this.levels.get(key) as BaseLevel;
+        if (this.currentLevel) {
+            AppState.setState("currentLevel", key);
+            this.currentLevel.init()
+        } else {
+            console.log("level doesnt exist ->", key)
+        }
 
-        this.currentLevel.init()
     }
- destroyCurrentLevel(){
-     if (this.currentLevel) this.currentLevel.destroy()
-     this.currentLevel =null;
-}
+
+    destroyCurrentLevel() {
+        if (this.currentLevel) this.currentLevel.destroy()
+        this.currentLevel = null;
+    }
+
+    onUI() {
+        if (this.currentLevel) {
+            this.currentLevel.onUI()
+        }
+    }
 
     private addLevel(key: string, level: BaseLevel) {
 
         this.levelKeys.push(key)
         this.levels.set(key, level)
-    }
-
-
-    onUI() {
-        if(this.currentLevel){
-            this.currentLevel.onUI()
-        }
     }
 }
 
