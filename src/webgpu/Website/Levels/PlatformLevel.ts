@@ -2,14 +2,14 @@ import {BaseLevel} from "./BaseLevel.ts";
 import CharacterController from "../CharacterController.ts";
 import Timer from "../../lib/Timer.ts";
 import SceneHandler from "../../data/SceneHandler.ts";
-import CoinHandler from "../handlers/CoinHandler.ts";
+import CoinGrabber from "../handlers/CoinGrabber.ts";
 import SceneObject3D from "../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../data/HitTriggers.ts";
 import GameModel from "../GameModel.ts";
 
 export class PlatformLevel extends BaseLevel{
     public characterController!: CharacterController;
-    private coinHandler!: CoinHandler;
+    private coinHandler!: CoinGrabber;
 
     blockInput =false
 
@@ -19,7 +19,7 @@ export class PlatformLevel extends BaseLevel{
 
     }
     configScene(){
-        this.coinHandler =new CoinHandler()
+        this.coinHandler =new CoinGrabber()
        GameModel.conversationHandler.dataCallBack =this.conversationDataCallBack.bind(this)
         this.blockInput =false;
        GameModel.gameRenderer.setLevelType("platform")

@@ -22,6 +22,7 @@ import TextBalloonHandler from "./conversation/TextBalloonHandler.ts";
 import ConversationHandler from "./conversation/ConversationHandler.ts";
 import AppState from "../AppState.ts";
 import Overlay from "./Overlay.ts";
+import CoinHandler from "./handlers/CoinHandler.ts";
 
 
 export default class Game {
@@ -59,7 +60,7 @@ export default class Game {
        GameModel.textBalloonHandler = this.textBalloonHandler
        GameModel.conversationHandler = this.conversationHandler;
        GameModel.mouseListener = this.mouseListener;
-
+        GameModel.coinHandeler = new CoinHandler(renderer)
         LevelHandler.init()
         SoundHandler.init()
     }
@@ -77,7 +78,7 @@ export default class Game {
         }
 
         this.gameCamera.update()
-
+        GameModel.coinHandeler.update()
         this.textBalloonHandler.update()
 this.overlay.update()
         DebugDraw.update();

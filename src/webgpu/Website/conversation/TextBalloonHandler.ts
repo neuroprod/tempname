@@ -252,6 +252,7 @@ export default class TextBalloonHandler {
             textArrowOffset += 10
             this.arrowRightModel.visible = true
             this.arrowLeftModel.visible = true
+
             h -= 2;
 
             w += 20;
@@ -360,10 +361,11 @@ export default class TextBalloonHandler {
 
         }
 
-this.updatePath()
+        this.updatePath()
 
-
-
+        this.balloonModel.visible =true
+        this.textModel.visible =true
+        this.arrowModelPoint.visible =true
         this.newBalloon = false
 
 
@@ -381,8 +383,17 @@ this.updatePath()
 
         if(this.tLine)this.tLine.clear()
         this.charPos =-4
+        this.balloonModel.visible =false
+        this.arrowRightModel.visible =false
+        this.arrowLeftModel.visible =false
+        this.textModel.visible =false
+        this.arrowModelPoint.visible = false
+        for(let d of this.dots){
+            d.visible =false
+        }
+        this.holder.y =-100
         this.textModel.material.setUniform("charPos", this.charPos)
-        this.holder.x =-1000
+
     }
 
     private makeArrowPoint() {

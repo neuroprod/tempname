@@ -6,7 +6,7 @@ import {Howl} from 'howler';
      private step!: Howl;
      private hitFloor!: Howl;
      private wetHit!: Howl;
-   playSound =false;
+    playSound =true;
 
 
     init() {

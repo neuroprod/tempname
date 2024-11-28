@@ -1,42 +1,40 @@
-
-import {HitTrigger} from "../../data/HitTriggers.ts";
-import SceneObject3D from "../../data/SceneObject3D.ts";
-import Timer from "../../lib/Timer.ts";
-import SceneHandler from "../../data/SceneHandler.ts";
+import Renderer from "../../lib/Renderer.ts";
 import SoundHandler from "../SoundHandler.ts";
-import gsap from "gsap";
-import Game from "../Game.ts";
-import GameModel from "../GameModel.ts";
+import Timer from "../../lib/Timer.ts";
+
 export default class CoinHandler{
 
-private coins :Array<SceneObject3D> =[];
-    constructor() {
+    numCoins = 0
+    displayCoins =0;
+    displayTime =0
+    constructor(renderer:Renderer) {
 
-        for(let c of SceneHandler.triggerModels){
-
-                if(c.hitTriggerItem ==HitTrigger.COIN){
-                    this.coins.push(c)
-                    c.ry =0;
-                    c.show()
+    }
+    public addCoins(numCoins:number)
+    {
+        this.numCoins += numCoins;
+        SoundHandler.playCoin()
+    }
+    update(){
+        if(this.numCoins!=this.displayCoins){
+            this.displayTime-=Timer.delta;
+            if(this.displayTime<0){
+                if(this.numCoins<this.displayCoins){
+                    this.displayCoins--
+                    SoundHandler.playCoin()
+                }
+                 else if(this.displayCoins){
+                    this.displayCoins++
+                    SoundHandler.playCoin()
+                }
+                if(this.numCoins!=this.displayCoins){
+                    this.displayTime =0.6;
                 }
             }
 
-    }
-
-
-    update() {
-
-       let rotSpeed =1*Timer.delta;
-        for(let c of this.coins){
-            c.ry+=rotSpeed;
-
         }
+
+
     }
 
-    takeCoin(f: SceneObject3D) {
-        f.triggerIsEnabled =false;
-
-GameModel.addCoins(1)
-        gsap.to(f,{ sx:0,sy:0,sz:0,ease:"back.in",duration:0.2,onComplete:()=>{f.hide();}})
-    }
 }

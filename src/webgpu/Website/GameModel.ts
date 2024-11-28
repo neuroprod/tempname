@@ -8,6 +8,7 @@ import ConversationHandler from "./conversation/ConversationHandler.ts";
 import MouseListener from "../lib/MouseListener.ts";
 import SoundHandler from "./SoundHandler.ts";
 import Overlay from "./Overlay.ts";
+import CoinHandler from "./handlers/CoinHandler.ts";
 
  class GameModel {
 
@@ -20,7 +21,7 @@ import Overlay from "./Overlay.ts";
     conversationHandler!: ConversationHandler;
     mouseListener!: MouseListener;
     overlay!: Overlay;
-
+    coinHandeler!: CoinHandler;
 
     //godPresent
     presentID=-1;
@@ -28,9 +29,6 @@ import Overlay from "./Overlay.ts";
 
 
 
-    addCoins(number: number) {
-       this.numCoins+=number
-       SoundHandler.playCoin()
-    }
+
  }
 export default  new GameModel()
