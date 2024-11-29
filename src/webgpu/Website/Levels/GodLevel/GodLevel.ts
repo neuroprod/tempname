@@ -18,7 +18,7 @@ export class GodLevel extends PlatformLevel{
     private god!: SceneObject3D;
     private godController!: God;
     private skipGodChoice: boolean =false;
-
+private startPos =-10
     init() {
         super.init();
         LoadHandler.onComplete =this.configScene.bind(this)
@@ -83,16 +83,16 @@ export class GodLevel extends PlatformLevel{
         this.blockInput =true
 
        let charRoot = SceneHandler.getSceneObject("charRoot");
-        charRoot.x = -5-2
+        charRoot.x =this.startPos-2
         charRoot.y = 0.15
         this.characterController.setCharacter()
-        this.characterController.gotoAndIdle(new Vector3(-3-2, 0.1, 0), 1, () => {
+        this.characterController.gotoAndIdle(new Vector3(this.startPos, 0.1, 0), 1, () => {
             this.blockInput =false
 
         })
         GameModel.gameCamera.camDistance =2;
         GameModel.gameCamera.heightOffset =0.5
-        GameModel.gameCamera.setMinMaxX(-3-2,4.5)
+        GameModel.gameCamera.setMinMaxX(this.startPos,4.5)
 
 
         GameModel.gameCamera.setForCharPos(new Vector3(-6, 0, 0))
@@ -151,7 +151,7 @@ export class GodLevel extends PlatformLevel{
 
                 f.triggerIsEnabled =false;
 
-                let target = this.tree.getWorldPos().add([-0.3,0.5,0])
+                let target = this.tree.getWorldPos().add([-0.5,0.55,0])
                 GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,1.7]))
                 this.blockInput =true
 

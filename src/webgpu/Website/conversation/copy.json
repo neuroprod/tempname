@@ -8,7 +8,7 @@
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Hi pirate. Are you ready to\ngo on an adventure!?"},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "No, I'm just collecting\nthose free coins that\nare lying around here."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "You know, there is more\nto live then coins."},
-      {"text": "Climb my branches, and discover\nwhat it's all about."},
+      {"text": "Climb my branches,\nand discover what it's all about."},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "I don't know,\nIsn't that dangerous..."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Sigh... The are also\ncoins in the branches."},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "Why didn't you tell me that earlier\nI'm on my way!"}
@@ -36,14 +36,14 @@
   {
     "name": "godYes",
     "data": [
-      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Good my child! Choose wisely"}
+      {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Good my child. Choose wisely!"}
     ]
   },
   {
     "name": "godNo",
     "data": [
       {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Ow... You can have my coins if you want?"},
-      {"text": "No need for coins in the sky"}
+      {"text": "No need for coins in the sky..."}
     ]
   },
   {
@@ -73,42 +73,43 @@
   {
     "name": "cookieNoPresent",
     "data": [
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, you won't believe who I just met!"}
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Hi Cookie, you won't believe who I just met!"}
     ]
   },
   {
     "name": "cookieLightning",
     "data": [
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, want to the striking thing I just got?"}
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Hi Cookie, want to the striking thing I just got?"}
     ]
   },
   {
     "name": "cookieNDA",
     "data": [
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, Want to sign my NDA?"}
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Hi Cookie, Want to sign my NDA?"}
     ]
   },
   {
     "name": "cookieHammer",
     "data": [
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, I got a new hammer!"}
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Hi Cookie, I got a new hammer!"}
     ]
   },
   {
     "name": "cookieBox",
     "data": [
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Hi Cookie, do you want to check out my new box?"}
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Hi Cookie, do you want to check out my new box?"}
     ]
   },
   {
     "name": "cookie",
     "data": [
       {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "Fuck off man!"},
-      {"char":"charRoot","pos":[-0.2, 0.8, 0],"text": "Sorry. Why are you always so angry?"},
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Why are you always so angry?"},
       {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "I don't know?\nMy mom told me\nI was a happy baby."},
       {"text": "But then I had to go to\nschool and stuff."},
-      {"text": "Now I just want to smash things.\nYou should try it! It helps"}
-
+      {"text": "Now I just want to smash things.\nYou should try it! It helps"},
+      {"text": "You should try it. It helps!"},
+      {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Euhm... Ok!"}
     ]
   },
   {
@@ -117,13 +118,12 @@
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "What's going on Strawberry?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just got a call from my mum:\nMy brother got squased by some jerk!"},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": " Ow... "},
-      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy dru...\n euh,my happy medicine"},
-      {"text":"Can you spare me some coins?"},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy DRU...\neuh,my happy medicine."},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "How much do you need?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just #numCoins coins..."},
       {"char":"charRoot","pos":[0.1, 0.8, 0],"choice": [
-        {"text": "Those are all my coins Strawberry,\nI might need them later. I cant do that.", "callBack": "coinsNo" },
-        {"text": "Here you go! All my coins.\nI know it's a tough world out there!","callBack": "coinsYes" }
+        {"text": "Those are all my coins Strawberry,\nI might need them later. I can't do that.", "callBack": "coinsNo" },
+        {"text": "Here you go! #numCoins coins.\nI know it's a tough world out there!","callBack": "coinsYes" }
       ]}
 
     ]

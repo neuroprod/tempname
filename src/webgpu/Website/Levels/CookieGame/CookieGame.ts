@@ -184,7 +184,7 @@ export default class CookieGame extends BaseLevel {
            GameModel.gameCamera.screenShakeCookie(0.1)
             this.points++;
             if(this.points==1){
-                text ="First one is the sweetest!"
+                text ="Nice! First one is the sweetest!"
             }else{
                 text ="Yea! " + this.points + " kills!"
             }
