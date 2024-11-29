@@ -95,7 +95,7 @@ private startPos =-10
         GameModel.gameCamera.setMinMaxX(this.startPos,4.5)
 
 
-        GameModel.gameCamera.setForCharPos(new Vector3(-6, 0, 0))
+        GameModel.gameCamera.setForCharPos(new Vector3(this.startPos, 0, 0))
 
 
 
