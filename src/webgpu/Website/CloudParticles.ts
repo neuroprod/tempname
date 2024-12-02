@@ -85,7 +85,7 @@ export default class CloudParticles{
         let charProj = ProjectData.projectsNameMap.get("character")
         if(charProj){
 
-            charProj.getProjectMeshByName("cloudParticles")
+         //   charProj.getProjectMeshByName("cloudParticles")
             this.particlesModel = new Model(renderer,"particlesModel")
 
             this.particlesModel.mesh =charProj.getProjectMeshByName("cloudParticle")?.getMesh() as Mesh
@@ -93,7 +93,7 @@ export default class CloudParticles{
             this.particlesModel.material =new GBufferCloudMaterial(renderer,"cloudMaterial")
 
             this.particlesModel.needCulling =false;
-            this.particlesModel.visible =false;
+            this.particlesModel.visible =true;
 
 
         }
@@ -153,6 +153,7 @@ init(){
             this.particlesModel.visible =false;
             return;
         }
+
         this.particlesModel.visible =true;
         this.particlesModel.numInstances =this.particles.length;
         let matrices0:Array<number> =[];
@@ -172,6 +173,7 @@ init(){
         this.particlesModel.createBuffer(new Float32Array(matrices1),"instancesMatrix1");
         this.particlesModel.createBuffer(new Float32Array(matrices2),"instancesMatrix2");
         this.particlesModel.createBuffer(new Float32Array(matrices3),"instancesMatrix3");
+
 
     }
 

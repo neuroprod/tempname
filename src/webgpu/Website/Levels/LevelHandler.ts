@@ -10,6 +10,7 @@ import CookieGame from "./CookieGame/CookieGame.ts";
 import {StrawberryLevel} from "./StrawberryLevel/StrawberryLevel.ts";
 import AppState from "../../AppState.ts";
 import GameModel from "../GameModel.ts";
+import {DockLevel} from "./DockLevel/DockLevel.ts";
 
 
 class LevelHandler {
@@ -28,6 +29,7 @@ class LevelHandler {
         this.addLevel("CookieGame", new CookieGame())
         this.addLevel("Website", new WebsiteLevel())
         this.addLevel("StrawBerry", new StrawberryLevel())
+        this.addLevel("Dock", new DockLevel())
     }
 
     setLevel(key: string) {

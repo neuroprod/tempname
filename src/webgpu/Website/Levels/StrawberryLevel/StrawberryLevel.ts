@@ -52,7 +52,7 @@ export class StrawberryLevel extends PlatformLevel{
         this.characterController.setCharacter()
         GameModel.gameCamera.setCharacter()
         GameModel.gameRenderer.setModels(SceneHandler.allModels)
-
+        GameModel.gameRenderer.addModel(this.characterController.cloudParticles.particlesModel)
         this.strawBerryHandler.init()
 
 

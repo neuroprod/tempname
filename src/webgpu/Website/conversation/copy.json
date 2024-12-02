@@ -7,7 +7,8 @@
     "data": [
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Hi pirate. Are you ready to\ngo on an adventure!?"},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "No, I'm just collecting\nthose free coins that\nare lying around here."},
-      {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "You know, there is more\nto live then coins."},
+      {"text":"I need to pay my rent." },
+      {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "You know, there is more\nto live then paying rent."},
       {"text": "Climb my branches,\nand discover what it's all about."},
       {"char":"charRoot","pos":[0.1, 0.9, 0],"text": "I don't know,\nIsn't that dangerous..."},
       {"char":"rootTree","pos":[-0.34, 0.9, 0],"text": "Sigh... The are also\ncoins in the branches."},
@@ -23,8 +24,8 @@
       {"text": "Are you God?"},
       {"char":"godRoot","pos":[-0.3, 0.85, 0],"text": "Noooo, my child!"},
       {"text": "I am the man in the sky!"},
-      {"text": "Every year, I bring\npresents to the children!"},
-      {"text": "If they are good, that is."},
+      {"text": "Every year, I bring plastic presents\nto the children!"},
+      {"text": "If they are good, that is..."},
       {"text": "Do you want to have a present?"},
       {"char":"charRoot","pos":[0.1, 0.83, 0],"choice": [
         {"text": "I'm not a child, but sure,\nI like presents!","callText":"godYes", "callBack": "godYes" },
@@ -108,7 +109,7 @@
       {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "I don't know?\nMy mom told me\nI was a happy baby."},
       {"text": "But then I had to go to\nschool and stuff."},
       {"text": "Now I just want to smash things.\nYou should try it! It helps"},
-      {"text": "You should try it. It helps!"},
+      {"text": "You should try it.\nIt helps with the pain!"},
       {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Euhm... Ok!"}
     ]
   },
@@ -118,7 +119,7 @@
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "What's going on Strawberry?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just got a call from my mum:\nMy brother got squased by some jerk!"},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": " Ow... "},
-      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy DRU...\neuh,my happy medicine."},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy DRU...\neuh, my happy medicine."},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "How much do you need?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just #numCoins coins..."},
       {"char":"charRoot","pos":[0.1, 0.8, 0],"choice": [

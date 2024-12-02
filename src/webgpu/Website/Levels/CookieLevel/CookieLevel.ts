@@ -51,7 +51,7 @@ export class CookieLevel extends PlatformLevel{
         this.characterController.setCharacter()
        GameModel.gameCamera.setCharacter()
        GameModel.gameRenderer.setModels(SceneHandler.allModels)
-
+        GameModel.gameRenderer.addModel(this.characterController.cloudParticles.particlesModel)
 
         sceneHandler.getSceneObject("coinTree1").hide()
         sceneHandler.getSceneObject("coinTree2").hide()

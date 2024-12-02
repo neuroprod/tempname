@@ -54,8 +54,9 @@ private startPos =-10
         this.blockInput =false
         this.skipGodChoice =false
         GameModel.gameCamera.setCharacter()
-        GameModel.gameRenderer.setModels(SceneHandler.allModels)
 
+        GameModel.gameRenderer.setModels(SceneHandler.allModels)
+        GameModel.gameRenderer.addModel(this.characterController.cloudParticles.particlesModel)
 
 
 

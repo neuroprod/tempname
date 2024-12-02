@@ -43,6 +43,7 @@ export default class GameRenderer {
     private aoDenoise: DeNoisePass;
     private shadowDenoise: DeNoisePass;
     private transparentModelRenderer: ModelRenderer;
+    private transitionValue: number =0;
 
     constructor(renderer: Renderer, camera: Camera) {
         this.renderer = renderer;
@@ -51,9 +52,9 @@ export default class GameRenderer {
         this.shadowBlurPass = new ShadowBlurRenderPass(renderer);
         this.gBufferPass = new GBufferRenderPass(renderer, camera);
         this.preProcessDepth = new PreProcessDepth(renderer);
-        //this.gtoaPass = new GTAORenderPass(renderer,camera);
+
         this.shadowPass = new ShadowRenderPass(renderer, camera, this.sunLight)
-        //this.gtoaDenoisePass = new GTAODenoisePass(renderer);
+
         this.preDept = new AOPreprocessDepth(renderer)
         this.ao = new GTAO(renderer, camera)
         this.aoDenoise = new DeNoisePass(renderer, Textures.GTAO_DENOISE, Textures.GTAO)
@@ -128,15 +129,21 @@ export default class GameRenderer {
     }
 
     public addModel(m: Model) {
+
         if (m.transparent) {
             this.transparentModelRenderer.addModel(m)
         } else {
+            if(m.label=="particlesModel"){
+                console.log(m)
+            }
             this.gBufferPass.modelRenderer.addModel(m)
+            console.log(this.gBufferPass.modelRenderer)
         }
+        if(m.parent ){
         if ((m.parent as SceneObject3D).dropShadow) {
 
             this.shadowMapPass.modelRenderer.addModel(m)
-        }
+        }}
 
         this.allModels.push(m)
 
@@ -168,6 +175,10 @@ export default class GameRenderer {
         this.shadowMapPass.update()
         this.shadowPass.update();
         this.lightPass.update();
+
+        if(this.transitionValue !=0){
+            //
+        }
     }
 
     onUI() {
@@ -213,5 +224,10 @@ export default class GameRenderer {
         this.blitFinal.draw(pass);
 
         this.transparentModelRenderer.draw(pass)
+
+        if(this.transitionValue !=0){
+            //
+        }
+
     }
 }

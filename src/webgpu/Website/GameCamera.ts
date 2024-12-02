@@ -8,6 +8,7 @@ import Timer from "../lib/Timer.ts";
 import {lerpValueDelta} from "../lib/MathUtils.ts";
 import gsap from "gsap";
 import SceneHandler from "../data/SceneHandler.ts";
+import GameModel from "./GameModel.ts";
 
 
 enum CameraState {

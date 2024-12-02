@@ -9,8 +9,8 @@ import GameModel from "../GameModel.ts";
 
 export default class CoinHandler{
 
-    numCoins = 0
-    displayCoins =0;
+    numCoins =0;//622; 999987470
+    displayCoins =0;//622; 999987470
     displayTime =0
     private textModel: Model;
     private textMesh: TextBalloonFontMesh;

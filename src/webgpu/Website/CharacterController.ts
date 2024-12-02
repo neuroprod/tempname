@@ -12,6 +12,8 @@ import SoundHandler from "./SoundHandler.ts";
 import SceneHandler from "../data/SceneHandler.ts";
 import Timer from "../lib/Timer.ts";
 import Object3D from "../lib/model/Object3D.ts";
+import Model from "../lib/model/Model.ts";
+import GameModel from "./GameModel.ts";
 
 export default class CharacterController {
 
@@ -81,6 +83,7 @@ export default class CharacterController {
  */
 
         this.cloudParticles = new CloudParticles(renderer)
+
         this.downRay = new Ray()
         this.sideRay = new Ray()
 
