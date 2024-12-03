@@ -24,13 +24,15 @@ export class DockLevel extends PlatformLevel{
         LoadHandler.onComplete =this.configScene.bind(this)
         LoadHandler.startLoading()
         LoadHandler.startLoading()
-
+        LoadHandler.startLoading()
         SceneHandler.setScene("f05cd0d2-c8f3-4ad4").then(() => {
 
             SceneHandler.addScene("1234").then(() => {
                 LoadHandler.stopLoading()
             });
-
+            SceneHandler.addScene("697e1443-b2d5-4871").then(() => {
+                LoadHandler.stopLoading()
+            });
 
 
 
@@ -45,6 +47,11 @@ export class DockLevel extends PlatformLevel{
         let char = sceneHandler.getSceneObject("charRoot")
         char.x = -4;
         char.y = 1;
+
+
+        let landlord = sceneHandler.getSceneObject("rootLandlord")
+        landlord.setScaler(1.2)
+        landlord.x =4
 
         this.characterController.setCharacter()
         GameModel.gameCamera.setCharacter()

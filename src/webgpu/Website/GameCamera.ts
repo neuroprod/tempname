@@ -88,12 +88,12 @@ setForCharPos(charPos:Vector3){
        charPos.y+=this.heightOffset
         if(charPos.x<this.minX)charPos.x=this.minX
         if(charPos.x>this.maxX)charPos.x=this.maxX
-        this.cameraLookAt.lerp( charPos,1 - Math.pow(0.01 ,delta))
+        this.cameraLookAt.lerp( charPos,1 - Math.pow(0.005 ,delta))
         this.camPos.copy(this.cameraLookAt);
         this.camPos.z+=this.camDistance;
         this.camPos.y+=0;
 
-        this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.001 ,delta))
+        this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.00001 ,delta))
     }
     setCharView(){
         this.cameraState  =CameraState.CharCamera

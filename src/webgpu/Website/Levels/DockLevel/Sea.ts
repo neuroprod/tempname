@@ -32,6 +32,7 @@ class WaveParticle {
     update(time: number) {
         this.positionDraw.from(this.position)
         this.positionDraw.x += (Math.sin(time + this.timeOffset) * this.dir) * 0.5
+        this.positionDraw.y += (Math.cos(time + this.timeOffset) * this.dir) * 0.02
     }
 }
 
@@ -57,13 +58,16 @@ export default class Sea {
 
         }
         for (let y = 0; y < 20; y++) {
-            let color =Math.random()*0.1+0.5
+            let timeOffset = Math.random()*10
+            let color =Math.random()*0.05+0.5
             for (let x = 0; x < 6; x++) {
 
                 let waveParticle = new WaveParticle()
                 if (y % 2) {
                     waveParticle.dir = -1;
                 }
+
+                waveParticle.timeOffset =  timeOffset
                 waveParticle.color = color;
                 waveParticle.position.x = (x * 1.9) - 2 + (y % 2) / 2
                 waveParticle.position.z = -y / 4 + 2
@@ -82,7 +86,7 @@ export default class Sea {
         let matrices2: Array<number> = [];
         let matrices3: Array<number> = [];
         let colors: Array<number> = [];
-        let t = Timer.time / 10;
+        let t = Timer.time / 4;
         for (let p of this.waves) {
             p.update(t)
             let m = p.getMatrix();
