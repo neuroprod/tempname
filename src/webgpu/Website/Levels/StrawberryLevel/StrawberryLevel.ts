@@ -10,6 +10,7 @@ import {HitTrigger} from "../../../data/HitTriggers.ts";
 
 import Strawberry from "./Strawberry.ts";
 import GameModel from "../../GameModel.ts";
+import LevelHandler from "../LevelHandler.ts";
 
 
 
@@ -104,7 +105,7 @@ export class StrawberryLevel extends PlatformLevel{
                         GameModel.conversationHandler.startConversation("strawBerry")
 
                         GameModel.conversationHandler.doneCallBack =()=>{
-
+LevelHandler.setLevel("Dock");
                         }});
 
                 });
