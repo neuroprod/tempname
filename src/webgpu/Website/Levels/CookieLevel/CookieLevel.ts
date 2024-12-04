@@ -64,7 +64,8 @@ export class CookieLevel extends PlatformLevel{
         this.tree.x =-1.5
 
 
-
+        let char = sceneHandler.getSceneObject("charRoot")
+        char.setScaler(1.2)
 
 
         this.cookie = sceneHandler.getSceneObject("cookieRoot")

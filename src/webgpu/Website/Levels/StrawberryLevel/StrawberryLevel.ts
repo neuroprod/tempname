@@ -58,7 +58,8 @@ export class StrawberryLevel extends PlatformLevel{
 
 
 
-
+        let char = sceneHandler.getSceneObject("charRoot")
+        char.setScaler(1.2)
 
 
 

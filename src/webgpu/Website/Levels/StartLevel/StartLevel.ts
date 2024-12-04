@@ -75,6 +75,7 @@ export class StartLevel extends BaseLevel {
         this.kris.reset()
 
         let char = sceneHandler.getSceneObject("charRoot")
+        char.setScaler(1.2)
         char.x = -2;
         char.y = 1;
         this.characterController.setCharacter()

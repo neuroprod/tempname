@@ -53,10 +53,10 @@ export class WebsiteLevel extends BaseLevel {
         window.scrollTo(0, 0);
         document.body.style.overflow = "visible"
         let char = SceneHandler.getSceneObject("charRoot")
-        char.setScaler(0.5)
-        char.x =0.45
-        char.z =0.1
-        char.ry =Math.PI-0.35
+        char.setScaler(0.7)
+        char.x =0.5
+        char.z =0.0
+        char.ry =Math.PI
         char.y =-1.6
         let webSiteRoot = SceneHandler.getSceneObject("rootWebsite")
         this.websiteShow.setObjects(webSiteRoot.children)

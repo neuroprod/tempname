@@ -86,6 +86,7 @@ private startPos =-10
        let charRoot = SceneHandler.getSceneObject("charRoot");
         charRoot.x =this.startPos-2
         charRoot.y = 0.15
+        charRoot.setScaler(1.2)
         this.characterController.setCharacter()
         this.characterController.gotoAndIdle(new Vector3(this.startPos, 0.1, 0), 1, () => {
             this.blockInput =false
@@ -157,7 +158,7 @@ private startPos =-10
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.tree.getWorldPos().add([-0.65,0,0]),1,()=>{
-                    this.characterController.setAngle(0.4)
+                    this.characterController.setAngle(0.1)
                     gsap.delayedCall(0.5,()=>{
                         GameModel.conversationHandler.startConversation("tree")
                         GameModel.conversationHandler.doneCallBack =()=>{

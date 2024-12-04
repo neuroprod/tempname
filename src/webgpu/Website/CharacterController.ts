@@ -44,7 +44,7 @@ export default class CharacterController {
     private cross2 = new Vector3()
     private cross3 = new Vector3()
     private cross4 = new Vector3()
-    private stepLength = 0.2;
+    private stepLength = 0.05;
     private feetStep = 0
     private feetPos2 = new Vector3()
     private feetPos1 = new Vector3()
@@ -52,7 +52,7 @@ export default class CharacterController {
     private rightLeg!: SceneObject3D;
     private distanceToFloor: number = 0;
     private charHitBottom = new Vector3(-0.02, 0.15, 0)
-    private charHitTop = new Vector3(0.01, 0.42, 0)
+    private charHitTop = new Vector3(0.01, 0.32, 0)
     private feetStepPrev: number = 0;
     private idleTime = 0;
      cloudParticles: CloudParticles;
@@ -66,7 +66,7 @@ export default class CharacterController {
     private browTL!: gsap.core.Timeline;
     private browLeft!: SceneObject3D;
     private browRight!: SceneObject3D;
-
+private feetToFloor=0.1;// 0.06/1.2
     constructor(renderer: Renderer) {
         this.renderer = renderer;
 
@@ -91,20 +91,20 @@ export default class CharacterController {
     public startWave(){
         if(this.waveTL)this.waveTL.clear()
         this.waveTL =gsap.timeline({repeat:-1,repeatRefresh:true})
-        this.waveTL.to( this.armLeft,{rz:0.2,x:0.02,duration:0.4,ease:"sine.inOut"})
-        this.waveTL.to( this.armLeft,{rz:-0.4,x:0.06,duration:0.5,ease:"sine.inOut"})
+       // this.waveTL.to( this.armLeft,{rz:0.2,x:0.02,duration:0.4,ease:"sine.inOut"})
+        //this.waveTL.to( this.armLeft,{rz:-0.4,x:0.06,duration:0.5,ease:"sine.inOut"})
 
         if(this.browTL)this.browTL.clear()
         this.browTL =gsap.timeline({repeat:1})
         this.browTL.to(this.browRight,{y:0.07,duration:0.2},0)
         this.browTL.to(this.browLeft,{y:0.07,duration:0.2},0)
-        this.browTL.to(this.browRight,{y:0.063,duration:0.4},0.2)
-        this.browTL.to(this.browLeft,{y:0.063,duration:0.4},0.2)
+        this.browTL.to(this.browRight,{y:0.050,duration:0.4},0.2)
+        this.browTL.to(this.browLeft,{y:0.050,duration:0.4},0.2)
     }
     public stopWave(){
         if(this.waveTL)this.waveTL.clear()
         this.waveTL =gsap.timeline({})
-        this.waveTL.to( this.armLeft,{rz:-0.7,x:0.06,ease:"power2.inOut"})
+       // this.waveTL.to( this.armLeft,{rz:-0.7,x:0.06,ease:"power2.inOut"})
     }
     setCharacter() {
         if(this.waveTL)this.waveTL.clear()
@@ -140,7 +140,7 @@ export default class CharacterController {
                 this.velocity.x =speed;
             }
 
-            if(Math.abs(this.autoWalkTarget.x-this.targetPos.x)<0.1){
+            if(Math.abs(this.autoWalkTarget.x-this.targetPos.x)<0.01){
                 this.update(delta, this.autoWalkTargetDir*0.001, false)
                 this.autoWalk =false
                 this.gotoDone();
@@ -307,7 +307,7 @@ if(! this.charRoot )return;
             //console.log(this.hitObject)
             if (this.velocity.y < -5) {
                 let vEf = Math.abs(this.velocity.y) - 5;
-                this.charBody.y = this.bodyBasePos.y - 0.07
+                this.charBody.y = this.bodyBasePos.y //- 0.07
                 this.charBody.sy = 1 - smoothstep(1, 9, vEf) * 0.4;
                 this.cloudParticles.addParticlesHitFloor(this.targetPos)
             }
@@ -362,11 +362,11 @@ if(! this.charRoot )return;
         if (Math.abs(this.velocity.x) < 0.01 || !this.isGrounded) {
             let lerpVal = lerpValueDelta(0.002, delta)
 
-            this.feetPos1.x = lerp(this.feetPos1.x, tScale * (this.stepLength / 2) - 0.02, lerpVal);
-            this.feetPos1.y = lerp(this.feetPos1.y, 0.17, lerpVal)
+            this.feetPos1.x = lerp(this.feetPos1.x, tScale * (this.stepLength / 2) , lerpVal);
+            this.feetPos1.y = lerp(this.feetPos1.y, this.feetToFloor, lerpVal)
 
-            this.feetPos2.x = lerp(this.feetPos2.x, tScale * (-this.stepLength / 2) - 0.02, lerpVal);
-            this.feetPos2.y = lerp(this.feetPos2.y, 0.17, lerpVal)
+            this.feetPos2.x = lerp(this.feetPos2.x, tScale * (-this.stepLength / 2) , lerpVal);
+            this.feetPos2.y = lerp(this.feetPos2.y,  this.feetToFloor, lerpVal)
 
             this.leftLeg.setPositionV(this.feetPos1)
             this.rightLeg.setPositionV(this.feetPos2)
@@ -393,17 +393,17 @@ if(! this.charRoot )return;
             let x = Math.sin(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 2
             let y = Math.cos(feetStepLocal * Math.PI + Math.PI / 2) * this.stepLength / 4;
 
-            this.feetPos1.x = x - 0.02;
-            this.feetPos1.y = Math.max(y, 0) + 0.17;
+            this.feetPos1.x = x ;
+            this.feetPos1.y = Math.max(y, 0) +  this.feetToFloor;
 
             let x2 = Math.sin(feetStepLocal * Math.PI - Math.PI + Math.PI / 2) * this.stepLength / 2
             let y2 = Math.cos(feetStepLocal * Math.PI - Math.PI + Math.PI / 2) * this.stepLength / 4;
 
-            this.feetPos2.x = x2 - 0.02;
-            this.feetPos2.y = Math.max(y2, 0) + 0.17;
+            this.feetPos2.x = x2 ;
+            this.feetPos2.y = Math.max(y2, 0) +  this.feetToFloor;
 
 
-            this.charBody.y = Math.max(y, y2) / 4 + 0.2
+            this.charBody.y = Math.max(y, y2) / 6 + 0.15//charheight
 
 
             this.leftLeg.setPositionV(this.feetPos1)

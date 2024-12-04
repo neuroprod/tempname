@@ -47,7 +47,7 @@ export class DockLevel extends PlatformLevel{
         let char = sceneHandler.getSceneObject("charRoot")
         char.x = -4;
         char.y = 1;
-
+        char.setScaler(1.2)
 
         let landlord = sceneHandler.getSceneObject("rootLandlord")
         landlord.setScaler(1.2)
