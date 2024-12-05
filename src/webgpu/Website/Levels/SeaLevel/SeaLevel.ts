@@ -156,10 +156,10 @@ this.tl.to( this.rootShip,{x:0,duration:15})
         this.rootShip.y =Math.sin(Timer.time*2.4)*0.03
         this.rootShip.rz =Math.sin(Timer.time*1)*0.02 +Math.PI+0.05
 
-        this.foam.y =-this.rootShip.y/this.rootShip.sy
+        this.foam.y =-this.rootShip.y*1.5
 
        for (let s of this.foam.children){
-           s.rz-=Timer.delta
+           s.rz-=Timer.delta*2
        }
 
     }

@@ -62,7 +62,7 @@ export default class SeaFull {
         for (let y = 0; y < 15; y++) {
 
             let color =Math.random()*0.05+0.5
-            let speed =Math.random()+5
+            let speed =Math.random()*3+5
             for (let x = 0; x < 10; x++) {
 
                 let waveParticle = new WaveParticle()
