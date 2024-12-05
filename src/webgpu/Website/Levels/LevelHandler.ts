@@ -11,6 +11,8 @@ import {StrawberryLevel} from "./StrawberryLevel/StrawberryLevel.ts";
 import AppState from "../../AppState.ts";
 import GameModel from "../GameModel.ts";
 import {DockLevel} from "./DockLevel/DockLevel.ts";
+import Sea from "./DockLevel/Sea.ts";
+import {SeaLevel} from "./SeaLevel/SeaLevel.ts";
 
 
 class LevelHandler {
@@ -30,6 +32,7 @@ class LevelHandler {
         this.addLevel("Website", new WebsiteLevel())
         this.addLevel("StrawBerry", new StrawberryLevel())
         this.addLevel("Dock", new DockLevel())
+        this.addLevel("Sea", new SeaLevel())
     }
 
     setLevel(key: string) {

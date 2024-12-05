@@ -109,7 +109,7 @@ export class DockLevel extends PlatformLevel{
         super.update();
         this.sea.update()
         this.rootShip.y =Math.sin(Timer.time*0.5)*0.03
-        this.rootShip.rz =Math.sin(Timer.time*0.33)*0.01 +Math.PI
+        this.rootShip.rz =Math.sin(Timer.time*0.33)*0.02 +Math.PI
     }
 
     destroy(){

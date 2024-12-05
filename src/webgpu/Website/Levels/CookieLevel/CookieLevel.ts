@@ -69,10 +69,10 @@ export class CookieLevel extends PlatformLevel{
 
 
         this.cookie = sceneHandler.getSceneObject("cookieRoot")
-        this.cookie.setScaler(1.5)
-        this.cookie.z =-0.5
+        this.cookie.setScaler(1.4)
+        this.cookie.z =-0.1
         this.cookie.x =8
-        this.cookie.ry =-0.4
+        this.cookie.ry =-0.2
 
        GameModel.gameCamera.setMinMaxX(-0.3,100)
 
