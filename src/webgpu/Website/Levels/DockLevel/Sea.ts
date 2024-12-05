@@ -69,7 +69,7 @@ export default class Sea {
 
                 waveParticle.timeOffset =  timeOffset
                 waveParticle.color = color;
-                waveParticle.position.x = (x * 1.9) - 2 + (y % 2) / 2
+                waveParticle.position.x = (x * 2) - 2 + (y % 2) / 2
                 waveParticle.position.z = -y / 4 + 2
                 waveParticle.position.y = -0.15
                 this.waves.push(waveParticle)

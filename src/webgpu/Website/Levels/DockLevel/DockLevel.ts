@@ -8,12 +8,15 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 
 import GameModel from "../../GameModel.ts";
 import Sea from "./Sea.ts";
+import Timer from "../../../lib/Timer.ts";
 
 
 
 export class DockLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
     private sea!: Sea;
+    private rootShip!: SceneObject3D;
+
 
 
 
@@ -25,7 +28,13 @@ export class DockLevel extends PlatformLevel{
         LoadHandler.startLoading()
         LoadHandler.startLoading()
         LoadHandler.startLoading()
+        LoadHandler.startLoading()
         SceneHandler.setScene("f05cd0d2-c8f3-4ad4").then(() => {
+
+
+            SceneHandler.addScene("edb3050b-b132-4957").then(() => {
+                LoadHandler.stopLoading()
+            });
 
             SceneHandler.addScene("1234").then(() => {
                 LoadHandler.stopLoading()
@@ -44,6 +53,11 @@ export class DockLevel extends PlatformLevel{
         super.configScene()
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
+
+
+        this.rootShip = sceneHandler.getSceneObject("rootShip")
+        this.rootShip.x =1
+        this.rootShip.z =-0.7
         let char = sceneHandler.getSceneObject("charRoot")
         char.x = -4;
         char.y = 1;
@@ -94,6 +108,8 @@ export class DockLevel extends PlatformLevel{
     update() {
         super.update();
         this.sea.update()
+        this.rootShip.y =Math.sin(Timer.time*0.5)*0.03
+        this.rootShip.rz =Math.sin(Timer.time*0.33)*0.01 +Math.PI
     }
 
     destroy(){

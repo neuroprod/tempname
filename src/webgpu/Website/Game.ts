@@ -108,7 +108,7 @@ this.overlay.update()
         this.gameRenderer.drawFinal(pass);
 
 
-        DebugDraw.draw(pass);
+      //  DebugDraw.draw(pass);
         this.overlay.draw(pass)
     }
 
