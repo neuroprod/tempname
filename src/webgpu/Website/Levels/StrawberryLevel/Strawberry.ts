@@ -12,11 +12,11 @@ class Tear{
         this.tear =tear;
         this.startY =this.tear.posEditor.y
         this.tear.setScaler(0)
-        this.tl =gsap.timeline({repeat:-1,delay:Math.random()*10})
-        this.tl.to(this.tear,{sx:1,sy:1,sz:1,duration:1})
-        this.tl.to(this.tear,{y:this.startY-0.05,duration:1,ease:"power2.inOut"})
-        this.tl.to(this.tear,{y:this.startY-0.4,duration:0.5,ease:"power2.in"})
-        this.tl.set(this.tear,{y:this.startY},Math.random()+3)
+        this.tl =gsap.timeline({repeat:-1,delay:Math.random()*10,})
+        this.tl.to(this.tear,{sx:1,sy:1,sz:1,duration:2})
+        this.tl.to(this.tear,{y:this.startY-0.05,duration:2,ease:"power2.inOut"})
+        this.tl.to(this.tear,{y:this.startY-0.4,duration:0.7,ease:"power2.in"})
+        this.tl.set(this.tear,{y:this.startY},Math.random()+10)
     }
 
 

@@ -133,11 +133,9 @@ export default class GameRenderer {
         if (m.transparent) {
             this.transparentModelRenderer.addModel(m)
         } else {
-            if(m.label=="particlesModel"){
-                console.log(m)
-            }
+
             this.gBufferPass.modelRenderer.addModel(m)
-            console.log(this.gBufferPass.modelRenderer)
+
         }
         if(m.parent ){
         if ((m.parent as SceneObject3D).dropShadow) {

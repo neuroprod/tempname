@@ -67,7 +67,7 @@ export class SeaLevel extends PlatformLevel{
 
 
         this.rootShip = sceneHandler.getSceneObject("rootShip")
-        this.rootShip.x =0
+        this.rootShip.x =-7
         this.rootShip.z =-0.7
 
         let char = sceneHandler.getSceneObject("charRoot")
@@ -89,7 +89,7 @@ export class SeaLevel extends PlatformLevel{
 
 
         let cookie = sceneHandler.getSceneObject("cookieRoot")
-        cookie.setScaler(1.5)
+        cookie.setScaler(1.3)
         cookie.z =0
         cookie.x =0
         cookie.y =0.3
@@ -98,9 +98,9 @@ export class SeaLevel extends PlatformLevel{
 
 
         let strawberyy = sceneHandler.getSceneObject("strawberryRoot")
-        strawberyy.setScaler(1.3)
-        strawberyy.z =0.2
-        strawberyy.x =0.5
+        strawberyy.setScaler(1.2)
+        strawberyy.z =0.1
+        strawberyy.x =0.7
         strawberyy.y =0.7
         strawberyy.ry =Math.PI;
         this.rootShip.addChild( strawberyy)
@@ -120,8 +120,8 @@ export class SeaLevel extends PlatformLevel{
 
 
 
-
-
+this.tl =gsap.timeline()
+this.tl.to( this.rootShip,{x:0,duration:15})
 
 
 

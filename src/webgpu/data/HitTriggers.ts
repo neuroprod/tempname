@@ -9,6 +9,7 @@ export enum HitTrigger
         GOD,
         COOKIE,
         TREE,
+        DOCK,
     }
 
 export  const HitTriggerSelectItems:Array<SelectItem> =[]
