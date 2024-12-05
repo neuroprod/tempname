@@ -120,7 +120,7 @@ export class WebsiteLevel extends BaseLevel {
     update() {
         super.update();
         let t = document.body.getBoundingClientRect().top
-        let p = -Math.abs(t / 2000)
+        let p = -Math.abs(t / 1000)
         GameModel.gameCamera.setLockedView(new Vector3(0, p, 0), new Vector3(0, p, 1));
 
         // this.websiteSphere.update(this.sphereBlend)
