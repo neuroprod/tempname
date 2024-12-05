@@ -72,7 +72,7 @@ export default class SeaFull {
                 waveParticle.speed =speed
                 waveParticle.color = color;
                 waveParticle.position.x = (x * 2) - 2 + (y % 2) / 2-4
-                waveParticle.position.z = (-y / 3)+1.40
+                waveParticle.position.z = (-y / 3)+1.40-0.2
 
                 waveParticle.position.y = -0.15
                 this.waves.push(waveParticle)

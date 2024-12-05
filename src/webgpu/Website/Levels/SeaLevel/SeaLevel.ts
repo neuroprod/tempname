@@ -19,6 +19,7 @@ export class SeaLevel extends PlatformLevel{
 
     private rootShip!: SceneObject3D;
     private sea!: SeaFull;
+    private foam!: SceneObject3D;
 
 
 
@@ -105,6 +106,10 @@ export class SeaLevel extends PlatformLevel{
         strawberyy.ry =Math.PI;
         this.rootShip.addChild( strawberyy)
 
+this.foam = sceneHandler.getSceneObject("foamHolder")
+        for (let s of this.foam.children){
+            s.rz=Math.random()*6
+        }
 
       //this.characterController.setCharacter()
         GameModel.gameCamera.setCharacter()
@@ -150,6 +155,13 @@ this.tl.to( this.rootShip,{x:0,duration:15})
        this.sea.update()
         this.rootShip.y =Math.sin(Timer.time*2.4)*0.03
         this.rootShip.rz =Math.sin(Timer.time*1)*0.02 +Math.PI+0.05
+
+        this.foam.y =-this.rootShip.y/this.rootShip.sy
+
+       for (let s of this.foam.children){
+           s.rz-=Timer.delta
+       }
+
     }
 
     destroy(){

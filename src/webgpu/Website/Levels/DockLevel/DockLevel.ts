@@ -53,7 +53,10 @@ export class DockLevel extends PlatformLevel{
         super.configScene()
         LoadHandler.onComplete =()=>{}
         this.blockInput =false
-
+        let foam = sceneHandler.getSceneObject("foamHolder")
+        for (let s of foam.children){
+            ( s as SceneObject3D).hide()
+        }
 
         this.rootShip = sceneHandler.getSceneObject("rootShip")
         this.rootShip.x =1

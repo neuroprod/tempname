@@ -175,6 +175,24 @@ export default class SceneObject3D extends Object3D {
         }
         if (this.isText) {
             let t = UI.LTextInput("text", this.text)
+            if(t!=this.text){
+                this.text =t
+                if(this.model){
+                    let text =this.text
+                    if(text.startsWith("#")){
+
+                        let id = text.slice(1)
+                        let copy =ProjectData.copy[id]
+
+                        if(copy){
+                            text=copy;
+                        }
+                    }
+
+                    (this.model.mesh as FontMesh).setText(text, ProjectData.font);
+                }
+
+            }
 
 
             let tc = UI.LColor("textColor", this.textColor)

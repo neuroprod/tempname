@@ -26,7 +26,7 @@ class ProjectData {
 
     private defaultFontShadowMaterial!: ShadowFontDepthMaterial;
     font!: Font;
-    private copy: any;
+    copy: any;
     constructor() {
     }
    async init(renderer:Renderer,preloader:PreLoader,){
