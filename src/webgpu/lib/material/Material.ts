@@ -52,7 +52,9 @@ export default class Material extends ObjectGPU {
     setTexture(name: string, value: Texture) {
         this.defaultUniformGroup.setTexture(name, value)
     }
-
+    setVideoFrameTexture(name: string, value: VideoFrame) {
+        this.defaultUniformGroup.setVideoFrameTexture(name, value)
+    }
     makePipeLine(pass: RenderPass) {
         if (this.pipeLine) return;
 

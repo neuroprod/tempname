@@ -64,7 +64,8 @@ type SamplerUniform = {
 }
 type ExternalTexture = {
     name: string,
-    video: HTMLVideoElement | null,
+    videoFrame:  VideoFrame | null,
+    timestamp:number;
 }
 
 export default class UniformGroup extends ObjectGPU {
@@ -145,7 +146,8 @@ export default class UniformGroup extends ObjectGPU {
 
         this.externalTextures.push({
             name: name,
-            video: null
+            videoFrame: null,
+            timestamp:0
         });
 
     }
@@ -225,10 +227,19 @@ export default class UniformGroup extends ObjectGPU {
 
     }
 
-    setVideoTexture(name: string, video:  HTMLVideoElement) {
+    setVideoFrameTexture(name: string, videoFrame:  VideoFrame) {
         const found = this.externalTextures.find((element) => element.name == name);
         if(found){
-            found.video =video;
+
+            // if(video.timestamp !=found.timestamp){
+            found.videoFrame =videoFrame;
+           found.timestamp =videoFrame.timestamp;
+
+            //}
+            this.isBindGroupDirty = true;
+
+        }else {
+            console.log("uniform externalTexture not found", name, this.label)
         }
     }
 
@@ -526,7 +537,7 @@ ${this.getUniformStruct()}
                 {
                     binding: bindingCount,
                     resource: this.device.importExternalTexture({
-                        source: t.video as HTMLVideoElement,
+                        source: t.videoFrame as VideoFrame,
                     }),
 
                 }

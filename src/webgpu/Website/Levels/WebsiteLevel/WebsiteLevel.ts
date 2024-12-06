@@ -1,7 +1,7 @@
 import {BaseLevel} from "../BaseLevel.ts";
 import LoadHandler from "../../../data/LoadHandler.ts";
 import SceneHandler from "../../../data/SceneHandler.ts";
-import {Vector3} from "@math.gl/core";
+import {Vector2, Vector3} from "@math.gl/core";
 import UI from "../../../lib/UI/UI.ts";
 import WebsiteShow from "./WebsiteShow.ts";
 import MouseInteractionWrapper from "../../MouseInteractionWrapper.ts";
@@ -10,6 +10,7 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
 import GameModel from "../../GameModel.ts";
+import VideoPlayer from "../../../lib/video/VideoPlayer.ts";
 
 
 
@@ -17,7 +18,13 @@ export class WebsiteLevel extends BaseLevel {
 
 
     private websiteShow = new WebsiteShow()
+    private video1!: VideoPlayer;
+constructor() {
 
+    super();
+    this.video1 =new VideoPlayer(GameModel.renderer,"video/test.mp4",new Vector2(100,100))
+
+}
     init() {
         super.init();
         LoadHandler.onComplete = this.configScene.bind(this)
@@ -57,7 +64,10 @@ export class WebsiteLevel extends BaseLevel {
         char.x =0.5
         char.z =0.0
         char.ry =Math.PI
-        char.y =-1.6
+        char.y =-1.6;
+
+// @ts-ignore
+       // (char.children[0] as SceneObject3D ).model.material.setTexture("colorTexture",this.video1.getTexture())
         let webSiteRoot = SceneHandler.getSceneObject("rootWebsite")
         this.websiteShow.setObjects(webSiteRoot.children)
 
@@ -84,6 +94,12 @@ export class WebsiteLevel extends BaseLevel {
                 this.bounce("star1")
             }*/
         });
+
+
+
+
+        this.video1.play()
+
     }
 
     public bounce(s: string) {
@@ -109,7 +125,7 @@ export class WebsiteLevel extends BaseLevel {
         window.scrollTo(0, 0);
         document.body.style.overflow = "hidden"
         this.websiteShow.destroy()
-
+        this.video1.pauze()
 
     }
 

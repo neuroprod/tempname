@@ -202,14 +202,20 @@ export default class Main {
 
     private onUI() {
         if (this.currentMainState == MainState.game) {
+
+
             // pushMainMenu("editMenu", 74, 0)
             UI_I.currentComponent = UI_I.panelLayer;
             if (addMainMenuTextButton("Edit", true)) {
                 this.setMainState(MainState.editor)
             }
+            UI.pushWindow("rendering")
+            this.gameRenderer.onUI()
+            UI.popWindow()
             // popMainMenu()
         } else {
             pushMainMenu("MainMenu", 207, 0)
+
             if (addMainMenuToggleButton("Game", Icons.GAME, false)) this.setMainState(MainState.game);
             if (addMainMenuToggleButton("Scene Editor", Icons.CUBE, this.currentMainState == MainState.editor)) this.setMainState(MainState.editor);
             if (addMainMenuToggleButton("Model Maker", Icons.PAINT, this.currentMainState == MainState.modelMaker)) this.setMainState(MainState.modelMaker);
