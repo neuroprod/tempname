@@ -11,6 +11,10 @@ import gsap from "gsap";
 import LevelHandler from "../LevelHandler.ts";
 import GameModel from "../../GameModel.ts";
 import VideoPlayer from "../../../lib/video/VideoPlayer.ts";
+import Model from "../../../lib/model/Model.ts";
+import GBufferMaterial from "../../../render/GBuffer/GBufferMaterial.ts";
+import Plane from "../../../lib/mesh/geometry/Plane.ts";
+import Box from "../../../lib/mesh/geometry/Box.ts";
 
 
 
@@ -22,7 +26,7 @@ export class WebsiteLevel extends BaseLevel {
 constructor() {
 
     super();
-    this.video1 =new VideoPlayer(GameModel.renderer,"video/test.mp4",new Vector2(100,100))
+    this.video1 =new VideoPlayer(GameModel.renderer,"video/test.mp4",new Vector2(1920,1080))
 
 }
     init() {
@@ -65,7 +69,21 @@ constructor() {
         char.z =0.0
         char.ry =Math.PI
         char.y =-1.6;
+        let fv =SceneHandler.getSceneObject("foodVideo")
+console.log(fv.x,fv.y,fv.z)
 
+        let m = new Model(GameModel.renderer,"video1")
+        m.material =new GBufferMaterial(GameModel.renderer,"video1")
+        m.material.setTexture('colorTexture',this.video1.getTexture())
+        m.mesh =new Plane(GameModel.renderer,1920/1000,1080/1000)
+            m.setScaler(0.3)
+        m.z = 0.03
+        m.rx =Math.PI/2
+
+        fv.addChild(m)
+        GameModel.gameRenderer.addModel(m)
+
+       // fv.model?.material.setTexture("colorTexture",this.video1.getTexture())
 // @ts-ignore
        // (char.children[0] as SceneObject3D ).model.material.setTexture("colorTexture",this.video1.getTexture())
         let webSiteRoot = SceneHandler.getSceneObject("rootWebsite")
