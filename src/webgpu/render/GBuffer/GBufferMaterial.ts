@@ -3,6 +3,7 @@ import {ShaderType} from "../../lib/material/ShaderTypes.ts";
 import DefaultUniformGroups from "../../lib/material/DefaultUniformGroups.ts";
 import UniformGroup from "../../lib/material/UniformGroup.ts";
 import DefaultTextures from "../../lib/textures/DefaultTextures.ts";
+import {AddressMode, FilterMode} from "../../lib/WebGPUConstants.ts";
 
 
 export default class GBufferMaterial extends Material{
@@ -23,7 +24,7 @@ export default class GBufferMaterial extends Material{
         this.addUniformGroup(uniforms,true);
 
         uniforms.addTexture("colorTexture",DefaultTextures.getWhite(this.renderer))
-        uniforms.addSampler("mySampler")
+        uniforms.addSampler("mySampler",  GPUShaderStage.FRAGMENT,  FilterMode.Linear,  AddressMode.ClampToEdge, 4)
 
         //this.logShader =true;
     }
