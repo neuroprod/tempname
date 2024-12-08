@@ -9,6 +9,8 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import GameModel from "../../GameModel.ts";
 import Sea from "./Sea.ts";
 import Timer from "../../../lib/Timer.ts";
+import {HitTrigger} from "../../../data/HitTriggers.ts";
+import {Vector3} from "@math.gl/core";
 
 
 
@@ -16,6 +18,7 @@ export class DockLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
     private sea!: Sea;
     private rootShip!: SceneObject3D;
+    private landlord!: SceneObject3D;
 
 
 
@@ -66,10 +69,10 @@ export class DockLevel extends PlatformLevel{
         char.y = 1;
         char.setScaler(1.2)
 
-        let landlord = sceneHandler.getSceneObject("rootLandlord")
-        landlord.setScaler(1.2)
-        landlord.x =4
-
+        this.landlord = sceneHandler.getSceneObject("rootLandlord")
+        this.landlord.setScaler(1.2)
+        this.landlord.x =4.5
+        this.landlord.y =-1000
         this.characterController.setCharacter()
         GameModel.gameCamera.setCharacter()
         GameModel.gameRenderer.setModels(SceneHandler.allModels)
@@ -102,12 +105,51 @@ export class DockLevel extends PlatformLevel{
 
 
 
+                if(f.hitTriggerItem ==HitTrigger.DOCK) {
+
+                    f.triggerIsEnabled=false
+                    let target =new Vector3(5.8, 0,0)
+                    GameModel.gameCamera.TweenToLockedView( target.clone().add([0.5,0.5,0]),target.clone().add([0.5,0.5,2]),3)
+                    this.blockInput =true
+
+                    this.characterController.gotoAndIdle(target,1,()=>{
+                        gsap.delayedCall(2,()=>{
+                            GameModel.conversationHandler.startConversation("sea")
+                            GameModel.conversationHandler.doneCallBack =()=> {
+this.landLordConversation()
+                            }
+                        });
+
+                    });
+                }
 
         }
 
         return false;
     }
+   landLordConversation() {
+       let target =new Vector3(5, 0.5,0)
+       this.landlord.y = 0
+       GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0.0,0.0,2]),1)
+       gsap.delayedCall(0.5,()=> {
+           GameModel.conversationHandler.startConversation("readBoy")
+           GameModel.conversationHandler.doneCallBack = () => {
+               // this.landLordConversation()
 
+                   let target =new Vector3(5.8, 0,0)
+
+
+               this.characterController.gotoAndIdle(target,-1,()=>{})
+               gsap.delayedCall(0.5,()=> {
+                   GameModel.conversationHandler.startConversation("landlordConversation")
+                   GameModel.conversationHandler.doneCallBack = () => {
+
+                   }
+
+               })
+           }
+       });
+    }
     update() {
         super.update();
         this.sea.update()
@@ -120,4 +162,6 @@ export class DockLevel extends PlatformLevel{
         if(this.tl) this.tl.clear()
 
     }
+
+
 }

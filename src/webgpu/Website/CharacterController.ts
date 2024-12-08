@@ -254,7 +254,7 @@ if(! this.charRoot )return;
         //
         //console.log(SceneData.hitTestModels)
 
-
+//if(Timer.frame%10==0)console.log(this.targetPos)
         this.charRoot.setPositionV(this.targetPos)
         this.setFeet(delta)
         this.setCharacterDir(hInput);

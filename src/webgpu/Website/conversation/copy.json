@@ -128,7 +128,30 @@
       ]}
 
     ]
-  }
+  }, {
+  "name": "sea",
+  "data": [
+
+    {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "blabla"}
+
+  ]
+}, {
+  "name": "readBoy",
+  "data": [
+
+    {"char":"rootLandlord","pos":[0.01, 0.8, 0],"text": "Can't you read BOY! This is a private pier"},
+    {"text": "trespassers will be shot"}
+  ]
+},
+
+ {
+  "name": "landlordConversation",
+  "data": [
+
+    {"char":"rootLandlord","pos":[0.01, 0.8, 0],"text": "Ow, It's you?\nGot my money BOY?"}
+
+  ]
+}
 ]
 
 
