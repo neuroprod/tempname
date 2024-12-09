@@ -130,7 +130,7 @@ private startPos =-10
                            gsap.delayedCall(0.5,()=>{
 
                                if( this.skipGodChoice){
-                                   gsap.delayedCall(4,()=>{
+                                   gsap.delayedCall(2,()=>{
                                    LevelHandler.setLevel("Cookie")})
                                    GameModel.coinHandeler.show()
                                    GameModel.coinHandeler.addCoins(5)

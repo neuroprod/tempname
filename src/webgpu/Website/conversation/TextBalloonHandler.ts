@@ -238,7 +238,7 @@ export default class TextBalloonHandler {
 
         this.charPos = -4
         this.textMesh.setText(text, ProjectData.font, 0.15)
-        let w = this.textMesh.max.x;
+        let w = Math.max(this.textMesh.max.x,20);
 
 
         let h = -this.textMesh.numLines * 7;

@@ -8,18 +8,19 @@ import SceneObject3D from "../../../data/SceneObject3D.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
 
 
-import Strawberry from "./Strawberry.ts";
+
 import GameModel from "../../GameModel.ts";
 import LevelHandler from "../LevelHandler.ts";
 
 
 
-export class StrawberryLevel extends PlatformLevel{
+export class HandLevel extends PlatformLevel{
     private tl!: gsap.core.Timeline;
+    private hand!: SceneObject3D;
 
-    private strawBerry!: SceneObject3D;
 
-    strawBerryHandler =new Strawberry()
+
+
 
 
     init() {
@@ -29,17 +30,14 @@ export class StrawberryLevel extends PlatformLevel{
         LoadHandler.onComplete =this.configScene.bind(this)
         LoadHandler.startLoading()
         LoadHandler.startLoading()
-        LoadHandler.startLoading()
 
-        SceneHandler.setScene("bbd954c4-d38e-4618").then(() => {
+
+        SceneHandler.setScene("2de5b0dc-f37a-4e59").then(() => {
 
             SceneHandler.addScene("1234").then(() => {
                 LoadHandler.stopLoading()
             });
 
-            SceneHandler.addScene("c7dc8752-9088-476b").then(() => {
-                LoadHandler.stopLoading()
-            });
 
 
             LoadHandler.stopLoading()
@@ -54,20 +52,16 @@ export class StrawberryLevel extends PlatformLevel{
         GameModel.gameCamera.setCharacter()
         GameModel.gameRenderer.setModels(SceneHandler.allModels)
         GameModel.gameRenderer.addModel(this.characterController.cloudParticles.particlesModel)
-        this.strawBerryHandler.init()
+
 
 
 
         let char = sceneHandler.getSceneObject("charRoot")
         char.setScaler(1.2)
+        char.x = 0
 
+this.hand =   sceneHandler.getSceneObject("rootHand")
 
-
-        this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
-        this.strawBerry.setScaler(1.1)
-        this.strawBerry.z =0
-        this.strawBerry.x =3.8
-        this.strawBerry.ry =-0.4
 
         GameModel.gameCamera.setMinMaxX(-0.3,100)
 
@@ -77,13 +71,11 @@ export class StrawberryLevel extends PlatformLevel{
     update(){
         super.update()
 
-        this.strawBerryHandler.update()
+
     }
     conversationDataCallBack(data:string){
         super.conversationDataCallBack(data);
-        if(data=="coinsYes"){
-            GameModel.coinHandeler.addCoins(GameModel.coinHandeler.numCoins*-1);
-        }
+
 
     }
     resolveHitTrigger(f: SceneObject3D) {
@@ -93,20 +85,19 @@ export class StrawberryLevel extends PlatformLevel{
 
 
 
-            if(f.hitTriggerItem ==HitTrigger.STRAWBERRY){
+            if(f.hitTriggerItem ==HitTrigger.HAND){
                 f.triggerIsEnabled =false;
 
-                let target = this.strawBerry.getWorldPos().add([-0.5,0.5,0])
+                let target = this.hand.getWorldPos().add([-0.5,0.5,0])
                 GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
                 this.blockInput =true
 
-                this.characterController.gotoAndIdle(this.strawBerry.getWorldPos().add([-0.9,0,0]),1,()=>{
-                    gsap.delayedCall(1.5,()=>{
-                        GameModel.conversationHandler.replaceMap.set("numCoins",GameModel.coinHandeler.numCoins+"")
-                        GameModel.conversationHandler.startConversation("strawBerry")
+                this.characterController.gotoAndIdle(this.hand.getWorldPos().add([-0.9,0,0]),1,()=>{
+                    gsap.delayedCall(0.5,()=>{
+                     GameModel.conversationHandler.startConversation("hand")
 
                         GameModel.conversationHandler.doneCallBack =()=>{
-LevelHandler.setLevel("Hand");
+LevelHandler.setLevel("Dock");
                         }});
 
                 });
@@ -120,7 +111,7 @@ LevelHandler.setLevel("Hand");
 
 
     destroy(){
-        this.strawBerryHandler.destroy()
+
         super.destroy()
         if(this.tl) this.tl.clear()
 

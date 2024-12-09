@@ -11,6 +11,7 @@ import Sea from "./Sea.ts";
 import Timer from "../../../lib/Timer.ts";
 import {HitTrigger} from "../../../data/HitTriggers.ts";
 import {Vector3} from "@math.gl/core";
+import LevelHandler from "../LevelHandler.ts";
 
 
 
@@ -143,7 +144,7 @@ this.landLordConversation()
                gsap.delayedCall(0.5,()=> {
                    GameModel.conversationHandler.startConversation("landlordConversation")
                    GameModel.conversationHandler.doneCallBack = () => {
-
+   LevelHandler.setLevel("Sea")
                    }
 
                })

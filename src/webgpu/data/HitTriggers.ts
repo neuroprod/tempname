@@ -10,6 +10,7 @@ export enum HitTrigger
         COOKIE,
         TREE,
         DOCK,
+        HAND,
     }
 
 export  const HitTriggerSelectItems:Array<SelectItem> =[]

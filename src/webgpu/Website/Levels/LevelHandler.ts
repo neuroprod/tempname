@@ -13,6 +13,7 @@ import GameModel from "../GameModel.ts";
 import {DockLevel} from "./DockLevel/DockLevel.ts";
 import Sea from "./DockLevel/Sea.ts";
 import {SeaLevel} from "./SeaLevel/SeaLevel.ts";
+import {HandLevel} from "./HandLevel/HandLevel.ts";
 
 
 class LevelHandler {
@@ -31,6 +32,7 @@ class LevelHandler {
         this.addLevel("CookieGame", new CookieGame())
         this.addLevel("Website", new WebsiteLevel())
         this.addLevel("StrawBerry", new StrawberryLevel())
+        this.addLevel("Hand", new HandLevel())
         this.addLevel("Dock", new DockLevel())
         this.addLevel("Sea", new SeaLevel())
     }

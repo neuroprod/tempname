@@ -82,7 +82,7 @@ export default class ConversationHandler {
     getCopyData(id: string) {
 
         for (let data of copy) {
-            if (data.name == id) return data.data
+            if (data && data.name == id) return data.data
         }
 
     }

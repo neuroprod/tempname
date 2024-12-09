@@ -1,7 +1,4 @@
 [
-
-
-
   {
     "name": "tree",
     "data": [
@@ -108,7 +105,7 @@
       {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Why are you always so angry?"},
       {"char":"cookieRoot","pos":[0.3, 1.0, 0],"text": "I don't know?\nMy mom told me\nI was a happy baby."},
       {"text": "But then I had to go to\nschool and stuff."},
-      {"text": "Now I just want to smash things.\nYou should try it! It helps"},
+      {"text": "Now I just want to smash things."},
       {"text": "You should try it.\nIt helps with the pain!"},
       {"char":"charRoot","pos":[0.01, 0.8, 0],"text": "Euhm... Ok!"}
     ]
@@ -119,16 +116,37 @@
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "What's going on Strawberry?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just got a call from my mum:\nMy brother got squased by some jerk!"},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": " Ow... "},
-      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy DRU...\neuh, my happy medicine."},
+      {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Yea, and I really need some money\nto buy DRU...\neuh, my medicine."},
       {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "How much do you need?"},
       {"char":"strawberryRoot","pos":[-0.2, 0.8, 0],"text": "Just #numCoins coins..."},
       {"char":"charRoot","pos":[0.1, 0.8, 0],"choice": [
-        {"text": "Those are all my coins Strawberry,\nI might need them later. I can't do that.", "callBack": "coinsNo" },
+        {"text": "Those are all my coins Strawberry,\nI can't do that.", "callBack": "coinsNo" },
         {"text": "Here you go! #numCoins coins.\nI know it's a tough world out there!","callBack": "coinsYes" }
       ]}
 
     ]
-  }, {
+  },
+  {
+    "name": "hand",
+    "data": [
+
+      {"char":"rootHand","pos":[0.01, 0.8, 0],"text": "Hi pirate, want to have some fun?"},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "I'm broke Candy. Maybe some other time..."},
+      {"char":"rootHand","pos":[0.01, 0.8, 0],"text": "mmm, ok.\nSince you are a pirate maybe you can\nhelp me get my fingers back?"},
+      {"text": "Some of my clients really miss them"},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "You know Candy, I'm actualy not a real pirate."},
+      {"text": "Sure, I download a movie every know and then."},
+      {"text": "But mostly, It's just me trying to pretend I'm free."},
+      {"char":"rootHand","pos":[0.01, 0.8, 0],"text": "ow...  "},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "...   "},
+      {"text": "What happend with your fingers?"},
+      {"char":"rootHand","pos":[0.01, 0.8, 0],"text": "Mr Scruffy took them.\nBecause I don't bring in enough money"},
+      {"char":"charRoot","pos":[0.2, 0.8, 0],"text": "ok, i'll see what I can do"}
+    ]
+  }
+
+
+, {
   "name": "sea",
   "data": [
 
@@ -139,8 +157,8 @@
   "name": "readBoy",
   "data": [
 
-    {"char":"rootLandlord","pos":[0.01, 0.8, 0],"text": "Can't you read BOY! This is a private pier"},
-    {"text": "trespassers will be shot"}
+    {"char":"rootLandlord","pos":[0.01, 0.8, 0],"text": "Can't you read boy! This is a private pier!"},
+    {"text": "I can shoot you right now if I want to"}
   ]
 },
 
@@ -148,7 +166,7 @@
   "name": "landlordConversation",
   "data": [
 
-    {"char":"rootLandlord","pos":[0.01, 0.8, 0],"text": "Ow, It's you?\nGot my money BOY?"}
+    {"char":"rootLandlord","pos":[0.01, 0.8, 0],"text": "Ow, It's you?\nGot my money boy?"}
 
   ]
 }
