@@ -61,6 +61,8 @@ export class StrawberryLevel extends PlatformLevel{
         let char = sceneHandler.getSceneObject("charRoot")
         char.setScaler(1.2)
 
+        GameModel.gameCamera.camDistance =2.3;
+        GameModel.gameCamera.heightOffset =0.5
 
 
         this.strawBerry = sceneHandler.getSceneObject("strawberryRoot")
@@ -97,7 +99,7 @@ export class StrawberryLevel extends PlatformLevel{
                 f.triggerIsEnabled =false;
 
                 let target = this.strawBerry.getWorldPos().add([-0.5,0.5,0])
-                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.strawBerry.getWorldPos().add([-0.9,0,0]),1,()=>{

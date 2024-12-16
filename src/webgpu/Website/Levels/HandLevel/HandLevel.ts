@@ -53,7 +53,8 @@ export class HandLevel extends PlatformLevel{
         GameModel.gameRenderer.setModels(SceneHandler.allModels)
         GameModel.gameRenderer.addModel(this.characterController.cloudParticles.particlesModel)
 
-
+        GameModel.gameCamera.camDistance =2.3;
+        GameModel.gameCamera.heightOffset =0.5
 
 
         let char = sceneHandler.getSceneObject("charRoot")
@@ -89,7 +90,7 @@ this.hand =   sceneHandler.getSceneObject("rootHand")
                 f.triggerIsEnabled =false;
 
                 let target = this.hand.getWorldPos().add([-0.5,0.5,0])
-                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2.3]))
+                GameModel.gameCamera.TweenToLockedView( target,target.clone().add([0,0,2]))
                 this.blockInput =true
 
                 this.characterController.gotoAndIdle(this.hand.getWorldPos().add([-0.9,0,0]),1,()=>{
