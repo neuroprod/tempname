@@ -77,6 +77,7 @@ setForCharPos(charPos:Vector3){
     this.cameraLookAt.lerp( charPos,1)
     this.camPos.copy(this.cameraLookAt);
     this.camPos.z+=this.camDistance;
+
     this.camPos.y+=0;
 
     this.cameraWorld.lerp( this.camPos as NumericArray,1)
@@ -92,7 +93,9 @@ setForCharPos(charPos:Vector3){
         this.camPos.copy(this.cameraLookAt);
         this.camPos.z+=this.camDistance;
         this.camPos.y+=0;
-
+      //  this.camera.fovy =0.3
+       // this.camera.near=1
+       // this.camera.far=100
         this.cameraWorld.lerp( this.camPos as NumericArray,lerpValueDelta(0.00001 ,delta))
     }
     setCharView(){

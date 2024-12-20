@@ -24,7 +24,7 @@ export default class PCSSShadowMaterial extends Material {
 
         uniforms.addUniform("shadowViewMatrix",0,GPUShaderStage.FRAGMENT,ShaderType.mat4);
         uniforms.addUniform("shadowViewProjectionMatrix",0,GPUShaderStage.FRAGMENT,ShaderType.mat4);
-        uniforms.addUniform("size",0.05);
+        uniforms.addUniform("size",0.03);
         uniforms.addTexture("gDepth",this.renderer.getTexture(Textures.GDEPTH), {sampleType:TextureSampleType.UnfilterableFloat})
         uniforms.addTexture("shadowMap",this.renderer.getTexture(Textures.SHADOW_DEPTH), {sampleType:TextureSampleType.Float})
         uniforms.addSampler("mySampler");
